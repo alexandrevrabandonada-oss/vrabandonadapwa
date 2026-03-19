@@ -6,7 +6,7 @@ Casa digital do **VR Abandonada**: uma landing page com base de PWA para memóri
 
 - Uma base editorial e de produto para um projeto popular, combativo e enraizado no território.
 - Não é um site institucional comum.
-- A fundação já vem preparada para App Router, Vercel, PWA e futura integração com Supabase.
+- A fundação já vem preparada para App Router, Vercel, PWA e integração com Supabase.
 
 ## Como rodar localmente
 
@@ -29,12 +29,25 @@ Abra `http://localhost:3000`.
 
 - `app/` - rotas, layout global, manifest e ícones do PWA
 - `components/` - peças de interface reutilizáveis
-- `lib/` - dados do site e base para Supabase
-- `reports/` - relatório de estado do projeto
+- `lib/` - dados do site, domínio de intake e base para Supabase
+- `supabase/migrations/` - migrations do banco
+- `reports/` - relatórios de estado do projeto
+
+## Acesso interno
+
+- A entrada protegida fica em `/interno/entrar`.
+- O e-mail precisa existir na tabela `public.admin_email_allowlist` no Supabase.
+- Depois do login, a fila interna fica em `/interno/intake`.
+
+## Migrations
+
+1. Aplicar `supabase/migrations/0001_create_intake_submissions.sql`.
+2. Aplicar `supabase/migrations/0002_intake_security_and_triage.sql`.
+3. Inserir o seu e-mail em `public.admin_email_allowlist`.
 
 ## Próximos passos
 
-1. Conectar Supabase para envio e organização de pautas/denúncias.
-2. Definir um fluxo seguro para recebimento de material sensível.
-3. Evoluir a home com conteúdo real, fotos, acervo e editoria viva.
-4. Criar observabilidade, moderação e trilha de publicação.
+1. Confirmar a migration e testar um envio real de ponta a ponta.
+2. Refinar a triagem com observações e estados editoriais mais ricos.
+3. Adicionar acervo real de memória da cidade.
+4. Montar a primeira trilha de publicação: pauta, apuração, publicação e atualização.

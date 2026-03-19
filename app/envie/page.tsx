@@ -55,6 +55,40 @@ export default function EnviePage() {
 
         <IntakeForm />
       </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">regras do envio</p>
+            <h2>Disciplina editorial antes da publicação.</h2>
+          </div>
+          <p className="section__lead">
+            Relatos sensíveis recebem cuidado extra. Envio não significa
+            publicação automática.
+          </p>
+        </div>
+
+        <div className="grid-2">
+          <article className="support-box">
+            <h3>Pode enviar</h3>
+            <ul>
+              <li>Fatos observados diretamente</li>
+              <li>Documentos, imagens e links úteis</li>
+              <li>Contexto territorial, data e impacto</li>
+              <li>Pedido explícito de anonimato, se necessário</li>
+            </ul>
+          </article>
+          <article className="support-box">
+            <h3>Evite enviar</h3>
+            <ul>
+              <li>Boatos sem contexto verificável</li>
+              <li>Dados de terceiros sem necessidade</li>
+              <li>Material que coloque fontes em risco sem aviso</li>
+              <li>Conteúdo que dependa de publicação imediata</li>
+            </ul>
+          </article>
+        </div>
+      </section>
     </Container>
   );
 }

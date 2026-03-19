@@ -38,7 +38,7 @@ export async function submitIntakeAction(
     };
   }
 
-  const supabase = createSupabaseServerClient();
+  const supabase = await createSupabaseServerClient();
 
   const { error } = await supabase.from("intake_submissions").insert({
     category,
@@ -65,3 +65,4 @@ export async function submitIntakeAction(
     message: "Envio registrado. O material entrou na fila editorial inicial.",
   };
 }
+

@@ -88,7 +88,10 @@ export function IntakeForm() {
         </button>
       </div>
 
-      <p className={`form-status ${state.ok ? "form-status--ok" : ""}`}>
+      <p
+        className={`form-status ${state.ok ? "form-status--ok" : ""}`}
+        aria-live="polite"
+      >
         {state.message || "Seu material entra numa fila editorial inicial."}
       </p>
     </form>
