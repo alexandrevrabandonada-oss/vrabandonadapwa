@@ -15,7 +15,7 @@ export function MemoryCard({ item, href, compact = false }: Props) {
       <EditorialCover
         title={item.title}
         primaryTag={item.memory_type}
-        seriesTitle={item.memory_collection}
+        seriesTitle={item.collection_title || item.memory_collection}
         coverImageUrl={item.cover_image_url}
         coverVariant={item.highlight_in_memory ? "ember" : "concrete"}
         compact={compact}
@@ -28,7 +28,7 @@ export function MemoryCard({ item, href, compact = false }: Props) {
         <h3>{item.title}</h3>
         <p>{item.excerpt}</p>
         <div className="meta-row">
-          <span>{item.memory_collection}</span>
+          <span>{item.collection_title || item.memory_collection}</span>
           <span>{item.year_start ? String(item.year_start) : "data aberta"}</span>
         </div>
         <Link href={href} className="button-secondary">
@@ -38,3 +38,4 @@ export function MemoryCard({ item, href, compact = false }: Props) {
     </article>
   );
 }
+

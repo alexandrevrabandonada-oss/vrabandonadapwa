@@ -1,29 +1,37 @@
 import type { MemoryCollection, MemoryTimelineEntry } from "@/lib/memory/types";
 
-export const memoryCollections: MemoryCollection[] = [
+export const memoryCollectionsFallback: MemoryCollection[] = [
   {
     slug: "cidade-operaria",
     title: "Cidade operária",
     description: "Marcos da formação da cidade como território de trabalho, bairro e organização popular.",
+    display_order: 1,
+    featured: true,
   },
   {
     slug: "poluicao-e-industria",
     title: "Poluição e indústria",
     description: "Recortes sobre ar, fumaça, água e o custo ambiental da produção no cotidiano.",
+    display_order: 2,
+    featured: true,
   },
   {
     slug: "trabalho-e-acidentes",
     title: "Trabalho e acidentes",
     description: "Memórias do risco, do desgaste e das marcas que o trabalho deixa no corpo.",
+    display_order: 3,
+    featured: true,
   },
   {
     slug: "apagamentos-e-disputas",
     title: "Apagamentos e disputas",
     description: "O que some quando a cidade se reescreve e o que insiste em permanecer no arquivo vivo.",
+    display_order: 4,
+    featured: false,
   },
 ];
 
-export const memoryTimeline: MemoryTimelineEntry[] = [
+export const memoryTimelineFallback: MemoryTimelineEntry[] = [
   {
     label: "Formação operária",
     year: "1946",

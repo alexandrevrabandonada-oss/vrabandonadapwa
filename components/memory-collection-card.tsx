@@ -16,7 +16,7 @@ export function MemoryCollectionCard({ collection, count }: Props) {
       <p className="series-card__count">
         {count} item{count === 1 ? "" : "s"}
       </p>
-      <Link href={`/memoria?coleta=${collection.slug}`} className="button-secondary">
+      <Link href={`/memoria?collection=${collection.slug}`} className="button-secondary">
         Ver recorte
       </Link>
     </article>

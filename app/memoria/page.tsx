@@ -11,9 +11,8 @@ import { MemoryTimelineEntryCard } from "@/components/memory-timeline-entry";
 import { PageHero } from "@/components/page-hero";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
-import { memoryCollections, memoryTimeline } from "@/lib/memory/catalog";
-import { getMemoryCollectionCount, getMemoryFeaturedItem, getRelatedEditorialForMemory } from "@/lib/memory/navigation";
-import { getMemoryItemsByCollection, getPublishedMemoryItems } from "@/lib/memory/queries";
+import { getMemoryCollectionCount, getMemoryFeaturedItem, getMemoryTimelineEntries, getRelatedEditorialForMemory } from "@/lib/memory/navigation";
+import { getPublishedMemoryCollections, getPublishedMemoryItems, getPublishedMemoryItemsByCollection } from "@/lib/memory/queries";
 
 export const metadata: Metadata = {
   title: "Memória",
@@ -28,13 +27,13 @@ export default async function MemoriaPage({ searchParams }: PageProps) {
   const { collection } = await searchParams;
   const items = await getPublishedMemoryItems();
   const editorialItems = await getPublishedEditorialItems();
+  const collections = await getPublishedMemoryCollections();
   const featuredMemory = getMemoryFeaturedItem(items);
-  const collectionSlug = collection && memoryCollections.some((entry) => entry.slug === collection) ? collection : null;
-  const filteredItems = collectionSlug ? await getMemoryItemsByCollection(collectionSlug) : items;
+  const collectionSlug = collection && collections.some((entry) => entry.slug === collection) ? collection : null;
+  const filteredItems = collectionSlug ? await getPublishedMemoryItemsByCollection(collectionSlug) : items;
   const relatedEditorial = featuredMemory ? getRelatedEditorialForMemory(featuredMemory, editorialItems) : null;
-  const relatedSeries = featuredMemory?.related_series_slug
-    ? getEditorialSeriesBySlug(featuredMemory.related_series_slug)
-    : null;
+  const relatedSeries = featuredMemory?.related_series_slug ? getEditorialSeriesBySlug(featuredMemory.related_series_slug) : null;
+  const timelineEntries = getMemoryTimelineEntries(items);
 
   return (
     <Container className="intro-grid memory-page">
@@ -97,7 +96,7 @@ export default async function MemoriaPage({ searchParams }: PageProps) {
           <Link className={`tag-row__item ${!collectionSlug ? "tag-row__item--active" : ""}`} href="/memoria">
             Tudo
           </Link>
-          {memoryCollections.map((entry) => (
+          {collections.map((entry) => (
             <Link
               key={entry.slug}
               className={`tag-row__item ${collectionSlug === entry.slug ? "tag-row__item--active" : ""}`}
@@ -109,12 +108,8 @@ export default async function MemoriaPage({ searchParams }: PageProps) {
         </div>
 
         <div className="grid-3">
-          {memoryCollections.map((entry) => (
-            <MemoryCollectionCard
-              key={entry.slug}
-              collection={entry}
-              count={getMemoryCollectionCount(entry, items)}
-            />
+          {collections.map((entry) => (
+            <MemoryCollectionCard key={entry.slug} collection={entry} count={getMemoryCollectionCount(entry, items)} />
           ))}
         </div>
 
@@ -123,7 +118,7 @@ export default async function MemoriaPage({ searchParams }: PageProps) {
             <div className="grid-2">
               <div>
                 <p className="eyebrow">Filtro ativo</p>
-                <h2>{memoryCollections.find((entry) => entry.slug === collectionSlug)?.title}</h2>
+                <h2>{collections.find((entry) => entry.slug === collectionSlug)?.title}</h2>
               </div>
               <p className="section__lead">
                 Estes recortes entram agora como porta de leitura direta dentro do arquivo vivo.
@@ -151,7 +146,7 @@ export default async function MemoriaPage({ searchParams }: PageProps) {
         </div>
 
         <div className="timeline-rail">
-          {memoryTimeline.map((entry) => (
+          {timelineEntries.map((entry) => (
             <MemoryTimelineEntryCard key={`${entry.year}-${entry.label}`} entry={entry} />
           ))}
         </div>
@@ -171,9 +166,7 @@ export default async function MemoriaPage({ searchParams }: PageProps) {
         </div>
 
         <div className="grid-2">
-          {relatedEditorial ? (
-            <EditorialCard item={relatedEditorial} href={`/pautas/${relatedEditorial.slug}`} compact />
-          ) : null}
+          {relatedEditorial ? <EditorialCard item={relatedEditorial} href={`/pautas/${relatedEditorial.slug}`} compact /> : null}
           {relatedSeries ? (
             <article className="support-box memory-series-box">
               <p className="eyebrow">Série conectada</p>

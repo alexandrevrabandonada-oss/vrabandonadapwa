@@ -8,10 +8,9 @@ import { EditorialCover } from "@/components/editorial-cover";
 import { MemoryBridge } from "@/components/memory-bridge";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
-import { memoryCollections } from "@/lib/memory/catalog";
 import { getMemoryCollectionCount, getRelatedEditorialForMemory } from "@/lib/memory/navigation";
 import { getMemoryOpenGraphImagePath } from "@/lib/memory/share";
-import { getPublishedMemoryBySlug, getPublishedMemoryItems } from "@/lib/memory/queries";
+import { getPublishedMemoryBySlug, getPublishedMemoryCollections, getPublishedMemoryItems } from "@/lib/memory/queries";
 
 export async function generateStaticParams() {
   const items = await getPublishedMemoryItems();
@@ -60,10 +59,11 @@ export default async function MemoryDetailPage({ params }: PageProps) {
   }
 
   const items = await getPublishedMemoryItems();
+  const collections = await getPublishedMemoryCollections();
   const editorialItems = await getPublishedEditorialItems();
   const relatedEditorial = getRelatedEditorialForMemory(item, editorialItems);
   const relatedSeries = item.related_series_slug ? getEditorialSeriesBySlug(item.related_series_slug) : null;
-  const collection = memoryCollections.find((entry) => entry.slug === item.memory_collection);
+  const collection = collections.find((entry) => entry.slug === (item.collection_slug || item.memory_collection));
   const collectionCount = collection ? getMemoryCollectionCount(collection, items) : 0;
 
   return (
@@ -80,7 +80,7 @@ export default async function MemoryDetailPage({ params }: PageProps) {
             <span>{item.archive_status}</span>
           </div>
           <div className="tag-row">
-            <span className="tag-row__item">{item.memory_collection}</span>
+            <span className="tag-row__item">{item.collection_title || item.memory_collection}</span>
             <span className="tag-row__item">{item.memory_type}</span>
             {collection ? <span className="tag-row__item">{collectionCount} recortes</span> : null}
           </div>
@@ -99,7 +99,7 @@ export default async function MemoryDetailPage({ params }: PageProps) {
         <EditorialCover
           title={item.title}
           primaryTag={item.memory_type}
-          seriesTitle={item.memory_collection}
+          seriesTitle={item.collection_title || item.memory_collection}
           coverImageUrl={item.cover_image_url}
           coverVariant={item.highlight_in_memory ? "ember" : "concrete"}
         />
