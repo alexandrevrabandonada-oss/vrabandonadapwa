@@ -53,15 +53,15 @@ export default async function PautaDetailPage({ params }: PageProps) {
           <span>{item.category}</span>
           <span>{item.neighborhood || "Volta Redonda"}</span>
           {item.featured ? <span>Destaque</span> : null}
+          <span>
+            {item.published_at ? new Date(item.published_at).toLocaleDateString("pt-BR") : "sem data"}
+          </span>
         </div>
       </section>
 
       <article className="section editorial-article">
         <div className="editorial-article__meta">
           <p className="eyebrow">arquivo vivo</p>
-          <p>
-            {item.published_at ? new Date(item.published_at).toLocaleDateString("pt-BR") : "sem data"}
-          </p>
           <p>{editorialStatusLabels[item.editorial_status as EditorialStatus] ?? item.editorial_status}</p>
         </div>
 
@@ -71,11 +71,6 @@ export default async function PautaDetailPage({ params }: PageProps) {
           {paragraphs.map((paragraph) => (
             <p key={paragraph}>{paragraph}</p>
           ))}
-        </div>
-
-        <div className="support-box">
-          <h3>Nota editorial</h3>
-          <p>{item.source_visibility_note || "Conteúdo sanitizado antes da publicação."}</p>
         </div>
 
         <div className="stack-actions">

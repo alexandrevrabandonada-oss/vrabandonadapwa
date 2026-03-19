@@ -3,8 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { buildEditorialSlug } from "@/lib/editorial/utils";
-import { getEditorialByIntakeId } from "@/lib/editorial/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type IntakeUpdateState = {
@@ -18,73 +16,6 @@ function normalize(value: FormDataEntryValue | null) {
 
 function isIntakeStatus(value: string): value is import("@/lib/intake/types").IntakeStatus {
   return ["new", "reviewing", "archived", "published"].includes(value as import("@/lib/intake/types").IntakeStatus);
-}
-
-export async function createEditorialDraftFromIntakeAction(formData: FormData) {
-  const intakeId = normalize(formData.get("intake_submission_id"));
-  if (!intakeId) {
-    redirect("/interno/intake");
-  }
-
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/interno/entrar");
-  }
-
-  const existing = await getEditorialByIntakeId(intakeId);
-  if (existing) {
-    redirect(`/interno/editorial/${existing.id}`);
-  }
-
-  const { data: intake, error } = await supabase
-    .from("intake_submissions")
-    .select("id, category, title, location, safe_public_summary")
-    .eq("id", intakeId)
-    .maybeSingle();
-
-  if (error || !intake) {
-    redirect("/interno/intake");
-  }
-
-  const title = intake.safe_public_summary?.trim() || intake.title;
-  const slug = buildEditorialSlug(title, intake.id.slice(0, 6));
-
-  const { data, error: insertError } = await supabase
-    .from("editorial_items")
-    .insert({
-      intake_submission_id: intake.id,
-      title,
-      slug,
-      excerpt:
-        intake.safe_public_summary?.trim() ||
-        "Rascunho editorial derivado de material interno e ainda em revisão.",
-      body: intake.safe_public_summary?.trim()
-        ? `${intake.safe_public_summary.trim()}\n\nRascunho inicial criado a partir da triagem interna.`
-        : "Rascunho em construção. Sanitizar, reescrever e contextualizar antes de publicar.",
-      category: intake.category,
-      neighborhood: intake.location || null,
-      cover_image_url: null,
-      published: false,
-      editorial_status: "draft",
-      featured: false,
-      source_visibility_note: `Derivado da submissão interna ${intake.id}. Conteúdo sanitizado para camada pública.`,
-      created_by: user.email || null,
-      updated_by: user.email || null,
-    })
-    .select("id")
-    .single();
-
-  if (insertError || !data) {
-    throw insertError ?? new Error("Failed to create editorial draft.");
-  }
-
-  revalidatePath("/interno/editorial");
-  revalidatePath(`/interno/editorial/${data.id}`);
-  redirect(`/interno/editorial/${data.id}`);
 }
 
 export async function updateIntakeAction(

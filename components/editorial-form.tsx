@@ -3,7 +3,11 @@
 import { useActionState } from "react";
 
 import { saveEditorialItemAction } from "@/app/interno/editorial/actions";
-import { editorialStatuses, type EditorialItem } from "@/lib/editorial/types";
+import {
+  editorialReviewStatuses,
+  editorialStatuses,
+  type EditorialItem,
+} from "@/lib/editorial/types";
 
 type Props = {
   item: EditorialItem;
@@ -55,6 +59,50 @@ export function EditorialForm({ item }: Props) {
         <textarea name="body" rows={10} defaultValue={item.body} required />
       </label>
 
+      <div className="grid-2">
+        <label className="field">
+          <span>Status editorial</span>
+          <select name="editorial_status" defaultValue={item.editorial_status} required>
+            {editorialStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="field">
+          <span>Status de revisão</span>
+          <select name="review_status" defaultValue={item.review_status} required>
+            {editorialReviewStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <label className="field">
+        <span>Motivo de publicação</span>
+        <textarea
+          name="publication_reason"
+          rows={3}
+          defaultValue={item.publication_reason ?? ""}
+          placeholder="Explique por que este item deve ir ao ar agora."
+        />
+      </label>
+
+      <label className="field">
+        <span>Nota de checagem</span>
+        <textarea
+          name="fact_check_note"
+          rows={3}
+          defaultValue={item.fact_check_note ?? ""}
+          placeholder="Registre a checagem editorial mínima feita antes da publicação."
+        />
+      </label>
+
       <label className="field">
         <span>Nota de visibilidade da fonte</span>
         <textarea
@@ -77,14 +125,37 @@ export function EditorialForm({ item }: Props) {
         </label>
 
         <label className="field">
-          <span>Status editorial</span>
-          <select name="editorial_status" defaultValue={item.editorial_status} required>
-            {editorialStatuses.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
+          <span>Arquivo / observação</span>
+          <input
+            name="archived_reason"
+            type="text"
+            defaultValue={item.archived_reason ?? ""}
+            placeholder="Use quando o item for arquivado."
+          />
+        </label>
+      </div>
+
+      <div className="support-box">
+        <p className="eyebrow">Checklist de publicação</p>
+        <label className="check">
+          <input name="check_personal_data_removed" type="checkbox" />
+          <span>Remover dados pessoais ou sensíveis</span>
+        </label>
+        <label className="check">
+          <input name="check_sanitized" type="checkbox" />
+          <span>Confirmar que o texto está sanitizado</span>
+        </label>
+        <label className="check">
+          <input name="check_no_private_contact" type="checkbox" />
+          <span>Confirmar que não há contato privado exposto</span>
+        </label>
+        <label className="check">
+          <input name="check_editorial_fit" type="checkbox" />
+          <span>Confirmar que a publicação faz sentido editorial</span>
+        </label>
+        <label className="check">
+          <input name="sensitivity_check_passed" type="checkbox" defaultChecked={item.sensitivity_check_passed} />
+          <span>Checagem de sensibilidade aprovada</span>
         </label>
       </div>
 
@@ -92,10 +163,6 @@ export function EditorialForm({ item }: Props) {
         <label className="check">
           <input name="featured" type="checkbox" defaultChecked={item.featured} />
           <span>Destaque na home de pautas</span>
-        </label>
-        <label className="check">
-          <input name="published" type="checkbox" defaultChecked={item.published} />
-          <span>Publicar / manter publicado</span>
         </label>
       </div>
 

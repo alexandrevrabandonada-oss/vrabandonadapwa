@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { recordEditorialAuditEvent, resolveEditorialAuditEventType } from "@/lib/editorial/audit";
 import { buildEditorialSlug, slugifyEditorialValue } from "@/lib/editorial/utils";
 import { getEditorialByIntakeId, getInternalEditorialById } from "@/lib/editorial/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -18,6 +19,40 @@ function normalize(value: FormDataEntryValue | null) {
 
 function toBool(value: FormDataEntryValue | null) {
   return value === "on";
+}
+
+function formatChecklistMessage(missing: string[]) {
+  if (missing.length === 0) {
+    return "";
+  }
+
+  if (missing.length === 1) {
+    return missing[0];
+  }
+
+  return `${missing.slice(0, -1).join(", ")} e ${missing[missing.length - 1]}`;
+}
+
+function validatePublishingChecklist(formData: FormData) {
+  const missing: string[] = [];
+
+  if (!toBool(formData.get("check_personal_data_removed"))) {
+    missing.push("remover dados pessoais ou sensíveis");
+  }
+
+  if (!toBool(formData.get("check_sanitized"))) {
+    missing.push("confirmar que o texto está sanitizado");
+  }
+
+  if (!toBool(formData.get("check_no_private_contact"))) {
+    missing.push("confirmar que não há contato privado exposto");
+  }
+
+  if (!toBool(formData.get("check_editorial_fit"))) {
+    missing.push("confirmar que a publicação faz sentido editorial");
+  }
+
+  return missing;
 }
 
 export async function createEditorialDraftFromIntakeAction(formData: FormData) {
@@ -52,6 +87,7 @@ export async function createEditorialDraftFromIntakeAction(formData: FormData) {
 
   const title = intake.safe_public_summary?.trim() || intake.title;
   const slug = buildEditorialSlug(title, intake.id.slice(0, 6));
+  const now = new Date().toISOString();
 
   const { data, error: insertError } = await supabase
     .from("editorial_items")
@@ -69,8 +105,17 @@ export async function createEditorialDraftFromIntakeAction(formData: FormData) {
       neighborhood: intake.location || null,
       cover_image_url: null,
       published: false,
+      published_at: null,
       editorial_status: "draft",
+      review_status: "pending",
       featured: false,
+      publication_reason: null,
+      sensitivity_check_passed: false,
+      fact_check_note: null,
+      last_reviewed_at: null,
+      last_reviewed_by: null,
+      published_by: null,
+      archived_reason: null,
       source_visibility_note: `Derivado da submissão interna ${intake.id}. Conteúdo sanitizado para camada pública.`,
       created_by: user.email || null,
       updated_by: user.email || null,
@@ -81,6 +126,15 @@ export async function createEditorialDraftFromIntakeAction(formData: FormData) {
   if (insertError || !data) {
     throw insertError ?? new Error("Failed to create editorial draft.");
   }
+
+  await recordEditorialAuditEvent({
+    editorialItemId: data.id,
+    actorEmail: user.email || null,
+    eventType: "draft_created",
+    fromStatus: null,
+    toStatus: "draft",
+    note: `Rascunho criado a partir da submissão ${intake.id} em ${now}.`,
+  });
 
   revalidatePath("/interno/editorial");
   revalidatePath(`/interno/editorial/${data.id}`);
@@ -101,13 +155,56 @@ export async function saveEditorialItemAction(
   const coverImageUrl = normalize(formData.get("cover_image_url"));
   const sourceVisibilityNote = normalize(formData.get("source_visibility_note"));
   const editorialStatus = normalize(formData.get("editorial_status"));
+  const reviewStatus = normalize(formData.get("review_status"));
+  const publicationReason = normalize(formData.get("publication_reason"));
+  const factCheckNote = normalize(formData.get("fact_check_note"));
+  const archivedReason = normalize(formData.get("archived_reason"));
   const featured = toBool(formData.get("featured"));
-  const published = toBool(formData.get("published")) || editorialStatus === "published";
+  const sensitivityCheckPassed = toBool(formData.get("sensitivity_check_passed"));
+  const published = editorialStatus === "published";
 
-  if (!id || !title || !slugInput || !excerpt || !body || !category || !editorialStatus) {
+  if (!id || !title || !slugInput || !excerpt || !body || !category || !editorialStatus || !reviewStatus) {
     return {
       ok: false,
       message: "Preencha os campos editoriais obrigatórios.",
+    };
+  }
+
+  if (published) {
+    const missingChecklist = validatePublishingChecklist(formData);
+    if (!publicationReason || !factCheckNote || !sensitivityCheckPassed || missingChecklist.length > 0) {
+      const pieces = [];
+      if (!publicationReason) {
+        pieces.push("motivo curto de publicação");
+      }
+      if (!factCheckNote) {
+        pieces.push("nota de checagem");
+      }
+      if (!sensitivityCheckPassed) {
+        pieces.push("confirmação de sigilo");
+      }
+      if (missingChecklist.length > 0) {
+        pieces.push(formatChecklistMessage(missingChecklist));
+      }
+
+      return {
+        ok: false,
+        message: `Antes de publicar, conclua: ${pieces.join("; ")}.`,
+      };
+    }
+
+    if (reviewStatus !== "reviewed") {
+      return {
+        ok: false,
+        message: "Para publicar, marque o item como revisado.",
+      };
+    }
+  }
+
+  if (editorialStatus === "archived" && !archivedReason) {
+    return {
+      ok: false,
+      message: "Explique por que o item foi arquivado.",
     };
   }
 
@@ -122,10 +219,23 @@ export async function saveEditorialItemAction(
   }
 
   const current = await getInternalEditorialById(id);
+  if (!current) {
+    return {
+      ok: false,
+      message: "Item editorial não encontrado.",
+    };
+  }
 
-  const publishedAt = published
-    ? current?.published_at ?? new Date().toISOString()
-    : null;
+  const now = new Date().toISOString();
+  const publishedAt = published ? current.published_at ?? now : current.published_at;
+  const publishedBy = published ? user.email || current.published_by : current.published_by;
+  const auditEventType = resolveEditorialAuditEventType(current.editorial_status, editorialStatus);
+  const auditNote =
+    editorialStatus === "published"
+      ? publicationReason || "Publicado após checklist editorial."
+      : editorialStatus === "archived"
+        ? archivedReason || "Arquivado."
+        : publicationReason || factCheckNote || "Atualização editorial.";
 
   const { error } = await supabase
     .from("editorial_items")
@@ -138,11 +248,19 @@ export async function saveEditorialItemAction(
       neighborhood: neighborhood || null,
       cover_image_url: coverImageUrl || null,
       editorial_status: editorialStatus,
+      review_status: reviewStatus,
       featured,
       published,
       published_at: publishedAt,
+      publication_reason: publicationReason || null,
+      sensitivity_check_passed: sensitivityCheckPassed,
+      fact_check_note: factCheckNote || null,
+      last_reviewed_at: now,
+      last_reviewed_by: user.email || null,
+      published_by: publishedBy,
+      archived_reason: editorialStatus === "archived" ? archivedReason || null : null,
       source_visibility_note: sourceVisibilityNote || null,
-      updated_at: new Date().toISOString(),
+      updated_at: now,
       updated_by: user.email || null,
     })
     .eq("id", id);
@@ -155,6 +273,15 @@ export async function saveEditorialItemAction(
     };
   }
 
+  await recordEditorialAuditEvent({
+    editorialItemId: id,
+    actorEmail: user.email || null,
+    eventType: auditEventType,
+    fromStatus: current.editorial_status,
+    toStatus: editorialStatus,
+    note: auditNote,
+  });
+
   revalidatePath("/interno/editorial");
   revalidatePath(`/interno/editorial/${id}`);
   revalidatePath("/pautas");
@@ -162,8 +289,13 @@ export async function saveEditorialItemAction(
 
   return {
     ok: true,
-    message: published
-      ? "Item salvo e marcado para publicação."
-      : "Item salvo como rascunho interno.",
+    message:
+      editorialStatus === "published"
+        ? "Item salvo e publicado após checklist editorial."
+        : editorialStatus === "archived"
+          ? "Item salvo e arquivado."
+          : editorialStatus === "in_review"
+            ? "Item salvo e enviado para revisão."
+            : "Item salvo com segurança editorial.",
   };
 }

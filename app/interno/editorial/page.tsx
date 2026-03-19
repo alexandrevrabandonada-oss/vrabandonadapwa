@@ -4,14 +4,14 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { signOutAction } from "@/app/interno/actions";
 import { getInternalEditorialItems } from "@/lib/editorial/queries";
-import { editorialStatusLabels, type EditorialStatus } from "@/lib/editorial/types";
+import { editorialReviewStatusLabels, editorialStatusLabels, type EditorialReviewStatus, type EditorialStatus } from "@/lib/editorial/types";
 
 export const metadata: Metadata = {
   title: "Editorial",
   description: "Fila de itens editoriais públicos e rascunhos internos.",
 };
 
-const filters = ["all", "draft", "ready", "published", "archived"] as const;
+const filters = ["all", "draft", "in_review", "ready", "published", "archived"] as const;
 
 type FilterValue = (typeof filters)[number];
 
@@ -35,7 +35,7 @@ export default async function InternalEditorialPage({ searchParams }: PageProps)
         <p className="eyebrow">editorial interno</p>
         <h1 className="hero__title">Arquivo público</h1>
         <p className="hero__lead">
-          Rascunhos, versões prontas e itens publicados em fila editorial.
+          Rascunhos, revisões e itens publicados em fila editorial.
         </p>
         <div className="hero__actions">
           <form action={signOutAction}>
@@ -77,6 +77,7 @@ export default async function InternalEditorialPage({ searchParams }: PageProps)
                 <p>{item.excerpt}</p>
                 <div className="meta-row">
                   <span>{editorialStatusLabels[item.editorial_status as EditorialStatus] ?? item.editorial_status}</span>
+                  <span>{editorialReviewStatusLabels[item.review_status as EditorialReviewStatus] ?? item.review_status}</span>
                   <span>{item.published ? "Publicado" : "Não publicado"}</span>
                 </div>
                 <Link href={`/interno/editorial/${item.id}`} className="button-secondary">
