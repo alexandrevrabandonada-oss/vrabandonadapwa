@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { recordEditorialAuditEvent, resolveEditorialAuditEventType } from "@/lib/editorial/audit";
 import { buildEditorialSlug, slugifyEditorialValue } from "@/lib/editorial/utils";
 import { getEditorialByIntakeId, getInternalEditorialById } from "@/lib/editorial/queries";
+import { getEditorialSeriesBySlug, suggestEditorialSeriesByCategory } from "@/lib/editorial/taxonomy";
+import { editorialCoverVariants } from "@/lib/editorial/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type EditorialActionState = {
@@ -19,6 +21,22 @@ function normalize(value: FormDataEntryValue | null) {
 
 function toBool(value: FormDataEntryValue | null) {
   return value === "on";
+}
+
+function parseNumber(value: string, fallback: number | null = null) {
+  if (!value) {
+    return fallback;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? fallback : parsed;
+}
+
+function parseTags(value: string) {
+  return value
+    .split(/[\n,]/)
+    .map((tag) => slugifyEditorialValue(tag))
+    .filter(Boolean);
 }
 
 function formatChecklistMessage(missing: string[]) {
@@ -88,6 +106,8 @@ export async function createEditorialDraftFromIntakeAction(formData: FormData) {
   const title = intake.safe_public_summary?.trim() || intake.title;
   const slug = buildEditorialSlug(title, intake.id.slice(0, 6));
   const now = new Date().toISOString();
+  const suggestedSeries = suggestEditorialSeriesByCategory(intake.category);
+  const primaryTag = slugifyEditorialValue(intake.category);
 
   const { data, error: insertError } = await supabase
     .from("editorial_items")
@@ -102,6 +122,13 @@ export async function createEditorialDraftFromIntakeAction(formData: FormData) {
         ? `${intake.safe_public_summary.trim()}\n\nRascunho inicial criado a partir da triagem interna.`
         : "Rascunho em construção. Sanitizar, reescrever e contextualizar antes de publicar.",
       category: intake.category,
+      primary_tag: primaryTag || null,
+      secondary_tags: primaryTag ? [primaryTag] : [],
+      series_slug: suggestedSeries?.slug ?? null,
+      series_title: suggestedSeries?.title ?? null,
+      reading_time: 5,
+      featured_order: null,
+      cover_variant: suggestedSeries?.coverVariant ?? "concrete",
       neighborhood: intake.location || null,
       cover_image_url: null,
       published: false,
@@ -151,6 +178,13 @@ export async function saveEditorialItemAction(
   const excerpt = normalize(formData.get("excerpt"));
   const body = normalize(formData.get("body"));
   const category = normalize(formData.get("category"));
+  const primaryTag = normalize(formData.get("primary_tag"));
+  const secondaryTagsInput = normalize(formData.get("secondary_tags"));
+  const seriesSlugInput = normalize(formData.get("series_slug"));
+  const seriesTitleInput = normalize(formData.get("series_title"));
+  const coverVariantInput = normalize(formData.get("cover_variant"));
+  const readingTimeInput = normalize(formData.get("reading_time"));
+  const featuredOrderInput = normalize(formData.get("featured_order"));
   const neighborhood = normalize(formData.get("neighborhood"));
   const coverImageUrl = normalize(formData.get("cover_image_url"));
   const sourceVisibilityNote = normalize(formData.get("source_visibility_note"));
@@ -162,6 +196,15 @@ export async function saveEditorialItemAction(
   const featured = toBool(formData.get("featured"));
   const sensitivityCheckPassed = toBool(formData.get("sensitivity_check_passed"));
   const published = editorialStatus === "published";
+  const readingTime = parseNumber(readingTimeInput, 5) ?? 5;
+  const featuredOrder = parseNumber(featuredOrderInput, null);
+  const coverVariant = editorialCoverVariants.includes(coverVariantInput as (typeof editorialCoverVariants)[number])
+    ? coverVariantInput
+    : "concrete";
+  const secondaryTags = parseTags(secondaryTagsInput);
+  const normalizedSeries = seriesSlugInput ? getEditorialSeriesBySlug(seriesSlugInput) : null;
+  const seriesSlug = normalizedSeries?.slug ?? (seriesSlugInput || null);
+  const seriesTitle = normalizedSeries?.title ?? (seriesTitleInput || null);
 
   if (!id || !title || !slugInput || !excerpt || !body || !category || !editorialStatus || !reviewStatus) {
     return {
@@ -245,6 +288,13 @@ export async function saveEditorialItemAction(
       excerpt,
       body,
       category,
+      primary_tag: primaryTag || null,
+      secondary_tags: secondaryTags,
+      series_slug: seriesSlug,
+      series_title: seriesTitle,
+      reading_time: readingTime,
+      featured_order: featuredOrder,
+      cover_variant: coverVariant,
       neighborhood: neighborhood || null,
       cover_image_url: coverImageUrl || null,
       editorial_status: editorialStatus,
@@ -286,6 +336,12 @@ export async function saveEditorialItemAction(
   revalidatePath(`/interno/editorial/${id}`);
   revalidatePath("/pautas");
   revalidatePath(`/pautas/${slugifyEditorialValue(slugInput)}`);
+  if (seriesSlug) {
+    revalidatePath(`/series/${seriesSlug}`);
+  }
+  if (current.series_slug && current.series_slug !== seriesSlug) {
+    revalidatePath(`/series/${current.series_slug}`);
+  }
 
   return {
     ok: true,
@@ -299,3 +355,6 @@ export async function saveEditorialItemAction(
             : "Item salvo com segurança editorial.",
   };
 }
+
+
+

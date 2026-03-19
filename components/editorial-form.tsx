@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { saveEditorialItemAction } from "@/app/interno/editorial/actions";
 import {
+  editorialCoverVariants,
   editorialReviewStatuses,
   editorialStatuses,
   type EditorialItem,
@@ -44,6 +45,82 @@ export function EditorialForm({ item }: Props) {
         </label>
 
         <label className="field">
+          <span>Tag principal</span>
+          <input name="primary_tag" type="text" defaultValue={item.primary_tag ?? ""} placeholder="transporte, memória, poluição..." />
+        </label>
+      </div>
+
+      <label className="field">
+        <span>Tags secundárias</span>
+        <textarea
+          name="secondary_tags"
+          rows={2}
+          defaultValue={item.secondary_tags.join(", ")}
+          placeholder="Separe por vírgulas ou quebras de linha"
+        />
+      </label>
+
+      <div className="grid-2">
+        <label className="field">
+          <span>Série slug</span>
+          <input name="series_slug" type="text" defaultValue={item.series_slug ?? ""} placeholder="cidade-e-abandono" />
+        </label>
+
+        <label className="field">
+          <span>Título da série</span>
+          <input name="series_title" type="text" defaultValue={item.series_title ?? ""} placeholder="Cidade e abandono" />
+        </label>
+      </div>
+
+      <div className="grid-2">
+        <label className="field">
+          <span>Tempo de leitura</span>
+          <input name="reading_time" type="number" min={1} step={1} defaultValue={item.reading_time || 5} required />
+        </label>
+
+        <label className="field">
+          <span>Ordem de destaque</span>
+          <input name="featured_order" type="number" min={1} step={1} defaultValue={item.featured_order ?? ""} placeholder="1, 2, 3..." />
+        </label>
+      </div>
+
+      <div className="grid-2">
+        <label className="field">
+          <span>Cor da capa</span>
+          <select name="cover_variant" defaultValue={item.cover_variant || "concrete"}>
+            {editorialCoverVariants.map((variant) => (
+              <option key={variant} value={variant}>
+                {variant}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="field">
+          <span>Status editorial</span>
+          <select name="editorial_status" defaultValue={item.editorial_status} required>
+            {editorialStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div className="grid-2">
+        <label className="field">
+          <span>Status de revisão</span>
+          <select name="review_status" defaultValue={item.review_status} required>
+            {editorialReviewStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="field">
           <span>Bairro / território</span>
           <input name="neighborhood" type="text" defaultValue={item.neighborhood ?? ""} />
         </label>
@@ -58,30 +135,6 @@ export function EditorialForm({ item }: Props) {
         <span>Corpo</span>
         <textarea name="body" rows={10} defaultValue={item.body} required />
       </label>
-
-      <div className="grid-2">
-        <label className="field">
-          <span>Status editorial</span>
-          <select name="editorial_status" defaultValue={item.editorial_status} required>
-            {editorialStatuses.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="field">
-          <span>Status de revisão</span>
-          <select name="review_status" defaultValue={item.review_status} required>
-            {editorialReviewStatuses.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
 
       <label className="field">
         <span>Motivo de publicação</span>

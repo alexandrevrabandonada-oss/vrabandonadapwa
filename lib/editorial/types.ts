@@ -15,6 +15,9 @@ export const editorialAuditEventTypes = [
 ] as const;
 export type EditorialAuditEventType = (typeof editorialAuditEventTypes)[number];
 
+export const editorialCoverVariants = ["steel", "ember", "concrete", "night"] as const;
+export type EditorialCoverVariant = (typeof editorialCoverVariants)[number];
+
 export type EditorialItem = {
   id: string;
   intake_submission_id: string | null;
@@ -23,6 +26,13 @@ export type EditorialItem = {
   excerpt: string;
   body: string;
   category: string;
+  primary_tag: string | null;
+  secondary_tags: string[];
+  series_slug: string | null;
+  series_title: string | null;
+  reading_time: number;
+  featured_order: number | null;
+  cover_variant: EditorialCoverVariant | string;
   neighborhood: string | null;
   cover_image_url: string | null;
   published: boolean;
@@ -53,6 +63,14 @@ export type EditorialAuditLogEntry = {
   to_status: string | null;
   note: string | null;
   created_at: string;
+};
+
+export type EditorialSeries = {
+  slug: string;
+  title: string;
+  description: string;
+  axis: string;
+  coverVariant: EditorialCoverVariant;
 };
 
 export const editorialStatusLabels: Record<EditorialStatus, string> = {

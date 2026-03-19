@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { EditorialCard } from "@/components/editorial-card";
+import { EditorialHero } from "@/components/editorial-hero";
 import { Container } from "@/components/container";
-import { PageHero } from "@/components/page-hero";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
-import { editorialStatusLabels, type EditorialStatus } from "@/lib/editorial/types";
+import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,41 +15,65 @@ export const metadata: Metadata = {
 
 export default async function PautasPage() {
   const items = await getPublishedEditorialItems();
+  const featuredItem = items[0];
+  const secondaryItems = items.slice(1);
+  const seriesCards = getEditorialSeriesCards(items);
 
   return (
     <Container className="intro-grid">
-      <PageHero
-        kicker="pautas"
-        title="Arquivo editorial da cidade."
-        lead="A pauta pública nasce da triagem interna, passa por sanitização e só aparece aqui quando está marcada como publicada."
-      />
+      {featuredItem ? <EditorialHero item={featuredItem} /> : null}
 
       <section className="section">
         <div className="grid-2">
           <div>
-            <p className="eyebrow">o que aparece aqui</p>
-            <h2>Itens publicados, não dados brutos.</h2>
+            <p className="eyebrow">séries</p>
+            <h2>Linhas de investigação em curso.</h2>
           </div>
           <p className="section__lead">
-            O material exibido foi derivado da camada interna e limpo para o público.
-            Se não houver publicação real, a base mostra peças editoriais iniciais do projeto.
+            A navegação pública agora parte de séries editoriais, não só de uma sequência cronológica.
+          </p>
+        </div>
+
+        <div className="series-grid">
+          {seriesCards.map((series) => (
+            <article className="series-card" key={series.slug}>
+              <div className={`series-card__cover editorial-cover editorial-cover--${series.coverVariant}`}>
+                <div className="editorial-cover__glow" />
+                <div className="editorial-cover__copy">
+                  <span>Série</span>
+                  <strong>{series.title}</strong>
+                </div>
+              </div>
+              <div className="series-card__body">
+                <p className="eyebrow">{series.axis}</p>
+                <h3>{series.title}</h3>
+                <p>{series.description}</p>
+                <p className="series-card__count">
+                  {series.items.length} pauta{series.items.length === 1 ? "" : "s"}
+                </p>
+                <Link href={`/series/${series.slug}`} className="button-secondary">
+                  Ver série
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">pautas recentes</p>
+            <h2>Leituras para continuar a investigação.</h2>
+          </div>
+          <p className="section__lead">
+            Se a pauta não for destaque, ela entra aqui como parte de uma linha maior, com tag, série e tempo de leitura.
           </p>
         </div>
 
         <div className="grid-3">
-          {items.map((item) => (
-            <article className="entry editorial-card" key={item.id}>
-              <span className="entry__tag">{item.featured ? "Destaque" : item.category}</span>
-              <h3>{item.title}</h3>
-              <p>{item.excerpt}</p>
-              <div className="meta-row">
-                <span>{item.neighborhood || "Volta Redonda"}</span>
-                <span>{editorialStatusLabels[item.editorial_status as EditorialStatus] ?? item.editorial_status}</span>
-              </div>
-              <Link href={`/pautas/${item.slug}`} className="button-secondary">
-                Ler pauta
-              </Link>
-            </article>
+          {secondaryItems.map((item) => (
+            <EditorialCard key={item.id} item={item} href={`/pautas/${item.slug}`} compact />
           ))}
         </div>
       </section>

@@ -54,11 +54,16 @@ export default async function InternalEditorialDetailPage({ params }: PageProps)
       <section className="section internal-panel">
         <div className="grid-2">
           <article className="support-box">
-            <h3>Origem</h3>
+            <h3>Origem e taxonomia</h3>
             <ul>
               <li>Intake: {item.intake_submission_id || "não vinculado"}</li>
               <li>Slug: {item.slug}</li>
               <li>Categoria: {item.category}</li>
+              <li>Tag principal: {item.primary_tag || "não informada"}</li>
+              <li>Série: {item.series_title || item.series_slug || "não vinculada"}</li>
+              <li>Tempo de leitura: {item.reading_time} min</li>
+              <li>Ordem de destaque: {item.featured_order ?? "não definida"}</li>
+              <li>Cor da capa: {item.cover_variant}</li>
               <li>Bairro: {item.neighborhood || "não informado"}</li>
               <li>Destaque: {item.featured ? "sim" : "não"}</li>
             </ul>
