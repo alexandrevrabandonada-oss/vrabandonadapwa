@@ -8,6 +8,11 @@ const publicFields =
 
 export async function getPublishedEditorialItems() {
   const supabase = createSupabasePublicClient();
+
+  if (!supabase) {
+    return editorialMockItems;
+  }
+
   const { data, error } = await supabase
     .from("editorial_items")
     .select(publicFields)
@@ -25,6 +30,11 @@ export async function getPublishedEditorialItems() {
 
 export async function getPublishedEditorialBySlug(slug: string) {
   const supabase = createSupabasePublicClient();
+
+  if (!supabase) {
+    return editorialMockItems.find((item) => item.slug === slug) ?? null;
+  }
+
   const { data, error } = await supabase
     .from("editorial_items")
     .select(publicFields)
