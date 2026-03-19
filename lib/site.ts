@@ -17,10 +17,10 @@ export const site = {
     kicker: "arquivo vivo da cidade operária",
     title: "Volta Redonda não é cenário. É disputa.",
     lead:
-      "VR Abandonada existe para registrar o que tentam apagar: memória da cidade, abandono urbano, denúncias públicas e organização popular com método, contexto e responsabilidade.",
+      "VR Abandonada documenta o que tentam apagar: memória da cidade, abandono urbano, denúncias públicas e organização popular com método, contexto e responsabilidade.",
     ctas: [
       { href: "/envie", label: "Enviar denúncia" },
-      { href: "/manifesto", label: "Ler manifesto" },
+      { href: "/pautas", label: "Ler pautas" },
     ],
   },
   principles: [
@@ -39,20 +39,20 @@ export const site = {
   ],
   editorialAxes: [
     {
-      title: "Memória operária",
-      text: "Arquivo de relatos, imagens e marcos da formação industrial e popular de Volta Redonda.",
+      title: "Poluição e CSN",
+      text: "Ambiente, ar, água e os efeitos da indústria sobre a vida concreta da cidade.",
+    },
+    {
+      title: "Trabalho e acidentes",
+      text: "Risco, desgaste, rotina laboral e o preço da produção na cidade operária.",
     },
     {
       title: "Cidade e abandono",
       text: "Infraestrutura, transporte, saúde, educação, saneamento e o que falha no cotidiano.",
     },
     {
-      title: "Apuração pública",
-      text: "Pautas, indícios, dados, documentos e relatos cruzados antes de qualquer publicação.",
-    },
-    {
-      title: "Rede de apoio",
-      text: "Canalizar ajuda, colaboração, denúncias e parcerias de forma clara e segura.",
+      title: "Memória de Volta Redonda",
+      text: "Relatos, imagens e marcos da cidade para impedir que a história vire apagamento.",
     },
   ],
   featuredPautas: [
