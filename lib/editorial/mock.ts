@@ -20,6 +20,7 @@ export const editorialMockItems: EditorialItem[] = [
     cover_variant: "ember",
     neighborhood: "Centro e bairros conectados",
     cover_image_url: null,
+    cover_image_path: null,
     published: true,
     published_at: "2026-03-19T12:00:00.000Z",
     editorial_status: "published",
@@ -57,6 +58,7 @@ export const editorialMockItems: EditorialItem[] = [
     cover_variant: "steel",
     neighborhood: "Vila Santa Cecília",
     cover_image_url: null,
+    cover_image_path: null,
     published: true,
     published_at: "2026-03-19T12:00:00.000Z",
     editorial_status: "published",
@@ -94,6 +96,7 @@ export const editorialMockItems: EditorialItem[] = [
     cover_variant: "concrete",
     neighborhood: "Aterrado",
     cover_image_url: null,
+    cover_image_path: null,
     published: true,
     published_at: "2026-03-19T12:00:00.000Z",
     editorial_status: "published",
@@ -131,6 +134,7 @@ export const editorialMockItems: EditorialItem[] = [
     cover_variant: "night",
     neighborhood: "Volta Grande",
     cover_image_url: null,
+    cover_image_path: null,
     published: true,
     published_at: "2026-03-19T12:00:00.000Z",
     editorial_status: "published",
@@ -150,3 +154,5 @@ export const editorialMockItems: EditorialItem[] = [
     updated_by: null,
   },
 ];
+
+

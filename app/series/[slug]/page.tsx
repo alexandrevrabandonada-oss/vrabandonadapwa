@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { EditorialCard } from "@/components/editorial-card";
+import { EditorialCover } from "@/components/editorial-cover";
 import { Container } from "@/components/container";
 import { getPublishedEditorialItemsBySeries } from "@/lib/editorial/queries";
+import { getSeriesOpenGraphImagePath } from "@/lib/editorial/share";
 import { editorialSeriesCatalog, getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
 
 export async function generateStaticParams() {
@@ -29,6 +31,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: series.title,
     description: series.description,
+    openGraph: {
+      title: series.title,
+      description: series.description,
+      type: "website",
+      images: [series.coverImageUrl ?? getSeriesOpenGraphImagePath(series.slug)],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: series.title,
+      description: series.description,
+      images: [series.coverImageUrl ?? getSeriesOpenGraphImagePath(series.slug)],
+    },
   };
 }
 
@@ -54,13 +68,13 @@ export default async function SeriesPage({ params }: PageProps) {
             <span>{items.length} pauta{items.length === 1 ? "" : "s"}</span>
           </div>
         </div>
-        <div className={`editorial-cover editorial-cover--${series.coverVariant}`}>
-          <div className="editorial-cover__glow" />
-          <div className="editorial-cover__copy">
-            <span>Série</span>
-            <strong>{series.title}</strong>
-          </div>
-        </div>
+        <EditorialCover
+          title={series.title}
+          primaryTag="Série"
+          seriesTitle={series.title}
+          coverImageUrl={series.coverImageUrl ?? null}
+          coverVariant={series.coverVariant}
+        />
       </section>
 
       <section className="section">

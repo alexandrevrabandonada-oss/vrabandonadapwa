@@ -620,3 +620,39 @@ button, input, textarea, select { font: inherit; }
     grid-template-columns: 1fr;
   }
 }
+.hero--split {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  align-items: stretch;
+}
+
+.hero--split .hero__copy {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.cover-preview {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+}
+
+.cover-preview__image {
+  width: 100%;
+  max-height: 16rem;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.editorial-share-frame {
+  display: grid;
+  gap: 0.8rem;
+}
+
+@media (max-width: 920px) {
+  .hero--split {
+    grid-template-columns: 1fr;
+  }
+}

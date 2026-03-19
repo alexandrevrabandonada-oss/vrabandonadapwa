@@ -7,6 +7,7 @@ import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { Container } from "@/components/container";
 import { getPublishedEditorialBySlug, getPublishedEditorialItems } from "@/lib/editorial/queries";
+import { getEditorialOpenGraphImagePath } from "@/lib/editorial/share";
 import { getEditorialSeriesByItem } from "@/lib/editorial/taxonomy";
 import { getNextEditorialItem, getRelatedEditorialItems } from "@/lib/editorial/navigation";
 import { editorialStatusLabels, type EditorialStatus } from "@/lib/editorial/types";
@@ -34,6 +35,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: item.title,
     description: item.excerpt,
+    openGraph: {
+      title: item.title,
+      description: item.excerpt,
+      type: "article",
+      images: [item.cover_image_url || getEditorialOpenGraphImagePath(item.slug)],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: item.title,
+      description: item.excerpt,
+      images: [item.cover_image_url || getEditorialOpenGraphImagePath(item.slug)],
+    },
   };
 }
 

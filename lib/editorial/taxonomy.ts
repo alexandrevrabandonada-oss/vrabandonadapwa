@@ -22,6 +22,7 @@ export function getEditorialSeriesByItem(item: EditorialItem) {
     description: "Série editorial do arquivo vivo.",
     axis: item.category,
     coverVariant: "concrete",
+    coverImageUrl: null,
   } satisfies EditorialSeries;
 }
 

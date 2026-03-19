@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { EditorialCover } from "@/components/editorial-cover";
 import { createEditorialDraftFromIntakeAction } from "@/app/interno/editorial/actions";
 import { IntakeTriageForm } from "@/components/intake-triage-form";
 import { signOutAction } from "@/app/interno/actions";
@@ -98,14 +99,26 @@ export default async function IntakeDetailPage({ params }: PageProps) {
         </div>
 
         {editorial ? (
-          <div className="support-box">
-            <h3>{editorial.title}</h3>
-            <p>{editorial.excerpt}</p>
-            <div className="stack-actions">
-              <Link href={`/interno/editorial/${editorial.id}`} className="button-secondary">
-                Abrir item editorial
-              </Link>
-            </div>
+          <div className="grid-2">
+            <article className="support-box">
+              <h3>{editorial.title}</h3>
+              <p>{editorial.excerpt}</p>
+              <div className="stack-actions">
+                <Link href={`/interno/editorial/${editorial.id}`} className="button-secondary">
+                  Abrir item editorial
+                </Link>
+              </div>
+            </article>
+            <article className="support-box">
+              <h3>Prévia pública</h3>
+              <EditorialCover
+                title={editorial.title}
+                primaryTag={editorial.primary_tag ?? editorial.category}
+                seriesTitle={editorial.series_title}
+                coverImageUrl={editorial.cover_image_url}
+                coverVariant={editorial.cover_variant}
+              />
+            </article>
           </div>
         ) : (
           <form action={createEditorialDraftFromIntakeAction}>

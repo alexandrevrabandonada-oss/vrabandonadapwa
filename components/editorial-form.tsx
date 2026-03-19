@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useActionState } from "react";
@@ -17,13 +18,10 @@ type Props = {
 const initialState = { ok: false, message: "" };
 
 export function EditorialForm({ item }: Props) {
-  const [state, formAction, pending] = useActionState(
-    saveEditorialItemAction,
-    initialState,
-  );
+  const [state, formAction, pending] = useActionState(saveEditorialItemAction, initialState);
 
   return (
-    <form className="intake-form" action={formAction}>
+    <form className="intake-form" action={formAction} encType="multipart/form-data">
       <input type="hidden" name="id" value={item.id} />
 
       <div className="grid-2">
@@ -136,6 +134,38 @@ export function EditorialForm({ item }: Props) {
         <textarea name="body" rows={10} defaultValue={item.body} required />
       </label>
 
+      <div className="grid-2">
+        <label className="field">
+          <span>Capa atual / URL da capa</span>
+          <input
+            name="cover_image_url"
+            type="url"
+            defaultValue={item.cover_image_url ?? ""}
+            placeholder="https://..."
+          />
+        </label>
+
+        <label className="field">
+          <span>Enviar nova capa</span>
+          <input name="cover_image_file" type="file" accept="image/*" />
+        </label>
+      </div>
+
+      <div className="support-box">
+        <label className="check">
+          <input name="cover_image_clear" type="checkbox" />
+          <span>Remover capa atual</span>
+        </label>
+        {item.cover_image_url ? (
+          <div className="cover-preview">
+            <img src={item.cover_image_url} alt={`Prévia da capa de ${item.title}`} className="cover-preview__image" />
+            <p className="form-status">Capa atual carregada. Se enviar outra imagem ou escolher remover, a anterior sai de cena.</p>
+          </div>
+        ) : (
+          <p className="form-status">Sem capa real. O fallback editorial usa a variante visual escolhida.</p>
+        )}
+      </div>
+
       <label className="field">
         <span>Motivo de publicação</span>
         <textarea
@@ -168,22 +198,21 @@ export function EditorialForm({ item }: Props) {
 
       <div className="grid-2">
         <label className="field">
-          <span>Imagem de capa</span>
-          <input
-            name="cover_image_url"
-            type="url"
-            defaultValue={item.cover_image_url ?? ""}
-            placeholder="https://..."
-          />
-        </label>
-
-        <label className="field">
           <span>Arquivo / observação</span>
           <input
             name="archived_reason"
             type="text"
             defaultValue={item.archived_reason ?? ""}
             placeholder="Use quando o item for arquivado."
+          />
+        </label>
+
+        <label className="field">
+          <span>Atualização visual</span>
+          <input
+            type="text"
+            value={item.cover_image_path ? "Armazenada no Supabase" : "Fallback visual"}
+            readOnly
           />
         </label>
       </div>
@@ -231,3 +260,6 @@ export function EditorialForm({ item }: Props) {
     </form>
   );
 }
+
+
+

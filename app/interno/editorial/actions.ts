@@ -8,6 +8,7 @@ import { buildEditorialSlug, slugifyEditorialValue } from "@/lib/editorial/utils
 import { getEditorialByIntakeId, getInternalEditorialById } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug, suggestEditorialSeriesByCategory } from "@/lib/editorial/taxonomy";
 import { editorialCoverVariants } from "@/lib/editorial/types";
+import { removeEditorialCover, uploadEditorialCover } from "@/lib/media/editorial";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type EditorialActionState = {
@@ -73,6 +74,52 @@ function validatePublishingChecklist(formData: FormData) {
   return missing;
 }
 
+function getUploadedFile(value: FormDataEntryValue | null) {
+  return value instanceof File && value.size > 0 ? value : null;
+}
+
+async function applyCoverUpdate(params: {
+  itemId: string;
+  currentPath: string | null;
+  currentUrl: string | null;
+  formData: FormData;
+}) {
+  const coverImageFile = getUploadedFile(params.formData.get("cover_image_file"));
+  const coverImageUrlInput = normalize(params.formData.get("cover_image_url"));
+  const coverImageClear = toBool(params.formData.get("cover_image_clear"));
+
+  if (coverImageClear) {
+    if (params.currentPath) {
+      await removeEditorialCover(params.currentPath);
+    }
+
+    return { cover_image_url: null, cover_image_path: null };
+  }
+
+  if (coverImageFile) {
+    const uploaded = await uploadEditorialCover(coverImageFile, params.itemId);
+
+    if (params.currentPath && params.currentPath !== uploaded.path) {
+      await removeEditorialCover(params.currentPath);
+    }
+
+    return { cover_image_url: uploaded.url, cover_image_path: uploaded.path };
+  }
+
+  if (coverImageUrlInput && coverImageUrlInput !== params.currentUrl) {
+    if (params.currentPath) {
+      await removeEditorialCover(params.currentPath);
+    }
+
+    return { cover_image_url: coverImageUrlInput, cover_image_path: null };
+  }
+
+  return {
+    cover_image_url: params.currentUrl,
+    cover_image_path: params.currentPath,
+  };
+}
+
 export async function createEditorialDraftFromIntakeAction(formData: FormData) {
   const intakeId = normalize(formData.get("intake_submission_id"));
   if (!intakeId) {
@@ -131,6 +178,7 @@ export async function createEditorialDraftFromIntakeAction(formData: FormData) {
       cover_variant: suggestedSeries?.coverVariant ?? "concrete",
       neighborhood: intake.location || null,
       cover_image_url: null,
+      cover_image_path: null,
       published: false,
       published_at: null,
       editorial_status: "draft",
@@ -186,7 +234,6 @@ export async function saveEditorialItemAction(
   const readingTimeInput = normalize(formData.get("reading_time"));
   const featuredOrderInput = normalize(formData.get("featured_order"));
   const neighborhood = normalize(formData.get("neighborhood"));
-  const coverImageUrl = normalize(formData.get("cover_image_url"));
   const sourceVisibilityNote = normalize(formData.get("source_visibility_note"));
   const editorialStatus = normalize(formData.get("editorial_status"));
   const reviewStatus = normalize(formData.get("review_status"));
@@ -269,6 +316,27 @@ export async function saveEditorialItemAction(
     };
   }
 
+  let coverImageUrl = current.cover_image_url;
+  let coverImagePath = current.cover_image_path;
+
+  try {
+    const coverUpdate = await applyCoverUpdate({
+      itemId: id,
+      currentPath: current.cover_image_path,
+      currentUrl: current.cover_image_url,
+      formData,
+    });
+
+    coverImageUrl = coverUpdate.cover_image_url;
+    coverImagePath = coverUpdate.cover_image_path;
+  } catch (coverError) {
+    console.error("Failed to update editorial cover", coverError);
+    return {
+      ok: false,
+      message: "Não foi possível atualizar a capa agora.",
+    };
+  }
+
   const now = new Date().toISOString();
   const publishedAt = published ? current.published_at ?? now : current.published_at;
   const publishedBy = published ? user.email || current.published_by : current.published_by;
@@ -296,7 +364,8 @@ export async function saveEditorialItemAction(
       featured_order: featuredOrder,
       cover_variant: coverVariant,
       neighborhood: neighborhood || null,
-      cover_image_url: coverImageUrl || null,
+      cover_image_url: coverImageUrl,
+      cover_image_path: coverImagePath,
       editorial_status: editorialStatus,
       review_status: reviewStatus,
       featured,
@@ -355,6 +424,4 @@ export async function saveEditorialItemAction(
             : "Item salvo com segurança editorial.",
   };
 }
-
-
 

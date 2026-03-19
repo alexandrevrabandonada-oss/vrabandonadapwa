@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialForm } from "@/components/editorial-form";
 import { signOutAction } from "@/app/interno/actions";
 import { getEditorialAuditLog, getInternalEditorialById } from "@/lib/editorial/queries";
@@ -80,6 +81,27 @@ export default async function InternalEditorialDetailPage({ params }: PageProps)
               <li>Checagem sensível: {item.sensitivity_check_passed ? "aprovada" : "pendente"}</li>
               <li>Arquivo: {item.archived_reason || "não arquivado"}</li>
             </ul>
+          </article>
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <article className="support-box">
+            <h3>Capa atual</h3>
+            <EditorialCover
+              title={item.title}
+              primaryTag={item.primary_tag ?? item.category}
+              seriesTitle={item.series_title}
+              coverImageUrl={item.cover_image_url}
+              coverVariant={item.cover_variant}
+            />
+          </article>
+          <article className="support-box">
+            <h3>Mídia editorial</h3>
+            <p>
+              A imagem pode vir do Supabase Storage ou de um fallback visual. O formulário abaixo permite upload, substituição ou remoção.
+            </p>
           </article>
         </div>
       </section>

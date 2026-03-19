@@ -35,6 +35,7 @@ export type EditorialItem = {
   cover_variant: EditorialCoverVariant | string;
   neighborhood: string | null;
   cover_image_url: string | null;
+  cover_image_path: string | null;
   published: boolean;
   published_at: string | null;
   editorial_status: EditorialStatus | string;
@@ -71,6 +72,7 @@ export type EditorialSeries = {
   description: string;
   axis: string;
   coverVariant: EditorialCoverVariant;
+  coverImageUrl?: string | null;
 };
 
 export const editorialStatusLabels: Record<EditorialStatus, string> = {

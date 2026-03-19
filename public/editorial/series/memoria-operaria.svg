@@ -1,0 +1,12 @@
+<svg width="1200" height="900" viewBox="0 0 1200 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="900" fill="#111111"/>
+  <rect x="70" y="70" width="1060" height="760" rx="34" fill="#1A1A1A"/>
+  <rect x="70" y="70" width="1060" height="760" rx="34" stroke="#74706B" stroke-opacity="0.35" stroke-width="2"/>
+  <path d="M100 620H1100" stroke="#F3B21A" stroke-width="10" stroke-linecap="square"/>
+  <path d="M100 660H860" stroke="#F3EFE7" stroke-opacity="0.7" stroke-width="8" stroke-linecap="square"/>
+  <path d="M100 700H720" stroke="#F3EFE7" stroke-opacity="0.3" stroke-width="8" stroke-linecap="square"/>
+  <text x="100" y="190" fill="#F3EFE7" font-family="Arial, sans-serif" font-size="66" font-weight="700">MEMORIA OPERARIA</text>
+  <text x="100" y="260" fill="#F3B21A" font-family="Arial, sans-serif" font-size="28" letter-spacing="5">ARQUIVO VIVO</text>
+  <circle cx="930" cy="270" r="160" fill="#F3B21A" fill-opacity="0.12"/>
+  <circle cx="830" cy="260" r="90" fill="#B63F23" fill-opacity="0.15"/>
+</svg>

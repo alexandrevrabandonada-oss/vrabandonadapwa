@@ -1,29 +1,59 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
+import { EditorialCover } from "@/components/editorial-cover";
 import { Container } from "@/components/container";
 import { SupabaseStatus } from "@/components/supabase-status";
 import { site } from "@/lib/site";
+import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
+
+export const metadata: Metadata = {
+  title: site.name,
+  description: site.description,
+  openGraph: {
+    title: site.name,
+    description: site.description,
+    type: "website",
+    images: [getHomeOpenGraphImagePath()],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: site.name,
+    description: site.description,
+    images: [getHomeOpenGraphImagePath()],
+  },
+};
 
 export default function HomePage() {
   return (
     <Container className="intro-grid">
-      <section className="hero">
-        <p className="eyebrow">{site.hero.kicker}</p>
-        <h1 className="hero__title">{site.hero.title}</h1>
-        <p className="hero__lead">{site.hero.lead}</p>
-        <div className="hero__actions">
-          {site.hero.ctas.map((cta, index) =>
-            index === 0 ? (
-              <Link key={cta.href} href={cta.href} className="button">
-                {cta.label}
-              </Link>
-            ) : (
-              <Link key={cta.href} href={cta.href} className="button-secondary">
-                {cta.label}
-              </Link>
-            ),
-          )}
+      <section className="hero hero--split">
+        <div className="hero__copy">
+          <p className="eyebrow">{site.hero.kicker}</p>
+          <h1 className="hero__title">{site.hero.title}</h1>
+          <p className="hero__lead">{site.hero.lead}</p>
+          <div className="hero__actions">
+            {site.hero.ctas.map((cta, index) =>
+              index === 0 ? (
+                <Link key={cta.href} href={cta.href} className="button">
+                  {cta.label}
+                </Link>
+              ) : (
+                <Link key={cta.href} href={cta.href} className="button-secondary">
+                  {cta.label}
+                </Link>
+              ),
+            )}
+          </div>
         </div>
+
+        <EditorialCover
+          title={site.hero.title}
+          primaryTag="arquivo vivo"
+          seriesTitle="VR Abandonada"
+          coverImageUrl="/editorial/covers/arquivo-inicial.svg"
+          coverVariant="night"
+        />
       </section>
 
       <section className="section">

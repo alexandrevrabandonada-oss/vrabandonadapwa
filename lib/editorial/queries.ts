@@ -7,7 +7,7 @@ const publicFields =
   "id, title, slug, excerpt, body, category, primary_tag, secondary_tags, series_slug, series_title, reading_time, featured_order, cover_variant, neighborhood, cover_image_url, published, published_at, editorial_status, featured, created_at, updated_at";
 
 const internalFields =
-  "id, intake_submission_id, title, slug, excerpt, body, category, primary_tag, secondary_tags, series_slug, series_title, reading_time, featured_order, cover_variant, neighborhood, cover_image_url, published, published_at, editorial_status, review_status, featured, publication_reason, sensitivity_check_passed, fact_check_note, last_reviewed_at, last_reviewed_by, published_by, archived_reason, source_visibility_note, created_at, updated_at, created_by, updated_by";
+  "id, intake_submission_id, title, slug, excerpt, body, category, primary_tag, secondary_tags, series_slug, series_title, reading_time, featured_order, cover_variant, neighborhood, cover_image_url, cover_image_path, published, published_at, editorial_status, review_status, featured, publication_reason, sensitivity_check_passed, fact_check_note, last_reviewed_at, last_reviewed_by, published_by, archived_reason, source_visibility_note, created_at, updated_at, created_by, updated_by";
 
 const auditFields = "id, editorial_item_id, actor_email, event_type, from_status, to_status, note, created_at";
 

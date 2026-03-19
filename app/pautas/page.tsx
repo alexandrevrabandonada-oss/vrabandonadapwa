@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialHero } from "@/components/editorial-hero";
 import { Container } from "@/components/container";
@@ -37,13 +38,13 @@ export default async function PautasPage() {
         <div className="series-grid">
           {seriesCards.map((series) => (
             <article className="series-card" key={series.slug}>
-              <div className={`series-card__cover editorial-cover editorial-cover--${series.coverVariant}`}>
-                <div className="editorial-cover__glow" />
-                <div className="editorial-cover__copy">
-                  <span>Série</span>
-                  <strong>{series.title}</strong>
-                </div>
-              </div>
+              <EditorialCover
+                title={series.title}
+                primaryTag="Série"
+                seriesTitle={series.title}
+                coverImageUrl={series.coverImageUrl ?? null}
+                coverVariant={series.coverVariant}
+              />
               <div className="series-card__body">
                 <p className="eyebrow">{series.axis}</p>
                 <h3>{series.title}</h3>

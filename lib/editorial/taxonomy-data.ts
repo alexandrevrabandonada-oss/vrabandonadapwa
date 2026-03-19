@@ -7,6 +7,7 @@ export const editorialSeriesCatalog: EditorialSeries[] = [
     description: "Infraestrutura, transporte, saúde e as falhas que moldam o cotidiano de Volta Redonda.",
     axis: "Cidade e abandono",
     coverVariant: "concrete",
+    coverImageUrl: "/editorial/series/cidade-e-abandono.svg",
   },
   {
     slug: "memoria-operaria",
@@ -14,6 +15,7 @@ export const editorialSeriesCatalog: EditorialSeries[] = [
     description: "Relatos, imagens e marcos da formação industrial e popular da cidade.",
     axis: "Memória operária",
     coverVariant: "steel",
+    coverImageUrl: "/editorial/series/memoria-operaria.svg",
   },
   {
     slug: "poluicao-e-csn",
@@ -21,6 +23,7 @@ export const editorialSeriesCatalog: EditorialSeries[] = [
     description: "Ambiente, ar, água e os efeitos da indústria sobre a vida concreta.",
     axis: "Apuração pública",
     coverVariant: "ember",
+    coverImageUrl: "/editorial/series/poluicao-e-csn.svg",
   },
   {
     slug: "trabalho-e-acidentes",
@@ -28,5 +31,6 @@ export const editorialSeriesCatalog: EditorialSeries[] = [
     description: "Risco, desgaste, rotina laboral e o preço da produção na cidade operária.",
     axis: "Apuração pública",
     coverVariant: "night",
+    coverImageUrl: "/editorial/series/trabalho-e-acidentes.svg",
   },
 ];
