@@ -2,13 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
+import { DossierCard } from "@/components/dossier-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
+import { getPublishedDossierLinks, getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
-import { site } from "@/lib/site";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: site.name,
@@ -29,10 +31,13 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const items = await getPublishedEditorialItems();
+  const dossiers = await getPublishedDossiers();
   const featuredItem = items[0] ?? null;
   const secondaryItems = items.slice(1, 4);
   const seriesCards = getEditorialSeriesCards(items);
   const featuredSeries = seriesCards.slice(0, 4);
+  const featuredDossier = dossiers[0] ?? null;
+  const featuredDossierLinkCount = featuredDossier ? (await getPublishedDossierLinks(featuredDossier.id)).length : 0;
 
   return (
     <Container className="intro-grid landing-page">
@@ -79,8 +84,7 @@ export default async function HomePage() {
             <h2>Uma casa digital para memória, denúncia e organização popular.</h2>
           </div>
           <p className="section__lead">
-            O projeto existe para reunir arquivo, pauta e apoio numa mesma casa editorial.
-            Ele documenta o que a cidade vive, o que tentam esconder e o que precisa virar ação pública.
+            O projeto existe para reunir arquivo, pauta e apoio numa mesma casa editorial. Ele documenta o que a cidade vive, o que tentam esconder e o que precisa virar ação pública.
           </p>
         </div>
 
@@ -109,6 +113,43 @@ export default async function HomePage() {
         </section>
       ) : null}
 
+      {featuredDossier ? (
+        <section className="section home-dossier-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">Investigação em curso</p>
+              <h2>Uma linha maior para reunir documento, memória e pauta.</h2>
+            </div>
+            <p className="section__lead">
+              O dossiê organiza o arquivo como percurso. Quem entra por aqui encontra uma hipótese pública, materiais de base e desdobramentos já publicados.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            <DossierCard
+              dossier={featuredDossier}
+              href={`/dossies/${featuredDossier.slug}`}
+              itemCount={featuredDossierLinkCount}
+            />
+            <article className="support-box home-callout home-callout--accent">
+              <p className="eyebrow">por que importa</p>
+              <h3>Não é uma página solta.</h3>
+              <p>
+                O dossiê costura o caso, aponta a pergunta central e distribui a leitura entre pauta, memória, acervo e coleção.
+              </p>
+              <div className="stack-actions">
+                <Link href="/dossies" className="button">
+                  Abrir dossiês
+                </Link>
+                <Link href="/acervo" className="button-secondary">
+                  Entrar no acervo
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section">
         <div className="grid-2">
           <div>
@@ -124,7 +165,15 @@ export default async function HomePage() {
           {(secondaryItems.length ? secondaryItems : items.slice(0, 3)).map((item) => (
             <EditorialCard key={item.id} item={item} href={`/pautas/${item.slug}`} compact />
           ))}
-        </div>`r`n        <div className="stack-actions">`r`n          <Link href="/memoria" className="button-secondary">`r`n            Entrar no arquivo vivo`r`n          </Link>`r`n        </div>`r`n      </section>`r`n`r`n      <section className="section">
+        </div>
+        <div className="stack-actions">
+          <Link href="/memoria" className="button-secondary">
+            Entrar no arquivo vivo
+          </Link>
+        </div>
+      </section>
+
+      <section className="section">
         <div className="grid-2">
           <div>
             <p className="eyebrow">Eixos editoriais</p>
@@ -143,7 +192,10 @@ export default async function HomePage() {
               <p>{item.text}</p>
             </article>
           ))}
-        </div>`r`n        <div className="stack-actions">`r`n          <Link href="/memoria" className="button-secondary">`r`n            Entrar no arquivo vivo`r`n          </Link>`r`n        </div>`r`n      </section>`r`n`r`n      <section className="section">
+        </div>
+      </section>
+
+      <section className="section">
         <div className="grid-2">
           <div>
             <p className="eyebrow">Séries em evidência</p>

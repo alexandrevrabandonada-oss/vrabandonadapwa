@@ -10,6 +10,7 @@ export const site = {
     { href: "/pautas", label: "Pautas" },
     { href: "/memoria", label: "Memória" },
     { href: "/acervo", label: "Acervo" },
+    { href: "/dossies", label: "Dossiês" },
     { href: "/apoie", label: "Apoie" },
     { href: "/envie", label: "Envie" },
     { href: "/manifesto", label: "Manifesto" },
