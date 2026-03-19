@@ -26,6 +26,32 @@ function getArchiveFallbackItems() {
   return sortArchiveAssets(archiveAssetMockItems.filter((asset) => asset.public_visibility));
 }
 
+function filterPublicAssets(items: ArchiveAsset[], filter: { assetType?: string; memoryItemId?: string; editorialItemId?: string; place?: string; year?: number | null; }) {
+  return items.filter((asset) => {
+    if (filter.assetType && asset.asset_type !== filter.assetType) {
+      return false;
+    }
+
+    if (filter.memoryItemId && asset.memory_item_id !== filter.memoryItemId) {
+      return false;
+    }
+
+    if (filter.editorialItemId && asset.editorial_item_id !== filter.editorialItemId) {
+      return false;
+    }
+
+    if (filter.place && asset.place_label !== filter.place) {
+      return false;
+    }
+
+    if (filter.year && asset.approximate_year !== filter.year) {
+      return false;
+    }
+
+    return true;
+  });
+}
+
 export async function getPublishedArchiveAssets() {
   const supabase = createSupabasePublicClient();
 
@@ -48,6 +74,27 @@ export async function getPublishedArchiveAssets() {
   return sortArchiveAssets(data as ArchiveAsset[]);
 }
 
+export async function getPublishedArchiveAssetById(id: string) {
+  const supabase = createSupabasePublicClient();
+
+  if (!supabase) {
+    return (await getPublishedArchiveAssets()).find((asset) => asset.id === id) ?? null;
+  }
+
+  const { data, error } = await supabase
+    .from("archive_assets")
+    .select(publicFields)
+    .eq("public_visibility", true)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error || !data) {
+    return (await getPublishedArchiveAssets()).find((asset) => asset.id === id) ?? null;
+  }
+
+  return data as ArchiveAsset;
+}
+
 export async function getPublishedArchiveAssetsByMemoryItemId(memoryItemId: string) {
   const items = await getPublishedArchiveAssets();
   return items.filter((asset) => asset.memory_item_id === memoryItemId && asset.public_visibility);
@@ -56,6 +103,16 @@ export async function getPublishedArchiveAssetsByMemoryItemId(memoryItemId: stri
 export async function getPublishedArchiveAssetsByEditorialItemId(editorialItemId: string) {
   const items = await getPublishedArchiveAssets();
   return items.filter((asset) => asset.editorial_item_id === editorialItemId && asset.public_visibility);
+}
+
+export async function getPublishedArchiveAssetsByType(assetType: string) {
+  const items = await getPublishedArchiveAssets();
+  return items.filter((asset) => asset.asset_type === assetType);
+}
+
+export async function getPublishedArchiveFilteredAssets(filter: { assetType?: string; memoryItemId?: string; editorialItemId?: string; place?: string; year?: number | null; }) {
+  const items = await getPublishedArchiveAssets();
+  return sortArchiveAssets(filterPublicAssets(items, filter));
 }
 
 export async function getInternalArchiveAssets(filters?: { memoryItemId?: string; editorialItemId?: string; visibility?: "all" | "public" | "private"; assetType?: string; }) {

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { ArchiveAsset } from "@/lib/archive/types";
-import { getArchiveAssetDisplayUrl, getArchiveAssetLinkLabel, isArchiveVisualAsset } from "@/lib/archive/navigation";
+import { getArchiveAssetDisplayUrl, getArchiveAssetLinkLabel, getArchiveAssetPeriodLabel, getArchiveAssetTypeLabel, isArchiveVisualAsset } from "@/lib/archive/navigation";
 
 type Props = {
   asset: ArchiveAsset;
@@ -32,7 +32,7 @@ export function ArchiveAssetCard({ asset, href, compact = false, memoryLabel, ed
           />
         ) : (
           <div className="archive-card__fallback">
-            <span>{asset.asset_type}</span>
+            <span>{getArchiveAssetTypeLabel(asset.asset_type)}</span>
             <strong>{asset.title}</strong>
             <p>Fonte documental sem prévia visual.</p>
           </div>
@@ -41,7 +41,7 @@ export function ArchiveAssetCard({ asset, href, compact = false, memoryLabel, ed
 
       <div className="archive-card__body">
         <div className="archive-card__meta">
-          <span>{asset.asset_type}</span>
+          <span>{getArchiveAssetTypeLabel(asset.asset_type)}</span>
           {asset.public_visibility ? <span>público</span> : <span>interno</span>}
           {asset.featured ? <span>destaque</span> : null}
         </div>
@@ -55,6 +55,7 @@ export function ArchiveAssetCard({ asset, href, compact = false, memoryLabel, ed
         <div className="meta-row">
           {asset.place_label ? <span>{asset.place_label}</span> : null}
           {asset.approximate_year ? <span>{asset.approximate_year}</span> : null}
+          {!asset.source_date_label ? <span>{getArchiveAssetPeriodLabel(asset)}</span> : null}
           {asset.rights_note ? <span>{asset.rights_note}</span> : null}
         </div>
         {href ? (

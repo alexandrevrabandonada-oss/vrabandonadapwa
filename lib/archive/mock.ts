@@ -4,7 +4,7 @@ export const archiveAssetMockItems: ArchiveAsset[] = [
   {
     id: "archive-mock-1",
     memory_item_id: "memory-1",
-    editorial_item_id: null,
+    editorial_item_id: "mock-2",
     title: "Foto de arquivo: oficina e poeira",
     asset_type: "photo",
     file_url: "/archive/assets/acervo-foto-oficina.svg",
@@ -28,7 +28,7 @@ export const archiveAssetMockItems: ArchiveAsset[] = [
   {
     id: "archive-mock-2",
     memory_item_id: "memory-2",
-    editorial_item_id: null,
+    editorial_item_id: "mock-3",
     title: "Recorte de jornal sobre fumaça e turno",
     asset_type: "newspaper",
     file_url: "/archive/assets/acervo-recorte-jornal.svg",
@@ -52,7 +52,7 @@ export const archiveAssetMockItems: ArchiveAsset[] = [
   {
     id: "archive-mock-3",
     memory_item_id: "memory-3",
-    editorial_item_id: null,
+    editorial_item_id: "mock-4",
     title: "Documento de registro e ocorrência",
     asset_type: "document",
     file_url: "/archive/assets/acervo-relatorio.svg",
@@ -76,7 +76,7 @@ export const archiveAssetMockItems: ArchiveAsset[] = [
   {
     id: "archive-mock-4",
     memory_item_id: "memory-4",
-    editorial_item_id: null,
+    editorial_item_id: "mock-1",
     title: "Mapa de apagamentos e disputa territorial",
     asset_type: "scan",
     file_url: "/archive/assets/acervo-mapa.svg",

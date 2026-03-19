@@ -147,7 +147,7 @@ export default async function MemoryDetailPage({ params }: PageProps) {
 
           <div className="grid-2">
             {memoryAssets.map((asset) => (
-                <ArchiveAssetCard key={asset.id} asset={asset} compact href={asset.file_url} actionLabel="Abrir fonte" />
+                <ArchiveAssetCard key={asset.id} asset={asset} compact href={`/acervo/${asset.id}`} actionLabel="Abrir no acervo" />
               ))}
           </div>
         </section>
@@ -190,4 +190,6 @@ export default async function MemoryDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
 
