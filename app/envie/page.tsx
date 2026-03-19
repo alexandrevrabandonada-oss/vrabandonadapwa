@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { Container } from "@/components/container";
+import { IntakeForm } from "@/components/intake-form";
 import { PageHero } from "@/components/page-hero";
 import { site } from "@/lib/site";
 
@@ -15,7 +16,7 @@ export default function EnviePage() {
       <PageHero
         kicker="envie"
         title="Denúncia sem excesso, com contexto e precisão."
-        lead="A base já deixa claro que o canal precisa ser simples, seguro e orientado. O fluxo real ainda vai ser implementado com cuidado."
+        lead="A base já deixa claro que o canal precisa ser simples, seguro e orientado. O fluxo real agora está ligado ao Supabase."
       />
 
       <section className="section">
@@ -38,6 +39,21 @@ export default function EnviePage() {
             </ul>
           </article>
         </div>
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">formulário</p>
+            <h2>Canal inicial de entrada</h2>
+          </div>
+          <p className="section__lead">
+            O envio vai para a tabela `intake_submissions`, preparada para fila
+            editorial, moderação e cruzamento com futuras ferramentas internas.
+          </p>
+        </div>
+
+        <IntakeForm />
       </section>
     </Container>
   );

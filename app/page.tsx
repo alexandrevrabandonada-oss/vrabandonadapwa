@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Container } from "@/components/container";
+import { SupabaseStatus } from "@/components/supabase-status";
 import { site } from "@/lib/site";
 
 export default function HomePage() {
@@ -145,13 +146,12 @@ export default function HomePage() {
             </ul>
           </div>
           <div className="support-box">
-            <h3>O que o projeto precisa</h3>
-            <ul>
-              <li>Rede para circulação de pauta</li>
-              <li>Material de memória e documentação</li>
-              <li>Colaboração técnica e editorial</li>
-              <li>Canal seguro para denúncia</li>
-            </ul>
+            <h3>Supabase</h3>
+            <p style={{ marginBottom: "0.75rem" }}>
+              A base já está ligada ao cliente browser e pronta para receber
+              formulário, pauta e fila editorial.
+            </p>
+            <SupabaseStatus />
           </div>
         </div>
       </section>
