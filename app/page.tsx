@@ -124,10 +124,7 @@ export default async function HomePage() {
           {(secondaryItems.length ? secondaryItems : items.slice(0, 3)).map((item) => (
             <EditorialCard key={item.id} item={item} href={`/pautas/${item.slug}`} compact />
           ))}
-        </div>
-      </section>
-
-      <section className="section">
+        </div>`r`n        <div className="stack-actions">`r`n          <Link href="/memoria" className="button-secondary">`r`n            Entrar no arquivo vivo`r`n          </Link>`r`n        </div>`r`n      </section>`r`n`r`n      <section className="section">
         <div className="grid-2">
           <div>
             <p className="eyebrow">Eixos editoriais</p>
@@ -146,10 +143,7 @@ export default async function HomePage() {
               <p>{item.text}</p>
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="section">
+        </div>`r`n        <div className="stack-actions">`r`n          <Link href="/memoria" className="button-secondary">`r`n            Entrar no arquivo vivo`r`n          </Link>`r`n        </div>`r`n      </section>`r`n`r`n      <section className="section">
         <div className="grid-2">
           <div>
             <p className="eyebrow">Séries em evidência</p>
@@ -312,3 +306,5 @@ export default async function HomePage() {
     </Container>
   );
 }
+
+
