@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/interno/actions";
 import { ArchiveAssetForm } from "@/components/archive-asset-form";
 import { Container } from "@/components/container";
+import { getInternalArchiveCollections } from "@/lib/archive/collections";
 import { getInternalEditorialItems } from "@/lib/editorial/queries";
 import { getInternalMemoryItems } from "@/lib/memory/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams?: Promise<{ memory_item_id?: string; editorial_item_id?: string }>;
+  searchParams?: Promise<{ memory_item_id?: string; editorial_item_id?: string; collection_slug?: string }>;
 };
 
 export default async function InternalArchiveNewPage({ searchParams }: PageProps) {
@@ -31,8 +32,12 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const memoryItems = await getInternalMemoryItems();
   const editorialItems = await getInternalEditorialItems();
+  const archiveCollections = await getInternalArchiveCollections();
   const selectedMemory = resolvedSearchParams.memory_item_id
     ? memoryItems.find((item) => item.id === resolvedSearchParams.memory_item_id) ?? null
+    : null;
+  const selectedCollection = resolvedSearchParams.collection_slug
+    ? archiveCollections.find((item) => item.slug === resolvedSearchParams.collection_slug) ?? null
     : null;
 
   return (
@@ -58,12 +63,23 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
         </div>
       </section>
 
-      {selectedMemory ? (
+      {selectedMemory || selectedCollection ? (
         <section className="section internal-panel">
-          <div className="support-box">
-            <p className="eyebrow">vínculo de memória</p>
-            <h3>{selectedMemory.title}</h3>
-            <p>{selectedMemory.excerpt}</p>
+          <div className="grid-2">
+            {selectedMemory ? (
+              <div className="support-box">
+                <p className="eyebrow">vínculo de memória</p>
+                <h3>{selectedMemory.title}</h3>
+                <p>{selectedMemory.excerpt}</p>
+              </div>
+            ) : null}
+            {selectedCollection ? (
+              <div className="support-box">
+                <p className="eyebrow">vínculo de coleção</p>
+                <h3>{selectedCollection.title}</h3>
+                <p>{selectedCollection.excerpt || selectedCollection.description}</p>
+              </div>
+            ) : null}
           </div>
         </section>
       ) : null}
@@ -80,9 +96,11 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
         <ArchiveAssetForm
           memoryItems={memoryItems}
           editorialItems={editorialItems}
+          archiveCollections={archiveCollections}
           allowBatch
           initialMemoryItemId={resolvedSearchParams.memory_item_id ?? ""}
           initialEditorialItemId={resolvedSearchParams.editorial_item_id ?? ""}
+          initialCollectionSlug={resolvedSearchParams.collection_slug ?? ""}
         />
       </section>
     </Container>

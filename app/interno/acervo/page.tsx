@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/interno/actions";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
+import { getInternalArchiveCollections } from "@/lib/archive/collections";
 import { getInternalArchiveAssets } from "@/lib/archive/queries";
 import { getInternalEditorialItems } from "@/lib/editorial/queries";
 import { getInternalMemoryItems } from "@/lib/memory/queries";
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams?: Promise<{ visibility?: string }>;
+  searchParams?: Promise<{ visibility?: string; collection?: string }>;
 };
 
 const visibilityFilters = ["all", "public", "private"] as const;
@@ -39,9 +40,16 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const visibility = isVisibilityFilter(resolvedSearchParams.visibility) ? resolvedSearchParams.visibility : "all";
+  const activeCollection = resolvedSearchParams.collection ?? "";
 
   const allAssets = await getInternalArchiveAssets();
-  const assets = visibility === "all" ? allAssets : await getInternalArchiveAssets({ visibility });
+  const collections = await getInternalArchiveCollections();
+  const assets =
+    visibility === "all"
+      ? activeCollection
+        ? await getInternalArchiveAssets({ collectionSlug: activeCollection })
+        : allAssets
+      : await getInternalArchiveAssets({ visibility, collectionSlug: activeCollection || undefined });
   const memoryItems = await getInternalMemoryItems();
   const editorialItems = await getInternalEditorialItems();
 
@@ -49,6 +57,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
   const editorialById = new Map(editorialItems.map((editorial) => [editorial.id, editorial.title]));
   const publicCount = allAssets.filter((asset) => asset.public_visibility).length;
   const linkedCount = allAssets.filter((asset) => asset.memory_item_id || asset.editorial_item_id).length;
+  const collectionCount = allAssets.filter((asset) => asset.collection_slug).length;
 
   return (
     <Container className="intro-grid internal-page archive-page">
@@ -67,6 +76,9 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
           <Link href="/interno/acervo/novo" className="button">
             Novo anexo
           </Link>
+          <Link href="/interno/acervo/colecoes" className="button-secondary">
+            Coleções
+          </Link>
           <Link href="/interno/memoria" className="button-secondary">
             Ir para memória
           </Link>
@@ -74,7 +86,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-3">
+        <div className="grid-4">
           <article className="support-box">
             <p className="eyebrow">itens</p>
             <h3>{allAssets.length}</h3>
@@ -89,6 +101,11 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
             <p className="eyebrow">vínculos</p>
             <h3>{linkedCount}</h3>
             <p>Materiais ligados a memória ou pauta.</p>
+          </article>
+          <article className="support-box">
+            <p className="eyebrow">coleções</p>
+            <h3>{collectionCount}</h3>
+            <p>Assets já encaixados em recortes editoriais.</p>
           </article>
         </div>
       </section>
@@ -106,10 +123,38 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
           {visibilityFilters.map((filter) => (
             <Link
               key={filter}
-              href={filter === "all" ? "/interno/acervo" : `/interno/acervo?visibility=${filter}`}
+              href={filter === "all" ? "/interno/acervo" : `/interno/acervo?visibility=${filter}${activeCollection ? `&collection=${activeCollection}` : ""}`}
               className={`status-chip ${visibility === filter ? "status-chip--active" : ""}`}
             >
               {filter}
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">coleções</p>
+            <h2>Recortes editoriais</h2>
+          </div>
+          <p className="section__lead">A coleção ajuda a operar o arquivo por linhas de investigação, não por acumulação crua.</p>
+        </div>
+
+        <div className="status-filters" aria-label="Filtro por coleção">
+          <Link
+            href={visibility === "all" ? "/interno/acervo" : `/interno/acervo?visibility=${visibility}`}
+            className={`status-chip ${!activeCollection ? "status-chip--active" : ""}`}
+          >
+            Todas
+          </Link>
+          {collections.map((collection) => (
+            <Link
+              key={collection.id}
+              href={`/interno/acervo?collection=${collection.slug}${visibility !== "all" ? `&visibility=${visibility}` : ""}`}
+              className={`status-chip ${activeCollection === collection.slug ? "status-chip--active" : ""}`}
+            >
+              {collection.title}
             </Link>
           ))}
         </div>
@@ -134,6 +179,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
                 actionLabel="Abrir anexo"
                 memoryLabel={asset.memory_item_id ? memoryById.get(asset.memory_item_id) ?? null : null}
                 editorialLabel={asset.editorial_item_id ? editorialById.get(asset.editorial_item_id) ?? null : null}
+                collectionLabel={asset.collection_slug ? collections.find((collection) => collection.slug === asset.collection_slug)?.title ?? null : null}
               />
             ))
           ) : (
@@ -166,5 +212,3 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
     </Container>
   );
 }
-
-

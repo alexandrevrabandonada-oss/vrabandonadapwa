@@ -1,10 +1,78 @@
-import type { ArchiveAsset } from "@/lib/archive/types";
+import type { ArchiveAsset, ArchiveCollection } from "@/lib/archive/types";
+
+export const archiveCollectionMockItems: ArchiveCollection[] = [
+  {
+    id: "archive-collection-1",
+    title: "Cidade operária",
+    slug: "cidade-operaria",
+    excerpt: "Recortes sobre a formação urbana, a vida de bairro e a organização popular na cidade do trabalho.",
+    description:
+      "A coleção reúne materiais-base que ajudam a entender como Volta Redonda foi construída entre fábrica, bairro e disputa social.",
+    cover_image_url: "/archive/assets/acervo-foto-oficina.svg",
+    public_visibility: true,
+    featured: true,
+    sort_order: 1,
+    created_at: "2026-03-19T12:00:00.000Z",
+    updated_at: "2026-03-19T12:00:00.000Z",
+    created_by: null,
+    updated_by: null,
+  },
+  {
+    id: "archive-collection-2",
+    title: "Poluição e indústria",
+    slug: "poluicao-e-industria",
+    excerpt: "Fontes e recortes sobre ar, fumaça, água e os efeitos concretos da indústria no cotidiano.",
+    description:
+      "Documentos que conectam o ambiente urbano aos efeitos materiais do entorno industrial e às leituras de saúde pública.",
+    cover_image_url: "/archive/assets/acervo-recorte-jornal.svg",
+    public_visibility: true,
+    featured: true,
+    sort_order: 2,
+    created_at: "2026-03-19T12:00:00.000Z",
+    updated_at: "2026-03-19T12:00:00.000Z",
+    created_by: null,
+    updated_by: null,
+  },
+  {
+    id: "archive-collection-3",
+    title: "Trabalho e acidentes",
+    slug: "trabalho-e-acidentes",
+    excerpt: "Material documental sobre risco, desgaste, lesão e normalização da dor no trabalho.",
+    description:
+      "Objetos de acervo que sustentam pautas sobre o corpo trabalhador e a marca que a produção deixa no dia a dia.",
+    cover_image_url: "/archive/assets/acervo-relatorio.svg",
+    public_visibility: true,
+    featured: true,
+    sort_order: 3,
+    created_at: "2026-03-19T12:00:00.000Z",
+    updated_at: "2026-03-19T12:00:00.000Z",
+    created_by: null,
+    updated_by: null,
+  },
+  {
+    id: "archive-collection-4",
+    title: "Apagamentos da memória",
+    slug: "apagamentos-da-memoria",
+    excerpt: "Imagens, mapas e recortes sobre demolição, reescrita urbana e desaparecimento de marcos.",
+    description:
+      "Uma coleção para ler o que some quando a cidade é recontada por anúncios, obras e discursos de modernização.",
+    cover_image_url: "/archive/assets/acervo-mapa.svg",
+    public_visibility: true,
+    featured: false,
+    sort_order: 4,
+    created_at: "2026-03-19T12:00:00.000Z",
+    updated_at: "2026-03-19T12:00:00.000Z",
+    created_by: null,
+    updated_by: null,
+  },
+];
 
 export const archiveAssetMockItems: ArchiveAsset[] = [
   {
     id: "archive-mock-1",
     memory_item_id: "memory-1",
     editorial_item_id: "mock-2",
+    collection_slug: "cidade-operaria",
     title: "Foto de arquivo: oficina e poeira",
     asset_type: "photo",
     file_url: "/archive/assets/acervo-foto-oficina.svg",
@@ -29,6 +97,7 @@ export const archiveAssetMockItems: ArchiveAsset[] = [
     id: "archive-mock-2",
     memory_item_id: "memory-2",
     editorial_item_id: "mock-3",
+    collection_slug: "poluicao-e-industria",
     title: "Recorte de jornal sobre fumaça e turno",
     asset_type: "newspaper",
     file_url: "/archive/assets/acervo-recorte-jornal.svg",
@@ -53,6 +122,7 @@ export const archiveAssetMockItems: ArchiveAsset[] = [
     id: "archive-mock-3",
     memory_item_id: "memory-3",
     editorial_item_id: "mock-4",
+    collection_slug: "trabalho-e-acidentes",
     title: "Documento de registro e ocorrência",
     asset_type: "document",
     file_url: "/archive/assets/acervo-relatorio.svg",
@@ -77,6 +147,7 @@ export const archiveAssetMockItems: ArchiveAsset[] = [
     id: "archive-mock-4",
     memory_item_id: "memory-4",
     editorial_item_id: "mock-1",
+    collection_slug: "apagamentos-da-memoria",
     title: "Mapa de apagamentos e disputa territorial",
     asset_type: "scan",
     file_url: "/archive/assets/acervo-mapa.svg",

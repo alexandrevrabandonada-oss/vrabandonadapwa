@@ -4,11 +4,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
+import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
+import { getPublishedArchiveCollectionBySlug } from "@/lib/archive/collections";
 import {
   getArchiveAssetDisplayUrl,
   getArchiveAssetNearbyItems,
@@ -18,6 +20,7 @@ import {
 import {
   getPublishedArchiveAssetById,
   getPublishedArchiveAssets,
+  getPublishedArchiveAssetsByCollectionSlug,
 } from "@/lib/archive/queries";
 
 export async function generateStaticParams() {
@@ -74,6 +77,8 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
     ? editorialItems.find((editorial) => editorial.id === asset.editorial_item_id) ?? null
     : null;
   const relatedSeries = relatedEditorial?.series_slug ? getEditorialSeriesBySlug(relatedEditorial.series_slug) : null;
+  const relatedCollection = asset.collection_slug ? await getPublishedArchiveCollectionBySlug(asset.collection_slug) : null;
+  const collectionAssets = asset.collection_slug ? await getPublishedArchiveAssetsByCollectionSlug(asset.collection_slug) : [];
   const nearbyItems = getArchiveAssetNearbyItems(asset, allAssets);
   const isVisual = isArchiveVisualAsset(asset);
   const fileUrl = asset.file_url;
@@ -97,11 +102,17 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
             {asset.featured ? <span className="tag-row__item">destaque</span> : null}
             {relatedMemory ? <span className="tag-row__item">Memória vinculada</span> : null}
             {relatedEditorial ? <span className="tag-row__item">Pauta vinculada</span> : null}
+            {relatedCollection ? <span className="tag-row__item">{relatedCollection.title}</span> : null}
           </div>
           <div className="stack-actions">
             <Link href="/acervo" className="button-secondary">
               Voltar ao acervo
             </Link>
+            {relatedCollection ? (
+              <Link href={`/acervo/colecoes/${relatedCollection.slug}`} className="button-secondary">
+                Ver coleção
+              </Link>
+            ) : null}
             {relatedMemory ? <Link href={`/memoria/${relatedMemory.slug}`} className="button">Ver memória</Link> : null}
           </div>
         </div>
@@ -148,6 +159,7 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
               <li>Ano: {asset.approximate_year || "não informado"}</li>
               <li>Lugar: {asset.place_label || "não informado"}</li>
               <li>Visibilidade: {asset.public_visibility ? "pública" : "interna"}</li>
+              <li>Coleção: {relatedCollection?.title || "não informada"}</li>
             </ul>
           </article>
         </div>
@@ -157,7 +169,7 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
         <div className="grid-2">
           <div>
             <p className="eyebrow">conexões</p>
-            <h2>Documento, memória e pauta.</h2>
+            <h2>Documento, memória, pauta e coleção.</h2>
           </div>
           <p className="section__lead">
             O arquivo ganha força quando volta para o contexto que o produziu ou para a narrativa que o leu.
@@ -204,6 +216,13 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
             </Link>
           </article>
         ) : null}
+
+        {relatedCollection ? (
+          <article className="support-box">
+            <p className="eyebrow">coleção conectada</p>
+            <ArchiveCollectionCard collection={relatedCollection} href={`/acervo/colecoes/${relatedCollection.slug}`} assetCount={collectionAssets.length} compact />
+          </article>
+        ) : null}
       </section>
 
       <section className="section archive-nearby">
@@ -225,7 +244,6 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
                 asset={nearby}
                 href={`/acervo/${nearby.id}`}
                 actionLabel="Abrir documento"
-                compact
               />
             ))
           ) : (
@@ -238,4 +256,7 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
+
 

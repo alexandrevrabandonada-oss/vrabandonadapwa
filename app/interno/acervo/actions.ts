@@ -96,6 +96,17 @@ async function revalidateConnectedPaths(memoryItemId: string | null, editorialIt
   }
 }
 
+function revalidateCollectionPaths(collectionSlug: string | null) {
+  if (!collectionSlug) {
+    return;
+  }
+
+  revalidatePath("/acervo");
+  revalidatePath(`/acervo/colecoes/${collectionSlug}`);
+  revalidatePath("/interno/acervo");
+  revalidatePath("/interno/acervo/colecoes");
+}
+
 export async function saveArchiveAssetAction(
   _: ArchiveAssetActionState,
   formData: FormData,
@@ -105,6 +116,7 @@ export async function saveArchiveAssetAction(
   const assetType = normalize(formData.get("asset_type")) as ArchiveAssetType;
   const memoryItemId = normalize(formData.get("memory_item_id")) || null;
   const editorialItemId = normalize(formData.get("editorial_item_id")) || null;
+  const collectionSlug = normalize(formData.get("collection_slug")) || null;
   const sourceLabel = normalize(formData.get("source_label"));
   const sourceDateLabel = normalize(formData.get("source_date_label"));
   const approximateYear = parseNumber(normalize(formData.get("approximate_year")));
@@ -135,7 +147,7 @@ export async function saveArchiveAssetAction(
   if (currentId) {
     const { data: current, error: currentError } = await supabase
       .from("archive_assets")
-      .select("id, file_path, file_url, thumb_path, thumb_url, memory_item_id, editorial_item_id, title")
+      .select("id, file_path, file_url, thumb_path, thumb_url, memory_item_id, editorial_item_id, collection_slug, title")
       .eq("id", currentId)
       .maybeSingle();
 
@@ -184,6 +196,7 @@ export async function saveArchiveAssetAction(
         asset_type: assetType,
         memory_item_id: memoryItemId,
         editorial_item_id: editorialItemId,
+        collection_slug: collectionSlug,
         file_url: fileUrl,
         file_path: filePath,
         thumb_url: thumbUrl,
@@ -219,6 +232,8 @@ export async function saveArchiveAssetAction(
     }
 
     await revalidateConnectedPaths(memoryItemId ?? current.memory_item_id, editorialItemId ?? current.editorial_item_id);
+    revalidateCollectionPaths(current.collection_slug);
+    revalidateCollectionPaths(collectionSlug);
     revalidatePath("/interno/acervo");
     revalidatePath(`/interno/acervo/${currentId}`);
 
@@ -245,6 +260,7 @@ export async function saveArchiveAssetAction(
         id: assetId,
         memory_item_id: memoryItemId,
         editorial_item_id: editorialItemId,
+        collection_slug: collectionSlug,
         title: nextTitle,
         asset_type: assetType,
         file_url: uploaded.url,
@@ -287,6 +303,7 @@ export async function saveArchiveAssetAction(
   }
 
   await revalidateConnectedPaths(memoryItemId, editorialItemId);
+  revalidateCollectionPaths(collectionSlug);
   revalidatePath("/interno/acervo");
 
   return {

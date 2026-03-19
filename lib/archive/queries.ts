@@ -4,7 +4,7 @@ import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const publicFields =
-  "id, memory_item_id, editorial_item_id, title, asset_type, file_url, thumb_url, source_label, source_date_label, approximate_year, place_label, rights_note, description, public_visibility, featured, sort_order, created_at, updated_at, created_by, updated_by";
+  "id, memory_item_id, editorial_item_id, collection_slug, title, asset_type, file_url, thumb_url, source_label, source_date_label, approximate_year, place_label, rights_note, description, public_visibility, featured, sort_order, created_at, updated_at, created_by, updated_by";
 
 const internalFields = `${publicFields}, file_path, thumb_path`;
 
@@ -26,7 +26,10 @@ function getArchiveFallbackItems() {
   return sortArchiveAssets(archiveAssetMockItems.filter((asset) => asset.public_visibility));
 }
 
-function filterPublicAssets(items: ArchiveAsset[], filter: { assetType?: string; memoryItemId?: string; editorialItemId?: string; place?: string; year?: number | null; }) {
+function filterPublicAssets(
+  items: ArchiveAsset[],
+  filter: { assetType?: string; memoryItemId?: string; editorialItemId?: string; collectionSlug?: string; place?: string; year?: number | null },
+) {
   return items.filter((asset) => {
     if (filter.assetType && asset.asset_type !== filter.assetType) {
       return false;
@@ -37,6 +40,10 @@ function filterPublicAssets(items: ArchiveAsset[], filter: { assetType?: string;
     }
 
     if (filter.editorialItemId && asset.editorial_item_id !== filter.editorialItemId) {
+      return false;
+    }
+
+    if (filter.collectionSlug && asset.collection_slug !== filter.collectionSlug) {
       return false;
     }
 
@@ -105,17 +112,35 @@ export async function getPublishedArchiveAssetsByEditorialItemId(editorialItemId
   return items.filter((asset) => asset.editorial_item_id === editorialItemId && asset.public_visibility);
 }
 
+export async function getPublishedArchiveAssetsByCollectionSlug(collectionSlug: string) {
+  const items = await getPublishedArchiveAssets();
+  return items.filter((asset) => asset.collection_slug === collectionSlug && asset.public_visibility);
+}
+
 export async function getPublishedArchiveAssetsByType(assetType: string) {
   const items = await getPublishedArchiveAssets();
   return items.filter((asset) => asset.asset_type === assetType);
 }
 
-export async function getPublishedArchiveFilteredAssets(filter: { assetType?: string; memoryItemId?: string; editorialItemId?: string; place?: string; year?: number | null; }) {
+export async function getPublishedArchiveFilteredAssets(filter: {
+  assetType?: string;
+  memoryItemId?: string;
+  editorialItemId?: string;
+  collectionSlug?: string;
+  place?: string;
+  year?: number | null;
+}) {
   const items = await getPublishedArchiveAssets();
   return sortArchiveAssets(filterPublicAssets(items, filter));
 }
 
-export async function getInternalArchiveAssets(filters?: { memoryItemId?: string; editorialItemId?: string; visibility?: "all" | "public" | "private"; assetType?: string; }) {
+export async function getInternalArchiveAssets(filters?: {
+  memoryItemId?: string;
+  editorialItemId?: string;
+  collectionSlug?: string;
+  visibility?: "all" | "public" | "private";
+  assetType?: string;
+}) {
   const supabase = await createSupabaseServerClient();
   let query = supabase
     .from("archive_assets")
@@ -130,6 +155,10 @@ export async function getInternalArchiveAssets(filters?: { memoryItemId?: string
 
   if (filters?.editorialItemId) {
     query = query.eq("editorial_item_id", filters.editorialItemId);
+  }
+
+  if (filters?.collectionSlug) {
+    query = query.eq("collection_slug", filters.collectionSlug);
   }
 
   if (filters?.visibility === "public") {
@@ -169,4 +198,8 @@ export async function getInternalArchiveAssetById(id: string) {
 
 export async function getInternalArchiveAssetsByMemoryItemId(memoryItemId: string) {
   return getInternalArchiveAssets({ memoryItemId });
+}
+
+export async function getInternalArchiveAssetsByCollectionSlug(collectionSlug: string) {
+  return getInternalArchiveAssets({ collectionSlug });
 }

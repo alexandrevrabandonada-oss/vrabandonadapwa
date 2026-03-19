@@ -2,15 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
+import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
-import {
-  getArchiveAssetTypeLabel,
-  getArchiveFilterOptions,
-} from "@/lib/archive/navigation";
+import { getArchiveAssetTypeLabel, getArchiveFilterOptions } from "@/lib/archive/navigation";
+import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import {
   getPublishedArchiveAssets,
   getPublishedArchiveFilteredAssets,
@@ -82,6 +81,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
   const activeMemory = resolvedSearchParams.memory ?? "";
 
   const allAssets = await getPublishedArchiveAssets();
+  const collections = await getPublishedArchiveCollections();
   const memoryItems = await getPublishedMemoryItems();
   const editorialItems = await getPublishedEditorialItems();
   const selectedAssets = await getPublishedArchiveFilteredAssets({
@@ -92,10 +92,14 @@ export default async function ArchivePage({ searchParams }: PageProps) {
   });
 
   const featuredAssets = allAssets.filter((asset) => asset.featured).slice(0, 3);
+  const featuredCollections = collections.filter((collection) => collection.featured).slice(0, 4);
   const options = getArchiveFilterOptions(allAssets);
   const memoryById = new Map(memoryItems.map((memory) => [memory.id, memory]));
   const editorialById = new Map(editorialItems.map((editorial) => [editorial.id, editorial]));
   const highlightedAsset = selectedAssets[0] ?? allAssets[0] ?? null;
+  const collectionCountBySlug = new Map(
+    collections.map((collection) => [collection.slug, allAssets.filter((asset) => asset.collection_slug === collection.slug).length]),
+  );
   const typeCards = options.types.map((type) => ({
     type,
     title: getArchiveAssetTypeLabel(type),
@@ -127,7 +131,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
             <EditorialCover
               title={highlightedAsset.title}
               primaryTag={getArchiveAssetTypeLabel(highlightedAsset.asset_type)}
-              seriesTitle={highlightedAsset.place_label || highlightedAsset.source_label || "VR Abandonada"}
+              seriesTitle={highlightedAsset.collection_slug || highlightedAsset.place_label || highlightedAsset.source_label || "VR Abandonada"}
               coverImageUrl={highlightedAsset.thumb_url || highlightedAsset.file_url}
               coverVariant={highlightedAsset.featured ? "ember" : "concrete"}
             />
@@ -144,6 +148,29 @@ export default async function ArchivePage({ searchParams }: PageProps) {
             </div>
           </article>
         ) : null}
+      </section>
+
+      <section className="section archive-collections">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">coleções curadas</p>
+            <h2>O arquivo entra por recortes, não por uma lista seca.</h2>
+          </div>
+          <p className="section__lead">
+            Cada coleção funciona como um dossiê leve: agrupa documentos, organiza contexto e ajuda o leitor a entrar por linha de investigação.
+          </p>
+        </div>
+
+        <div className="grid-4">
+          {featuredCollections.map((collection) => (
+            <ArchiveCollectionCard
+              key={collection.id}
+              collection={collection}
+              href={`/acervo/colecoes/${collection.slug}`}
+              assetCount={collectionCountBySlug.get(collection.slug) ?? 0}
+            />
+          ))}
+        </div>
       </section>
 
       <section className="section archive-intro">
@@ -302,6 +329,8 @@ export default async function ArchivePage({ searchParams }: PageProps) {
                 href={`/acervo/${asset.id}`}
                 memoryLabel={asset.memory_item_id ? memoryById.get(asset.memory_item_id)?.title ?? null : null}
                 editorialLabel={asset.editorial_item_id ? editorialById.get(asset.editorial_item_id)?.title ?? null : null}
+                collectionLabel={asset.collection_slug ? collections.find((collection) => collection.slug === asset.collection_slug)?.title ?? null : null}
+                collectionHref={asset.collection_slug ? `/acervo/colecoes/${asset.collection_slug}` : null}
                 actionLabel="Abrir documento"
               />
             ))
@@ -317,7 +346,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
       <section className="section archive-bridge">
         <div className="grid-2">
           <div>
-            <p className="eyebrow">do arquivo para o presente</p>
+            <p className="eyebrow">do arquivo para a pauta</p>
             <h2>O documento conversa com memória e pauta.</h2>
           </div>
           <p className="section__lead">

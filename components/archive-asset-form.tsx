@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useActionState } from "react";
 
 import { saveArchiveAssetAction } from "@/app/interno/acervo/actions";
-import type { ArchiveAsset, ArchiveAssetType } from "@/lib/archive/types";
+import type { ArchiveCollection, ArchiveAsset, ArchiveAssetType } from "@/lib/archive/types";
 import type { EditorialItem } from "@/lib/editorial/types";
 import type { MemoryItem } from "@/lib/memory/types";
 
@@ -17,22 +17,25 @@ type Props = {
   asset?: ArchiveAsset | null;
   memoryItems: MemoryItem[];
   editorialItems: EditorialItem[];
+  archiveCollections: ArchiveCollection[];
   allowBatch?: boolean;
   initialMemoryItemId?: string;
   initialEditorialItemId?: string;
+  initialCollectionSlug?: string;
 };
 
 const initialState: ArchiveAssetFormState = { ok: false, message: "" };
 const assetTypes: ArchiveAssetType[] = ["photo", "scan", "newspaper", "document", "pdf", "audio", "other"];
 
-
 export function ArchiveAssetForm({
   asset,
   memoryItems,
   editorialItems,
+  archiveCollections,
   allowBatch = false,
   initialMemoryItemId,
   initialEditorialItemId,
+  initialCollectionSlug,
 }: Props) {
   const [state, formAction, pending] = useActionState(saveArchiveAssetAction, initialState);
 
@@ -83,6 +86,18 @@ export function ArchiveAssetForm({
           </select>
         </label>
       </div>
+
+      <label className="field">
+        <span>Coleção</span>
+        <select name="collection_slug" defaultValue={asset?.collection_slug ?? initialCollectionSlug ?? ""}>
+          <option value="">Sem coleção</option>
+          {archiveCollections.map((collection) => (
+            <option key={collection.slug} value={collection.slug}>
+              {collection.title}
+            </option>
+          ))}
+        </select>
+      </label>
 
       <div className="grid-2">
         <label className="field">
@@ -189,10 +204,7 @@ export function ArchiveAssetForm({
         {state.message || "O acervo vive separado da narrativa pública, mas sustentando o arquivo."}
       </p>
 
-      {!asset && allowBatch ? (
-        <p className="form-status">Dica: use títulos curtos e salve o lote, depois refine os registros um a um.</p>
-      ) : null}
+      {!asset && allowBatch ? <p className="form-status">Dica: use títulos curtos e salve o lote, depois refine os registros um a um.</p> : null}
     </form>
   );
 }
-

@@ -65,6 +65,10 @@ export function getArchiveAssetNearbyItems(asset: ArchiveAsset, items: ArchiveAs
         return true;
       }
 
+      if (asset.collection_slug && candidate.collection_slug === asset.collection_slug) {
+        return true;
+      }
+
       if (asset.asset_type === candidate.asset_type) {
         return true;
       }

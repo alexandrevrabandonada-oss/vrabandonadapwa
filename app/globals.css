@@ -1086,3 +1086,38 @@ button, input, textarea, select { font: inherit; }
     grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
   }
 }
+.archive-collection-page,
+.archive-collection-intro,
+.archive-collection-materiais,
+.archive-collection-bridge,
+.archive-collection-memory,
+.archive-collection-editorial,
+.archive-collection-summary {
+  display: grid;
+  gap: 1rem;
+}
+
+.archive-collection-card {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.archive-collection-card__body {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.archive-collection-card .editorial-cover {
+  min-height: 14rem;
+}
+
+.archive-collection-card--compact .editorial-cover {
+  min-height: 11rem;
+}
+
+@media (min-width: 921px) {
+  .archive-collection-page .archive-detail-hero {
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  }
+}

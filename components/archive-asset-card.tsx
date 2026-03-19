@@ -2,7 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { ArchiveAsset } from "@/lib/archive/types";
-import { getArchiveAssetDisplayUrl, getArchiveAssetLinkLabel, getArchiveAssetPeriodLabel, getArchiveAssetTypeLabel, isArchiveVisualAsset } from "@/lib/archive/navigation";
+import {
+  getArchiveAssetDisplayUrl,
+  getArchiveAssetLinkLabel,
+  getArchiveAssetPeriodLabel,
+  getArchiveAssetTypeLabel,
+  isArchiveVisualAsset,
+} from "@/lib/archive/navigation";
 
 type Props = {
   asset: ArchiveAsset;
@@ -10,10 +16,21 @@ type Props = {
   compact?: boolean;
   memoryLabel?: string | null;
   editorialLabel?: string | null;
+  collectionLabel?: string | null;
+  collectionHref?: string | null;
   actionLabel?: string;
 };
 
-export function ArchiveAssetCard({ asset, href, compact = false, memoryLabel, editorialLabel, actionLabel }: Props) {
+export function ArchiveAssetCard({
+  asset,
+  href,
+  compact = false,
+  memoryLabel,
+  editorialLabel,
+  collectionLabel,
+  collectionHref,
+  actionLabel,
+}: Props) {
   const displayUrl = getArchiveAssetDisplayUrl(asset);
   const visual = isArchiveVisualAsset(asset);
 
@@ -48,6 +65,15 @@ export function ArchiveAssetCard({ asset, href, compact = false, memoryLabel, ed
         <h3>{asset.title}</h3>
         <p>{asset.description || asset.source_label || "Anexo de arquivo vivo."}</p>
         <div className="archive-card__labels">
+          {collectionLabel ? (
+            collectionHref ? (
+              <Link href={collectionHref} className="tag-row__item">
+                {collectionLabel}
+              </Link>
+            ) : (
+              <span className="tag-row__item">{collectionLabel}</span>
+            )
+          ) : null}
           {memoryLabel ? <span className="tag-row__item">{memoryLabel}</span> : null}
           {editorialLabel ? <span className="tag-row__item">{editorialLabel}</span> : null}
           {asset.source_date_label ? <span className="tag-row__item">{asset.source_date_label}</span> : null}
