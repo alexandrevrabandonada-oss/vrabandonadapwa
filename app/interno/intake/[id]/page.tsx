@@ -3,8 +3,10 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { createEditorialDraftFromIntakeAction } from "@/app/interno/editorial/actions";
 import { IntakeTriageForm } from "@/components/intake-triage-form";
 import { signOutAction } from "@/app/interno/actions";
+import { getEditorialByIntakeId } from "@/lib/editorial/queries";
 import { intakeStatusLabels, type IntakeStatus, type IntakeSubmission } from "@/lib/intake/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -43,6 +45,7 @@ export default async function IntakeDetailPage({ params }: PageProps) {
   }
 
   const item = submission as IntakeSubmission;
+  const editorial = await getEditorialByIntakeId(id);
 
   return (
     <Container className="intro-grid internal-page">
@@ -57,6 +60,7 @@ export default async function IntakeDetailPage({ params }: PageProps) {
             <button className="button-secondary" type="submit">Sair</button>
           </form>
           <Link href="/interno/intake" className="button-secondary">Voltar à fila</Link>
+          <Link href="/interno/editorial" className="button-secondary">Ver editorial</Link>
         </div>
       </section>
 
@@ -80,6 +84,35 @@ export default async function IntakeDetailPage({ params }: PageProps) {
             </ul>
           </article>
         </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">publicação</p>
+            <h2>Camada pública derivada</h2>
+          </div>
+          <p className="section__lead">
+            Aqui nasce o conteúdo sanitizado. Nada de nota interna ou contato vaza para a publicação.
+          </p>
+        </div>
+
+        {editorial ? (
+          <div className="support-box">
+            <h3>{editorial.title}</h3>
+            <p>{editorial.excerpt}</p>
+            <div className="stack-actions">
+              <Link href={`/interno/editorial/${editorial.id}`} className="button-secondary">
+                Abrir item editorial
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <form action={createEditorialDraftFromIntakeAction}>
+            <input type="hidden" name="intake_submission_id" value={item.id} />
+            <button className="button" type="submit">Criar rascunho editorial</button>
+          </form>
+        )}
       </section>
 
       <section className="section internal-panel">

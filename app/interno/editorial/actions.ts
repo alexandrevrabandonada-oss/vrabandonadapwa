@@ -3,11 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-import { buildEditorialSlug } from "@/lib/editorial/utils";
-import { getEditorialByIntakeId } from "@/lib/editorial/queries";
+import { buildEditorialSlug, slugifyEditorialValue } from "@/lib/editorial/utils";
+import { getEditorialByIntakeId, getInternalEditorialById } from "@/lib/editorial/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export type IntakeUpdateState = {
+export type EditorialActionState = {
   ok: boolean;
   message: string;
 };
@@ -16,8 +16,8 @@ function normalize(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function isIntakeStatus(value: string): value is import("@/lib/intake/types").IntakeStatus {
-  return ["new", "reviewing", "archived", "published"].includes(value as import("@/lib/intake/types").IntakeStatus);
+function toBool(value: FormDataEntryValue | null) {
+  return value === "on";
 }
 
 export async function createEditorialDraftFromIntakeAction(formData: FormData) {
@@ -87,21 +87,27 @@ export async function createEditorialDraftFromIntakeAction(formData: FormData) {
   redirect(`/interno/editorial/${data.id}`);
 }
 
-export async function updateIntakeAction(
-  _: IntakeUpdateState,
+export async function saveEditorialItemAction(
+  _: EditorialActionState,
   formData: FormData,
-): Promise<IntakeUpdateState> {
+): Promise<EditorialActionState> {
   const id = normalize(formData.get("id"));
-  const statusValue = normalize(formData.get("status"));
-  const internalNotes = normalize(formData.get("internal_notes"));
-  const safePublicSummary = normalize(formData.get("safe_public_summary"));
-  const isSensitive = formData.get("is_sensitive") === "on";
-  const contactAllowed = formData.get("contact_allowed") === "on";
+  const title = normalize(formData.get("title"));
+  const slugInput = normalize(formData.get("slug"));
+  const excerpt = normalize(formData.get("excerpt"));
+  const body = normalize(formData.get("body"));
+  const category = normalize(formData.get("category"));
+  const neighborhood = normalize(formData.get("neighborhood"));
+  const coverImageUrl = normalize(formData.get("cover_image_url"));
+  const sourceVisibilityNote = normalize(formData.get("source_visibility_note"));
+  const editorialStatus = normalize(formData.get("editorial_status"));
+  const featured = toBool(formData.get("featured"));
+  const published = toBool(formData.get("published")) || editorialStatus === "published";
 
-  if (!id || !isIntakeStatus(statusValue)) {
+  if (!id || !title || !slugInput || !excerpt || !body || !category || !editorialStatus) {
     return {
       ok: false,
-      message: "Escolha um status válido antes de salvar a triagem.",
+      message: "Preencha os campos editoriais obrigatórios.",
     };
   }
 
@@ -115,32 +121,49 @@ export async function updateIntakeAction(
     redirect("/interno/entrar");
   }
 
+  const current = await getInternalEditorialById(id);
+
+  const publishedAt = published
+    ? current?.published_at ?? new Date().toISOString()
+    : null;
+
   const { error } = await supabase
-    .from("intake_submissions")
+    .from("editorial_items")
     .update({
-      status: statusValue,
-      internal_notes: internalNotes || null,
-      safe_public_summary: safePublicSummary || null,
-      reviewed_by: user.email || null,
-      reviewed_at: new Date().toISOString(),
-      is_sensitive: isSensitive,
-      contact_allowed: contactAllowed,
+      title,
+      slug: slugifyEditorialValue(slugInput),
+      excerpt,
+      body,
+      category,
+      neighborhood: neighborhood || null,
+      cover_image_url: coverImageUrl || null,
+      editorial_status: editorialStatus,
+      featured,
+      published,
+      published_at: publishedAt,
+      source_visibility_note: sourceVisibilityNote || null,
+      updated_at: new Date().toISOString(),
+      updated_by: user.email || null,
     })
     .eq("id", id);
 
   if (error) {
-    console.error("Failed to update intake submission", error);
+    console.error("Failed to save editorial item", error);
     return {
       ok: false,
-      message: "Não foi possível salvar a triagem agora.",
+      message: "Não foi possível salvar o item editorial agora.",
     };
   }
 
-  revalidatePath("/interno/intake");
-  revalidatePath(`/interno/intake/${id}`);
+  revalidatePath("/interno/editorial");
+  revalidatePath(`/interno/editorial/${id}`);
+  revalidatePath("/pautas");
+  revalidatePath(`/pautas/${slugifyEditorialValue(slugInput)}`);
 
   return {
     ok: true,
-    message: "Triagem atualizada com sucesso.",
+    message: published
+      ? "Item salvo e marcado para publicação."
+      : "Item salvo como rascunho interno.",
   };
 }
