@@ -830,3 +830,136 @@ button, input, textarea, select { font: inherit; }
     grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
   }
 }
+.archive-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.archive-card {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.archive-card--compact {
+  gap: 0.7rem;
+}
+
+.archive-card__media {
+  overflow: hidden;
+  min-height: 13rem;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(243, 178, 26, 0.12), rgba(182, 63, 35, 0.08)), rgba(20, 20, 20, 0.86);
+}
+
+.archive-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.archive-card__fallback {
+  display: grid;
+  gap: 0.65rem;
+  align-content: end;
+  min-height: 13rem;
+  padding: 1rem;
+}
+
+.archive-card__fallback span,
+.archive-card__meta span {
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.archive-card__fallback strong {
+  max-width: 16ch;
+  font-size: 1.5rem;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.archive-card__fallback p {
+  max-width: 26ch;
+  margin: 0;
+  color: var(--muted);
+}
+
+.archive-card__body {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.archive-card__meta,
+.archive-card__labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.6rem;
+}
+
+.archive-card__meta span {
+  color: var(--muted);
+}
+
+.archive-card__action {
+  width: fit-content;
+}
+
+.archive-batch-note {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.archive-file-preview {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.archive-file-preview__image {
+  width: 100%;
+  max-height: 18rem;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.archive-file-preview__fallback {
+  display: grid;
+  gap: 0.65rem;
+  min-height: 11rem;
+  padding: 1rem;
+  border: 1px dashed rgba(243, 178, 26, 0.4);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.archive-file-preview__fallback span {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.archive-file-preview__fallback strong {
+  font-size: 1.15rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.memory-archive-section {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (max-width: 920px) {
+  .archive-card__media,
+  .archive-file-preview__image {
+    min-height: auto;
+  }
+}

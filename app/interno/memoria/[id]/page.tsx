@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import { signOutAction } from "@/app/interno/actions";
+import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
 import { MemoryForm } from "@/components/memory-form";
-import { signOutAction } from "@/app/interno/actions";
+import { countLinkedArchiveAssets } from "@/lib/archive/navigation";
+import { getInternalArchiveAssetsByMemoryItemId } from "@/lib/archive/queries";
 import { getPublishedMemoryCollections, getInternalMemoryById } from "@/lib/memory/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -35,6 +38,8 @@ export default async function InternalMemoryDetailPage({ params }: PageProps) {
   }
 
   const collections = await getPublishedMemoryCollections();
+  const archiveAssets = await getInternalArchiveAssetsByMemoryItemId(item.id);
+  const archiveAssetCount = countLinkedArchiveAssets(archiveAssets, item.id);
 
   return (
     <Container className="intro-grid internal-page">
@@ -46,10 +51,16 @@ export default async function InternalMemoryDetailPage({ params }: PageProps) {
         </p>
         <div className="hero__actions">
           <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
+            <button className="button-secondary" type="submit">
+              Sair
+            </button>
           </form>
-          <Link href="/interno/memoria" className="button-secondary">Voltar à fila</Link>
-          <Link href={`/memoria/${item.slug}`} className="button-secondary">Ver público</Link>
+          <Link href="/interno/memoria" className="button-secondary">
+            Voltar à fila
+          </Link>
+          <Link href={`/memoria/${item.slug}`} className="button-secondary">
+            Ver público
+          </Link>
         </div>
       </section>
 
@@ -65,6 +76,7 @@ export default async function InternalMemoryDetailPage({ params }: PageProps) {
               <li>Ano final: {item.year_end || "não"}</li>
               <li>Destaque: {item.featured ? "sim" : "não"}</li>
               <li>Timeline rank: {item.timeline_rank ?? "não definido"}</li>
+              <li>Anexos: {archiveAssetCount}</li>
             </ul>
           </article>
           <article className="support-box">
@@ -77,6 +89,46 @@ export default async function InternalMemoryDetailPage({ params }: PageProps) {
               coverVariant={item.highlight_in_memory ? "ember" : "concrete"}
             />
           </article>
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">anexos</p>
+            <h2>Lastro documental ligado à memória</h2>
+          </div>
+          <p className="section__lead">
+            Fotografia, recorte e documento entram aqui como material-base. Suba novos anexos sem sair do fluxo de revisão.
+          </p>
+        </div>
+
+        <div className="hero__actions">
+          <Link href={`/interno/acervo/novo?memory_item_id=${item.id}`} className="button">
+            Adicionar anexo
+          </Link>
+          <Link href="/interno/acervo" className="button-secondary">
+            Ver acervo
+          </Link>
+        </div>
+
+        <div className="grid-3">
+          {archiveAssets.length ? (
+            archiveAssets.map((asset) => (
+              <ArchiveAssetCard
+                key={asset.id}
+                asset={asset}
+                href={`/interno/acervo/${asset.id}`}
+                actionLabel="Abrir no acervo"
+                compact
+              />
+            ))
+          ) : (
+            <div className="support-box">
+              <h3>Sem anexos vinculados</h3>
+              <p>Use o atalho acima para subir fotos, scans ou documentos-base para esta memória.</p>
+            </div>
+          )}
         </div>
       </section>
 

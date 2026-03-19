@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
@@ -10,7 +11,15 @@ import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
 import { getMemoryCollectionCount, getRelatedEditorialForMemory } from "@/lib/memory/navigation";
 import { getMemoryOpenGraphImagePath } from "@/lib/memory/share";
-import { getPublishedMemoryBySlug, getPublishedMemoryCollections, getPublishedMemoryItems } from "@/lib/memory/queries";
+import {
+  getPublishedArchiveAssetsByMemoryItemId,
+  getPublishedArchiveAssets,
+} from "@/lib/archive/queries";
+import {
+  getPublishedMemoryBySlug,
+  getPublishedMemoryCollections,
+  getPublishedMemoryItems,
+} from "@/lib/memory/queries";
 
 export async function generateStaticParams() {
   const items = await getPublishedMemoryItems();
@@ -61,6 +70,9 @@ export default async function MemoryDetailPage({ params }: PageProps) {
   const items = await getPublishedMemoryItems();
   const collections = await getPublishedMemoryCollections();
   const editorialItems = await getPublishedEditorialItems();
+  const publicAssets = await getPublishedArchiveAssetsByMemoryItemId(item.id);
+  const fallbackArchiveAssets = publicAssets.length ? publicAssets : await getPublishedArchiveAssets();
+  const memoryAssets = fallbackArchiveAssets.filter((asset) => asset.public_visibility && asset.memory_item_id === item.id);
   const relatedEditorial = getRelatedEditorialForMemory(item, editorialItems);
   const relatedSeries = item.related_series_slug ? getEditorialSeriesBySlug(item.related_series_slug) : null;
   const collection = collections.find((entry) => entry.slug === (item.collection_slug || item.memory_collection));
@@ -121,6 +133,26 @@ export default async function MemoryDetailPage({ params }: PageProps) {
         </div>
       </section>
 
+      {memoryAssets.length ? (
+        <section className="section memory-archive-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">arquivo e fontes</p>
+              <h2>Objetos ligados a esta memória</h2>
+            </div>
+            <p className="section__lead">
+              Documentos, fotos e recortes ajudam a mostrar o lastro material por trás da leitura pública.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            {memoryAssets.map((asset) => (
+                <ArchiveAssetCard key={asset.id} asset={asset} compact href={asset.file_url} actionLabel="Abrir fonte" />
+              ))}
+          </div>
+        </section>
+      ) : null}
+
       <MemoryBridge memory={item} relatedEditorial={relatedEditorial} />
 
       <section className="section">
@@ -135,9 +167,7 @@ export default async function MemoryDetailPage({ params }: PageProps) {
         </div>
 
         <div className="grid-2">
-          {relatedEditorial ? (
-            <EditorialCard item={relatedEditorial} href={`/pautas/${relatedEditorial.slug}`} compact />
-          ) : null}
+          {relatedEditorial ? <EditorialCard item={relatedEditorial} href={`/pautas/${relatedEditorial.slug}`} compact /> : null}
           {relatedSeries ? (
             <article className="support-box">
               <p className="eyebrow">Série conectada</p>
@@ -160,3 +190,4 @@ export default async function MemoryDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
