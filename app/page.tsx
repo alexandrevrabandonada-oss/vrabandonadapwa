@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { DossierCard } from "@/components/dossier-card";
+import { PlaceHubCard } from "@/components/place-hub-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
@@ -22,6 +23,7 @@ import { getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { getPublishedCampaigns, getPublishedCampaignLinks } from "@/lib/campaigns/queries";
 import { getPublishedImpactLinks, getPublishedImpacts } from "@/lib/impact/queries";
 import { getRadarHomeItems } from "@/lib/radar/queries";
+import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -61,6 +63,9 @@ export default async function HomePage() {
   const impacts = await getPublishedImpacts();
   const featuredImpact = impacts.find((impact) => impact.featured && impact.status === "ongoing") ?? impacts.find((impact) => impact.status === "ongoing") ?? impacts[0] ?? null;
   const featuredImpactLinks = featuredImpact ? await getPublishedImpactLinks(featuredImpact.id) : [];
+  const placeHubs = await getPublishedPlaceHubs();
+  const featuredPlaceHub = placeHubs.find((place) => place.featured && place.status === "active") ?? placeHubs.find((place) => place.status === "active") ?? placeHubs[0] ?? null;
+  const featuredPlaceHubLinks = featuredPlaceHub ? await getPublishedPlaceHubLinks(featuredPlaceHub.id) : [];
   const radarItems = await getRadarHomeItems(3);
   const entryRoutes = await getPublishedEntryRoutes();
   const entryRouteCounts = new Map(
@@ -353,7 +358,42 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section className="section home-hubs-section">
+            {featuredPlaceHub ? (
+        <section className="section home-territory-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">a cidade por lugares</p>
+              <h2>Territórios vivos para entrar por endereço, bairro e ponto crítico.</h2>
+            </div>
+            <p className="section__lead">
+              Os lugares ajudam a localizar o conflito no mapa concreto da cidade e conectam memória, arquivo, pauta e consequência pública sem virar mapa burocrático.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            <PlaceHubCard placeHub={featuredPlaceHub} href={`/territorios/${featuredPlaceHub.slug}`} itemCount={featuredPlaceHubLinks.length} />
+            <article className="support-box home-callout home-callout--accent">
+              <p className="eyebrow">por que importa</p>
+              <h3>O território dá chão ao arquivo vivo.</h3>
+              <p>
+                Aqui o projeto mostra que memória e conflito têm endereço. Entre pelo lugar e siga para os casos, documentos e impactos ligados a ele.
+              </p>
+              <div className="stack-actions">
+                <Link href={`/territorios/${featuredPlaceHub.slug}`} className="button">
+                  Abrir território
+                </Link>
+                <Link href="/territorios" className="button-secondary">
+                  Ver atlas
+                </Link>
+                <Link href="/memoria" className="button-secondary">
+                  Ver memória
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
+      ) : null}
+<section className="section home-hubs-section">
         <div className="grid-2">
           <div>
             <p className="eyebrow">Grandes frentes</p>
