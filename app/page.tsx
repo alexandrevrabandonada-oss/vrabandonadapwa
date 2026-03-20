@@ -5,6 +5,7 @@ import { Container } from "@/components/container";
 import { DossierCard } from "@/components/dossier-card";
 import { PlaceHubCard } from "@/components/place-hub-card";
 import { ActorHubCard } from "@/components/actor-hub-card";
+import { PatternReadCard } from "@/components/pattern-read-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
@@ -26,6 +27,7 @@ import { getPublishedImpactLinks, getPublishedImpacts } from "@/lib/impact/queri
 import { getRadarHomeItems } from "@/lib/radar/queries";
 import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
 import { getPublishedActorHubLinks, getPublishedActorHubs } from "@/lib/actors/queries";
+import { getPublishedPatternReadLinks, getPublishedPatternReads } from "@/lib/patterns/queries";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -71,6 +73,9 @@ export default async function HomePage() {
   const actors = await getPublishedActorHubs();
   const featuredActor = actors.find((actor) => actor.featured && actor.status === "active") ?? actors.find((actor) => actor.status === "active") ?? actors[0] ?? null;
   const featuredActorLinks = featuredActor ? await getPublishedActorHubLinks(featuredActor.id) : [];
+  const patternReads = await getPublishedPatternReads();
+  const featuredPattern = patternReads.find((pattern) => pattern.featured && pattern.status === "active") ?? patternReads.find((pattern) => pattern.status === "active") ?? patternReads[0] ?? null;
+  const featuredPatternLinks = featuredPattern ? await getPublishedPatternReadLinks(featuredPattern.id) : [];
   const radarItems = await getRadarHomeItems(3);
   const entryRoutes = await getPublishedEntryRoutes();
   const entryRouteCounts = new Map(
@@ -435,6 +440,42 @@ export default async function HomePage() {
         </section>
       ) : null}
 
+      {featuredPattern ? (
+        <section className="section home-patterns-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">o que se repete na cidade</p>
+              <h2>Leitura estrutural para sair do caso isolado.</h2>
+            </div>
+            <p className="section__lead">
+              Padrões juntam as peças que insistem em voltar. Aqui a cidade aparece como recorrência, não como acúmulo de posts.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            <PatternReadCard patternRead={featuredPattern} href={`/padroes/${featuredPattern.slug}`} itemCount={featuredPatternLinks.length} />
+            <article className="support-box home-callout home-callout--accent">
+              <p className="eyebrow">por que importa</p>
+              <h3>O padrão mostra a estrutura por trás do conflito.</h3>
+              <p>
+                Entre pela recorrência e siga para atores, territórios, impactos e casos que voltam a se cruzar no tempo.
+              </p>
+              <div className="stack-actions">
+                <Link href={`/padroes/${featuredPattern.slug}`} className="button">
+                  Abrir padrão
+                </Link>
+                <Link href="/padroes" className="button-secondary">
+                  Ver padrões
+                </Link>
+                <Link href="/atores" className="button-secondary">
+                  Ver atores
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section home-hubs-section">
         <div className="grid-2">
           <div>
@@ -672,6 +713,12 @@ export default async function HomePage() {
     </Container>
   );
 }
+
+
+
+
+
+
 
 
 
