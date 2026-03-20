@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { FollowButton } from "@/components/follow-button";
 import { ActorHubLinkCard } from "@/components/actor-hub-link-card";
 import { ActorHubPrimaryPiece } from "@/components/actor-hub-primary-piece";
 import { ActorHubTimeline } from "@/components/actor-hub-timeline";
@@ -137,6 +138,7 @@ export default async function ActorHubPage({ params }: PageProps) {
             <Link href="/impacto" className="button-secondary">
               Ver impactos
             </Link>
+            <FollowButton kind="actor" keyValue={actorHub.slug} title={actorHub.title} summary={actorHub.excerpt || actorHub.description || actorHub.title} href={`/atores/${actorHub.slug}`} compact />
           </div>
         </article>
       </section>
@@ -254,6 +256,9 @@ export default async function ActorHubPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
+
 
 
 

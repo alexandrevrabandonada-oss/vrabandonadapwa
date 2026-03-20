@@ -288,6 +288,9 @@ export default async function HomePage() {
             <Link href="/agora" className="button-secondary">
               Ver radar completo
             </Link>
+            <Link href="/acompanhar" className="button-secondary">
+              Acompanhar frentes
+            </Link>
           </div>
         </section>
       ) : null}
@@ -771,6 +774,7 @@ export default async function HomePage() {
     </Container>
   );
 }
+
 
 
 

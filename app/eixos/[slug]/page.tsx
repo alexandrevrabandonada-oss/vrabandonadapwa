@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
+import { FollowButton } from "@/components/follow-button";
 import { DossierCard } from "@/components/dossier-card";
 import { DossierUpdateCard } from "@/components/dossier-update-card";
 import { EditorialCard } from "@/components/editorial-card";
@@ -140,6 +141,7 @@ export default async function ThemeHubDetailPage({ params }: PageProps) {
             <Link href="/dossies" className="button-secondary">
               Abrir dossiês
             </Link>
+            <FollowButton kind="hub" keyValue={hub.slug} title={hub.title} summary={hub.excerpt || hub.description || hub.title} href={`/eixos/${hub.slug}`} compact />
             <Link href="/envie" className="button">
               Enviar pista
             </Link>
@@ -315,3 +317,4 @@ export default async function ThemeHubDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+

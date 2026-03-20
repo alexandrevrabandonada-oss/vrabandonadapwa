@@ -57,6 +57,9 @@ export default async function AgoraPage() {
               Ver o que mudou
             </Link>
             <SaveReadButton kind="radar" keyValue="agora" title="Agora no VR Abandonada" summary="Pulso editorial vivo do VR Abandonada." href="/agora" compact />
+            <Link href="/acompanhar" className="button-secondary">
+              Acompanhar frentes
+            </Link>
             <Link href="/dossies" className="button-secondary">
               Abrir dossiês
             </Link>
@@ -247,6 +250,8 @@ export default async function AgoraPage() {
     </Container>
   );
 }
+
+
 
 
 

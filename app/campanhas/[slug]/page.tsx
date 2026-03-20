@@ -6,6 +6,7 @@ import { Container } from "@/components/container";
 import { CampaignLinkCard } from "@/components/campaign-link-card";
 import { CampaignPrimaryPiece } from "@/components/campaign-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
+import { FollowButton } from "@/components/follow-button";
 import { SaveReadButton } from "@/components/save-read-button";
 import { SharePanel } from "@/components/share-panel";
 import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
@@ -77,6 +78,7 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
               Como ajudar
             </Link>
             <SaveReadButton kind="campaign" keyValue={campaign.slug} title={campaign.title} summary={campaign.excerpt || campaign.description || campaign.title} href={`/campanhas/${campaign.slug}`} compact />
+            <FollowButton kind="campaign" keyValue={campaign.slug} title={campaign.title} summary={campaign.excerpt || campaign.description || campaign.title} href={`/campanhas/${campaign.slug}`} compact />
             <Link href="/agora" className="button-secondary">
               Abrir radar
             </Link>
@@ -262,6 +264,7 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
     </Container>
   );
 }
+
 
 
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { SavedReadsClient } from "@/components/saved-reads-client";
@@ -43,7 +44,33 @@ export default function SalvosPage() {
           <p>
             O dispositivo vira uma pequena prateleira local. A leitura salva não depende de conta nem de nuvem; ela acompanha o que você escolheu abrir aqui.
           </p>
+          <div className="stack-actions">
+            <Link href="/acompanhar" className="button-secondary">
+              Abrir acompanhar
+            </Link>
+            <Link href="/metodo" className="button-secondary">
+              Entender a diferença
+            </Link>
+          </div>
         </article>
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">acompanhar</p>
+            <h2>Salvar é uma leitura. Seguir é uma frente.</h2>
+          </div>
+          <p className="section__lead">Quando a leitura precisa de continuidade, abra o painel local de acompanhamento.</p>
+        </div>
+        <div className="stack-actions">
+          <Link href="/acompanhar" className="button">
+            Abrir acompanhar
+          </Link>
+          <Link href="/metodo" className="button-secondary">
+            Entender a diferença
+          </Link>
+        </div>
       </section>
 
       <SavedReadsClient />

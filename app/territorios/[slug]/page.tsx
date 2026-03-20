@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { FollowButton } from "@/components/follow-button";
 import { EditorialCover } from "@/components/editorial-cover";
 import { PlaceHubCard } from "@/components/place-hub-card";
 import { PlaceHubPrimaryPiece } from "@/components/place-hub-primary-piece";
@@ -123,6 +124,7 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
             <Link href="/metodo" className="button-secondary">
               Ler método
             </Link>
+            <FollowButton kind="territory" keyValue={placeHub.slug} title={placeHub.title} summary={placeHub.excerpt || placeHub.description || placeHub.title} href={`/territorios/${placeHub.slug}`} compact />
           </div>
         </div>
         <EditorialCover
@@ -300,3 +302,4 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
