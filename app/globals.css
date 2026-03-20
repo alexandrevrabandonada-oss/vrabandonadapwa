@@ -1542,3 +1542,56 @@ button, input, textarea, select { font: inherit; }
 .entry-route-card .meta-row {
   align-items: center;
 }
+.participate-page,
+.participation-internal-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.participate-hero,
+.participate-detail-hero,
+.participation-internal-hero,
+.participate-intro-section,
+.participate-cards-section,
+.participate-guidance-section,
+.participate-follow-section,
+.participation-internal-section,
+.home-participation-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.participation-card,
+.participation-step-card {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.participation-card--compact,
+.participation-step-card--compact {
+  gap: 0.75rem;
+}
+
+.participation-card__body,
+.participation-step-card__body {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.participation-step-card__note {
+  margin: 0;
+  color: var(--muted);
+}
+
+.participation-card .editorial-cover,
+.participation-step-card .editorial-cover {
+  min-height: 13rem;
+}
+
+@media (min-width: 921px) {
+  .participate-hero,
+  .participate-detail-hero {
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  }
+}

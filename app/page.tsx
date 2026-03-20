@@ -8,10 +8,12 @@ import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
 import { RadarItemCard } from "@/components/radar-item-card";
 import { EntryRouteCard } from "@/components/entry-route-card";
+import { ParticipationPathCard } from "@/components/participation-path-card";
 import { ThemeHubCard } from "@/components/theme-hub-card";
 import { getPublishedDossierLinks, getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getPublishedEntryRouteItems, getPublishedEntryRoutes } from "@/lib/entry-routes/queries";
+import { getPublishedParticipationPathItems, getPublishedParticipationPaths } from "@/lib/participation/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
@@ -56,6 +58,12 @@ export default async function HomePage() {
   );
   const featuredStartRoutes = entryRoutes.filter((route) => route.featured).slice(0, 3);
   const startRoutes = featuredStartRoutes.length ? featuredStartRoutes : entryRoutes.slice(0, 3);
+  const participationPaths = await getPublishedParticipationPaths();
+  const participationCounts = new Map(
+    await Promise.all(participationPaths.map(async (path) => [path.id, (await getPublishedParticipationPathItems(path.id)).length] as const)),
+  );
+  const featuredParticipationPaths = participationPaths.filter((path) => path.featured).slice(0, 4);
+  const participationHighlights = featuredParticipationPaths.length ? featuredParticipationPaths : participationPaths.slice(0, 4);
 
   return (
     <Container className="intro-grid landing-page">
@@ -136,6 +144,30 @@ export default async function HomePage() {
         <div className="stack-actions">
           <Link href="/comecar" className="button-secondary">
             Abrir guias de leitura
+          </Link>
+        </div>
+      </section>
+
+      <section className="section home-participation-section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">Participe</p>
+            <h2>O que fazer depois de entender o projeto.</h2>
+          </div>
+          <p className="section__lead">
+            A participação não começa em um formulário. Ela começa no gesto certo: enviar, apoiar, preservar ou compartilhar com contexto.
+          </p>
+        </div>
+
+        <div className="grid-2">
+          {participationHighlights.map((path) => (
+            <ParticipationPathCard key={path.id} path={path} href={`/participe/${path.slug}`} itemCount={participationCounts.get(path.id) ?? 0} compact />
+          ))}
+        </div>
+
+        <div className="stack-actions">
+          <Link href="/participe" className="button-secondary">
+            Abrir caminhos de participação
           </Link>
         </div>
       </section>

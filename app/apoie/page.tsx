@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { PageHero } from "@/components/page-hero";
@@ -37,6 +38,27 @@ export default function ApoiePage() {
               <li>Rotina de resposta ao público</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">como colaborar</p>
+            <h2>Se quiser entender o gesto certo antes de apoiar, denunciar ou enviar material.</h2>
+          </div>
+          <p className="section__lead">
+            A participação organiza os caminhos públicos: envio, memória, apoio e acompanhamento do que está em curso.
+          </p>
+        </div>
+
+        <div className="stack-actions">
+          <Link href="/participe" className="button-secondary">
+            Ver caminhos de participação
+          </Link>
+          <Link href="/comecar" className="button-secondary">
+            Começar por aqui
+          </Link>
         </div>
       </section>
     </Container>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { IntakeForm } from "@/components/intake-form";
@@ -48,8 +49,7 @@ export default function EnviePage() {
             <h2>Canal inicial de entrada</h2>
           </div>
           <p className="section__lead">
-            O envio vai para a tabela `intake_submissions`, preparada para fila
-            editorial, moderação e cruzamento com futuras ferramentas internas.
+            O envio vai para a tabela `intake_submissions`, preparada para fila editorial, moderação e cruzamento com futuras ferramentas internas.
           </p>
         </div>
 
@@ -63,8 +63,7 @@ export default function EnviePage() {
             <h2>Disciplina editorial antes da publicação.</h2>
           </div>
           <p className="section__lead">
-            Relatos sensíveis recebem cuidado extra. Envio não significa
-            publicação automática.
+            Relatos sensíveis recebem cuidado extra. Envio não significa publicação automática.
           </p>
         </div>
 
@@ -87,6 +86,27 @@ export default function EnviePage() {
               <li>Conteúdo que dependa de publicação imediata</li>
             </ul>
           </article>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">antes de enviar</p>
+            <h2>Se ainda estiver entendendo o projeto, comece pela rota de participação.</h2>
+          </div>
+          <p className="section__lead">
+            Assim você escolhe o caminho certo para o seu gesto: denunciar, apoiar, colaborar com memória ou acompanhar o momento.
+          </p>
+        </div>
+
+        <div className="stack-actions">
+          <Link href="/participe" className="button-secondary">
+            Ver como participar
+          </Link>
+          <Link href="/comecar" className="button-secondary">
+            Entender o projeto
+          </Link>
         </div>
       </section>
     </Container>
