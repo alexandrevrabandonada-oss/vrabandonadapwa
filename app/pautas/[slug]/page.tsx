@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SharePanel } from "@/components/share-panel";
 import { Container } from "@/components/container";
 import { getPublishedEditorialBySlug, getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialOpenGraphImagePath } from "@/lib/editorial/share";
@@ -104,6 +105,25 @@ export default async function PautaDetailPage({ params }: PageProps) {
         />
       </section>
 
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">compartilhar</p>
+            <h2>Uma pauta também precisa de circulação curta.</h2>
+          </div>
+          <p className="section__lead">Leve a leitura para fora do site sem perder o fio editorial e o retorno ao arquivo.</p>
+        </div>
+
+        <SharePanel
+          title={item.title}
+          summary={item.excerpt || item.title}
+          caption={`Leia e compartilhe: ${item.title}. ${item.excerpt || ""}`.trim()}
+          shareHref={`/compartilhar/pauta/${item.slug}`}
+          contentHref={`/pautas/${item.slug}`}
+          titleLabel="compartilhe esta pauta"
+        />
+      </section>
+
       <article className="section editorial-article">
         <div className="editorial-article__meta">
           <p className="eyebrow">arquivo vivo</p>
@@ -169,3 +189,6 @@ export default async function PautaDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
+

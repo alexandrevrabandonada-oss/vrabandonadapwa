@@ -6,6 +6,7 @@ import { Container } from "@/components/container";
 import { EditionLinkCard } from "@/components/edition-link-card";
 import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SharePanel } from "@/components/share-panel";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
@@ -157,6 +158,25 @@ export default async function EditionPage({ params }: PageProps) {
         </article>
       </section>
 
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">compartilhar</p>
+            <h2>Uma edição também é uma peça de circulação.</h2>
+          </div>
+          <p className="section__lead">Copie resumo, legenda ou link e leve a leitura para fora do site sem perder contexto.</p>
+        </div>
+
+        <SharePanel
+          title={edition.title}
+          summary={edition.excerpt || edition.description || edition.title}
+          caption={`Leia e compartilhe: ${edition.title}. ${edition.excerpt || edition.description || ""}`.trim()}
+          shareHref={`/compartilhar/edicao/${edition.slug}`}
+          contentHref={`/edicoes/${edition.slug}`}
+          titleLabel="compartilhe esta edição"
+        />
+      </section>
+
       <section className="section" id="edicao-viva">
         <div className="grid-2">
           <div>
@@ -280,5 +300,8 @@ export default async function EditionPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
+
 
 

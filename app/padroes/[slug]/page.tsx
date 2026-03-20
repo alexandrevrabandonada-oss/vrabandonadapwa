@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { SharePanel } from "@/components/share-panel";
 import { PatternReadLinkCard } from "@/components/pattern-read-link-card";
 import { PatternReadPrimaryPiece } from "@/components/pattern-read-primary-piece";
 import { PatternReadTimeline } from "@/components/pattern-read-timeline";
@@ -147,6 +148,25 @@ export default async function PatternReadPage({ params }: PageProps) {
             </Link>
           </div>
         </article>
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">compartilhar</p>
+            <h2>O padrão também pode circular como leitura estrutural.</h2>
+          </div>
+          <p className="section__lead">Compartilhe a hipótese sem perder o caminho para as peças que sustentam a recorrência.</p>
+        </div>
+
+        <SharePanel
+          title={patternRead.title}
+          summary={patternRead.lead_question || patternRead.excerpt || patternRead.description || patternRead.title}
+          caption={`Leia e compartilhe: ${patternRead.title}. ${patternRead.lead_question || patternRead.excerpt || patternRead.description || ""}`.trim()}
+          shareHref={`/compartilhar/padrao/${patternRead.slug}`}
+          contentHref={`/padroes/${patternRead.slug}`}
+          titleLabel="compartilhe este padrão"
+        />
       </section>
 
       <section className="section" id="padrao-vivo">
@@ -296,4 +316,8 @@ export default async function PatternReadPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
+
+
 

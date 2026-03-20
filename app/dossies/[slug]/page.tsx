@@ -10,6 +10,7 @@ import { DossierTimeline } from "@/components/dossier-timeline";
 import { DossierUpdateCard } from "@/components/dossier-update-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SharePanel } from "@/components/share-panel";
 import { MemoryCard } from "@/components/memory-card";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
@@ -144,6 +145,25 @@ export default async function DossierDetailPage({ params }: PageProps) {
           seriesTitle={dossier.lead_question || dossier.period_label || dossier.title}
           coverImageUrl={dossier.cover_image_url}
           coverVariant={dossier.featured ? "ember" : "concrete"}
+        />
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">compartilhar</p>
+            <h2>Um dossiê também pode sair do site com contexto.</h2>
+          </div>
+          <p className="section__lead">Copie a leitura inicial e circule a investigação sem perder o caminho para o arquivo vivo.</p>
+        </div>
+
+        <SharePanel
+          title={dossier.title}
+          summary={dossier.excerpt || dossier.description || dossier.title}
+          caption={`Leia e compartilhe: ${dossier.title}. ${dossier.excerpt || dossier.description || ""}`.trim()}
+          shareHref={`/compartilhar/dossie/${dossier.slug}`}
+          contentHref={`/dossies/${dossier.slug}`}
+          titleLabel="compartilhe este dossiê"
         />
       </section>
 
@@ -382,3 +402,6 @@ export default async function DossierDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
+

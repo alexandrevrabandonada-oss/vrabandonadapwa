@@ -6,6 +6,7 @@ import { Container } from "@/components/container";
 import { CampaignLinkCard } from "@/components/campaign-link-card";
 import { CampaignPrimaryPiece } from "@/components/campaign-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SharePanel } from "@/components/share-panel";
 import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
 import { getPublishedCampaignBySlug, getPublishedCampaignLinks } from "@/lib/campaigns/queries";
 import { resolveCampaignLink } from "@/lib/campaigns/resolve";
@@ -86,6 +87,25 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
           seriesTitle={campaign.lead_question || campaign.excerpt || campaign.title}
           coverImageUrl={campaign.cover_image_url}
           coverVariant={campaign.featured ? "ember" : "concrete"}
+        />
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">compartilhar</p>
+            <h2>Uma campanha precisa de circulação responsável.</h2>
+          </div>
+          <p className="section__lead">Leve o chamado fora do site sem perder o caminho de volta ao método e à participação.</p>
+        </div>
+
+        <SharePanel
+          title={campaign.title}
+          summary={campaign.lead_question || campaign.excerpt || campaign.description || "Foco público do momento."}
+          caption={`Leia e compartilhe: ${campaign.title}. ${campaign.lead_question || campaign.excerpt || campaign.description || ""}`.trim()}
+          shareHref={`/compartilhar/campanha/${campaign.slug}`}
+          contentHref={`/campanhas/${campaign.slug}`}
+          titleLabel="compartilhe esta campanha"
         />
       </section>
 
@@ -240,3 +260,6 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
     </Container>
   );
 }
+
+
+

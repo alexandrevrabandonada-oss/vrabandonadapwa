@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SharePanel } from "@/components/share-panel";
 import { ImpactCard } from "@/components/impact-card";
 import { ImpactLinkCard } from "@/components/impact-link-card";
 import { getPublishedImpacts, getPublishedImpactBySlug, getPublishedImpactLinks } from "@/lib/impact/queries";
@@ -100,6 +101,25 @@ export default async function ImpactDetailPage({ params }: PageProps) {
           seriesTitle={impact.territory_label || impact.date_label || "VR Abandonada"}
           coverImageUrl={impact.cover_image_url}
           coverVariant={impact.featured ? "ember" : "concrete"}
+        />
+      </section>
+
+      <section className="section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">compartilhar</p>
+            <h2>Uma consequência pública também precisa circular.</h2>
+          </div>
+          <p className="section__lead">Compartilhe a leitura do que mudou sem reduzir o impacto a métrica ou slogan.</p>
+        </div>
+
+        <SharePanel
+          title={impact.title}
+          summary={impact.excerpt || impact.description || impact.title}
+          caption={`Leia e compartilhe: ${impact.title}. ${impact.excerpt || impact.description || ""}`.trim()}
+          shareHref={`/compartilhar/impacto/${impact.slug}`}
+          contentHref={`/impacto/${impact.slug}`}
+          titleLabel="compartilhe este impacto"
         />
       </section>
 
@@ -235,5 +255,8 @@ export default async function ImpactDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
+
 
 
