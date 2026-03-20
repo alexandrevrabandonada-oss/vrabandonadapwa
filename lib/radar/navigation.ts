@@ -2,6 +2,7 @@ import type { RadarSection, RadarSourceType } from "@/lib/radar/types";
 
 export const radarSectionLabels: Record<RadarSection, string> = {
   what_changed: "O que mudou",
+  impact: "O que já mudou",
   in_course: "Em curso agora",
   hot_fronts: "Frentes quentes",
   archive_present: "Do arquivo ao presente",
@@ -16,6 +17,7 @@ export const radarSourceLabels: Record<RadarSourceType, string> = {
   memory: "Memória",
   archive: "Acervo",
   campaign: "Campanha",
+  impact: "Impacto",
 };
 
 export function getRadarSectionLabel(section: string) {
@@ -26,6 +28,8 @@ export function getRadarSectionTone(section: string) {
   switch (section) {
     case "what_changed":
       return "status-tone--hot";
+    case "impact":
+      return "status-tone--calm";
     case "in_course":
       return "status-tone--watch";
     case "hot_fronts":
@@ -47,6 +51,8 @@ export function getRadarSectionIntro(section: RadarSection) {
   switch (section) {
     case "what_changed":
       return "Atualizações de dossiê e pautas recentes entram primeiro aqui.";
+    case "impact":
+      return "Efeitos públicos já observados ou em consolidação entram aqui.";
     case "in_course":
       return "Casos em andamento com a última movimentação visível.";
     case "hot_fronts":

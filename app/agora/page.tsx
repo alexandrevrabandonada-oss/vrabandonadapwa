@@ -30,7 +30,7 @@ export default async function AgoraPage() {
   const radar = await getRadarPageData();
   const homeSignals = Array.from(
     new Map(
-      [radar.spotlight, radar.sections.what_changed[0], radar.sections.in_course[0], radar.sections.hot_fronts[0], radar.sections.archive_present[0], radar.sections.calls[0]]
+      [radar.spotlight, radar.sections.what_changed[0], radar.sections.impact[0], radar.sections.in_course[0], radar.sections.hot_fronts[0], radar.sections.archive_present[0], radar.sections.calls[0]]
         .filter((item): item is RadarItem => Boolean(item))
         .map((item) => [item.href, item] as const),
     ).values(),
@@ -87,16 +87,16 @@ export default async function AgoraPage() {
             <p>Atualizações e pautas recentes que pedem leitura imediata.</p>
           </article>
           <article className="card">
+            <h3>{radar.counts.impact} efeitos</h3>
+            <p>Consequências públicas observadas ou em consolidação.</p>
+          </article>
+          <article className="card">
             <h3>{radar.counts.dossiers} casos</h3>
             <p>Dossiês em acompanhamento público.</p>
           </article>
           <article className="card">
             <h3>{radar.counts.hubs} frentes</h3>
             <p>Eixos temáticos com movimentação recente.</p>
-          </article>
-          <article className="card">
-            <h3>{radar.counts.archive} rastros</h3>
-            <p>Memória e acervo em evidência quando ajudam a ler o presente.</p>
           </article>
         </div>
       </section>
@@ -112,6 +112,22 @@ export default async function AgoraPage() {
 
         <div className="grid-2">
           {radar.sections.what_changed.map((item) => (
+            <RadarItemCard key={item.id} item={item} compact />
+          ))}
+        </div>
+      </section>
+
+      <section className="section radar-section" id="impacto">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">{getRadarSectionLabel("impact")}</p>
+            <h2>{getRadarSectionIntro("impact")}</h2>
+          </div>
+          <p className="section__lead">Consequências já observadas, parcialidades e efeitos em consolidação ajudam a entender que investigação não termina no texto publicado.</p>
+        </div>
+
+        <div className="grid-2">
+          {radar.sections.impact.map((item) => (
             <RadarItemCard key={item.id} item={item} compact />
           ))}
         </div>
@@ -229,5 +245,8 @@ export default async function AgoraPage() {
     </Container>
   );
 }
+
+
+
 
 

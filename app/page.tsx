@@ -8,6 +8,7 @@ import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
 import { RadarItemCard } from "@/components/radar-item-card";
 import { CampaignCard } from "@/components/campaign-card";
+import { ImpactPrimaryPiece } from "@/components/impact-primary-piece";
 import { EntryRouteCard } from "@/components/entry-route-card";
 import { ParticipationPathCard } from "@/components/participation-path-card";
 import { ThemeHubCard } from "@/components/theme-hub-card";
@@ -19,6 +20,7 @@ import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { getPublishedCampaigns, getPublishedCampaignLinks } from "@/lib/campaigns/queries";
+import { getPublishedImpactLinks, getPublishedImpacts } from "@/lib/impact/queries";
 import { getRadarHomeItems } from "@/lib/radar/queries";
 import { site } from "@/lib/site";
 
@@ -56,6 +58,9 @@ export default async function HomePage() {
   const campaigns = await getPublishedCampaigns();
   const featuredCampaign = campaigns[0] ?? null;
   const featuredCampaignLinks = featuredCampaign ? await getPublishedCampaignLinks(featuredCampaign.id) : [];
+  const impacts = await getPublishedImpacts();
+  const featuredImpact = impacts.find((impact) => impact.featured && impact.status === "ongoing") ?? impacts.find((impact) => impact.status === "ongoing") ?? impacts[0] ?? null;
+  const featuredImpactLinks = featuredImpact ? await getPublishedImpactLinks(featuredImpact.id) : [];
   const radarItems = await getRadarHomeItems(3);
   const entryRoutes = await getPublishedEntryRoutes();
   const entryRouteCounts = new Map(
@@ -300,6 +305,54 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
+      {featuredImpact ? (
+        <section className="section home-impact-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">o que já mudou</p>
+              <h2>A consequência pública que dá continuidade ao projeto.</h2>
+            </div>
+            <p className="section__lead">
+              Impacto registra o que mudou por causa de uma pauta, campanha ou investigação, sem prometer causalidade total nem virar dashboard frio.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            <ImpactPrimaryPiece
+              title={featuredImpact.title}
+              question={featuredImpact.lead_question}
+              description={featuredImpact.excerpt || featuredImpact.description}
+              status={featuredImpact.status}
+              impactType={featuredImpact.impact_type}
+              dateLabel={featuredImpact.date_label}
+              happenedAt={featuredImpact.happened_at}
+              territoryLabel={featuredImpact.territory_label}
+              href={`/impacto/${featuredImpact.slug}`}
+              linkCount={featuredImpactLinks.length}
+              latestLink={featuredImpactLinks[0] ?? null}
+            />
+            <article className="support-box home-callout home-callout--accent">
+              <p className="eyebrow">por que importa</p>
+              <h3>Uma consequência pública precisa continuar visível.</h3>
+              <p>
+                Aqui o projeto presta conta sem relatório burocrático: mostra o que mudou, o que segue em aberto e para onde ir depois.
+              </p>
+              <div className="stack-actions">
+                <Link href={`/impacto/${featuredImpact.slug}`} className="button">
+                  Abrir impacto
+                </Link>
+                <Link href="/campanhas" className="button-secondary">
+                  Ver campanhas
+                </Link>
+                <Link href="/agora" className="button-secondary">
+                  Ver radar
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section home-hubs-section">
         <div className="grid-2">
           <div>
@@ -537,6 +590,10 @@ export default async function HomePage() {
     </Container>
   );
 }
+
+
+
+
 
 
 

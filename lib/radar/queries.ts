@@ -1,21 +1,24 @@
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
-import { getPublishedCampaigns } from "@/lib/campaigns/queries";
 import { getArchiveAssetPeriodLabel, getArchiveAssetTypeLabel } from "@/lib/archive/navigation";
+import { getPublishedCampaigns } from "@/lib/campaigns/queries";
+import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
+import type { ArchiveAsset } from "@/lib/archive/types";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
+import type { EditorialItem } from "@/lib/editorial/types";
 import { getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import { getDossierUpdateNarrativeLabel, getDossierUpdatePreviewText, sortDossierUpdates } from "@/lib/dossiers/updates";
+import type { InvestigationDossier, InvestigationDossierUpdate } from "@/lib/dossiers/types";
+import { getPublishedImpacts } from "@/lib/impact/queries";
+import { getImpactStatusLabel, getImpactTypeLabel } from "@/lib/impact/navigation";
+import type { PublicImpact } from "@/lib/impact/types";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
+import type { MemoryItem } from "@/lib/memory/types";
 import { getPublishedThemeHubLinks, getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { getThemeHubStatusLabel } from "@/lib/hubs/navigation";
-import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
-import type { ArchiveAsset } from "@/lib/archive/types";
-import type { PublicCampaign } from "@/lib/campaigns/types";
-import type { EditorialItem } from "@/lib/editorial/types";
-import type { InvestigationDossier, InvestigationDossierUpdate } from "@/lib/dossiers/types";
-import type { MemoryItem } from "@/lib/memory/types";
 import type { ThemeHub } from "@/lib/hubs/types";
+import type { PublicCampaign } from "@/lib/campaigns/types";
 import type { RadarItem, RadarPageData, RadarSection, RadarSectionMap, RadarSourceType } from "@/lib/radar/types";
 
 function formatRadarDateLabel(value: string | null | undefined) {
@@ -63,6 +66,7 @@ function getCoverVariantBySource(sourceType: RadarSourceType, featured: boolean,
   if (sourceType === "theme-hub") return featured ? "ember" : "steel";
   if (sourceType === "editorial") return featured ? "ember" : "night";
   if (sourceType === "memory") return featured ? "ember" : "steel";
+  if (sourceType === "impact") return featured ? "ember" : "steel";
   return featured ? "ember" : "concrete";
 }
 
@@ -107,6 +111,26 @@ function buildEditorialItem(item: EditorialItem): RadarItem {
     sortDate: item.published_at || item.updated_at,
     sortOrder: item.featured_order ?? 9999,
     actionLabel: "Ler pauta",
+  };
+}
+
+function buildImpactItem(impact: PublicImpact): RadarItem {
+  return {
+    id: `impact:${impact.id}`,
+    section: "impact",
+    sourceType: "impact",
+    title: impact.title,
+    excerpt: impact.excerpt || impact.description,
+    href: `/impacto/${impact.slug}`,
+    primaryLabel: "Impacto",
+    secondaryLabel: `${getImpactStatusLabel(impact.status)} • ${getImpactTypeLabel(impact.impact_type)}`,
+    dateLabel: formatRadarDateLabel(impact.happened_at || impact.updated_at),
+    coverImageUrl: impact.cover_image_url,
+    coverVariant: getCoverVariantBySource("impact", impact.featured, "impact"),
+    featured: impact.featured || impact.status === "ongoing",
+    sortDate: impact.happened_at || impact.updated_at,
+    sortOrder: impact.sort_order,
+    actionLabel: "Abrir impacto",
   };
 }
 
@@ -209,6 +233,7 @@ function buildCampaignItem(campaign: PublicCampaign): RadarItem {
     actionLabel: "Abrir campanha",
   };
 }
+
 function getLatestUpdateForDossier(dossierId: string, updatesByDossierId: Map<string, InvestigationDossierUpdate[]>) {
   return updatesByDossierId.get(dossierId)?.[0] ?? null;
 }
@@ -216,6 +241,7 @@ function getLatestUpdateForDossier(dossierId: string, updatesByDossierId: Map<st
 function initializeSections(): RadarSectionMap {
   return {
     what_changed: [],
+    impact: [],
     in_course: [],
     hot_fronts: [],
     archive_present: [],
@@ -224,13 +250,14 @@ function initializeSections(): RadarSectionMap {
 }
 
 export async function getRadarPageData(): Promise<RadarPageData> {
-  const [dossiers, editorialItems, memoryItems, archiveAssets, hubs, campaigns] = await Promise.all([
+  const [dossiers, editorialItems, memoryItems, archiveAssets, hubs, campaigns, impacts] = await Promise.all([
     getPublishedDossiers(),
     getPublishedEditorialItems(),
     getPublishedMemoryItems(),
     getPublishedArchiveAssets(),
     getPublishedThemeHubs(),
     getPublishedCampaigns(),
+    getPublishedImpacts(),
   ]);
 
   const dossierIds = dossiers.map((dossier) => dossier.id);
@@ -251,6 +278,13 @@ export async function getRadarPageData(): Promise<RadarPageData> {
       .filter((item) => item.featured || item.published_at)
       .slice(0, 4)
       .map((item) => buildEditorialItem(item)),
+  );
+
+  const impactItems = sortRadarItems(
+    impacts
+      .filter((impact) => impact.public_visibility && impact.status !== "archived")
+      .slice(0, 4)
+      .map((impact) => buildImpactItem(impact)),
   );
 
   const activeDossierItems = sortRadarItems(
@@ -296,19 +330,21 @@ export async function getRadarPageData(): Promise<RadarPageData> {
 
   const sections = initializeSections();
   sections.what_changed = sortRadarItems([...updateItems.filter((item) => item.section === "what_changed"), ...editorialRadarItems]).slice(0, 6);
+  sections.impact = impactItems.slice(0, 6);
   sections.in_course = activeDossierItems.slice(0, 6);
   sections.hot_fronts = hubItems.slice(0, 4);
   sections.archive_present = archiveRadarItems.slice(0, 4);
   sections.calls = sortRadarItems([...updateItems.filter((item) => item.section === "calls"), ...campaignItems]).slice(0, 6);
 
   const spotlight =
-    sections.what_changed[0] ?? sections.in_course[0] ?? sections.hot_fronts[0] ?? sections.archive_present[0] ?? sections.calls[0] ?? null;
+    sections.what_changed[0] ?? sections.impact[0] ?? sections.in_course[0] ?? sections.hot_fronts[0] ?? sections.archive_present[0] ?? sections.calls[0] ?? null;
 
   return {
     spotlight,
     sections,
     counts: {
       updates: sections.what_changed.length + sections.calls.length,
+      impact: sections.impact.length,
       dossiers: sections.in_course.length,
       hubs: sections.hot_fronts.length,
       archive: sections.archive_present.length,
@@ -322,6 +358,7 @@ export async function getRadarHomeItems(limit = 4) {
   const items = dedupeRadarItems([
     data.spotlight,
     data.sections.what_changed[0],
+    data.sections.impact[0],
     data.sections.in_course[0],
     data.sections.hot_fronts[0],
     data.sections.archive_present[0],
@@ -330,12 +367,3 @@ export async function getRadarHomeItems(limit = 4) {
 
   return items.slice(0, limit);
 }
-
-
-
-
-
-
-
-
-

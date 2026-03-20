@@ -1,7 +1,7 @@
-export const radarSections = ["what_changed", "in_course", "hot_fronts", "archive_present", "calls"] as const;
+export const radarSections = ["what_changed", "impact", "in_course", "hot_fronts", "archive_present", "calls"] as const;
 export type RadarSection = (typeof radarSections)[number];
 
-export const radarSourceTypes = ["dossier-update", "dossier", "theme-hub", "editorial", "memory", "archive", "campaign"] as const;
+export const radarSourceTypes = ["dossier-update", "dossier", "theme-hub", "editorial", "memory", "archive", "campaign", "impact"] as const;
 export type RadarSourceType = (typeof radarSourceTypes)[number];
 
 export type RadarItem = {
@@ -29,10 +29,10 @@ export type RadarPageData = {
   sections: RadarSectionMap;
   counts: {
     updates: number;
+    impact: number;
     dossiers: number;
     hubs: number;
     archive: number;
     calls: number;
   };
 };
-
