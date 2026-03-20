@@ -5,7 +5,7 @@ import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const publicFields =
-  "id, content_type, content_key, title_override, short_summary, share_caption, share_status, cover_variant, featured, public_visibility, sort_order, created_at, updated_at, created_by, updated_by";
+  "id, content_type, content_key, title_override, short_summary, share_caption, share_status, cover_variant, preferred_format, featured, public_visibility, sort_order, created_at, updated_at, created_by, updated_by";
 const internalFields = publicFields;
 
 function getFallbackSharePacks() {

@@ -29,6 +29,7 @@ function buildFallbackPack(contentType: string, contentKey: string): SharePack {
     share_caption: null,
     share_status: "published",
     cover_variant: getSharePackCoverVariant(contentType),
+    preferred_format: "both",
     featured: false,
     public_visibility: true,
     sort_order: 0,

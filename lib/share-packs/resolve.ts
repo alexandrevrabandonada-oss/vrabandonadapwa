@@ -1,12 +1,5 @@
+import { getSharePackContentHref, getSharePackContentTypeLabel, getSharePackCoverVariant, getSharePackFormatLabel, getSharePackPagePath, getSharePackReference, getSharePackStatusLabel } from "@/lib/share-packs/navigation";
 import type { SharePack, SharePackContext, SharePackLinkOption, SharePackResolved } from "@/lib/share-packs/types";
-import {
-  getSharePackContentHref,
-  getSharePackContentTypeLabel,
-  getSharePackCoverVariant,
-  getSharePackPagePath,
-  getSharePackReference,
-  getSharePackStatusLabel,
-} from "@/lib/share-packs/navigation";
 import type { EditorialEdition } from "@/lib/editions/types";
 import type { PublicCampaign } from "@/lib/campaigns/types";
 import type { PublicImpact } from "@/lib/impact/types";
@@ -105,6 +98,7 @@ export function resolveSharePack(pack: SharePack, context: SharePackContext): Sh
     caption,
     typeLabel: getSharePackContentTypeLabel(pack.content_type),
     statusLabel: getSharePackStatusLabel(pack.share_status),
+    formatLabel: getSharePackFormatLabel(pack.preferred_format),
     coverVariantResolved,
   };
 }
@@ -148,5 +142,3 @@ export function buildSharePackLinkOptions(context: SharePackContext) {
 
   return uniqueOptions(options).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
 }
-
-

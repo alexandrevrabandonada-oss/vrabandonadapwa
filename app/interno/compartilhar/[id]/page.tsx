@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { SharePackCard } from "@/components/share-pack-card";
+import { SharePackExportPanel } from "@/components/share-pack-export";
 import { SharePackForm } from "@/components/share-pack-form";
 import { getPublishedCampaigns } from "@/lib/campaigns/queries";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
@@ -161,6 +162,8 @@ export default async function InternalSharePackPage({ params }: PageProps) {
           </article>
         </div>
       </section>
+
+      <SharePackExportPanel pack={resolved} contentHref={resolved.contentHref} />
     </Container>
   );
 }

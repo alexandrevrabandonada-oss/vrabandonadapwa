@@ -1,4 +1,4 @@
-import type { SharePackContentType, SharePackCoverVariant, SharePackStatus } from "@/lib/share-packs/types";
+import type { SharePackContentType, SharePackCoverVariant, SharePackFormat, SharePackStatus } from "@/lib/share-packs/types";
 
 export const sharePackContentTypeLabels: Record<SharePackContentType, string> = {
   edicao: "Edição",
@@ -20,6 +20,12 @@ export const sharePackCoverVariantLabels: Record<SharePackCoverVariant, string> 
   ember: "Brasa",
   concrete: "Concreto",
   night: "Noite",
+};
+
+export const sharePackFormatLabels: Record<SharePackFormat, string> = {
+  square: "Quadrado",
+  vertical: "Vertical",
+  both: "Ambos",
 };
 
 export function getSharePackContentTypeLabel(type: string) {
@@ -85,6 +91,19 @@ export function getSharePackCoverVariant(type: string): SharePackCoverVariant {
   }
 }
 
+export function getSharePackFormatLabel(format: string) {
+  switch (format) {
+    case "square":
+      return sharePackFormatLabels.square;
+    case "vertical":
+      return sharePackFormatLabels.vertical;
+    case "both":
+      return sharePackFormatLabels.both;
+    default:
+      return format;
+  }
+}
+
 export function getSharePackContentHref(type: string, key: string) {
   switch (type) {
     case "edicao":
@@ -122,4 +141,12 @@ export function splitSharePackReference(reference: string) {
     contentType: contentType || "",
     contentKey: rest.join(":") || "",
   };
+}
+
+export function getSharePackCardImagePath(type: string, key: string, format: SharePackFormat = "square") {
+  return `/api/share/card?contentType=${encodeURIComponent(type)}&contentKey=${encodeURIComponent(key)}&format=${encodeURIComponent(format)}`;
+}
+
+export function getSharePackCardDownloadPath(type: string, key: string, format: SharePackFormat = "square") {
+  return `${getSharePackCardImagePath(type, key, format)}&download=1`;
 }

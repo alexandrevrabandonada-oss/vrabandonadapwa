@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SharePackExportPanel } from "@/components/share-pack-export";
 import { SharePackCard } from "@/components/share-pack-card";
 import { ShareTools } from "@/components/share-tools";
 import { getPublishedCampaigns } from "@/lib/campaigns/queries";
@@ -27,6 +28,7 @@ function buildFallbackPack(contentType: string, contentKey: string): SharePack {
     share_caption: null,
     share_status: "published",
     cover_variant: getSharePackCoverVariant(contentType),
+    preferred_format: "both",
     featured: false,
     public_visibility: true,
     sort_order: 0,
@@ -156,6 +158,8 @@ export default async function SharePackPage({ params }: PageProps) {
           coverVariant={resolved.coverVariantResolved}
         />
       </section>
+
+      <SharePackExportPanel pack={resolved} contentHref={resolved.contentHref} />
 
       <section className="section">
         <div className="grid-2">

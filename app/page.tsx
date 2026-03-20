@@ -21,6 +21,7 @@ import { getPublishedEntryRouteItems, getPublishedEntryRoutes } from "@/lib/entr
 import { getPublishedParticipationPathItems, getPublishedParticipationPaths } from "@/lib/participation/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
+import { getSharePackCardDownloadPath } from "@/lib/share-packs/navigation";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { getPublishedCampaigns, getPublishedCampaignLinks } from "@/lib/campaigns/queries";
 import { getPublishedImpactLinks, getPublishedImpacts } from "@/lib/impact/queries";
@@ -327,6 +328,9 @@ export default async function HomePage() {
                 </Link>
                 <Link href="/edicoes" className="button-secondary">
                   Ver edições
+                </Link>
+                <Link href={getSharePackCardDownloadPath("edicao", featuredEdition.slug, "square")} className="button-secondary">
+                  Baixar card
                 </Link>
                 <Link href="/agora" className="button-secondary">
                   Ver radar

@@ -3,8 +3,8 @@
 import { useActionState } from "react";
 
 import { saveSharePackAction } from "@/app/interno/compartilhar/actions";
-import { getSharePackContentTypeLabel, getSharePackStatusLabel } from "@/lib/share-packs/navigation";
-import { sharePackCoverVariants, sharePackStatuses, type SharePack, type SharePackLinkOption } from "@/lib/share-packs/types";
+import { getSharePackContentTypeLabel, getSharePackFormatLabel, getSharePackStatusLabel } from "@/lib/share-packs/navigation";
+import { sharePackCoverVariants, sharePackFormats, sharePackStatuses, type SharePack, type SharePackLinkOption } from "@/lib/share-packs/types";
 
 type SharePackFormState = {
   ok: boolean;
@@ -40,7 +40,7 @@ export function SharePackForm({ pack, options }: Props) {
             <option key={option.value} value={option.value} label={option.label} />
           ))}
         </datalist>
-        <small className="field-help">Use o formato tipo:chave. Exemplo: {getSharePackContentTypeLabel("edicao")}:edicao-do-momento-o-que-esta-quente-agora</small>
+        <small className="field-help">Use o formato tipo:chave. Exemplo: {getSharePackContentTypeLabel("edicao")}:{"edicao-do-momento-o-que-esta-quente-agora"}</small>
       </label>
 
       <label className="field">
@@ -76,6 +76,19 @@ export function SharePackForm({ pack, options }: Props) {
         </label>
 
         <label className="field">
+          <span>Formato prioritário</span>
+          <select name="preferred_format" defaultValue={pack?.preferred_format ?? "both"}>
+            {sharePackFormats.map((format) => (
+              <option key={format} value={format}>
+                {getSharePackFormatLabel(format)}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      <div className="grid-2">
+        <label className="field">
           <span>Variante visual</span>
           <select name="cover_variant" defaultValue={pack?.cover_variant ?? "steel"}>
             {sharePackCoverVariants.map((variant) => (
@@ -85,14 +98,14 @@ export function SharePackForm({ pack, options }: Props) {
             ))}
           </select>
         </label>
-      </div>
 
-      <div className="grid-2">
         <label className="field">
           <span>Ordenação</span>
           <input name="sort_order" type="number" min={0} step={1} defaultValue={pack?.sort_order ?? 0} />
         </label>
+      </div>
 
+      <div className="grid-2">
         <label className="field">
           <span>Visibilidade pública</span>
           <select name="public_visibility" defaultValue={pack?.public_visibility ? "true" : "false"}>
@@ -100,17 +113,17 @@ export function SharePackForm({ pack, options }: Props) {
             <option value="false">Interna</option>
           </select>
         </label>
-      </div>
 
-      <label className="field">
-        <span>Destaque</span>
-        <div className="support-box">
-          <label className="check">
-            <input name="featured" type="checkbox" defaultChecked={pack?.featured ?? false} />
-            <span>Marcar como destaque</span>
-          </label>
-        </div>
-      </label>
+        <label className="field">
+          <span>Destaque</span>
+          <div className="support-box">
+            <label className="check">
+              <input name="featured" type="checkbox" defaultChecked={pack?.featured ?? false} />
+              <span>Marcar como destaque</span>
+            </label>
+          </div>
+        </label>
+      </div>
 
       <div className="stack-actions">
         <button className="button" type="submit" disabled={pending}>

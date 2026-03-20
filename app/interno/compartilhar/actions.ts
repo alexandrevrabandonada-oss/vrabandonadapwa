@@ -48,6 +48,7 @@ export async function saveSharePackAction(_: SharePackState, formData: FormData)
   const shareCaption = normalize(formData.get("share_caption"));
   const shareStatus = normalize(formData.get("share_status")) || "draft";
   const coverVariant = normalize(formData.get("cover_variant"));
+  const preferredFormat = normalize(formData.get("preferred_format")) || "both";
   const featured = parseBoolean(formData.get("featured"));
   const publicVisibility = parseBoolean(formData.get("public_visibility"));
   const sortOrder = parseSortOrder(formData.get("sort_order"));
@@ -70,6 +71,7 @@ export async function saveSharePackAction(_: SharePackState, formData: FormData)
     share_caption: shareCaption || null,
     share_status: shareStatus || "draft",
     cover_variant: coverVariant || null,
+    preferred_format: preferredFormat,
     featured,
     public_visibility: publicVisibility,
     sort_order: sortOrder,

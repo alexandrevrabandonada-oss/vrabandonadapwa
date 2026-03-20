@@ -1595,3 +1595,39 @@ button, input, textarea, select { font: inherit; }
     grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
   }
 }
+.share-export-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.share-export-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.share-export-card__preview-link {
+  display: block;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.share-export-card__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.share-export-card__image--vertical {
+  aspect-ratio: 4 / 5;
+}
+
+@media (max-width: 900px) {
+  .share-export-grid {
+    grid-template-columns: 1fr;
+  }
+}

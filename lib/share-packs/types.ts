@@ -14,6 +14,9 @@ export type SharePackStatus = (typeof sharePackStatuses)[number];
 export const sharePackCoverVariants = ["steel", "ember", "concrete", "night"] as const;
 export type SharePackCoverVariant = (typeof sharePackCoverVariants)[number];
 
+export const sharePackFormats = ["square", "vertical", "both"] as const;
+export type SharePackFormat = (typeof sharePackFormats)[number];
+
 export type SharePack = {
   id: string;
   content_type: SharePackContentType | string;
@@ -23,6 +26,7 @@ export type SharePack = {
   share_caption: string | null;
   share_status: SharePackStatus | string;
   cover_variant: SharePackCoverVariant | string | null;
+  preferred_format: SharePackFormat | string;
   featured: boolean;
   public_visibility: boolean;
   sort_order: number;
@@ -49,6 +53,7 @@ export type SharePackResolved = SharePack & {
   caption: string;
   typeLabel: string;
   statusLabel: string;
+  formatLabel: string;
   coverVariantResolved: SharePackCoverVariant;
 };
 
