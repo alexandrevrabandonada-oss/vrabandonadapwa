@@ -1,5 +1,6 @@
 import { investigationDossierLinkMockItems, investigationDossierMockItems } from "@/lib/dossiers/mock";
-import type { DossierResolvedLink, InvestigationDossier, InvestigationDossierLink } from "@/lib/dossiers/types";
+import type { InvestigationDossier, InvestigationDossierLink } from "@/lib/dossiers/types";
+import { getDossierStatusSortOrder } from "@/lib/dossiers/navigation";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -7,10 +8,17 @@ const publicFields =
   "id, title, slug, excerpt, description, status, cover_image_url, featured, public_visibility, sort_order, lead_question, period_label, territory_label, created_at, updated_at, created_by, updated_by";
 
 const internalFields = publicFields;
-const linkFields = "id, dossier_id, link_type, link_key, featured, sort_order, created_at, updated_at";
+const linkFields = "id, dossier_id, link_type, link_key, link_role, timeline_year, timeline_label, timeline_note, featured, sort_order, created_at, updated_at";
 
 function sortDossiers(items: InvestigationDossier[]) {
   return [...items].sort((a, b) => {
+    const aStatus = getDossierStatusSortOrder(a.status);
+    const bStatus = getDossierStatusSortOrder(b.status);
+
+    if (aStatus !== bStatus) {
+      return aStatus - bStatus;
+    }
+
     if ((a.featured ? 1 : 0) !== (b.featured ? 1 : 0)) {
       return Number(b.featured) - Number(a.featured);
     }
@@ -29,6 +37,12 @@ function sortLinks(items: InvestigationDossierLink[]) {
       return Number(b.featured) - Number(a.featured);
     }
 
+    const aYear = a.timeline_year ?? Number.POSITIVE_INFINITY;
+    const bYear = b.timeline_year ?? Number.POSITIVE_INFINITY;
+    if (aYear !== bYear) {
+      return aYear - bYear;
+    }
+
     if (a.sort_order !== b.sort_order) {
       return a.sort_order - b.sort_order;
     }
@@ -38,11 +52,15 @@ function sortLinks(items: InvestigationDossierLink[]) {
 }
 
 function getFallbackDossiers() {
-  return sortDossiers(investigationDossierMockItems.filter((dossier) => dossier.public_visibility));
+  return sortDossiers(investigationDossierMockItems.filter((dossier) => dossier.public_visibility && dossier.status !== "draft"));
 }
 
 function getFallbackLinks(dossierId: string) {
   return sortLinks(investigationDossierLinkMockItems.filter((link) => link.dossier_id === dossierId));
+}
+
+function isPublicDossierStatus(status: string) {
+  return status !== "draft";
 }
 
 export async function getPublishedDossiers() {
@@ -56,7 +74,7 @@ export async function getPublishedDossiers() {
     .from("investigation_dossiers")
     .select(publicFields)
     .eq("public_visibility", true)
-    .eq("status", "published")
+    .neq("status", "draft")
     .order("featured", { ascending: false })
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -79,7 +97,7 @@ export async function getPublishedDossierBySlug(slug: string) {
     .from("investigation_dossiers")
     .select(publicFields)
     .eq("public_visibility", true)
-    .eq("status", "published")
+    .neq("status", "draft")
     .eq("slug", slug)
     .maybeSingle();
 
@@ -101,7 +119,7 @@ export async function getPublishedDossierById(id: string) {
     .from("investigation_dossiers")
     .select(publicFields)
     .eq("public_visibility", true)
-    .eq("status", "published")
+    .neq("status", "draft")
     .eq("id", id)
     .maybeSingle();
 
@@ -124,6 +142,7 @@ export async function getPublishedDossierLinks(dossierId: string) {
     .select(linkFields)
     .eq("dossier_id", dossierId)
     .order("featured", { ascending: false })
+    .order("timeline_year", { ascending: true, nullsFirst: false })
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
 
@@ -147,7 +166,7 @@ export async function getInternalDossiers(filters?: { status?: string }) {
     throw error;
   }
 
-  return (data ?? []) as InvestigationDossier[];
+  return sortDossiers((data ?? []) as InvestigationDossier[]);
 }
 
 export async function getInternalDossierById(id: string) {
@@ -179,6 +198,7 @@ export async function getInternalDossierLinks(dossierId: string) {
     .select(linkFields)
     .eq("dossier_id", dossierId)
     .order("featured", { ascending: false })
+    .order("timeline_year", { ascending: true, nullsFirst: false })
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: true });
 
@@ -186,7 +206,7 @@ export async function getInternalDossierLinks(dossierId: string) {
     throw error;
   }
 
-  return (data ?? []) as InvestigationDossierLink[];
+  return sortLinks((data ?? []) as InvestigationDossierLink[]);
 }
 
 export function getDossierLinkKey(type: string, key: string) {
@@ -221,24 +241,8 @@ export function resolveDossierLinkHref(type: string, key: string) {
   }
 }
 
-export function resolveDossierLinks(links: InvestigationDossierLink[]): DossierResolvedLink[] {
-  return sortLinks(links)
-    .map((link) => {
-      const href = resolveDossierLinkHref(link.link_type, link.link_key);
-      const title = link.link_key;
-      const excerpt: string | null = null;
-
-      return {
-        id: link.id,
-        link_type: link.link_type,
-        link_key: link.link_key,
-        title,
-        excerpt,
-        href,
-        featured: link.featured,
-        sort_order: link.sort_order,
-      };
-    })
-    .filter(Boolean);
+export function isPublishedDossierStatus(status: string) {
+  return isPublicDossierStatus(status);
 }
+
 

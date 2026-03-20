@@ -3,7 +3,8 @@
 import { useActionState } from "react";
 
 import { saveInvestigationDossierAction } from "@/app/interno/dossies/actions";
-import type { InvestigationDossier } from "@/lib/dossiers/types";
+import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
+import { dossierStatuses, type InvestigationDossier } from "@/lib/dossiers/types";
 
 type DossierFormState = {
   ok: boolean;
@@ -74,12 +75,13 @@ export function DossierForm({ dossier }: Props) {
         </label>
 
         <label className="field">
-          <span>Status</span>
+          <span>Status público</span>
           <select name="status" defaultValue={dossier?.status ?? "draft"}>
-            <option value="draft">Rascunho</option>
-            <option value="in_progress">Em curso</option>
-            <option value="published">Publicado</option>
-            <option value="archived">Arquivado</option>
+            {dossierStatuses.map((status) => (
+              <option key={status} value={status}>
+                {getDossierStatusLabel(status)}
+              </option>
+            ))}
           </select>
         </label>
       </div>

@@ -50,10 +50,7 @@ function revalidateDossier(slug: string) {
   revalidatePath("/interno/dossies/novo");
 }
 
-export async function saveInvestigationDossierAction(
-  _: DossierActionState,
-  formData: FormData,
-): Promise<DossierActionState> {
+export async function saveInvestigationDossierAction(_: DossierActionState, formData: FormData): Promise<DossierActionState> {
   const currentId = normalize(formData.get("id")) || null;
   const title = normalize(formData.get("title"));
   const slugInput = normalize(formData.get("slug"));
@@ -85,7 +82,6 @@ export async function saveInvestigationDossierAction(
       return { ok: false, message: "Dossiê não encontrado." };
     }
 
-    const nextSlug = current.slug;
     const { error } = await supabase
       .from("investigation_dossiers")
       .update({
@@ -109,7 +105,7 @@ export async function saveInvestigationDossierAction(
       return { ok: false, message: "Não foi possível salvar o dossiê." };
     }
 
-    revalidateDossier(nextSlug);
+    revalidateDossier(current.slug);
     revalidatePath(`/interno/dossies/${currentId}`);
 
     return { ok: true, message: "Dossiê atualizado." };
@@ -140,12 +136,14 @@ export async function saveInvestigationDossierAction(
   return { ok: true, message: "Dossiê criado." };
 }
 
-export async function addInvestigationDossierLinkAction(
-  _: DossierActionState,
-  formData: FormData,
-): Promise<DossierActionState> {
+export async function addInvestigationDossierLinkAction(_: DossierActionState, formData: FormData): Promise<DossierActionState> {
   const dossierId = normalize(formData.get("dossier_id"));
   const linkRef = normalize(formData.get("link_ref"));
+  const linkRole = normalize(formData.get("link_role")) || "context";
+  const timelineYearRaw = normalize(formData.get("timeline_year"));
+  const timelineYear = timelineYearRaw ? Number.parseInt(timelineYearRaw, 10) : null;
+  const timelineLabel = normalize(formData.get("timeline_label"));
+  const timelineNote = normalize(formData.get("timeline_note"));
   const featured = toBool(formData.get("featured"));
   const sortOrder = Number.parseInt(normalize(formData.get("sort_order")), 10) || 0;
 
@@ -164,6 +162,10 @@ export async function addInvestigationDossierLinkAction(
     dossier_id: dossierId,
     link_type: parsed.type,
     link_key: parsed.key,
+    link_role: linkRole,
+    timeline_year: Number.isNaN(timelineYear) ? null : timelineYear,
+    timeline_label: timelineLabel || null,
+    timeline_note: timelineNote || null,
     featured,
     sort_order: sortOrder,
   });
@@ -205,4 +207,3 @@ export async function removeInvestigationDossierLinkAction(formData: FormData): 
 
   return;
 }
-

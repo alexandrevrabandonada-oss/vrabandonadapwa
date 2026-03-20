@@ -5,11 +5,12 @@ import { Container } from "@/components/container";
 import { DossierCard } from "@/components/dossier-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { getPublishedDossierLinks, getPublishedDossiers } from "@/lib/dossiers/queries";
+import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
+import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
-import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 
 export const metadata: Metadata = {
@@ -29,6 +30,8 @@ export const metadata: Metadata = {
   },
 };
 
+const statusOrder = ["in_progress", "monitoring", "concluded", "archived"] as const;
+
 export default async function DossiersPage() {
   const dossiers = await getPublishedDossiers();
   const editorialItems = await getPublishedEditorialItems();
@@ -36,11 +39,14 @@ export default async function DossiersPage() {
   const archiveAssets = await getPublishedArchiveAssets();
   const archiveCollections = await getPublishedArchiveCollections();
   const seriesCards = getEditorialSeriesCards(editorialItems);
+
   const dossierLinkPairs = await Promise.all(dossiers.map(async (dossier) => [dossier.id, await getPublishedDossierLinks(dossier.id)] as const));
   const linkCountByDossierId = new Map(dossierLinkPairs.map(([id, links]) => [id, links.length]));
-
-  const featured = dossiers.find((dossier) => dossier.featured) ?? dossiers[0] ?? null;
-  const secondary = featured ? dossiers.filter((dossier) => dossier.id !== featured.id) : dossiers;
+  const featured = dossiers.find((dossier) => dossier.featured && dossier.status !== "archived") ?? dossiers[0] ?? null;
+  const sections = statusOrder.map((status) => ({
+    status,
+    dossiers: dossiers.filter((dossier) => dossier.status === status),
+  }));
   const featuredSeries = seriesCards.slice(0, 3);
 
   return (
@@ -50,7 +56,7 @@ export default async function DossiersPage() {
           <p className="eyebrow">dossiês vivos</p>
           <h1 className="hero__title">Linhas de investigação em andamento.</h1>
           <p className="hero__lead">
-            O VR Abandonada reúne pauta, memória, acervo e coleção em recortes investigativos que mostram o que a cidade tenta esconder.
+            O VR Abandonada reúne pauta, memória, acervo e coleção em recortes investigativos que mostram como o caso se desenrola no tempo.
           </p>
           <div className="hero__actions">
             <Link href="/pautas" className="button">
@@ -70,12 +76,17 @@ export default async function DossiersPage() {
             <p className="eyebrow">em destaque</p>
             <EditorialCover
               title={featured.title}
-              primaryTag="Dossiê"
-              seriesTitle={featured.title}
+              primaryTag={getDossierStatusLabel(featured.status)}
+              seriesTitle={featured.lead_question || featured.period_label || featured.title}
               coverImageUrl={featured.cover_image_url}
               coverVariant={featured.featured ? "ember" : "concrete"}
             />
             <p>{featured.excerpt || featured.description}</p>
+            <div className="meta-row">
+              <span>{getDossierStatusLabel(featured.status)}</span>
+              {featured.period_label ? <span>{featured.period_label}</span> : null}
+              {featured.territory_label ? <span>{featured.territory_label}</span> : null}
+            </div>
             <Link href={`/dossies/${featured.slug}`} className="button-secondary">
               Abrir dossiê
             </Link>
@@ -110,35 +121,59 @@ export default async function DossiersPage() {
         </div>
       </section>
 
-      <section className="section dossier-grid-section">
+      <section className="section dossier-status-overview">
         <div className="grid-2">
           <div>
-            <p className="eyebrow">investigações em curso</p>
-            <h2>Peças que já formam uma unidade de entendimento.</h2>
+            <p className="eyebrow">status narrativo</p>
+            <h2>O estágio da investigação aparece na navegação.</h2>
           </div>
           <p className="section__lead">
-            Os dossiês abaixo são o mapa de trabalho do projeto. Cada um combina território, contexto e leitura documental.
+            A leitura pública agora diferencia o que está em curso, em monitoramento, concluído ou arquivado.
           </p>
         </div>
 
-        <div className="grid-2">
-          {secondary.length ? (
-            secondary.map((dossier) => (
-              <DossierCard
-                key={dossier.id}
-                dossier={dossier}
-                href={`/dossies/${dossier.slug}`}
-                itemCount={linkCountByDossierId.get(dossier.id) ?? 0}
-              />
-            ))
-          ) : (
-            <div className="support-box">
-              <h3>Sem dossiês públicos</h3>
-              <p>Crie o primeiro recorte investigativo no painel interno para abrir a camada pública.</p>
-            </div>
-          )}
+        <div className="grid-4">
+          {sections.map((section) => (
+            <article className="card" key={section.status}>
+              <h3>{getDossierStatusLabel(section.status)}</h3>
+              <p>{section.dossiers.length} dossiê{section.dossiers.length === 1 ? "" : "s"}</p>
+            </article>
+          ))}
         </div>
       </section>
+
+      {sections.map((section) =>
+        section.dossiers.length ? (
+          <section className="section dossier-grid-section" key={section.status}>
+            <div className="grid-2">
+              <div>
+                <p className="eyebrow">{getDossierStatusLabel(section.status)}</p>
+                <h2>{getDossierStatusLabel(section.status)}</h2>
+              </div>
+              <p className="section__lead">
+                {section.status === "in_progress"
+                  ? "Casos em andamento com hipótese aberta e leitura em construção."
+                  : section.status === "monitoring"
+                    ? "Investigações em observação, com atualização de contexto e prova."
+                    : section.status === "concluded"
+                      ? "Casos com percurso editorial fechado ou quase fechado, mas ainda consultáveis."
+                      : "Dossiês guardados como referência e memória do percurso investigativo."}
+              </p>
+            </div>
+
+            <div className="grid-2">
+              {section.dossiers.map((dossier) => (
+                <DossierCard
+                  key={dossier.id}
+                  dossier={dossier}
+                  href={`/dossies/${dossier.slug}`}
+                  itemCount={linkCountByDossierId.get(dossier.id) ?? 0}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null,
+      )}
 
       <section className="section dossier-context">
         <div className="grid-2">
@@ -205,3 +240,4 @@ export default async function DossiersPage() {
     </Container>
   );
 }
+

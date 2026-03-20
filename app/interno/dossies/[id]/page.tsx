@@ -6,12 +6,15 @@ import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierForm } from "@/components/dossier-form";
 import { DossierLinkForm } from "@/components/dossier-link-form";
+import { DossierPrimaryPiece } from "@/components/dossier-primary-piece";
+import { DossierTimeline } from "@/components/dossier-timeline";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
-import { buildDossierLinkOptions, resolveDossierLinks } from "@/lib/dossiers/resolve";
+import { buildDossierLinkOptions, buildDossierTimeline, resolveDossierLinks } from "@/lib/dossiers/resolve";
+import { getDossierLinkRoleLabel, getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import { getInternalDossierById, getInternalDossierLinks } from "@/lib/dossiers/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { removeInvestigationDossierLinkAction } from "@/app/interno/dossies/actions";
@@ -49,6 +52,8 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
   const seriesCards = getEditorialSeriesCards(editorialItems);
   const options = buildDossierLinkOptions({ editorialItems, memoryItems, archiveAssets, archiveCollections, seriesCards });
   const resolvedLinks = resolveDossierLinks(links, { editorialItems, memoryItems, archiveAssets, archiveCollections, seriesCards });
+  const timelineEntries = buildDossierTimeline(resolvedLinks);
+  const leadLink = resolvedLinks.find((link) => link.link_role === "lead") ?? resolvedLinks[0] ?? null;
 
   return (
     <Container className="intro-grid internal-page dossier-internal-page">
@@ -56,6 +61,11 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
         <p className="eyebrow">dossiês internos</p>
         <h1 className="hero__title">{dossier.title}</h1>
         <p className="hero__lead">{dossier.excerpt || dossier.description || "Linha de investigação pública."}</p>
+        <div className="meta-row">
+          <span>{getDossierStatusLabel(dossier.status)}</span>
+          {dossier.period_label ? <span>{dossier.period_label}</span> : null}
+          {dossier.territory_label ? <span>{dossier.territory_label}</span> : null}
+        </div>
         <div className="hero__actions">
           <form action={signOutAction}>
             <button className="button-secondary" type="submit">
@@ -75,7 +85,7 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
         <div className="grid-4">
           <article className="support-box">
             <p className="eyebrow">status</p>
-            <h3>{dossier.status}</h3>
+            <h3>{getDossierStatusLabel(dossier.status)}</h3>
             <p>{dossier.public_visibility ? "Público" : "Interno"}</p>
           </article>
           <article className="support-box">
@@ -84,9 +94,9 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
             <p>Peças já conectadas.</p>
           </article>
           <article className="support-box">
-            <p className="eyebrow">período</p>
-            <h3>{dossier.period_label || "aberto"}</h3>
-            <p>{dossier.territory_label || "território aberto"}</p>
+            <p className="eyebrow">timeline</p>
+            <h3>{timelineEntries.length}</h3>
+            <p>Marcos organizados na leitura pública.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">destaque</p>
@@ -111,6 +121,30 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
+            <p className="eyebrow">peça central</p>
+            <h2>Entrada principal do caso</h2>
+          </div>
+          <p className="section__lead">A peça central organiza a pergunta e define por onde o leitor começa.</p>
+        </div>
+
+        <DossierPrimaryPiece dossier={dossier} leadLink={leadLink} />
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">timeline</p>
+            <h2>Ordem de leitura</h2>
+          </div>
+          <p className="section__lead">Edite a ordem pelos campos de ano, papel e ordenação do vínculo.</p>
+        </div>
+
+        <DossierTimeline entries={timelineEntries} />
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
             <p className="eyebrow">vínculos</p>
             <h2>Ligações do dossiê</h2>
           </div>
@@ -127,9 +161,13 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
               {resolvedLinks.length ? (
                 resolvedLinks.map((link) => (
                   <article className="card" key={link.id}>
-                    <p className="eyebrow">{link.link_type}</p>
+                    <p className="eyebrow">{getDossierLinkRoleLabel(link.link_role)}</p>
                     <h4>{link.title}</h4>
-                    <p>{link.excerpt || "Sem resumo."}</p>
+                    <p>{link.timeline_note || link.excerpt || "Sem resumo."}</p>
+                    <div className="meta-row">
+                      {link.timeline_label ? <span>{link.timeline_label}</span> : null}
+                      {link.timeline_year ? <span>{link.timeline_year}</span> : null}
+                    </div>
                     <div className="stack-actions">
                       <Link href={link.href} className="button-secondary">
                         Abrir
@@ -154,3 +192,4 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+

@@ -3,12 +3,8 @@
 import { useActionState } from "react";
 
 import { addInvestigationDossierLinkAction } from "@/app/interno/dossies/actions";
-import type { DossierResolvedLink, InvestigationDossier } from "@/lib/dossiers/types";
-
-export type DossierLinkOption = {
-  value: string;
-  label: string;
-};
+import { getDossierLinkRoleLabel } from "@/lib/dossiers/navigation";
+import { dossierLinkRoles, type DossierResolvedLink, type InvestigationDossier } from "@/lib/dossiers/types";
 
 type DossierLinkFormState = {
   ok: boolean;
@@ -17,7 +13,7 @@ type DossierLinkFormState = {
 
 type Props = {
   dossier: InvestigationDossier;
-  options: DossierLinkOption[];
+  options: { value: string; label: string }[];
   existingLinks: DossierResolvedLink[];
 };
 
@@ -42,6 +38,34 @@ export function DossierLinkForm({ dossier, options, existingLinks }: Props) {
             </option>
           ))}
         </select>
+      </label>
+
+      <div className="grid-2">
+        <label className="field">
+          <span>Papel editorial</span>
+          <select name="link_role" defaultValue="context">
+            {dossierLinkRoles.map((role) => (
+              <option key={role} value={role}>
+                {getDossierLinkRoleLabel(role)}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="field">
+          <span>Ano ou marco</span>
+          <input name="timeline_year" type="number" min={1900} max={2100} step={1} placeholder="2026" />
+        </label>
+      </div>
+
+      <label className="field">
+        <span>Rótulo temporal</span>
+        <input name="timeline_label" type="text" placeholder="anos 1990 / 2026 / fim dos anos 1990" />
+      </label>
+
+      <label className="field">
+        <span>Nota da timeline</span>
+        <textarea name="timeline_note" rows={3} placeholder="Frase curta para orientar a leitura do caso." />
       </label>
 
       <div className="grid-2">

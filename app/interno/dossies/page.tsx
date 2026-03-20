@@ -6,6 +6,7 @@ import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierCard } from "@/components/dossier-card";
 import { getInternalDossiers, getInternalDossierLinks } from "@/lib/dossiers/queries";
+import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
   description: "Curadoria e operação dos dossiês vivos do VR Abandonada.",
 };
 
-const filters = ["all", "draft", "in_progress", "published", "archived"] as const;
+const filters = ["all", "draft", "in_progress", "monitoring", "concluded", "archived"] as const;
 
 type FilterValue = (typeof filters)[number];
 
@@ -41,8 +42,8 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
   const allDossiers = status === "all" ? dossiers : await getInternalDossiers({ status: "all" });
   const linkPairs = await Promise.all(allDossiers.map(async (dossier) => [dossier.id, await getInternalDossierLinks(dossier.id)] as const));
   const linkCountById = new Map(linkPairs.map(([id, links]) => [id, links.length]));
-  const publishedCount = allDossiers.filter((dossier) => dossier.status === "published" && dossier.public_visibility).length;
-  const activeCount = allDossiers.filter((dossier) => dossier.status === "in_progress").length;
+  const publishedCount = allDossiers.filter((dossier) => dossier.status !== "draft" && dossier.public_visibility).length;
+  const activeCount = allDossiers.filter((dossier) => dossier.status === "in_progress" || dossier.status === "monitoring").length;
 
   return (
     <Container className="intro-grid internal-page dossier-internal-page">
@@ -98,7 +99,7 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
             <p className="eyebrow">fila</p>
             <h2>Estados editoriais</h2>
           </div>
-          <p className="section__lead">Filtre rápido o que está em rascunho, em curso, publicado ou arquivado.</p>
+          <p className="section__lead">Filtre rápido o que está em rascunho, em curso, em monitoramento, concluído ou arquivado.</p>
         </div>
 
         <div className="status-filters" aria-label="Filtro de dossiês">
@@ -108,7 +109,7 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
               href={filter === "all" ? "/interno/dossies" : `/interno/dossies?status=${filter}`}
               className={`status-chip ${status === filter ? "status-chip--active" : ""}`}
             >
-              {filter}
+              {filter === "all" ? "todos" : getDossierStatusLabel(filter)}
             </Link>
           ))}
         </div>

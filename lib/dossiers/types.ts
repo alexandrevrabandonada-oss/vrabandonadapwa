@@ -1,8 +1,11 @@
-export const dossierStatuses = ["draft", "in_progress", "published", "archived"] as const;
+export const dossierStatuses = ["draft", "in_progress", "monitoring", "concluded", "archived"] as const;
 export type DossierStatus = (typeof dossierStatuses)[number];
 
 export const dossierLinkTypes = ["editorial", "memory", "archive", "collection", "series"] as const;
 export type DossierLinkType = (typeof dossierLinkTypes)[number];
+
+export const dossierLinkRoles = ["lead", "evidence", "context", "followup", "archive"] as const;
+export type DossierLinkRole = (typeof dossierLinkRoles)[number];
 
 export type InvestigationDossier = {
   id: string;
@@ -29,6 +32,10 @@ export type InvestigationDossierLink = {
   dossier_id: string;
   link_type: DossierLinkType | string;
   link_key: string;
+  link_role: DossierLinkRole | string;
+  timeline_year: number | null;
+  timeline_label: string | null;
+  timeline_note: string | null;
   featured: boolean;
   sort_order: number;
   created_at: string;
@@ -39,6 +46,10 @@ export type DossierResolvedLink = {
   id: string;
   link_type: DossierLinkType | string;
   link_key: string;
+  link_role: DossierLinkRole | string;
+  timeline_year: number | null;
+  timeline_label: string | null;
+  timeline_note: string | null;
   title: string;
   excerpt: string | null;
   href: string;
@@ -46,10 +57,16 @@ export type DossierResolvedLink = {
   sort_order: number;
 };
 
+export type DossierTimelineEntry = DossierResolvedLink & {
+  yearLabel: string;
+  roleLabel: string;
+};
+
 export const dossierStatusLabels: Record<DossierStatus, string> = {
   draft: "Rascunho",
   in_progress: "Em curso",
-  published: "Publicado",
+  monitoring: "Monitoramento",
+  concluded: "Concluído",
   archived: "Arquivado",
 };
 
@@ -59,4 +76,12 @@ export const dossierLinkTypeLabels: Record<DossierLinkType, string> = {
   archive: "Acervo",
   collection: "Coleção",
   series: "Série",
+};
+
+export const dossierLinkRoleLabels: Record<DossierLinkRole, string> = {
+  lead: "Peça central",
+  evidence: "Evidência",
+  context: "Contexto",
+  followup: "Desdobramento",
+  archive: "Arquivo de base",
 };

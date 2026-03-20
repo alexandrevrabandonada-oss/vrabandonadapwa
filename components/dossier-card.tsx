@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { EditorialCover } from "@/components/editorial-cover";
+import { getDossierStatusLabel, getDossierStatusTone } from "@/lib/dossiers/navigation";
 import type { InvestigationDossier } from "@/lib/dossiers/types";
 
 type Props = {
@@ -23,12 +24,13 @@ export function DossierCard({ dossier, href, itemCount, compact = false }: Props
       />
       <div className="dossier-card__body">
         <div className="editorial-card__kicker">
-          <span>{dossier.period_label || "linha investigativa"}</span>
+          <span className={getDossierStatusTone(dossier.status)}>{getDossierStatusLabel(dossier.status)}</span>
+          {dossier.period_label ? <span>{dossier.period_label}</span> : null}
           {dossier.territory_label ? <span>{dossier.territory_label}</span> : null}
           {typeof itemCount === "number" ? <span>{itemCount} peças</span> : null}
         </div>
         <h3>{dossier.title}</h3>
-        <p>{dossier.excerpt || dossier.description || "Linha de investigação pública."}</p>
+        <p>{dossier.excerpt || dossier.description || dossier.lead_question || "Linha de investigação pública."}</p>
         <Link href={href} className="button-secondary">
           Abrir dossiê
         </Link>

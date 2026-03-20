@@ -2,8 +2,8 @@ import type { ArchiveAsset } from "@/lib/archive/types";
 import type { EditorialItem, EditorialSeries } from "@/lib/editorial/types";
 import type { MemoryItem } from "@/lib/memory/types";
 import type { ArchiveCollection } from "@/lib/archive/types";
-import type { DossierResolvedLink, InvestigationDossierLink } from "@/lib/dossiers/types";
-import { getDossierLinkHref, getDossierLinkTypeLabel, parseDossierLinkRef } from "@/lib/dossiers/navigation";
+import type { DossierResolvedLink, DossierTimelineEntry, InvestigationDossierLink } from "@/lib/dossiers/types";
+import { getDossierLinkHref, getDossierLinkRoleLabel, getDossierLinkTypeLabel, parseDossierLinkRef, getDossierLinkRoleOrder } from "@/lib/dossiers/navigation";
 
 export type DossierLinkOption = {
   value: string;
@@ -22,6 +22,17 @@ function sortResolvedLinks(items: DossierResolvedLink[]) {
   return [...items].sort((a, b) => {
     if ((a.featured ? 1 : 0) !== (b.featured ? 1 : 0)) {
       return Number(b.featured) - Number(a.featured);
+    }
+
+    const aYear = a.timeline_year ?? Number.POSITIVE_INFINITY;
+    const bYear = b.timeline_year ?? Number.POSITIVE_INFINITY;
+
+    if (aYear !== bYear) {
+      return aYear - bYear;
+    }
+
+    if (a.link_role !== b.link_role) {
+      return getDossierLinkRoleOrder(a.link_role) - getDossierLinkRoleOrder(b.link_role);
     }
 
     if (a.sort_order !== b.sort_order) {
@@ -50,87 +61,64 @@ export function resolveDossierLinks(links: InvestigationDossierLink[], context: 
         return null;
       }
 
+      let title = link.link_key;
+      let excerpt: string | null = null;
+      const href = getDossierLinkHref(parsed.type, parsed.key);
+
       if (parsed.type === "editorial") {
         const item = context.editorialItems.find((entry) => entry.slug === parsed.key);
-        return item
-          ? {
-              id: link.id,
-              link_type: link.link_type,
-              link_key: link.link_key,
-              title: item.title,
-              excerpt: item.excerpt,
-              href: getDossierLinkHref(parsed.type, parsed.key),
-              featured: link.featured,
-              sort_order: link.sort_order,
-            }
-          : null;
+        if (item) {
+          title = item.title;
+          excerpt = item.excerpt;
+        }
       }
 
       if (parsed.type === "memory") {
         const item = context.memoryItems.find((entry) => entry.slug === parsed.key);
-        return item
-          ? {
-              id: link.id,
-              link_type: link.link_type,
-              link_key: link.link_key,
-              title: item.title,
-              excerpt: item.excerpt,
-              href: getDossierLinkHref(parsed.type, parsed.key),
-              featured: link.featured,
-              sort_order: link.sort_order,
-            }
-          : null;
+        if (item) {
+          title = item.title;
+          excerpt = item.excerpt;
+        }
       }
 
       if (parsed.type === "archive") {
         const item = context.archiveAssets.find((entry) => entry.id === parsed.key);
-        return item
-          ? {
-              id: link.id,
-              link_type: link.link_type,
-              link_key: link.link_key,
-              title: item.title,
-              excerpt: item.description || item.source_label,
-              href: getDossierLinkHref(parsed.type, parsed.key),
-              featured: link.featured,
-              sort_order: link.sort_order,
-            }
-          : null;
+        if (item) {
+          title = item.title;
+          excerpt = item.description || item.source_label;
+        }
       }
 
       if (parsed.type === "collection") {
         const item = context.archiveCollections.find((entry) => entry.slug === parsed.key);
-        return item
-          ? {
-              id: link.id,
-              link_type: link.link_type,
-              link_key: link.link_key,
-              title: item.title,
-              excerpt: item.excerpt || item.description,
-              href: getDossierLinkHref(parsed.type, parsed.key),
-              featured: link.featured,
-              sort_order: link.sort_order,
-            }
-          : null;
+        if (item) {
+          title = item.title;
+          excerpt = item.excerpt || item.description;
+        }
       }
 
       if (parsed.type === "series") {
         const item = context.seriesCards.find((entry) => entry.slug === parsed.key);
-        return item
-          ? {
-              id: link.id,
-              link_type: link.link_type,
-              link_key: link.link_key,
-              title: item.title,
-              excerpt: item.description,
-              href: getDossierLinkHref(parsed.type, parsed.key),
-              featured: link.featured,
-              sort_order: link.sort_order,
-            }
-          : null;
+        if (item) {
+          title = item.title;
+          excerpt = item.description;
+        }
       }
 
-      return null;
+      return {
+        id: link.id,
+        link_type: link.link_type,
+        link_key: link.link_key,
+        link_role: link.link_role,
+        timeline_year: link.timeline_year,
+        timeline_label: link.timeline_label,
+        timeline_note: link.timeline_note,
+        title,
+        excerpt,
+        href,
+        featured: link.featured,
+        sort_order: link.sort_order,
+      } satisfies DossierResolvedLink;
     })
     .filter((entry): entry is DossierResolvedLink => Boolean(entry));
 
@@ -145,11 +133,43 @@ export function groupDossierLinksByType(links: DossierResolvedLink[]) {
   }, {});
 }
 
+export function groupDossierLinksByRole(links: DossierResolvedLink[]) {
+  return links.reduce<Partial<Record<string, DossierResolvedLink[]>>>((acc, link) => {
+    const key = link.link_role;
+    acc[key] = [...(acc[key] ?? []), link];
+    return acc;
+  }, {});
+}
+
+export function buildDossierTimeline(links: DossierResolvedLink[]): DossierTimelineEntry[] {
+  return sortResolvedLinks(links)
+    .filter((link) => link.link_role !== "archive" || link.timeline_year !== null || Boolean(link.timeline_label))
+    .map((link) => ({
+      ...link,
+      yearLabel: link.timeline_label || (link.timeline_year ? String(link.timeline_year) : "linha aberta"),
+      roleLabel: getDossierLinkRoleLabel(link.link_role),
+    }))
+    .sort((a, b) => {
+      const aYear = a.timeline_year ?? Number.POSITIVE_INFINITY;
+      const bYear = b.timeline_year ?? Number.POSITIVE_INFINITY;
+
+      if (aYear !== bYear) {
+        return aYear - bYear;
+      }
+
+      if (a.link_role !== b.link_role) {
+        return getDossierLinkRoleOrder(a.link_role) - getDossierLinkRoleOrder(b.link_role);
+      }
+
+      return a.sort_order - b.sort_order;
+    });
+}
+
 export function getDossierLinkTypeHeading(type: string) {
   return getDossierLinkTypeLabel(type);
 }
 
 export function getDossierLinkPreviewText(link: DossierResolvedLink) {
-  return link.excerpt || getDossierLinkTypeLabel(link.link_type);
+  return link.timeline_note || link.excerpt || getDossierLinkTypeLabel(link.link_type);
 }
 
