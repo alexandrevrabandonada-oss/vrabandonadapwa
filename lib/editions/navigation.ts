@@ -1,13 +1,12 @@
-import type { PatternReadLinkRole, PatternReadStatus } from "@/lib/patterns/types";
+import type { EditorialEditionLinkRole, EditorialEditionStatus } from "@/lib/editions/types";
 
-export const patternReadStatusOrder: Record<PatternReadStatus, number> = {
-  active: 1,
-  monitoring: 2,
-  archive: 3,
-  draft: 4,
+export const editorialEditionStatusOrder: Record<EditorialEditionStatus, number> = {
+  published: 1,
+  draft: 2,
+  archived: 3,
 };
 
-export const patternReadLinkRoleOrder: Record<PatternReadLinkRole, number> = {
+export const editorialEditionLinkRoleOrder: Record<EditorialEditionLinkRole, number> = {
   lead: 1,
   evidence: 2,
   context: 3,
@@ -15,75 +14,87 @@ export const patternReadLinkRoleOrder: Record<PatternReadLinkRole, number> = {
   archive: 5,
 };
 
-export function getPatternReadStatusSortOrder(status: string) {
+export function getEditionStatusSortOrder(status: string) {
   switch (status) {
-    case "active":
+    case "published":
       return 1;
-    case "monitoring":
-      return 2;
-    case "archive":
-      return 3;
     case "draft":
-      return 4;
+      return 2;
+    case "archived":
+      return 3;
     default:
       return 9;
   }
 }
 
-export function getPatternReadStatusLabel(status: string) {
+export function getEditionStatusLabel(status: string) {
   switch (status) {
-    case "active":
-      return "Ativo";
-    case "monitoring":
-      return "Monitoramento";
-    case "archive":
-      return "Arquivo";
+    case "published":
+      return "Publicado";
     case "draft":
       return "Rascunho";
+    case "archived":
+      return "Arquivo";
     default:
       return status;
   }
 }
 
-export function getPatternReadStatusTone(status: string) {
+export function getEditionStatusTone(status: string) {
   switch (status) {
-    case "active":
+    case "published":
       return "status-tone--hot";
-    case "monitoring":
-      return "status-tone--watch";
-    case "archive":
-      return "status-tone--calm";
     case "draft":
       return "status-tone--draft";
+    case "archived":
+      return "status-tone--calm";
     default:
       return "status-tone--muted";
   }
 }
 
-export function getPatternReadTypeLabel(type: string) {
+export function getEditionTypeLabel(type: string) {
   switch (type) {
-    case "actor_recurrence":
-      return "Recorrência de ator";
-    case "territory_recurrence":
-      return "Recorrência territorial";
-    case "impact_pattern":
-      return "Padrão de impacto";
-    case "thematic_pattern":
-      return "Padrão temático";
-    case "institution_pattern":
-      return "Padrão institucional";
-    case "archive_pattern":
-      return "Padrão de arquivo";
-    case "continuity":
-      return "Continuidade";
-    case "dispute":
-      return "Disputa recorrente";
+    case "weekly":
+      return "Semanal";
+    case "thematic":
+      return "Temática";
+    case "campaign":
+      return "Campanha";
+    case "dossier":
+      return "Dossiê";
+    case "city_pulse":
+      return "Pulso da cidade";
+    case "archive":
+      return "Arquivo";
+    case "special":
+      return "Especial";
     default:
       return type;
   }
 }
 
-export function getPatternReadLinkTypeLabel(type: string) {
+export function getEditionCoverVariant(type: string) {
+  switch (type) {
+    case "weekly":
+      return "steel";
+    case "campaign":
+      return "ember";
+    case "dossier":
+      return "night";
+    case "city_pulse":
+      return "ember";
+    case "archive":
+      return "concrete";
+    case "special":
+      return "night";
+    case "thematic":
+    default:
+      return "steel";
+  }
+}
+
+export function getEditionLinkTypeLabel(type: string) {
   switch (type) {
     case "editorial":
       return "Pauta";
@@ -105,6 +116,10 @@ export function getPatternReadLinkTypeLabel(type: string) {
       return "Território";
     case "actor":
       return "Ator";
+    case "pattern":
+      return "Padrão";
+    case "radar":
+      return "Radar";
     case "page":
       return "Página";
     case "external":
@@ -114,7 +129,7 @@ export function getPatternReadLinkTypeLabel(type: string) {
   }
 }
 
-export function getPatternReadLinkRoleLabel(role: string) {
+export function getEditionLinkRoleLabel(role: string) {
   switch (role) {
     case "lead":
       return "Peça central";
@@ -131,7 +146,7 @@ export function getPatternReadLinkRoleLabel(role: string) {
   }
 }
 
-export function getPatternReadLinkRoleOrder(role: string) {
+export function getEditionLinkRoleOrder(role: string) {
   switch (role) {
     case "lead":
       return 1;
@@ -148,7 +163,7 @@ export function getPatternReadLinkRoleOrder(role: string) {
   }
 }
 
-export function getPatternReadLinkHref(type: string, key: string) {
+export function getEditionLinkHref(type: string, key: string) {
   switch (type) {
     case "editorial":
       return `/pautas/${key}`;
@@ -170,6 +185,10 @@ export function getPatternReadLinkHref(type: string, key: string) {
       return `/territorios/${key}`;
     case "actor":
       return `/atores/${key}`;
+    case "pattern":
+      return `/padroes/${key}`;
+    case "radar":
+      return `/agora`;
     case "page":
       return key.startsWith("/") ? key : `/${key}`;
     case "external":
@@ -179,11 +198,11 @@ export function getPatternReadLinkHref(type: string, key: string) {
   }
 }
 
-export function getPatternReadLinkRef(type: string, key: string) {
+export function getEditionLinkRef(type: string, key: string) {
   return `${type}:${key}`;
 }
 
-export function parsePatternReadLinkRef(ref: string) {
+export function parseEditionLinkRef(ref: string) {
   const [type, ...rest] = ref.split(":");
   const key = rest.join(":");
 
@@ -193,6 +212,4 @@ export function parsePatternReadLinkRef(ref: string) {
 
   return { type, key };
 }
-
-
 

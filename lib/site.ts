@@ -9,6 +9,7 @@ export const site = {
     { href: "/agora", label: "Agora" },
     { href: "/campanhas", label: "Campanhas" },
     { href: "/impacto", label: "Impacto" },
+    { href: "/edicoes", label: "Edições" },
     { href: "/comecar", label: "Começar" },
     { href: "/sobre", label: "Sobre" },
     { href: "/pautas", label: "Pautas" },

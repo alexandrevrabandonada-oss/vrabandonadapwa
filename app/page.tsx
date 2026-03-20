@@ -28,6 +28,8 @@ import { getRadarHomeItems } from "@/lib/radar/queries";
 import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
 import { getPublishedActorHubLinks, getPublishedActorHubs } from "@/lib/actors/queries";
 import { getPublishedPatternReadLinks, getPublishedPatternReads } from "@/lib/patterns/queries";
+import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
+import { getPublishedEditorialEditionLinks, getPublishedEditorialEditions } from "@/lib/editions/queries";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -73,6 +75,9 @@ export default async function HomePage() {
   const actors = await getPublishedActorHubs();
   const featuredActor = actors.find((actor) => actor.featured && actor.status === "active") ?? actors.find((actor) => actor.status === "active") ?? actors[0] ?? null;
   const featuredActorLinks = featuredActor ? await getPublishedActorHubLinks(featuredActor.id) : [];
+  const editions = await getPublishedEditorialEditions();
+  const featuredEdition = editions.find((edition) => edition.featured && edition.status === "published") ?? editions.find((edition) => edition.status === "published") ?? editions[0] ?? null;
+  const featuredEditionLinks = featuredEdition ? await getPublishedEditorialEditionLinks(featuredEdition.id) : [];
   const patternReads = await getPublishedPatternReads();
   const featuredPattern = patternReads.find((pattern) => pattern.featured && pattern.status === "active") ?? patternReads.find((pattern) => pattern.status === "active") ?? patternReads[0] ?? null;
   const featuredPatternLinks = featuredPattern ? await getPublishedPatternReadLinks(featuredPattern.id) : [];
@@ -281,6 +286,53 @@ export default async function HomePage() {
             <Link href="/agora" className="button-secondary">
               Ver radar completo
             </Link>
+          </div>
+        </section>
+      ) : null}
+
+      {featuredEdition ? (
+        <section className="section home-edition-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">Edição do momento</p>
+              <h2>Uma síntese para circular o que o radar está dizendo.</h2>
+            </div>
+            <p className="section__lead">
+              A edição concentra o pulso do momento, costura campanha, impacto, padrão e dossiê, e devolve ao público uma leitura pronta para compartilhar.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            <EditionPrimaryPiece
+              title={featuredEdition.title}
+              excerpt={featuredEdition.excerpt}
+              description={featuredEdition.description}
+              status={featuredEdition.status}
+              editionType={featuredEdition.edition_type}
+              periodLabel={featuredEdition.period_label}
+              publishedAt={featuredEdition.published_at}
+              href={`/edicoes/${featuredEdition.slug}`}
+              linkCount={featuredEditionLinks.length}
+              latestLink={featuredEditionLinks[0] ?? null}
+            />
+            <article className="support-box home-callout home-callout--accent">
+              <p className="eyebrow">por que importa</p>
+              <h3>A síntese dá ritmo ao arquivo.</h3>
+              <p>
+                Em vez de deixar o leitor montar o quebra-cabeça, a edição entrega uma leitura rápida do estado do momento e aponta para onde seguir.
+              </p>
+              <div className="stack-actions">
+                <Link href={`/edicoes/${featuredEdition.slug}`} className="button">
+                  Abrir edição
+                </Link>
+                <Link href="/edicoes" className="button-secondary">
+                  Ver edições
+                </Link>
+                <Link href="/agora" className="button-secondary">
+                  Ver radar
+                </Link>
+              </div>
+            </article>
           </div>
         </section>
       ) : null}
