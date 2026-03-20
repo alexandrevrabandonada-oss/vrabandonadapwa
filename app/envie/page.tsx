@@ -92,17 +92,20 @@ export default function EnviePage() {
       <section className="section">
         <div className="grid-2">
           <div>
-            <p className="eyebrow">antes de enviar</p>
-            <h2>Se ainda estiver entendendo o projeto, comece pela rota de participação.</h2>
+            <p className="eyebrow">como tratamos relatos</p>
+            <h2>Método, cuidado e limites em linguagem pública.</h2>
           </div>
           <p className="section__lead">
-            Assim você escolhe o caminho certo para o seu gesto: denunciar, apoiar, colaborar com memória ou acompanhar o momento.
+            Se quiser entender o que acontece depois do envio e como o projeto trata anonimato, correção e checagem, leia a página de método antes ou depois de participar.
           </p>
         </div>
 
         <div className="stack-actions">
+          <Link href="/metodo" className="button">
+            Ler como trabalhamos
+          </Link>
           <Link href="/participe" className="button-secondary">
-            Ver como participar
+            Ver caminhos de participação
           </Link>
           <Link href="/comecar" className="button-secondary">
             Entender o projeto

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -13,10 +14,7 @@ function normalize(value: FormDataEntryValue | null) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-export async function submitIntakeAction(
-  _: SubmissionState,
-  formData: FormData,
-): Promise<SubmissionState> {
+export async function submitIntakeAction(_: SubmissionState, formData: FormData): Promise<SubmissionState> {
   const category = normalize(formData.get("category"));
   const title = normalize(formData.get("title"));
   const location = normalize(formData.get("location"));
@@ -59,10 +57,5 @@ export async function submitIntakeAction(
   }
 
   revalidatePath("/envie");
-
-  return {
-    ok: true,
-    message: "Envio registrado. O material entrou na fila editorial inicial.",
-  };
+  redirect("/envie/recebido");
 }
-

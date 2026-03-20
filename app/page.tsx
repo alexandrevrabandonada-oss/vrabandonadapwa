@@ -169,6 +169,9 @@ export default async function HomePage() {
           <Link href="/participe" className="button-secondary">
             Abrir caminhos de participação
           </Link>
+          <Link href="/metodo" className="button-secondary">
+            Entender o método
+          </Link>
         </div>
       </section>
 
@@ -412,6 +415,9 @@ export default async function HomePage() {
               <Link href="/envie" className="button">
                 Abrir canal de envio
               </Link>
+              <Link href="/metodo" className="button-secondary">
+                Entender o método
+              </Link>
               <Link href="/sobre" className="button-secondary">
                 Entender o cuidado editorial
               </Link>
@@ -424,7 +430,7 @@ export default async function HomePage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">Apoie o projeto</p>
-            <h2>Sem rede, sem base. Sem base, sem continuidade.</h2>
+            <h2>Sem base coletiva, o projeto não sustenta ritmo.</h2>
           </div>
           <p className="section__lead">
             O apoio sustenta apuração, redação, design, infraestrutura e o tempo necessário para transformar relato em publicação séria.
@@ -448,6 +454,9 @@ export default async function HomePage() {
             <div className="stack-actions">
               <Link href="/apoie" className="button">
                 Apoiar o projeto
+              </Link>
+              <Link href="/participe" className="button-secondary">
+                Ver participação
               </Link>
               <Link href="/manifesto" className="button-secondary">
                 Ler o manifesto
@@ -488,4 +497,3 @@ export default async function HomePage() {
     </Container>
   );
 }
-

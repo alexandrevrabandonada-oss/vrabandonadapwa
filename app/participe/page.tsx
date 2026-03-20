@@ -62,6 +62,9 @@ export default async function ParticipatePage() {
             <Link href="/apoie" className="button-secondary">
               Ver apoio
             </Link>
+            <Link href="/metodo" className="button-secondary">
+              Ver como trabalhamos
+            </Link>
           </div>
         </article>
       </section>
@@ -116,6 +119,30 @@ export default async function ParticipatePage() {
             <p>Veja o radar, os dossiês e as rotas de entrada para não perder a linha do momento.</p>
             <Link href="/agora" className="button-secondary">Abrir o radar</Link>
           </article>
+        </div>
+      </section>
+
+      <section className="section participate-method-section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">como trabalhamos</p>
+            <h2>Transparência pública antes e depois da participação.</h2>
+          </div>
+          <p className="section__lead">
+            Se você quer entender o que acontece depois do envio, como o projeto trata cuidado e correção e por que nem tudo vira publicação imediata, siga para o método.
+          </p>
+        </div>
+
+        <div className="stack-actions">
+          <Link href="/metodo" className="button">
+            Ler o método
+          </Link>
+          <Link href="/envie/recebido" className="button-secondary">
+            Ver pós-envio
+          </Link>
+          <Link href="/envie" className="button-secondary">
+            Abrir o envio
+          </Link>
         </div>
       </section>
 

@@ -16,6 +16,7 @@ export const site = {
     { href: "/eixos", label: "Eixos" },
     { href: "/apoie", label: "Apoie" },
     { href: "/participe", label: "Participe" },
+    { href: "/metodo", label: "Método" },
     { href: "/envie", label: "Envie" },
     { href: "/manifesto", label: "Manifesto" },
   ],
