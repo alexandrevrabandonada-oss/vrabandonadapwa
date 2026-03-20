@@ -17,6 +17,7 @@ export const site = {
     { href: "/dossies", label: "Dossiês" },
     { href: "/eixos", label: "Eixos" },
     { href: "/territorios", label: "Territórios" },
+    { href: "/atores", label: "Atores" },
     { href: "/apoie", label: "Apoie" },
     { href: "/participe", label: "Participe" },
     { href: "/metodo", label: "Método" },
@@ -117,3 +118,8 @@ export const site = {
     "Denunciar é um ato coletivo quando o problema é estrutural.",
   ],
 } as const;
+
+
+
+
+

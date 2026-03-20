@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { DossierCard } from "@/components/dossier-card";
 import { PlaceHubCard } from "@/components/place-hub-card";
+import { ActorHubCard } from "@/components/actor-hub-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
@@ -24,6 +25,7 @@ import { getPublishedCampaigns, getPublishedCampaignLinks } from "@/lib/campaign
 import { getPublishedImpactLinks, getPublishedImpacts } from "@/lib/impact/queries";
 import { getRadarHomeItems } from "@/lib/radar/queries";
 import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
+import { getPublishedActorHubLinks, getPublishedActorHubs } from "@/lib/actors/queries";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -66,6 +68,9 @@ export default async function HomePage() {
   const placeHubs = await getPublishedPlaceHubs();
   const featuredPlaceHub = placeHubs.find((place) => place.featured && place.status === "active") ?? placeHubs.find((place) => place.status === "active") ?? placeHubs[0] ?? null;
   const featuredPlaceHubLinks = featuredPlaceHub ? await getPublishedPlaceHubLinks(featuredPlaceHub.id) : [];
+  const actors = await getPublishedActorHubs();
+  const featuredActor = actors.find((actor) => actor.featured && actor.status === "active") ?? actors.find((actor) => actor.status === "active") ?? actors[0] ?? null;
+  const featuredActorLinks = featuredActor ? await getPublishedActorHubLinks(featuredActor.id) : [];
   const radarItems = await getRadarHomeItems(3);
   const entryRoutes = await getPublishedEntryRoutes();
   const entryRouteCounts = new Map(
@@ -393,7 +398,44 @@ export default async function HomePage() {
           </div>
         </section>
       ) : null}
-<section className="section home-hubs-section">
+
+      {featuredActor ? (
+        <section className="section home-actors-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">quem atravessa os conflitos da cidade</p>
+              <h2>Entrar pelo nome recorrente da responsabilidade.</h2>
+            </div>
+            <p className="section__lead">
+              Atores, instituições e equipamentos ajudam a localizar o poder que reaparece nos casos. A leitura cruza pauta, memória, território, campanha e impacto.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            <ActorHubCard actorHub={featuredActor} href={`/atores/${featuredActor.slug}`} itemCount={featuredActorLinks.length} />
+            <article className="support-box home-callout home-callout--accent">
+              <p className="eyebrow">por que importa</p>
+              <h3>O projeto também lê quem atravessa o conflito.</h3>
+              <p>
+                Entre pelo ator e siga para os lugares, os dossiês, os impactos e os chamados públicos ligados a ele.
+              </p>
+              <div className="stack-actions">
+                <Link href={`/atores/${featuredActor.slug}`} className="button">
+                  Abrir ator
+                </Link>
+                <Link href="/atores" className="button-secondary">
+                  Ver mapa de atores
+                </Link>
+                <Link href="/territorios" className="button-secondary">
+                  Ver territórios
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="section home-hubs-section">
         <div className="grid-2">
           <div>
             <p className="eyebrow">Grandes frentes</p>
@@ -630,6 +672,9 @@ export default async function HomePage() {
     </Container>
   );
 }
+
+
+
 
 
 
