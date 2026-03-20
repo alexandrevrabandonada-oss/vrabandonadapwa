@@ -1482,3 +1482,63 @@ button, input, textarea, select { font: inherit; }
 .radar-follow-section .card h3 {
   margin-top: 0;
 }
+
+.landing-page,
+.start-page,
+.start-route-page,
+.entry-route-list-page,
+.entry-route-detail-page,
+.entry-route-internal-page {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-start-section,
+.start-route-intro,
+.start-route-steps,
+.start-route-follow,
+.entry-route-list-hero,
+.entry-route-detail-hero,
+.entry-route-internal-hero,
+.entry-route-internal-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.entry-route-card,
+.entry-route-step-card {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.entry-route-card--compact,
+.entry-route-step-card--compact {
+  gap: 0.75rem;
+}
+
+.entry-route-card__body,
+.entry-route-step-card__body {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.entry-route-step-card__note {
+  margin: 0;
+  color: var(--muted);
+}
+
+.entry-route-card .editorial-cover,
+.entry-route-step-card .editorial-cover {
+  min-height: 13rem;
+}
+
+.entry-route-detail-hero .support-box,
+.entry-route-internal-hero .support-box {
+  align-self: start;
+}
+
+.entry-route-step-card .meta-row,
+.entry-route-card .meta-row {
+  align-items: center;
+}

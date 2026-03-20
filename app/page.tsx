@@ -7,9 +7,11 @@ import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
 import { RadarItemCard } from "@/components/radar-item-card";
+import { EntryRouteCard } from "@/components/entry-route-card";
 import { ThemeHubCard } from "@/components/theme-hub-card";
 import { getPublishedDossierLinks, getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
+import { getPublishedEntryRouteItems, getPublishedEntryRoutes } from "@/lib/entry-routes/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
@@ -48,6 +50,12 @@ export default async function HomePage() {
   const featuredDossierUpdate = featuredDossier ? updatesByDossierId.get(featuredDossier.id)?.[0] ?? null : null;
   const featuredHubs = hubs.slice(0, 3);
   const radarItems = await getRadarHomeItems(3);
+  const entryRoutes = await getPublishedEntryRoutes();
+  const entryRouteCounts = new Map(
+    await Promise.all(entryRoutes.map(async (route) => [route.id, (await getPublishedEntryRouteItems(route.id)).length] as const)),
+  );
+  const featuredStartRoutes = entryRoutes.filter((route) => route.featured).slice(0, 3);
+  const startRoutes = featuredStartRoutes.length ? featuredStartRoutes : entryRoutes.slice(0, 3);
 
   return (
     <Container className="intro-grid landing-page">
@@ -105,6 +113,30 @@ export default async function HomePage() {
               <p>{item.text}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="section home-start-section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">Por onde começar</p>
+            <h2>Rotas curtas para entrar sem dispersão.</h2>
+          </div>
+          <p className="section__lead">
+            Se você chegou agora, escolha uma porta guiada: projeto em 5 minutos, tema, memória ou acompanhamento do agora.
+          </p>
+        </div>
+
+        <div className="grid-3">
+          {startRoutes.map((route) => (
+            <EntryRouteCard key={route.id} route={route} href={`/comecar/${route.slug}`} itemCount={entryRouteCounts.get(route.id) ?? 0} compact />
+          ))}
+        </div>
+
+        <div className="stack-actions">
+          <Link href="/comecar" className="button-secondary">
+            Abrir guias de leitura
+          </Link>
         </div>
       </section>
 
