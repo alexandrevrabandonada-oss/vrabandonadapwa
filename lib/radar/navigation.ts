@@ -15,6 +15,7 @@ export const radarSourceLabels: Record<RadarSourceType, string> = {
   editorial: "Pauta",
   memory: "Memória",
   archive: "Acervo",
+  campaign: "Campanha",
 };
 
 export function getRadarSectionLabel(section: string) {

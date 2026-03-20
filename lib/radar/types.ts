@@ -1,7 +1,7 @@
 export const radarSections = ["what_changed", "in_course", "hot_fronts", "archive_present", "calls"] as const;
 export type RadarSection = (typeof radarSections)[number];
 
-export const radarSourceTypes = ["dossier-update", "dossier", "theme-hub", "editorial", "memory", "archive"] as const;
+export const radarSourceTypes = ["dossier-update", "dossier", "theme-hub", "editorial", "memory", "archive", "campaign"] as const;
 export type RadarSourceType = (typeof radarSourceTypes)[number];
 
 export type RadarItem = {
@@ -35,3 +35,4 @@ export type RadarPageData = {
     calls: number;
   };
 };
+

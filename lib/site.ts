@@ -7,6 +7,7 @@ export const site = {
   nav: [
     { href: "/", label: "Início" },
     { href: "/agora", label: "Agora" },
+    { href: "/campanhas", label: "Campanhas" },
     { href: "/comecar", label: "Começar" },
     { href: "/sobre", label: "Sobre" },
     { href: "/pautas", label: "Pautas" },

@@ -1,4 +1,5 @@
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
+import { getPublishedCampaigns } from "@/lib/campaigns/queries";
 import { getArchiveAssetPeriodLabel, getArchiveAssetTypeLabel } from "@/lib/archive/navigation";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
@@ -8,7 +9,9 @@ import { getDossierUpdateNarrativeLabel, getDossierUpdatePreviewText, sortDossie
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedThemeHubLinks, getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { getThemeHubStatusLabel } from "@/lib/hubs/navigation";
+import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
 import type { ArchiveAsset } from "@/lib/archive/types";
+import type { PublicCampaign } from "@/lib/campaigns/types";
 import type { EditorialItem } from "@/lib/editorial/types";
 import type { InvestigationDossier, InvestigationDossierUpdate } from "@/lib/dossiers/types";
 import type { MemoryItem } from "@/lib/memory/types";
@@ -187,6 +190,25 @@ function buildArchiveItem(asset: ArchiveAsset): RadarItem {
   };
 }
 
+function buildCampaignItem(campaign: PublicCampaign): RadarItem {
+  return {
+    id: `campaign:${campaign.id}`,
+    section: "calls",
+    sourceType: "campaign",
+    title: campaign.title,
+    excerpt: campaign.excerpt || campaign.description,
+    href: `/campanhas/${campaign.slug}`,
+    primaryLabel: "Campanha",
+    secondaryLabel: `${getCampaignStatusLabel(campaign.status)} • ${getCampaignTypeLabel(campaign.campaign_type)}`,
+    dateLabel: formatRadarDateLabel(campaign.start_date || campaign.updated_at),
+    coverImageUrl: campaign.cover_image_url,
+    coverVariant: getCoverVariantBySource("campaign", campaign.featured, "calls"),
+    featured: campaign.featured || campaign.status === "active",
+    sortDate: campaign.start_date || campaign.updated_at,
+    sortOrder: campaign.sort_order,
+    actionLabel: "Abrir campanha",
+  };
+}
 function getLatestUpdateForDossier(dossierId: string, updatesByDossierId: Map<string, InvestigationDossierUpdate[]>) {
   return updatesByDossierId.get(dossierId)?.[0] ?? null;
 }
@@ -202,12 +224,13 @@ function initializeSections(): RadarSectionMap {
 }
 
 export async function getRadarPageData(): Promise<RadarPageData> {
-  const [dossiers, editorialItems, memoryItems, archiveAssets, hubs] = await Promise.all([
+  const [dossiers, editorialItems, memoryItems, archiveAssets, hubs, campaigns] = await Promise.all([
     getPublishedDossiers(),
     getPublishedEditorialItems(),
     getPublishedMemoryItems(),
     getPublishedArchiveAssets(),
     getPublishedThemeHubs(),
+    getPublishedCampaigns(),
   ]);
 
   const dossierIds = dossiers.map((dossier) => dossier.id);
@@ -253,6 +276,13 @@ export async function getRadarPageData(): Promise<RadarPageData> {
       }),
   );
 
+  const campaignItems = sortRadarItems(
+    campaigns
+      .filter((campaign) => campaign.public_visibility && (campaign.status === "active" || campaign.status === "monitoring" || campaign.status === "upcoming"))
+      .slice(0, 4)
+      .map((campaign) => buildCampaignItem(campaign)),
+  );
+
   const archiveRadarItems = sortRadarItems([
     ...memoryItems
       .filter((item) => item.featured || item.highlight_in_memory || item.timeline_rank !== null)
@@ -269,7 +299,7 @@ export async function getRadarPageData(): Promise<RadarPageData> {
   sections.in_course = activeDossierItems.slice(0, 6);
   sections.hot_fronts = hubItems.slice(0, 4);
   sections.archive_present = archiveRadarItems.slice(0, 4);
-  sections.calls = sortRadarItems(updateItems.filter((item) => item.section === "calls")).slice(0, 4);
+  sections.calls = sortRadarItems([...updateItems.filter((item) => item.section === "calls"), ...campaignItems]).slice(0, 6);
 
   const spotlight =
     sections.what_changed[0] ?? sections.in_course[0] ?? sections.hot_fronts[0] ?? sections.archive_present[0] ?? sections.calls[0] ?? null;
@@ -300,3 +330,12 @@ export async function getRadarHomeItems(limit = 4) {
 
   return items.slice(0, limit);
 }
+
+
+
+
+
+
+
+
+

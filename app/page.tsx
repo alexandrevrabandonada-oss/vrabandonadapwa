@@ -7,6 +7,7 @@ import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
 import { RadarItemCard } from "@/components/radar-item-card";
+import { CampaignCard } from "@/components/campaign-card";
 import { EntryRouteCard } from "@/components/entry-route-card";
 import { ParticipationPathCard } from "@/components/participation-path-card";
 import { ThemeHubCard } from "@/components/theme-hub-card";
@@ -17,6 +18,7 @@ import { getPublishedParticipationPathItems, getPublishedParticipationPaths } fr
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
+import { getPublishedCampaigns, getPublishedCampaignLinks } from "@/lib/campaigns/queries";
 import { getRadarHomeItems } from "@/lib/radar/queries";
 import { site } from "@/lib/site";
 
@@ -51,6 +53,9 @@ export default async function HomePage() {
   const featuredDossierLinkCount = featuredDossier ? (await getPublishedDossierLinks(featuredDossier.id)).length : 0;
   const featuredDossierUpdate = featuredDossier ? updatesByDossierId.get(featuredDossier.id)?.[0] ?? null : null;
   const featuredHubs = hubs.slice(0, 3);
+  const campaigns = await getPublishedCampaigns();
+  const featuredCampaign = campaigns[0] ?? null;
+  const featuredCampaignLinks = featuredCampaign ? await getPublishedCampaignLinks(featuredCampaign.id) : [];
   const radarItems = await getRadarHomeItems(3);
   const entryRoutes = await getPublishedEntryRoutes();
   const entryRouteCounts = new Map(
@@ -260,6 +265,41 @@ export default async function HomePage() {
         </section>
       ) : null}
 
+      {featuredCampaign ? (
+        <section className="section home-campaign-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">Chamado em curso</p>
+              <h2>O foco temporário que está puxando o momento.</h2>
+            </div>
+            <p className="section__lead">
+              Campanhas condensam investigação, participação, método e apoio quando o projeto precisa concentrar atenção coletiva em um ponto específico.
+            </p>
+          </div>
+
+          <div className="grid-2">
+            <CampaignCard campaign={featuredCampaign} href={`/campanhas/${featuredCampaign.slug}`} itemCount={featuredCampaignLinks.length} />
+            <article className="support-box home-callout home-callout--accent">
+              <p className="eyebrow">por que agora</p>
+              <h3>O chamado do momento não é marketing. É foco público.</h3>
+              <p>
+                Use a campanha para entender o que está em jogo, reunir o que ajuda de verdade e seguir para o método, a participação e o radar.
+              </p>
+              <div className="stack-actions">
+                <Link href={`/campanhas/${featuredCampaign.slug}`} className="button">
+                  Abrir campanha
+                </Link>
+                <Link href="/participe" className="button-secondary">
+                  Ver participação
+                </Link>
+                <Link href="/metodo" className="button-secondary">
+                  Ler método
+                </Link>
+              </div>
+            </article>
+          </div>
+        </section>
+      ) : null}
       <section className="section home-hubs-section">
         <div className="grid-2">
           <div>
@@ -497,3 +537,11 @@ export default async function HomePage() {
     </Container>
   );
 }
+
+
+
+
+
+
+
+
