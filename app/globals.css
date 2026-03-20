@@ -1320,3 +1320,131 @@ button, input, textarea, select { font: inherit; }
     align-items: start;
   }
 }
+
+.dossier-update-card {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.dossier-update-card--compact p:last-of-type {
+  margin-bottom: 0;
+}
+
+.dossier-card__update {
+  margin-top: 0.35rem;
+}
+
+.dossier-card__update h4,
+.dossier-update-card h3 {
+  margin: 0;
+}
+
+.dossier-update-featured-section,
+.dossier-progress-section,
+.dossier-call-section {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.update-tone--hot {
+  color: #ffcf5b;
+}
+
+.update-tone--watch {
+  color: #e0a047;
+}
+
+.update-tone--calm {
+  color: #9ed08d;
+}
+
+.update-tone--muted {
+  color: var(--muted);
+}
+
+.update-tone--call {
+  color: #ff8f5b;
+}
+
+.update-tone--alert {
+  color: #ff7a72;
+}
+
+.theme-hub-card,
+.theme-hub-primary-piece {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.theme-hub-card .editorial-cover,
+.theme-hub-primary-piece .editorial-cover {
+  min-height: 14rem;
+}
+
+.theme-hub-card__body,
+.theme-hub-primary-piece__body {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.theme-hub-card__movement h4,
+.theme-hub-primary-piece h3 {
+  margin: 0;
+}
+
+.theme-hub-timeline {
+  display: grid;
+  gap: 1rem;
+}
+
+.theme-hub-timeline__entry {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr);
+  gap: 0.9rem;
+}
+
+.theme-hub-timeline__rail {
+  border-left: 2px solid rgba(243, 178, 26, 0.35);
+  position: relative;
+}
+
+.theme-hub-timeline__rail::before {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  left: -0.38rem;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 0 6px rgba(243, 178, 26, 0.12);
+}
+
+.theme-hub-timeline__content {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.theme-hub-section,
+.theme-hub-detail-section,
+.theme-hub-movements-section,
+.theme-hub-links-section,
+.theme-hub-bridge-section {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.theme-hub-page .theme-hub-card,
+.theme-hub-internal-page .theme-hub-card {
+  align-self: start;
+}
+
+@media (min-width: 921px) {
+  .theme-hub-detail-hero {
+    grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  }
+}

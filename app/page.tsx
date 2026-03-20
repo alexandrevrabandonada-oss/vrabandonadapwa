@@ -6,10 +6,12 @@ import { DossierCard } from "@/components/dossier-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
-import { getPublishedDossierLinks, getPublishedDossiers } from "@/lib/dossiers/queries";
+import { ThemeHubCard } from "@/components/theme-hub-card";
+import { getPublishedDossierLinks, getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
+import { getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -32,12 +34,17 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const items = await getPublishedEditorialItems();
   const dossiers = await getPublishedDossiers();
+  const hubs = await getPublishedThemeHubs();
+  const dossierIds = dossiers.map((dossier) => dossier.id);
+  const updatesByDossierId = await getPublishedDossierUpdatesByDossierIds(dossierIds);
   const featuredItem = items[0] ?? null;
   const secondaryItems = items.slice(1, 4);
   const seriesCards = getEditorialSeriesCards(items);
   const featuredSeries = seriesCards.slice(0, 4);
   const featuredDossier = dossiers[0] ?? null;
   const featuredDossierLinkCount = featuredDossier ? (await getPublishedDossierLinks(featuredDossier.id)).length : 0;
+  const featuredDossierUpdate = featuredDossier ? updatesByDossierId.get(featuredDossier.id)?.[0] ?? null : null;
+  const featuredHubs = hubs.slice(0, 3);
 
   return (
     <Container className="intro-grid landing-page">
@@ -121,7 +128,7 @@ export default async function HomePage() {
               <h2>Uma linha maior para reunir documento, memória e pauta.</h2>
             </div>
             <p className="section__lead">
-              O dossiê organiza o arquivo como percurso. Quem entra por aqui encontra uma hipótese pública, materiais de base e desdobramentos já publicados.
+              O dossiê organiza o arquivo como percurso. Quem entra por aqui encontra uma hipótese pública, materiais de base, desdobramentos e a última atualização da linha.
             </p>
           </div>
 
@@ -130,25 +137,56 @@ export default async function HomePage() {
               dossier={featuredDossier}
               href={`/dossies/${featuredDossier.slug}`}
               itemCount={featuredDossierLinkCount}
+              latestUpdate={featuredDossierUpdate}
             />
             <article className="support-box home-callout home-callout--accent">
               <p className="eyebrow">por que importa</p>
               <h3>Não é uma página solta.</h3>
               <p>
-                O dossiê costura o caso, aponta a pergunta central e distribui a leitura entre pauta, memória, acervo e coleção.
+                O dossiê costura o caso, aponta a pergunta central e distribui a leitura entre pauta, memória, acervo, coleção e atualização pública.
               </p>
+              {featuredDossierUpdate ? (
+                <article className="support-box">
+                  <p className="eyebrow">última movimentação</p>
+                  <h4>{featuredDossierUpdate.title}</h4>
+                  <p>{featuredDossierUpdate.excerpt || featuredDossierUpdate.body}</p>
+                </article>
+              ) : null}
               <div className="stack-actions">
-                <Link href="/dossies" className="button">
-                  Abrir dossiês
+                <Link href={`/dossies/${featuredDossier.slug}`} className="button">
+                  Abrir dossiê
                 </Link>
-                <Link href="/acervo" className="button-secondary">
-                  Entrar no acervo
+                <Link href="/envie" className="button-secondary">
+                  Enviar pista
                 </Link>
               </div>
             </article>
           </div>
         </section>
       ) : null}
+
+      <section className="section home-hubs-section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">Grandes frentes</p>
+            <h2>Entrar pelo tema, não pelo formato.</h2>
+          </div>
+          <p className="section__lead">
+            Os eixos atravessam o site inteiro e ajudam a encontrar, no mesmo lugar, pauta, memória, acervo e dossiê.
+          </p>
+        </div>
+
+        <div className="grid-3">
+          {featuredHubs.map((hub) => (
+            <ThemeHubCard key={hub.id} hub={hub} href={`/eixos/${hub.slug}`} itemCount={0} compact />
+          ))}
+        </div>
+        <div className="stack-actions">
+          <Link href="/eixos" className="button-secondary">
+            Abrir mapa temático
+          </Link>
+        </div>
+      </section>
 
       <section className="section">
         <div className="grid-2">
@@ -358,5 +396,3 @@ export default async function HomePage() {
     </Container>
   );
 }
-
-

@@ -8,6 +8,7 @@ import { DossierForm } from "@/components/dossier-form";
 import { DossierLinkForm } from "@/components/dossier-link-form";
 import { DossierPrimaryPiece } from "@/components/dossier-primary-piece";
 import { DossierTimeline } from "@/components/dossier-timeline";
+import { DossierUpdateCard } from "@/components/dossier-update-card";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
@@ -15,7 +16,8 @@ import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { buildDossierLinkOptions, buildDossierTimeline, resolveDossierLinks } from "@/lib/dossiers/resolve";
 import { getDossierLinkRoleLabel, getDossierStatusLabel } from "@/lib/dossiers/navigation";
-import { getInternalDossierById, getInternalDossierLinks } from "@/lib/dossiers/queries";
+import { getInternalDossierById, getInternalDossierLinks, getInternalDossierUpdates } from "@/lib/dossiers/queries";
+import { getDossierLatestUpdate } from "@/lib/dossiers/updates";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { removeInvestigationDossierLinkAction } from "@/app/interno/dossies/actions";
 
@@ -45,6 +47,8 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
   }
 
   const links = await getInternalDossierLinks(dossier.id);
+  const updates = await getInternalDossierUpdates(dossier.id);
+  const latestUpdate = getDossierLatestUpdate(updates);
   const editorialItems = await getPublishedEditorialItems();
   const memoryItems = await getPublishedMemoryItems();
   const archiveAssets = await getPublishedArchiveAssets();
@@ -65,6 +69,7 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
           <span>{getDossierStatusLabel(dossier.status)}</span>
           {dossier.period_label ? <span>{dossier.period_label}</span> : null}
           {dossier.territory_label ? <span>{dossier.territory_label}</span> : null}
+          {latestUpdate ? <span>Última atualização: {latestUpdate.title}</span> : null}
         </div>
         <div className="hero__actions">
           <form action={signOutAction}>
@@ -74,6 +79,9 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
           </form>
           <Link href="/interno/dossies" className="button-secondary">
             Voltar à lista
+          </Link>
+          <Link href={`/interno/dossies/${dossier.id}/updates`} className="button-secondary">
+            Gerir updates
           </Link>
           <Link href={`/dossies/${dossier.slug}`} className="button">
             Ver público
@@ -117,6 +125,24 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
 
         <DossierForm dossier={dossier} />
       </section>
+
+      {updates.length ? (
+        <section className="section internal-panel">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">updates recentes</p>
+              <h2>A investigação está viva</h2>
+            </div>
+            <p className="section__lead">Acompanhe o andamento, as correções e a convocação pública sem sair do dossiê.</p>
+          </div>
+
+          <div className="grid-2">
+            {updates.slice(0, 2).map((update) => (
+              <DossierUpdateCard key={update.id} update={update} href={`/interno/dossies/${dossier.id}/updates/${update.id}`} actionLabel="Editar update" />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="section internal-panel">
         <div className="grid-2">
@@ -192,4 +218,3 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
     </Container>
   );
 }
-

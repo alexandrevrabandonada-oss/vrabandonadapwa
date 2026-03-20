@@ -1,6 +1,7 @@
-import { investigationDossierLinkMockItems, investigationDossierMockItems } from "@/lib/dossiers/mock";
-import type { InvestigationDossier, InvestigationDossierLink } from "@/lib/dossiers/types";
+import { investigationDossierLinkMockItems, investigationDossierMockItems, investigationDossierUpdateMockItems } from "@/lib/dossiers/mock";
 import { getDossierStatusSortOrder } from "@/lib/dossiers/navigation";
+import { groupDossierUpdatesByDossierId, sortDossierUpdates } from "@/lib/dossiers/updates";
+import type { InvestigationDossier, InvestigationDossierLink, InvestigationDossierUpdate } from "@/lib/dossiers/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -9,6 +10,8 @@ const publicFields =
 
 const internalFields = publicFields;
 const linkFields = "id, dossier_id, link_type, link_key, link_role, timeline_year, timeline_label, timeline_note, featured, sort_order, created_at, updated_at";
+const updateFields =
+  "id, dossier_id, title, slug, excerpt, body, update_type, published, published_at, featured, sort_order, created_at, updated_at, created_by, updated_by";
 
 function sortDossiers(items: InvestigationDossier[]) {
   return [...items].sort((a, b) => {
@@ -51,12 +54,20 @@ function sortLinks(items: InvestigationDossierLink[]) {
   });
 }
 
+function sortUpdates(items: InvestigationDossierUpdate[]) {
+  return sortDossierUpdates(items);
+}
+
 function getFallbackDossiers() {
   return sortDossiers(investigationDossierMockItems.filter((dossier) => dossier.public_visibility && dossier.status !== "draft"));
 }
 
 function getFallbackLinks(dossierId: string) {
   return sortLinks(investigationDossierLinkMockItems.filter((link) => link.dossier_id === dossierId));
+}
+
+function getFallbackUpdates(dossierId: string) {
+  return sortUpdates(investigationDossierUpdateMockItems.filter((update) => update.dossier_id === dossierId && update.published));
 }
 
 function isPublicDossierStatus(status: string) {
@@ -153,6 +164,62 @@ export async function getPublishedDossierLinks(dossierId: string) {
   return sortLinks(data as InvestigationDossierLink[]);
 }
 
+export async function getPublishedDossierUpdates(dossierId: string) {
+  const supabase = createSupabasePublicClient();
+
+  if (!supabase) {
+    return getFallbackUpdates(dossierId);
+  }
+
+  const { data, error } = await supabase
+    .from("investigation_dossier_updates")
+    .select(updateFields)
+    .eq("dossier_id", dossierId)
+    .eq("published", true)
+    .order("featured", { ascending: false })
+    .order("published_at", { ascending: false, nullsFirst: false })
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  if (error || !data) {
+    return getFallbackUpdates(dossierId);
+  }
+
+  return sortUpdates(data as InvestigationDossierUpdate[]);
+}
+
+export async function getPublishedDossierUpdatesByDossierIds(dossierIds: string[]) {
+  if (!dossierIds.length) {
+    return new Map<string, InvestigationDossierUpdate[]>();
+  }
+
+  const supabase = createSupabasePublicClient();
+
+  if (!supabase) {
+    return groupDossierUpdatesByDossierId(
+      investigationDossierUpdateMockItems.filter((update) => dossierIds.includes(update.dossier_id) && update.published),
+    );
+  }
+
+  const { data, error } = await supabase
+    .from("investigation_dossier_updates")
+    .select(updateFields)
+    .in("dossier_id", dossierIds)
+    .eq("published", true)
+    .order("featured", { ascending: false })
+    .order("published_at", { ascending: false, nullsFirst: false })
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  if (error || !data) {
+    return groupDossierUpdatesByDossierId(
+      investigationDossierUpdateMockItems.filter((update) => dossierIds.includes(update.dossier_id) && update.published),
+    );
+  }
+
+  return groupDossierUpdatesByDossierId(data as InvestigationDossierUpdate[]);
+}
+
 export async function getInternalDossiers(filters?: { status?: string }) {
   const supabase = await createSupabaseServerClient();
   let query = supabase.from("investigation_dossiers").select(internalFields).order("updated_at", { ascending: false });
@@ -209,6 +276,40 @@ export async function getInternalDossierLinks(dossierId: string) {
   return sortLinks((data ?? []) as InvestigationDossierLink[]);
 }
 
+export async function getInternalDossierUpdates(dossierId: string) {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("investigation_dossier_updates")
+    .select(updateFields)
+    .eq("dossier_id", dossierId)
+    .order("published", { ascending: false })
+    .order("featured", { ascending: false })
+    .order("published_at", { ascending: false, nullsFirst: false })
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return sortUpdates((data ?? []) as InvestigationDossierUpdate[]);
+}
+
+export async function getInternalDossierUpdateById(updateId: string) {
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("investigation_dossier_updates")
+    .select(updateFields)
+    .eq("id", updateId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return (data as InvestigationDossierUpdate | null) ?? null;
+}
+
 export function getDossierLinkKey(type: string, key: string) {
   return `${type}:${key}`;
 }
@@ -244,5 +345,3 @@ export function resolveDossierLinkHref(type: string, key: string) {
 export function isPublishedDossierStatus(status: string) {
   return isPublicDossierStatus(status);
 }
-
-

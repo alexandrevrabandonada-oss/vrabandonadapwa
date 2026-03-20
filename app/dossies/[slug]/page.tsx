@@ -7,14 +7,16 @@ import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
 import { DossierPrimaryPiece } from "@/components/dossier-primary-piece";
 import { DossierTimeline } from "@/components/dossier-timeline";
+import { DossierUpdateCard } from "@/components/dossier-update-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { MemoryCard } from "@/components/memory-card";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getDossierLinkRoleLabel, getDossierStatusLabel } from "@/lib/dossiers/navigation";
-import { getPublishedDossierBySlug, getPublishedDossierLinks, getPublishedDossiers } from "@/lib/dossiers/queries";
+import { getPublishedDossierBySlug, getPublishedDossierLinks, getPublishedDossierUpdates, getPublishedDossiers } from "@/lib/dossiers/queries";
 import { buildDossierTimeline, groupDossierLinksByRole, resolveDossierLinks } from "@/lib/dossiers/resolve";
+import { getDossierUpdateNarrativeLabel, groupDossierUpdatesByType } from "@/lib/dossiers/updates";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug, getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
@@ -67,6 +69,7 @@ export default async function DossierDetailPage({ params }: PageProps) {
   }
 
   const links = await getPublishedDossierLinks(dossier.id);
+  const updates = await getPublishedDossierUpdates(dossier.id);
   const editorialItems = await getPublishedEditorialItems();
   const memoryItems = await getPublishedMemoryItems();
   const archiveAssets = await getPublishedArchiveAssets();
@@ -88,6 +91,14 @@ export default async function DossierDetailPage({ params }: PageProps) {
   const leadLink = resolvedLinks.find((link) => link.link_role === "lead") ?? resolvedLinks[0] ?? null;
   const leadSeries = resolvedLinks.find((link) => link.link_type === "series");
   const relatedSeries = leadSeries ? seriesCards.find((series) => series.slug === leadSeries.link_key) ?? getEditorialSeriesBySlug(leadSeries.link_key) : null;
+  const featuredUpdate = updates[0] ?? null;
+  const updatesByType = groupDossierUpdatesByType(updates);
+  const changesUpdates = [
+    ...(updatesByType.development ?? []),
+    ...(updatesByType.evidence ?? []),
+    ...(updatesByType.correction ?? []),
+  ];
+  const nextStepsUpdates = [...(updatesByType.monitoring ?? []), ...(updatesByType.call ?? []), ...(updatesByType.note ?? [])];
   const roleSections = [
     { role: "evidence", title: "Evidências e documentos" },
     { role: "context", title: "Memória e contexto" },
@@ -106,6 +117,7 @@ export default async function DossierDetailPage({ params }: PageProps) {
             <span>{getDossierStatusLabel(dossier.status)}</span>
             {dossier.period_label ? <span>{dossier.period_label}</span> : null}
             {dossier.territory_label ? <span>{dossier.territory_label}</span> : null}
+            {featuredUpdate ? <span>Última atualização: {featuredUpdate.title}</span> : null}
           </div>
           {dossier.lead_question ? (
             <article className="support-box dossier-question-box">
@@ -120,8 +132,8 @@ export default async function DossierDetailPage({ params }: PageProps) {
             <Link href="/pautas" className="button-secondary">
               Abrir pautas
             </Link>
-            <Link href="/acervo" className="button">
-              Entrar no acervo
+            <Link href="/envie" className="button">
+              Enviar pista ou documento
             </Link>
           </div>
         </div>
@@ -161,6 +173,52 @@ export default async function DossierDetailPage({ params }: PageProps) {
         </div>
 
         <DossierTimeline entries={timelineEntries} />
+      </section>
+
+      {featuredUpdate ? (
+        <section className="section dossier-update-featured-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">última atualização</p>
+              <h2>{getDossierUpdateNarrativeLabel(featuredUpdate.update_type)}</h2>
+            </div>
+            <p className="section__lead">O acompanhamento público mostra o que mudou, o que segue em aberto e onde o público pode ajudar.</p>
+          </div>
+
+          <DossierUpdateCard update={featuredUpdate} />
+        </section>
+      ) : null}
+
+      <section className="section dossier-progress-section">
+        <div className="grid-2">
+          <article className="support-box">
+            <p className="eyebrow">o que mudou</p>
+            <h3>Desenvolvimento, prova e correção</h3>
+            {changesUpdates.length ? (
+              <div className="stacked-list">
+                {changesUpdates.slice(0, 3).map((update) => (
+                  <DossierUpdateCard key={update.id} update={update} compact />
+                ))}
+              </div>
+            ) : (
+              <p>Sem movimentação nova registrada ainda.</p>
+            )}
+          </article>
+          <article className="support-box">
+            <p className="eyebrow">próximos passos</p>
+            <h3>O que está em aberto</h3>
+            <p>O caso segue vivo quando ainda há pista, confirmação ou documento por cruzar.</p>
+            {nextStepsUpdates.length ? (
+              <div className="stacked-list">
+                {nextStepsUpdates.slice(0, 3).map((update) => (
+                  <DossierUpdateCard key={update.id} update={update} compact />
+                ))}
+              </div>
+            ) : (
+              <p>Sem próximos passos registrados no momento.</p>
+            )}
+          </article>
+        </div>
       </section>
 
       <section className="section dossier-detail-overview">
@@ -248,6 +306,42 @@ export default async function DossierDetailPage({ params }: PageProps) {
         );
       })}
 
+      <section className="section dossier-call-section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">convocação pública</p>
+            <h2>Tem documento, relato ou pista sobre este caso?</h2>
+          </div>
+          <p className="section__lead">
+            A investigação só anda com lastro. Se houver material útil, o canal de envio abre caminho para cruzamento editorial responsável.
+          </p>
+        </div>
+
+        <div className="grid-3">
+          <article className="card">
+            <h3>Enviar ao projeto</h3>
+            <p>Pistas, relatos, fotos e documentos entram pelo canal de envio.</p>
+            <Link href="/envie" className="button-secondary">
+              Abrir canal
+            </Link>
+          </article>
+          <article className="card">
+            <h3>Ver o acervo</h3>
+            <p>Materiais de base ajudam a sustentar o percurso do dossiê.</p>
+            <Link href="/acervo" className="button-secondary">
+              Entrar no acervo
+            </Link>
+          </article>
+          <article className="card">
+            <h3>Acompanhar as pautas</h3>
+            <p>Os desdobramentos seguem a linha pública do projeto.</p>
+            <Link href="/pautas" className="button-secondary">
+              Abrir pautas
+            </Link>
+          </article>
+        </div>
+      </section>
+
       <section className="section dossier-next-section">
         <div className="grid-2">
           <div>
@@ -288,6 +382,3 @@ export default async function DossierDetailPage({ params }: PageProps) {
     </Container>
   );
 }
-
-
-
