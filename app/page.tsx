@@ -6,12 +6,14 @@ import { DossierCard } from "@/components/dossier-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
+import { RadarItemCard } from "@/components/radar-item-card";
 import { ThemeHubCard } from "@/components/theme-hub-card";
 import { getPublishedDossierLinks, getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
+import { getRadarHomeItems } from "@/lib/radar/queries";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -45,6 +47,7 @@ export default async function HomePage() {
   const featuredDossierLinkCount = featuredDossier ? (await getPublishedDossierLinks(featuredDossier.id)).length : 0;
   const featuredDossierUpdate = featuredDossier ? updatesByDossierId.get(featuredDossier.id)?.[0] ?? null : null;
   const featuredHubs = hubs.slice(0, 3);
+  const radarItems = await getRadarHomeItems(3);
 
   return (
     <Container className="intro-grid landing-page">
@@ -161,6 +164,31 @@ export default async function HomePage() {
                 </Link>
               </div>
             </article>
+          </div>
+        </section>
+      ) : null}
+
+      {radarItems.length ? (
+        <section className="section home-radar-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">Agora no VR Abandonada</p>
+              <h2>O pulso editorial do momento.</h2>
+            </div>
+            <p className="section__lead">
+              O que mudou, o que está em curso e o que merece retorno imediato. Uma superfície curta para quem quer voltar ao site sem perder o fio.
+            </p>
+          </div>
+
+          <div className="grid-3">
+            {radarItems.map((item) => (
+              <RadarItemCard key={item.id} item={item} compact />
+            ))}
+          </div>
+          <div className="stack-actions">
+            <Link href="/agora" className="button-secondary">
+              Ver radar completo
+            </Link>
           </div>
         </section>
       ) : null}
@@ -396,3 +424,4 @@ export default async function HomePage() {
     </Container>
   );
 }
+

@@ -1448,3 +1448,37 @@ button, input, textarea, select { font: inherit; }
     grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
   }
 }
+
+.home-radar-section,
+.radar-summary-section,
+.radar-section,
+.radar-call-section,
+.radar-follow-section {
+  display: grid;
+  gap: 1.2rem;
+}
+
+.radar-page .radar-hero {
+  align-items: stretch;
+}
+
+.radar-item-card {
+  align-self: start;
+}
+
+.radar-item-card__body {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.radar-item-card--compact .radar-item-card__body {
+  gap: 0.75rem;
+}
+
+.radar-side-box {
+  align-self: start;
+}
+
+.radar-follow-section .card h3 {
+  margin-top: 0;
+}

@@ -6,6 +6,7 @@ export const site = {
     "Memória, denúncia e organização popular sobre Volta Redonda.",
   nav: [
     { href: "/", label: "Início" },
+    { href: "/agora", label: "Agora" },
     { href: "/sobre", label: "Sobre" },
     { href: "/pautas", label: "Pautas" },
     { href: "/memoria", label: "Memória" },
@@ -110,3 +111,4 @@ export const site = {
     "Denunciar é um ato coletivo quando o problema é estrutural.",
   ],
 } as const;
+
