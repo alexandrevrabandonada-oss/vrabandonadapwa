@@ -8,6 +8,7 @@ import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getRadarPageData } from "@/lib/radar/queries";
 import { getRadarSectionIntro, getRadarSectionLabel } from "@/lib/radar/navigation";
 import type { RadarItem } from "@/lib/radar/types";
+import { SaveReadButton } from "@/components/save-read-button";
 
 export const metadata: Metadata = {
   title: "Agora",
@@ -55,6 +56,7 @@ export default async function AgoraPage() {
             <Link href="#mudou" className="button">
               Ver o que mudou
             </Link>
+            <SaveReadButton kind="radar" keyValue="agora" title="Agora no VR Abandonada" summary="Pulso editorial vivo do VR Abandonada." href="/agora" compact />
             <Link href="/dossies" className="button-secondary">
               Abrir dossiês
             </Link>

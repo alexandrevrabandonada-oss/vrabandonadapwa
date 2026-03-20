@@ -6,6 +6,7 @@ import { Container } from "@/components/container";
 import { CampaignLinkCard } from "@/components/campaign-link-card";
 import { CampaignPrimaryPiece } from "@/components/campaign-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SaveReadButton } from "@/components/save-read-button";
 import { SharePanel } from "@/components/share-panel";
 import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
 import { getPublishedCampaignBySlug, getPublishedCampaignLinks } from "@/lib/campaigns/queries";
@@ -75,6 +76,7 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
             <Link href="#como-ajudar" className="button">
               Como ajudar
             </Link>
+            <SaveReadButton kind="campaign" keyValue={campaign.slug} title={campaign.title} summary={campaign.excerpt || campaign.description || campaign.title} href={`/campanhas/${campaign.slug}`} compact />
             <Link href="/agora" className="button-secondary">
               Abrir radar
             </Link>

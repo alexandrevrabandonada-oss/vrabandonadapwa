@@ -22,6 +22,7 @@ import { getPublishedParticipationPathItems, getPublishedParticipationPaths } fr
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getSharePackCardDownloadPath } from "@/lib/share-packs/navigation";
+import { SaveReadButton } from "@/components/save-read-button";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { getPublishedCampaigns, getPublishedCampaignLinks } from "@/lib/campaigns/queries";
 import { getPublishedImpactLinks, getPublishedImpacts } from "@/lib/impact/queries";
@@ -326,6 +327,7 @@ export default async function HomePage() {
                 <Link href={`/edicoes/${featuredEdition.slug}`} className="button">
                   Abrir edição
                 </Link>
+                <SaveReadButton kind="edition" keyValue={featuredEdition.slug} title={featuredEdition.title} summary={featuredEdition.excerpt || featuredEdition.description || featuredEdition.title} href={`/edicoes/${featuredEdition.slug}`} compact />
                 <Link href="/edicoes" className="button-secondary">
                   Ver edições
                 </Link>

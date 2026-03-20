@@ -10,6 +10,7 @@ import { DossierTimeline } from "@/components/dossier-timeline";
 import { DossierUpdateCard } from "@/components/dossier-update-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SaveReadButton } from "@/components/save-read-button";
 import { SharePanel } from "@/components/share-panel";
 import { MemoryCard } from "@/components/memory-card";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
@@ -133,6 +134,7 @@ export default async function DossierDetailPage({ params }: PageProps) {
             <Link href="/pautas" className="button-secondary">
               Abrir pautas
             </Link>
+            <SaveReadButton kind="dossier" keyValue={dossier.slug} title={dossier.title} summary={dossier.excerpt || dossier.description || dossier.title} href={`/dossies/${dossier.slug}`} compact />
             <Link href="/envie" className="button">
               Enviar pista ou documento
             </Link>

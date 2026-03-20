@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Container } from "@/components/container";
+import { PwaInstallButton } from "@/components/pwa-install-button";
 import { site } from "@/lib/site";
 
 export function SiteHeader() {
@@ -22,6 +23,10 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
+
+        <div className="site-header__tools">
+          <PwaInstallButton />
+        </div>
       </Container>
     </header>
   );

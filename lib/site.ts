@@ -11,6 +11,7 @@ export const site = {
     { href: "/impacto", label: "Impacto" },
     { href: "/edicoes", label: "Edições" },
     { href: "/compartilhar", label: "Compartilhar" },
+    { href: "/salvos", label: "Salvos" },
     { href: "/comecar", label: "Começar" },
     { href: "/sobre", label: "Sobre" },
     { href: "/pautas", label: "Pautas" },

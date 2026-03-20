@@ -1631,3 +1631,119 @@ button, input, textarea, select { font: inherit; }
     grid-template-columns: 1fr;
   }
 }
+
+.site-header__tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.pwa-install-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.85rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid rgba(243, 178, 26, 0.24);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.pwa-offline-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(243, 178, 26, 0.24);
+  background: rgba(182, 63, 35, 0.14);
+}
+
+.pwa-offline-banner p {
+  margin: 0;
+  color: var(--text);
+}
+
+.pwa-offline-banner__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  padding: 0.28rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(243, 178, 26, 0.16);
+  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.pwa-offline-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.save-read-button {
+  min-width: 7rem;
+}
+
+.save-read-button--compact {
+  min-width: 6.2rem;
+}
+
+.saved-reads-page,
+.offline-page {
+  padding-bottom: 1.5rem;
+}
+
+.saved-reads-group,
+.saved-reads-empty {
+  display: grid;
+  gap: 1rem;
+}
+
+.saved-reads-group__list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.saved-read-card {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.saved-read-card h3 {
+  margin: 0 0 0.35rem;
+}
+
+.saved-read-card p {
+  margin: 0;
+}
+
+.saved-read-card__meta {
+  margin-top: 0.35rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.saved-reads-actions {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 900px) {
+  .site-header__tools,
+  .pwa-offline-banner {
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+  }
+}

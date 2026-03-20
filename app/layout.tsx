@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
+import { NetworkStatusBanner } from "@/components/network-status-banner";
+import { PwaRegister } from "@/components/pwa-register";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { site } from "@/lib/site";
@@ -52,8 +54,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
+        <PwaRegister />
         <div className="site-shell">
           <SiteHeader />
+          <NetworkStatusBanner />
           <main className="site-main">{children}</main>
           <SiteFooter />
         </div>

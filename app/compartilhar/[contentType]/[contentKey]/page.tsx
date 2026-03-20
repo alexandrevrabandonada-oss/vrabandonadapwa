@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SaveReadButton } from "@/components/save-read-button";
 import { SharePackExportPanel } from "@/components/share-pack-export";
 import { SharePackCard } from "@/components/share-pack-card";
 import { ShareTools } from "@/components/share-tools";
@@ -145,6 +146,7 @@ export default async function SharePackPage({ params }: PageProps) {
             <Link href={resolved.contentHref} className="button-secondary">
               Abrir conteúdo
             </Link>
+            <SaveReadButton kind="page" keyValue={`${contentType}:${contentKey}`} title={resolved.title} summary={resolved.summary} href={resolved.href} compact />
             <Link href="/compartilhar" className="button-secondary">
               Ver outros pacotes
             </Link>

@@ -6,6 +6,7 @@ import { Container } from "@/components/container";
 import { EditionLinkCard } from "@/components/edition-link-card";
 import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
+import { SaveReadButton } from "@/components/save-read-button";
 import { SharePanel } from "@/components/share-panel";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
@@ -131,6 +132,7 @@ export default async function EditionPage({ params }: PageProps) {
             <Link href="#edicao-viva" className="button">
               Ver síntese
             </Link>
+            <SaveReadButton kind="edition" keyValue={edition.slug} title={edition.title} summary={edition.excerpt || edition.description || edition.title} href={`/edicoes/${edition.slug}`} compact />
             <Link href="#edicao-relacionada" className="button-secondary">
               Ver vínculos
             </Link>
