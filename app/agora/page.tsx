@@ -46,7 +46,7 @@ export default async function AgoraPage() {
           <p className="eyebrow">radar vivo</p>
           <h1 className="hero__title">Agora no VR Abandonada.</h1>
           <p className="hero__lead">
-            O radar mostra o que mudou, o que segue quente e o que dá para agir agora.
+            O radar mostra o que mudou e o que agir agora.
           </p>
           <div className="home-hero__signals" aria-label="Sinais editoriais">
             <span className="home-hero__signal">última atualização</span>
@@ -113,9 +113,9 @@ export default async function AgoraPage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">em 1 minuto</p>
-            <h2>Ver o que mudou, mandar pista ou seguir uma frente.</h2>
+            <h2>Mudança, pista ou frente.</h2>
           </div>
-          <p className="section__lead">A tela de bolso responde rápido: o que mudou, onde agir e como voltar depois.</p>
+          <p className="section__lead">A tela responde rápido: o que mudou e onde agir.</p>
         </div>
 
         <div className="grid-3">

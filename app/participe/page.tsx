@@ -73,9 +73,9 @@ export default async function ParticipatePage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">em 1 minuto</p>
-            <h2>Mandar pista, apoiar ou ver agora.</h2>
+            <h2>Pista, apoio ou agora.</h2>
           </div>
-          <p className="section__lead">Se já sabe o que quer fazer, vá direto para a porta que resolve.</p>
+          <p className="section__lead">Se já sabe, vá direto.</p>
         </div>
 
         <div className="grid-3">

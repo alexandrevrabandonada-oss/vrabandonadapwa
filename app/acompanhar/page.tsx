@@ -241,7 +241,7 @@ export default async function AcompanharPage() {
         <div className="hero__copy">
           <p className="eyebrow">acompanhar</p>
           <h1 className="hero__title">O que você quer ver voltar?</h1>
-          <p className="hero__lead">O app guarda suas frentes seguidas e traz de volta o que continua em curso.</p>
+          <p className="hero__lead">O app traz de volta suas frentes seguidas.</p>
           <div className="home-hero__signals" aria-label="Sinais editoriais">
             <span className="home-hero__signal">eixos</span>
             <span className="home-hero__signal">territórios</span>
@@ -284,9 +284,9 @@ export default async function AcompanharPage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">em 1 minuto</p>
-            <h2>Ver frentes, radar ou pista.</h2>
+            <h2>Frentes, radar, pista.</h2>
           </div>
-          <p className="section__lead">A rotina aqui é curta: frentes, mudanças e gesto rápido.</p>
+          <p className="section__lead">Rotina curta: frentes, mudanças e gesto rápido.</p>
         </div>
 
         <div className="grid-3">
