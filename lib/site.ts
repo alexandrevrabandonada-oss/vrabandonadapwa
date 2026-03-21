@@ -83,32 +83,14 @@ export const site = {
       ],
     },
   ] satisfies SiteGroup[],
-  footerGroups: [
-    {
-      title: "Entender",
-      items: [
-        { href: "/comecar", label: "Começar" },
-        { href: "/sobre", label: "Sobre" },
-        { href: "/metodo", label: "Método" },
-      ],
-    },
-    {
-      title: "Investigar",
-      items: [
-        { href: "/pautas", label: "Pautas" },
-        { href: "/dossies", label: "Dossiês" },
-        { href: "/campanhas", label: "Campanhas" },
-      ],
-    },
-    {
-      title: "Participar",
-      items: [
-        { href: "/participe", label: "Participe" },
-        { href: "/envie", label: "Envie" },
-        { href: "/apoie", label: "Apoie" },
-      ],
-    },
-  ] satisfies SiteGroup[],
+  footerQuickLinks: [
+    { href: "/comecar", label: "Começar" },
+    { href: "/buscar", label: "Buscar" },
+    { href: "/agora", label: "Agora" },
+    { href: "/acompanhar", label: "Acompanhar" },
+    { href: "/participe", label: "Participe" },
+    { href: "/apoie", label: "Apoie" },
+  ] satisfies SiteLink[],
   hero: {
     kicker: "arquivo vivo da cidade operária",
     title: "Volta Redonda não é cenário. É disputa.",
@@ -205,4 +187,3 @@ export const site = {
     "Denunciar é um ato coletivo quando o problema é estrutural.",
   ],
 } as const;
-

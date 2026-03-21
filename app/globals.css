@@ -2700,3 +2700,31 @@ body.vr-low-vision .memory-collection-card .button-secondary {
     display: none;
   }
 }
+
+.site-footer__quicklinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.site-footer__quicklink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.6rem;
+  padding: 0.5rem 0.78rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.site-footer__quicklink:hover,
+.site-footer__quicklink:focus-visible {
+  color: var(--text);
+  border-color: rgba(243, 178, 26, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.site-footer__note {
+  font-size: 0.9rem;
+}
