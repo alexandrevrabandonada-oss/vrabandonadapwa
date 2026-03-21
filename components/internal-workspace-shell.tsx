@@ -20,20 +20,9 @@ const featuredItems: InternalNavItem[] = [
   { href: "/interno/entrada", label: "Entrada" },
   { href: "/interno/enriquecer", label: "Enriquecimento" },
   { href: "/interno/intake", label: "Intake" },
-  { href: "/interno/editorial", label: "Editorial" },
-  { href: "/interno/acervo", label: "Acervo" },
 ];
 
 const groups: InternalNavGroup[] = [
-  {
-    title: "Fluxo",
-    items: [
-      { href: "/interno/entrada", label: "Entrada" },
-      { href: "/interno/enriquecer", label: "Enriquecimento" },
-      { href: "/interno/intake", label: "Intake" },
-      { href: "/interno/editorial", label: "Editorial" },
-    ],
-  },
   {
     title: "Arquivo",
     items: [
@@ -51,11 +40,7 @@ const groups: InternalNavGroup[] = [
       { href: "/interno/eixos", label: "Eixos" },
       { href: "/interno/territorios", label: "Territórios" },
       { href: "/interno/atores", label: "Atores" },
-      { href: "/interno/padroes", label: "Padrões" },
       { href: "/interno/cronologia/marcos", label: "Marcos" },
-      { href: "/interno/compartilhar", label: "Compartilhar" },
-      { href: "/interno/busca", label: "Busca" },
-      { href: "/interno/participe", label: "Participar" },
     ],
   },
 ];
@@ -83,7 +68,7 @@ export function InternalWorkspaceShell({ children }: { children: React.ReactNode
             <p className="eyebrow">fluxo interno</p>
             <h1>Entrada, fila e transformação num só lugar.</h1>
             <p>
-              A porta única vira o primeiro passo; a fila de enriquecimento vira o segundo; o restante fica a um toque de distância.
+              A porta única vira o primeiro passo; a fila de enriquecimento vira o segundo; o resto fica reduzido ao que realmente ajuda a operar.
             </p>
           </div>
 
