@@ -32,8 +32,8 @@ export function IntakeForm() {
       {isQuick ? (
         <article className="support-box intake-form__quick">
           <p className="eyebrow">envio rápido</p>
-          <h3>Vi algo agora? Preencha o mínimo.</h3>
-          <p>Categoria, título e relato curto já abrem o caminho.</p>
+          <h3>Pista curta? Preencha o mínimo.</h3>
+          <p>Categoria, título e relato curto já bastam.</p>
           <div className="stack-actions">
             <a href="#intake-details" className="button-secondary">
               Ir direto ao relato
@@ -64,7 +64,7 @@ export function IntakeForm() {
             placeholder="Resumo do caso ou material"
             minLength={6}
             maxLength={120}
-            defaultValue={pickFirst(title, isQuick ? "Vi algo agora" : "")}
+            defaultValue={pickFirst(title, isQuick ? "Pista curta" : "")}
             required
           />
         </label>
@@ -99,7 +99,7 @@ export function IntakeForm() {
         <textarea
           name="details"
           rows={7}
-          placeholder="Conte o fato com contexto útil: o que aconteceu, quando, onde e por que importa."
+          placeholder="Conte o fato: o que aconteceu, quando, onde e por que importa."
           minLength={20}
           defaultValue={pickFirst(details, isQuick ? "" : "")}
           required
@@ -113,13 +113,14 @@ export function IntakeForm() {
 
       <div className="stack-actions">
         <button className="button" type="submit" disabled={pending}>
-          {pending ? "Enviando..." : isQuick ? "Mandar pista" : "Registrar"}
+          {pending ? "Enviando..." : isQuick ? "Enviar pista" : "Registrar"}
         </button>
       </div>
 
       <p className={`form-status ${state.ok ? "form-status--ok" : ""}`} aria-live="polite">
-        {state.message || (isQuick ? "Pista rápida com cuidado editorial." : "Seu material entra numa fila editorial inicial.")}
+        {state.message || (isQuick ? "Pista curta com cuidado editorial." : "Seu material entra numa fila editorial inicial.")}
       </p>
     </form>
   );
 }
+

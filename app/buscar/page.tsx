@@ -99,7 +99,7 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
           <p className="eyebrow">busca transversal</p>
           <h1 className="hero__title">Encontrar rápido.</h1>
           <p className="hero__lead">
-            Busque temas, casos, lugares, atores, campanhas, impactos, memórias e documentos em uma única consulta.
+            Busque um tema, caso, lugar, ator ou documento em uma única consulta.
           </p>
           <div className="home-hero__signals" aria-label="Sinais editoriais">
             <span className="home-hero__signal">busca pública</span>
@@ -143,7 +143,7 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
           <div className="grid-2 search-toolbar__header">
             <div>
               <p className="eyebrow">consulta pública</p>
-              <h2>Procure pelo que importa.</h2>
+              <h2>Procure rápido.</h2>
             </div>
             <p className="section__lead">
               O índice cruza pautas, memória, acervo, dossiês, campanhas, impactos, territórios, atores, padrões, edições, eixos, rotas e participação.
@@ -223,10 +223,10 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
         <div className="grid-2">
           <div>
             <p className="eyebrow">buscas frequentes</p>
-            <h2>Atalhos para quem ainda está encontrando o termo.</h2>
+            <h2>Atalhos para achar rápido.</h2>
           </div>
           <p className="section__lead">
-            Quando a palavra ainda não está clara, comece pelo tema, pela cidade ou pelo nome recorrente no conflito.
+            Se o termo ainda não estiver claro, comece pelo tema, pela cidade ou pelo nome recorrente.
           </p>
         </div>
 
@@ -320,10 +320,10 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
           <div className="grid-2">
             <div>
               <p className="eyebrow">destaque</p>
-              <h2>Um ponto de partida editorial.</h2>
+              <h2>Abra o melhor match.</h2>
             </div>
             <p className="section__lead">
-              Quando a busca encontra algo forte, vale abrir a peça principal e seguir a trilha para salvar ou acompanhar.
+              Se a busca achou algo forte, abra a peça principal e siga dali.
             </p>
           </div>
 
@@ -376,7 +376,7 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
         <div className="grid-2">
           <div>
             <p className="eyebrow">descoberta contínua</p>
-            <h2>Da busca para o retorno local.</h2>
+            <h2>Da busca ao retorno local.</h2>
           </div>
           <p className="section__lead">
             O que você encontra aqui pode ir para <Link href="/salvos">Salvos</Link> ou para <Link href="/acompanhar">Acompanhar</Link> sem sair da leitura.
@@ -410,6 +410,7 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
     </Container>
   );
 }
+
 
 
 

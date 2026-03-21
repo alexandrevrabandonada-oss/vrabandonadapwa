@@ -65,15 +65,15 @@ export function HomeReturnPanel() {
       <section className="home-return-panel home-return-panel--first">
         <div>
           <p className="eyebrow">uso diário</p>
-          <h2>Retome o que já começou.</h2>
-          <p className="section__lead">A home traz de volta o que você abriu, salvou ou acompanha neste aparelho.</p>
+          <h2>Retome seu fio.</h2>
+          <p className="section__lead">A home volta com o que você abriu, salvou ou acompanha neste aparelho.</p>
         </div>
         <div className="home-return-panel__actions">
           <Link href="/agora" className="button">
-            Ver agora
+            Agora
           </Link>
           <Link href="/acompanhar" className="button-secondary">
-            Escolher frentes
+            Frentes
           </Link>
           <Link href="/salvos" className="button-secondary">
             Salvos
@@ -87,8 +87,8 @@ export function HomeReturnPanel() {
     <section className="home-return-panel home-return-panel--return">
       <div className="home-return-panel__copy">
         <p className="eyebrow">retorno recorrente</p>
-        <h2>Continue de onde parou.</h2>
-        <p className="section__lead">A home traz de volta o que você abriu, salvou ou acompanha neste aparelho.</p>
+        <h2>Continue seu fio.</h2>
+        <p className="section__lead">A home volta com o que você abriu, salvou ou acompanha neste aparelho.</p>
       </div>
 
       <div className="home-return-panel__grid">
@@ -166,12 +166,13 @@ export function HomeReturnPanel() {
           Ver o que mudou
         </Link>
         <Link href="/edicoes" className="button-secondary">
-          Edição do momento
+          Edição
         </Link>
         <Link href="/buscar" className="button-secondary">
-          Buscar no arquivo
+          Buscar
         </Link>
       </div>
     </section>
   );
 }
+
