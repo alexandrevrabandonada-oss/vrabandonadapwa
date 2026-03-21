@@ -53,19 +53,16 @@ export default async function AgoraPage() {
             <span className="home-hero__signal">casos em andamento</span>
             <span className="home-hero__signal">retorno recorrente</span>
           </div>
-          <div className="hero__actions">
+                    <div className="hero__actions">
             <Link href="#mudou" className="button">
               Ver o que mudou
             </Link>
+            <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">
+              Mandar pista
+            </Link>
             <SaveReadButton kind="radar" keyValue="agora" title="Agora no VR Abandonada" summary="Pulso editorial vivo do VR Abandonada." href="/agora" compact />
             <Link href="/acompanhar" className="button-secondary">
-              Acompanhar frentes
-            </Link>
-            <Link href="/buscar" className="button-secondary">
-              Buscar
-            </Link>
-            <Link href="/dossies" className="button-secondary">
-              Abrir dossiês
+              Seguir
             </Link>
           </div>
         </div>
@@ -110,8 +107,48 @@ export default async function AgoraPage() {
         </div>
       </section>
 
-      <ReadingTrailPanel compact />
+            <ReadingTrailPanel compact />
 
+      <section className="section radar-quick-section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">em 1 minuto</p>
+            <h2>Abra, mande, siga ou volte depois.</h2>
+          </div>
+          <p className="section__lead">A tela de bolso entrega decisão rápida: o que mudou, o que você pode seguir e onde mandar pista sem perder tempo.</p>
+        </div>
+
+        <div className="grid-4">
+          <article className="card">
+            <h3>Ver o que mudou</h3>
+            <p>Volte direto para a parte que responde ao seu retorno.</p>
+            <div className="stack-actions">
+              <Link href="#mudou" className="button-secondary">Abrir</Link>
+            </div>
+          </article>
+          <article className="card">
+            <h3>Mandar pista rápida</h3>
+            <p>Quando você viu algo agora e quer registrar sem burocracia.</p>
+            <div className="stack-actions">
+              <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">Enviar rápido</Link>
+            </div>
+          </article>
+          <article className="card">
+            <h3>Seguir uma frente</h3>
+            <p>Escolha um eixo, território, dossiê ou campanha para voltar depois.</p>
+            <div className="stack-actions">
+              <Link href="/acompanhar" className="button-secondary">Abrir acompanhar</Link>
+            </div>
+          </article>
+          <article className="card">
+            <h3>Retomar leitura</h3>
+            <p>Abra o último conteúdo lido neste aparelho sem caça ao link.</p>
+            <div className="stack-actions">
+              <Link href="/" className="button-secondary">Voltar à home</Link>
+            </div>
+          </article>
+        </div>
+      </section>
 
       <section className="section radar-section" id="mudou">
         <div className="grid-2">
@@ -257,6 +294,7 @@ export default async function AgoraPage() {
     </Container>
   );
 }
+
 
 
 

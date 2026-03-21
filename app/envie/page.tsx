@@ -11,14 +11,37 @@ export const metadata: Metadata = {
   description: "Canal inicial para denúncia e envio de material.",
 };
 
-export default function EnviePage() {
+export default async function EnviePage({ searchParams }: { searchParams?: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = (await searchParams) ?? {};
+  const quickMode = params.modo === "rapido";
+
   return (
     <Container className="intro-grid">
       <PageHero
         kicker="envie"
-        title="Denúncia sem excesso, com contexto e precisão."
-        lead="A base já deixa claro que o canal precisa ser simples, seguro e orientado. O fluxo real agora está ligado ao Supabase."
+        title={quickMode ? "Mandar pista rápido." : "Denúncia sem excesso, com contexto e precisão."}
+        lead={quickMode ? "Fluxo curto para quando você viu algo agora e precisa registrar sem perder tempo." : "A base já deixa claro que o canal precisa ser simples, seguro e orientado. O fluxo real agora está ligado ao Supabase."}
       />
+
+      {quickMode ? (
+        <section className="section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">envio rápido</p>
+              <h2>Preencha o mínimo e mande a pista.</h2>
+            </div>
+            <p className="section__lead">Este modo foi pensado para o cotidiano: entrada curta, contexto suficiente e caminho direto para o relato.</p>
+          </div>
+          <div className="stack-actions">
+            <Link href="#intake-details" className="button">
+              Ir ao relato
+            </Link>
+            <Link href="/metodo" className="button-secondary">
+              Ver o cuidado editorial
+            </Link>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section">
         <div className="grid-2">
@@ -115,3 +138,4 @@ export default function EnviePage() {
     </Container>
   );
 }
+

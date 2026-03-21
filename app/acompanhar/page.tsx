@@ -282,6 +282,39 @@ export default async function AcompanharPage() {
         </article>
       </section>
 
+      <section className="section follow-quick-section">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">em 1 minuto</p>
+            <h2>Abra a frente, veja o sinal e volte depois.</h2>
+          </div>
+          <p className="section__lead">A rotina de acompanhar precisa ser direta: frentes seguidas, última movimentação e atalho para o que você salvou ou quer mandar agora.</p>
+        </div>
+
+        <div className="grid-4">
+          <article className="card">
+            <h3>Frentes seguidas</h3>
+            <p>Veja o que seu aparelho já acompanha para você.</p>
+            <Link href="#frentes-seguidas" className="button-secondary">Abrir</Link>
+          </article>
+          <article className="card">
+            <h3>Ver o que mudou</h3>
+            <p>Abra o radar e retorne ao pulso do momento.</p>
+            <Link href="/agora" className="button-secondary">Abrir radar</Link>
+          </article>
+          <article className="card">
+            <h3>Salvar para depois</h3>
+            <p>Guarde uma leitura específica sem seguir a frente inteira.</p>
+            <Link href="/salvos" className="button-secondary">Abrir salvos</Link>
+          </article>
+          <article className="card">
+            <h3>Mandar pista rápida</h3>
+            <p>Se a frente seguida virou fato novo, envie sem atrasar.</p>
+            <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">Enviar rápido</Link>
+          </article>
+        </div>
+      </section>
+
       <section className="section">
         <div className="grid-2">
           <div>

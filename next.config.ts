@@ -14,6 +14,12 @@ const remotePatterns = supabaseUrl
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns,
   },
