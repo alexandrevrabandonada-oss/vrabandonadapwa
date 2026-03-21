@@ -3,10 +3,11 @@
 import { redirect } from "next/navigation";
 
 import { isAdminEmailAllowed } from "@/lib/admin";
+import { getSiteUrl } from "@/lib/site-url";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteUrl = getSiteUrl();
 
 export type AdminAccessState = {
   ok: boolean;
