@@ -255,6 +255,9 @@ export default async function AcompanharPage() {
             <Link href="/salvos" className="button-secondary">
               Abrir salvos
             </Link>
+            <Link href="/buscar" className="button-secondary">
+              Buscar
+            </Link>
             <Link href="/agora" className="button-secondary">
               Abrir radar
             </Link>
@@ -341,4 +344,5 @@ export default async function AcompanharPage() {
     </Container>
   );
 }
+
 

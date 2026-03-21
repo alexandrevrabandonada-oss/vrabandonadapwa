@@ -25,6 +25,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="site-header__tools">
+          <Link href="/buscar" className="button-secondary site-header__search-link">
+            Buscar
+          </Link>
           <PwaInstallButton />
         </div>
       </Container>

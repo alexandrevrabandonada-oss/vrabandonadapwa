@@ -6,6 +6,7 @@ export const site = {
     "Memória, denúncia e organização popular sobre Volta Redonda.",
   nav: [
     { href: "/", label: "Início" },
+    { href: "/buscar", label: "Buscar" },
     { href: "/agora", label: "Agora" },
     { href: "/campanhas", label: "Campanhas" },
     { href: "/impacto", label: "Impacto" },
@@ -35,6 +36,7 @@ export const site = {
     lead:
       "VR Abandonada documenta o que tentam apagar: memória da cidade, abandono urbano, denúncias públicas e organização popular com método, contexto e responsabilidade.",
     ctas: [
+      { href: "/buscar", label: "Buscar na cidade" },
       { href: "/envie", label: "Enviar denúncia" },
       { href: "/pautas", label: "Ler pautas" },
     ],
@@ -123,4 +125,3 @@ export const site = {
     "Denunciar é um ato coletivo quando o problema é estrutural.",
   ],
 } as const;
-

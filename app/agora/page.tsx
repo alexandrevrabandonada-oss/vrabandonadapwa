@@ -60,6 +60,9 @@ export default async function AgoraPage() {
             <Link href="/acompanhar" className="button-secondary">
               Acompanhar frentes
             </Link>
+            <Link href="/buscar" className="button-secondary">
+              Buscar
+            </Link>
             <Link href="/dossies" className="button-secondary">
               Abrir dossiês
             </Link>
@@ -250,6 +253,7 @@ export default async function AgoraPage() {
     </Container>
   );
 }
+
 
 
 

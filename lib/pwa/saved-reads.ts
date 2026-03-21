@@ -10,6 +10,11 @@ export type SavedReadKind =
   | "pattern"
   | "radar"
   | "page"
+  | "series"
+  | "collection"
+  | "archive"
+  | "route"
+  | "participation"
   | string;
 
 export type SavedRead = {
@@ -36,6 +41,11 @@ export const savedReadKindLabels: Record<string, string> = {
   pattern: "Padrão",
   radar: "Radar",
   page: "Página",
+  series: "Série",
+  collection: "Coleção",
+  archive: "Acervo",
+  route: "Rota",
+  participation: "Participação",
 };
 
 function isBrowser() {
