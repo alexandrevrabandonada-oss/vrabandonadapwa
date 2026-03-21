@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { ImpactCard } from "@/components/impact-card";
 import { ImpactForm } from "@/components/impact-form";
@@ -50,14 +49,9 @@ export default async function InternalImpactDetailPage({ params }: PageProps) {
         <p className="eyebrow">impacto interno</p>
         <h1 className="hero__title">{impact.title}</h1>
         <p className="hero__lead">
-          Operação editorial da consequência pública: status, vínculos, destaque e leitura do que já mudou.
+          Operação editorial da consequência pública.
         </p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
           <Link href="/interno/impacto" className="button-secondary">
             Voltar à lista
           </Link>
@@ -68,26 +62,18 @@ export default async function InternalImpactDetailPage({ params }: PageProps) {
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-4">
+        <div className="grid-3">
           <article className="support-box">
             <p className="eyebrow">status</p>
             <h3>{getImpactStatusLabel(impact.status)}</h3>
-            <p>Estado narrativo da consequência.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">tipo</p>
             <h3>{getImpactTypeLabel(impact.impact_type)}</h3>
-            <p>Forma editorial do impacto.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">vínculos</p>
             <h3>{resolvedLinks.length}</h3>
-            <p>Peças associadas ao efeito público.</p>
-          </article>
-          <article className="support-box">
-            <p className="eyebrow">público</p>
-            <h3>{impact.public_visibility ? "sim" : "não"}</h3>
-            <p>Se a peça entra na camada pública.</p>
           </article>
         </div>
       </section>

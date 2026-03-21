@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { ImpactCard } from "@/components/impact-card";
 import { getImpactStatusLabel } from "@/lib/impact/navigation";
@@ -48,16 +47,11 @@ export default async function InternalImpactsPage({ searchParams }: PageProps) {
     <Container className="intro-grid internal-page impact-internal-page">
       <section className="hero internal-hero">
         <p className="eyebrow">impactos internos</p>
-        <h1 className="hero__title">Foco editorial temporário</h1>
+        <h1 className="hero__title">Impactos.</h1>
         <p className="hero__lead">
-          Organize chamados públicos que condensam investigação, participação, método e apoio.
+          Consequências públicas, vínculos e leitura do que já mudou.
         </p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
           <Link href="/interno/impacto/novo" className="button">
             Novo impacto
           </Link>
@@ -68,26 +62,18 @@ export default async function InternalImpactsPage({ searchParams }: PageProps) {
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-4">
+        <div className="grid-3">
           <article className="support-box">
             <p className="eyebrow">itens</p>
             <h3>{allImpacts.length}</h3>
-            <p>Impactos cadastrados.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">publicadas</p>
             <h3>{publishedCount}</h3>
-            <p>Chamados liberados para o público.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">em foco</p>
             <h3>{activeCount}</h3>
-            <p>Impactos em andamento ou observação.</p>
-          </article>
-          <article className="support-box">
-            <p className="eyebrow">vínculos</p>
-            <h3>{linkPairs.reduce((sum, [, links]) => sum + links.length, 0)}</h3>
-            <p>Peças conectadas aos impactos.</p>
           </article>
         </div>
       </section>
@@ -98,7 +84,7 @@ export default async function InternalImpactsPage({ searchParams }: PageProps) {
             <p className="eyebrow">fila</p>
             <h2>Estados editoriais</h2>
           </div>
-          <p className="section__lead">Filtre rápido o que está em preparação, ativo, monitoramento, encerrado ou arquivado.</p>
+          <p className="section__lead">Filtre o que está em preparação, ativo, monitoramento, encerrado ou arquivado.</p>
         </div>
 
         <div className="status-filters" aria-label="Filtro de impacto">
@@ -108,7 +94,7 @@ export default async function InternalImpactsPage({ searchParams }: PageProps) {
               href={filter === "all" ? "/interno/impacto" : `/interno/impacto?status=${filter}`}
               className={`status-chip ${status === filter ? "status-chip--active" : ""}`}
             >
-              {filter === "all" ? "todos" : getImpactStatusLabel(filter)}
+              {filter === "all" ? "Todos" : getImpactStatusLabel(filter)}
             </Link>
           ))}
         </div>
@@ -135,7 +121,7 @@ export default async function InternalImpactsPage({ searchParams }: PageProps) {
             ))
           ) : (
             <div className="support-box">
-              <h3>Sem impacto neste filtro</h3>
+              <h3>Sem impactos neste filtro</h3>
               <p>Crie o primeiro foco para condensar a mobilização pública do projeto.</p>
             </div>
           )}
@@ -144,11 +130,3 @@ export default async function InternalImpactsPage({ searchParams }: PageProps) {
     </Container>
   );
 }
-
-
-
-
-
-
-
-
