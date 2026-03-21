@@ -81,9 +81,11 @@ export function SearchResultCard({ item, query, compact = false }: Props) {
         <Link href={item.href} className="button" aria-label={`Abrir ${item.kindLabel}: ${item.title}`}>
           Abrir
         </Link>
-        <Link href={timelineHref} className="button-secondary" aria-label={`Ver linha do tempo de ${item.title}`}>
-          {compact ? "Tempo" : "Linha do tempo"}
-        </Link>
+        {compact ? null : (
+          <Link href={timelineHref} className="button-secondary" aria-label={`Ver linha do tempo de ${item.title}`}>
+            Linha do tempo
+          </Link>
+        )}
         {item.saveKind ? (
           <SaveReadButton kind={item.saveKind} keyValue={item.contentKey} title={item.title} summary={item.excerpt} href={item.href} compact />
         ) : null}
