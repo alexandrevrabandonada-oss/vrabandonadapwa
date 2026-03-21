@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierCard } from "@/components/dossier-card";
 import { getInternalDossiers, getInternalDossierLinks } from "@/lib/dossiers/queries";
@@ -49,16 +48,11 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
     <Container className="intro-grid internal-page dossier-internal-page">
       <section className="hero internal-hero">
         <p className="eyebrow">dossiês internos</p>
-        <h1 className="hero__title">Curadoria e operação</h1>
+        <h1 className="hero__title">Dossiês.</h1>
         <p className="hero__lead">
-          Organize investigações como linhas vivas. Cada dossiê costura pauta, memória, acervo e coleção em um percurso editorial.
+          Cada linha de investigação costura pauta, memória, acervo e coleção em um percurso editorial curto.
         </p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
           <Link href="/interno/dossies/novo" className="button">
             Novo dossiê
           </Link>
@@ -69,7 +63,7 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-4">
+        <div className="grid-3">
           <article className="support-box">
             <p className="eyebrow">itens</p>
             <h3>{allDossiers.length}</h3>
@@ -78,17 +72,12 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
           <article className="support-box">
             <p className="eyebrow">publicados</p>
             <h3>{publishedCount}</h3>
-            <p>Linhas liberadas para o público.</p>
+            <p>Linhas abertas ao público.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">em curso</p>
             <h3>{activeCount}</h3>
             <p>Investigação em andamento.</p>
-          </article>
-          <article className="support-box">
-            <p className="eyebrow">vínculos</p>
-            <h3>{linkPairs.reduce((sum, [, links]) => sum + links.length, 0)}</h3>
-            <p>Peças conectadas às linhas do arquivo vivo.</p>
           </article>
         </div>
       </section>
@@ -99,7 +88,7 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
             <p className="eyebrow">fila</p>
             <h2>Estados editoriais</h2>
           </div>
-          <p className="section__lead">Filtre rápido o que está em rascunho, em curso, em monitoramento, concluído ou arquivado.</p>
+          <p className="section__lead">Filtre o que está em rascunho, em curso, em monitoramento, concluído ou arquivado.</p>
         </div>
 
         <div className="status-filters" aria-label="Filtro de dossiês">
@@ -109,7 +98,7 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
               href={filter === "all" ? "/interno/dossies" : `/interno/dossies?status=${filter}`}
               className={`status-chip ${status === filter ? "status-chip--active" : ""}`}
             >
-              {filter === "all" ? "todos" : getDossierStatusLabel(filter)}
+              {filter === "all" ? "Todos" : getDossierStatusLabel(filter)}
             </Link>
           ))}
         </div>
@@ -121,7 +110,7 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
             <p className="eyebrow">lista</p>
             <h2>Dossiês registrados</h2>
           </div>
-          <p className="section__lead">Cada peça abaixo abre um caso com contexto, prova e navegação para o restante do projeto.</p>
+          <p className="section__lead">Cada peça abre um caso com contexto, prova e navegação para o restante do projeto.</p>
         </div>
 
         <div className="grid-2">

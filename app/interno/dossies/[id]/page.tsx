@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierForm } from "@/components/dossier-form";
 import { DossierLinkForm } from "@/components/dossier-link-form";
@@ -72,11 +71,6 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
           {latestUpdate ? <span>Última atualização: {latestUpdate.title}</span> : null}
         </div>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
           <Link href="/interno/dossies" className="button-secondary">
             Voltar à lista
           </Link>
@@ -90,7 +84,7 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-4">
+        <div className="grid-3">
           <article className="support-box">
             <p className="eyebrow">status</p>
             <h3>{getDossierStatusLabel(dossier.status)}</h3>
@@ -105,11 +99,6 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
             <p className="eyebrow">timeline</p>
             <h3>{timelineEntries.length}</h3>
             <p>Marcos organizados na leitura pública.</p>
-          </article>
-          <article className="support-box">
-            <p className="eyebrow">destaque</p>
-            <h3>{dossier.featured ? "sim" : "não"}</h3>
-            <p>Se deve puxar a home pública.</p>
           </article>
         </div>
       </section>
