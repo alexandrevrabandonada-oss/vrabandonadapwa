@@ -14,6 +14,7 @@ import { RadarItemCard } from "@/components/radar-item-card";
 import { CampaignCard } from "@/components/campaign-card";
 import { ImpactPrimaryPiece } from "@/components/impact-primary-piece";
 import { EntryRouteCard } from "@/components/entry-route-card";
+import { HomeReturnPanel } from "@/components/home-return-panel";
 import { ParticipationPathCard } from "@/components/participation-path-card";
 import { ThemeHubCard } from "@/components/theme-hub-card";
 import { getPublishedDossierLinks, getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
@@ -107,6 +108,7 @@ export default async function HomePage() {
 
   return (
     <Container className="intro-grid landing-page">
+      <HomeReturnPanel />
       <section className="hero hero--split landing-hero">
         <div className="hero__copy landing-hero__copy">
           <p className="eyebrow">{site.hero.kicker}</p>
@@ -164,7 +166,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <ReadingTrailPanel />
+      <ReadingTrailPanel compact />
 
 
       <section className="section home-start-section">
@@ -819,6 +821,7 @@ export default async function HomePage() {
     </Container>
   );
 }
+
 
 
 

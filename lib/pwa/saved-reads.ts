@@ -29,6 +29,7 @@ export type SavedRead = {
 };
 
 const STORAGE_KEY = "vr-abandonada:saved-reads";
+const SAVED_READS_CHANGE_EVENT = "vr-abandonada:saved-reads-changed";
 
 export const savedReadKindLabels: Record<string, string> = {
   edition: "Edição",
@@ -78,6 +79,7 @@ function writeStorage(items: SavedRead[]) {
   }
 
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  window.dispatchEvent(new Event(SAVED_READS_CHANGE_EVENT));
 }
 
 export function getSavedReads() {
@@ -122,3 +124,19 @@ export function toggleRead(item: Omit<SavedRead, "savedAt">) {
 export function clearSavedReads() {
   writeStorage([]);
 }
+
+export function subscribeToSavedReadsChanges(onChange: () => void) {
+  if (!isBrowser()) {
+    return () => {};
+  }
+
+  const handler = () => onChange();
+  window.addEventListener("storage", handler);
+  window.addEventListener(SAVED_READS_CHANGE_EVENT, handler);
+
+  return () => {
+    window.removeEventListener("storage", handler);
+    window.removeEventListener(SAVED_READS_CHANGE_EVENT, handler);
+  };
+}
+
