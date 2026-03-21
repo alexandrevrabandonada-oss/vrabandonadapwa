@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { EditionForm } from "@/components/edition-form";
 import { EditionLinkCard } from "@/components/edition-link-card";
@@ -25,11 +24,7 @@ import { getInternalEditorialEditionById, getInternalEditorialEditionLinks } fro
 import { getEditionCoverVariant, getEditionLinkRoleLabel, getEditionStatusLabel, getEditionStatusTone, getEditionTypeLabel } from "@/lib/editions/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-type PageProps = {
-  params: Promise<{ id: string }>;
-};
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params;
   const edition = await getInternalEditorialEditionById(id);
 
@@ -45,6 +40,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: edition.excerpt || edition.description || "Curadoria e operação das edições do VR Abandonada.",
   };
 }
+
+type PageProps = {
+  params: Promise<{ id: string }>;
+};
 
 export default async function InternalEditionPage({ params }: PageProps) {
   const { id } = await params;
@@ -113,11 +112,6 @@ export default async function InternalEditionPage({ params }: PageProps) {
         <h1 className="hero__title">{edition.title}</h1>
         <p className="hero__lead">{edition.excerpt || edition.description}</p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
           <Link href="/interno/edicoes" className="button-secondary">
             Voltar à lista
           </Link>
@@ -132,17 +126,14 @@ export default async function InternalEditionPage({ params }: PageProps) {
           <article className="support-box">
             <p className="eyebrow">status</p>
             <h3 className={getEditionStatusTone(edition.status)}>{getEditionStatusLabel(edition.status)}</h3>
-            <p>Estado público da edição.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">tipo</p>
             <h3>{getEditionTypeLabel(edition.edition_type)}</h3>
-            <p>Categoria principal.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">vínculos</p>
             <h3>{resolvedLinks.length}</h3>
-            <p>Peças ligadas à edição.</p>
           </article>
         </div>
       </section>
@@ -150,7 +141,7 @@ export default async function InternalEditionPage({ params }: PageProps) {
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
-            <p className="eyebrow">edição</p>
+            <p className="eyebrow">editar</p>
             <h2>Editar caderno</h2>
           </div>
           <p className="section__lead">Mantenha a edição curta, publicável e fácil de compartilhar fora do site.</p>
@@ -261,4 +252,3 @@ export default async function InternalEditionPage({ params }: PageProps) {
     </Container>
   );
 }
-

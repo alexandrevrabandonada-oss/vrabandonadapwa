@@ -33,8 +33,10 @@ export default async function InternalEditionsPage() {
     <Container className="intro-grid internal-page">
       <section className="hero internal-hero">
         <p className="eyebrow">edições internas</p>
-        <h1 className="hero__title">Curadoria e circulação.</h1>
-        <p className="hero__lead">A síntese editorial do projeto precisa de um lugar simples para ser editada, publicada e reenviada para o público.</p>
+        <h1 className="hero__title">Edições.</h1>
+        <p className="hero__lead">
+          A síntese editorial do projeto precisa de um lugar simples para ser editada, publicada e reenviada para o público.
+        </p>
         <div className="hero__actions">
           <Link href="/interno/edicoes/novo" className="button">
             Nova edição
@@ -46,7 +48,7 @@ export default async function InternalEditionsPage() {
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-4">
+        <div className="grid-3">
           <article className="support-box">
             <p className="eyebrow">publicadas</p>
             <h3>{publishedEditions.length}</h3>
@@ -58,10 +60,6 @@ export default async function InternalEditionsPage() {
           <article className="support-box">
             <p className="eyebrow">arquivo</p>
             <h3>{archivedEditions.length}</h3>
-          </article>
-          <article className="support-box">
-            <p className="eyebrow">total</p>
-            <h3>{editions.length}</h3>
           </article>
         </div>
       </section>
