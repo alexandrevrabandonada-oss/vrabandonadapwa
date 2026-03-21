@@ -1,14 +1,12 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { createClient } from "@supabase/supabase-js";
 
 import { isAdminEmailAllowed } from "@/lib/admin";
+import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 export type AdminAccessState = {
   ok: boolean;
@@ -40,33 +38,32 @@ export async function requestAdminAccessAction(
     };
   }
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    return {
-      ok: false,
-      message: "Supabase não configurado para envio do link interno.",
-    };
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-  const { error } = await supabase.auth.signInWithOtp({
+  const supabase = createSupabaseServiceClient();
+  const { data, error } = await supabase.auth.admin.generateLink({
+    type: "magiclink",
     email,
     options: {
-      emailRedirectTo: `${siteUrl}/auth/callback?next=/interno/intake`,
+      redirectTo: `${siteUrl}/auth/callback?next=/interno/entrada`,
     },
   });
 
   if (error) {
-    console.error("Failed to send admin magic link", error);
+    console.error("Failed to generate internal access link", error);
     return {
       ok: false,
-      message: "Não foi possível enviar o link agora. Tente novamente.",
+      message: "Não foi possível gerar o link interno agora. Tente novamente.",
     };
   }
 
-  return {
-    ok: true,
-    message: "Link de acesso enviado. Verifique sua caixa de entrada.",
-  };
+  const actionLink = data?.properties?.action_link;
+  if (!actionLink) {
+    return {
+      ok: false,
+      message: "O link interno não pôde ser criado agora.",
+    };
+  }
+
+  redirect(actionLink);
 }
 
 export async function signOutAction() {
@@ -74,4 +71,3 @@ export async function signOutAction() {
   await supabase.auth.signOut();
   redirect("/interno/entrar");
 }
-

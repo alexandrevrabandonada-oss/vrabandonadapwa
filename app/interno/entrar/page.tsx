@@ -23,11 +23,10 @@ export default function InternalLoginPage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">entrada</p>
-            <h2>Solicitar link de acesso</h2>
+            <h2>Solicitar acesso</h2>
           </div>
           <p className="section__lead">
-            O link só é enviado para e-mails presentes na allowlist do projeto.
-            Depois do login, a leitura e a edição seguem RLS no Supabase.
+            O acesso é liberado só para e-mails autorizados. Quando o endereço está na allowlist, o painel abre direto sem depender da caixa de entrada.
           </p>
         </div>
 
@@ -36,9 +35,9 @@ export default function InternalLoginPage() {
         <div className="support-box" style={{ marginTop: "1rem" }}>
           <h3>Como liberar acesso</h3>
           <ul>
-            <li>Insira seu e-mail na tabela `admin_email_allowlist` do Supabase.</li>
-            <li>Depois solicite o link nesta página.</li>
-            <li>Use o link recebido para entrar no painel interno.</li>
+            <li>Garanta que o e-mail esteja na allowlist do projeto.</li>
+            <li>Solicite o acesso nesta página.</li>
+            <li>Se o endereço estiver liberado, o painel abre direto pelo link gerado.</li>
           </ul>
         </div>
       </section>
