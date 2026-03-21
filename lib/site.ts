@@ -51,7 +51,7 @@ export const site = {
       items: [
         { href: "/pautas", label: "Pautas" },
         { href: "/dossies", label: "Dossiês" },
-        { href: "/campanhas", label: "Campanhas" },
+        { href: "/campanhas", label: "Chamados" },
         { href: "/impacto", label: "Impacto" },
         { href: "/padroes", label: "Padrões" },
       ],
@@ -62,7 +62,7 @@ export const site = {
         { href: "/eixos", label: "Eixos" },
         { href: "/territorios", label: "Territórios" },
         { href: "/atores", label: "Atores" },
-        { href: "/linha-do-tempo", label: "Linha do tempo" },
+        { href: "/linha-do-tempo", label: "Tempo" },
       ],
     },
     {
@@ -100,7 +100,7 @@ export const site = {
       { href: "/buscar", label: "Buscar na cidade" },
       { href: "/envie", label: "Enviar denúncia" },
       { href: "/pautas", label: "Ler pautas" },
-      { href: "/linha-do-tempo", label: "Linha do tempo" },
+      { href: "/linha-do-tempo", label: "Tempo" },
     ],
   },
   principles: [
@@ -187,3 +187,4 @@ export const site = {
     "Denunciar é um ato coletivo quando o problema é estrutural.",
   ],
 } as const;
+
