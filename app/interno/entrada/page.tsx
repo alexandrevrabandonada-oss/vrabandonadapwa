@@ -69,9 +69,8 @@ export default async function EntradaPage({ searchParams }: { searchParams?: Pro
           <form action={signOutAction}>
             <button className="button-secondary" type="submit">Sair</button>
           </form>
-          <Link href="/interno/intake" className="button-secondary">Ver fila pública</Link>
-          <Link href="/interno/editorial" className="button-secondary">Abrir editorial</Link>
           <Link href="/interno/enriquecer" className="button-secondary">Abrir enriquecimento</Link>
+          <Link href="/interno/intake" className="button-secondary">Ver fila pública</Link>
         </div>
       </section>
 
@@ -119,9 +118,7 @@ export default async function EntradaPage({ searchParams }: { searchParams?: Pro
               </p>
               <div className="stack-actions">
                 <Link href="/interno/entrada" className="button-secondary">Voltar à central</Link>
-                <Link href="/interno/acervo" className="button-secondary">Abrir acervo</Link>
                 <Link href="/interno/enriquecer" className="button-secondary">Ir para etapa 2</Link>
-                <Link href="/interno/memoria" className="button-secondary">Abrir memória</Link>
               </div>
             </article>
           </div>

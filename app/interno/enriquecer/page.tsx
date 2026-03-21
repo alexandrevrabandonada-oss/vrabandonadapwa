@@ -69,7 +69,6 @@ export default async function EnrichmentPage({ searchParams }: { searchParams?: 
             <button className="button-secondary" type="submit">Sair</button>
           </form>
           <Link href="/interno/entrada" className="button-secondary">Voltar à central</Link>
-          <Link href="/interno/editorial" className="button-secondary">Abrir editorial</Link>
         </div>
       </section>
 
