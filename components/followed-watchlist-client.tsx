@@ -57,10 +57,10 @@ export function FollowedWatchlistClient({ snapshots }: Props) {
       <div className="grid-2">
         <div>
           <p className="eyebrow">acompanhar</p>
-          <h2>Seu painel local de frentes seguidas.</h2>
+          <h2>Seu painel local.</h2>
         </div>
         <p className="section__lead">
-          Seguir é diferente de salvar: você acompanha eixos, territórios, casos e atores ao longo do tempo. Tudo fica neste aparelho.
+          Seguir é diferente de salvar: você acompanha frentes ao longo do tempo. Tudo fica neste aparelho.
         </p>
       </div>
 
@@ -68,7 +68,7 @@ export function FollowedWatchlistClient({ snapshots }: Props) {
         <article className="support-box follow-watchlist-summary">
           <p className="eyebrow">frentes seguidas</p>
           <h3>{followedSnapshots.length}</h3>
-          <p>Quantidade de frentes que o app vai trazer de volta para você.</p>
+          <p>O que o app traz de volta para você.</p>
           <div className="stack-actions">
             <Link href="/salvos" className="button-secondary">
               Ver salvos
@@ -181,16 +181,16 @@ export function FollowedWatchlistClient({ snapshots }: Props) {
         <div className="grid-2">
           <div>
             <p className="eyebrow">sugestões para começar</p>
-            <h2>Escolha algumas frentes para o app trazer de volta.</h2>
+            <h2>Escolha frentes para o app trazer de volta.</h2>
           </div>
           <p className="section__lead">
-            Acompanhar começa com poucos gestos. Você pode seguir um eixo, um território, um dossiê, uma campanha ou um ator e deixar o celular fazer o resto.
+            Você pode seguir um eixo, um território, um dossiê, uma campanha ou um ator.
           </p>
         </div>
 
         <div className="grid-3">
           {snapshots.slice(0, 6).map((item) => (
-            <article className="card" key={`${item.kind}:${item.key}`}>
+            <article className="card card--compact" key={`${item.kind}:${item.key}`}>
               <span className="pill">{item.label}</span>
               <h3>{item.title}</h3>
               <p>{item.summary}</p>

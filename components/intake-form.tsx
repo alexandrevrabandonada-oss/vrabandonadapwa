@@ -32,10 +32,8 @@ export function IntakeForm() {
       {isQuick ? (
         <article className="support-box intake-form__quick">
           <p className="eyebrow">envio rápido</p>
-          <h3>Vi algo agora? Preencha o mínimo e mande a pista.</h3>
-          <p>
-            Este modo já nasce com a categoria e o tom do envio mais próximos do cotidiano. Depois, se precisar, você pode completar com mais contexto.
-          </p>
+          <h3>Vi algo agora? Preencha o mínimo.</h3>
+          <p>Categoria, título e relato curto já abrem o caminho.</p>
           <div className="stack-actions">
             <a href="#intake-details" className="button-secondary">
               Ir direto ao relato
@@ -101,7 +99,7 @@ export function IntakeForm() {
         <textarea
           name="details"
           rows={7}
-          placeholder="Conte o fato com o máximo de contexto útil: o que aconteceu, quando, onde e por que importa."
+          placeholder="Conte o fato com contexto útil: o que aconteceu, quando, onde e por que importa."
           minLength={20}
           defaultValue={pickFirst(details, isQuick ? "" : "")}
           required
@@ -115,12 +113,12 @@ export function IntakeForm() {
 
       <div className="stack-actions">
         <button className="button" type="submit" disabled={pending}>
-          {pending ? "Enviando..." : isQuick ? "Mandar pista agora" : "Registrar envio"}
+          {pending ? "Enviando..." : isQuick ? "Mandar pista" : "Registrar"}
         </button>
       </div>
 
       <p className={`form-status ${state.ok ? "form-status--ok" : ""}`} aria-live="polite">
-        {state.message || (isQuick ? "Pista rápida, com cuidado editorial." : "Seu material entra numa fila editorial inicial.")}
+        {state.message || (isQuick ? "Pista rápida com cuidado editorial." : "Seu material entra numa fila editorial inicial.")}
       </p>
     </form>
   );

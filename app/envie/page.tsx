@@ -19,8 +19,8 @@ export default async function EnviePage({ searchParams }: { searchParams?: Promi
     <Container className="intro-grid">
       <PageHero
         kicker="envie"
-        title={quickMode ? "Mandar pista rápido." : "Denúncia sem excesso, com contexto e precisão."}
-        lead={quickMode ? "Fluxo curto para quando você viu algo agora e precisa registrar sem perder tempo." : "A base já deixa claro que o canal precisa ser simples, seguro e orientado. O fluxo real agora está ligado ao Supabase."}
+        title={quickMode ? "Mandar pista agora." : "Mandar pista com contexto e sem atraso."}
+        lead={quickMode ? "Fluxo curto para registrar o fato sem perder tempo." : "O fluxo precisa ser curto, claro e seguro."}
       />
 
       {quickMode ? (
@@ -28,16 +28,16 @@ export default async function EnviePage({ searchParams }: { searchParams?: Promi
           <div className="grid-2">
             <div>
               <p className="eyebrow">envio rápido</p>
-              <h2>Preencha o mínimo e mande a pista.</h2>
+              <h2>Preencha o mínimo.</h2>
             </div>
-            <p className="section__lead">Este modo foi pensado para o cotidiano: entrada curta, contexto suficiente e caminho direto para o relato.</p>
+            <p className="section__lead">Rápido e direto para não travar sua rotina.</p>
           </div>
           <div className="stack-actions">
             <Link href="#intake-details" className="button">
               Ir ao relato
             </Link>
             <Link href="/metodo" className="button-secondary">
-              Ver o cuidado editorial
+              Entender o cuidado
             </Link>
           </div>
         </section>

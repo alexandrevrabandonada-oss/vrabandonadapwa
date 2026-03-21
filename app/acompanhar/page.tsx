@@ -241,9 +241,7 @@ export default async function AcompanharPage() {
         <div className="hero__copy">
           <p className="eyebrow">acompanhar</p>
           <h1 className="hero__title">O que você quer ver voltar?</h1>
-          <p className="hero__lead">
-            O app guarda suas frentes seguidas neste aparelho e traz de volta o que continua em curso. Sem login, sem nuvem e sem feed caótico.
-          </p>
+          <p className="hero__lead">O app guarda suas frentes seguidas e traz de volta o que continua em curso.</p>
           <div className="home-hero__signals" aria-label="Sinais editoriais">
             <span className="home-hero__signal">eixos</span>
             <span className="home-hero__signal">territórios</span>
@@ -286,30 +284,25 @@ export default async function AcompanharPage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">em 1 minuto</p>
-            <h2>Abra a frente, veja o sinal e volte depois.</h2>
+            <h2>Ver frentes, radar ou pista.</h2>
           </div>
-          <p className="section__lead">A rotina de acompanhar precisa ser direta: frentes seguidas, última movimentação e atalho para o que você salvou ou quer mandar agora.</p>
+          <p className="section__lead">A rotina aqui é curta: frentes, mudanças e gesto rápido.</p>
         </div>
 
-        <div className="grid-4">
-          <article className="card">
+        <div className="grid-3">
+          <article className="card card--compact">
             <h3>Frentes seguidas</h3>
-            <p>Veja o que seu aparelho já acompanha para você.</p>
+            <p>O que o aparelho já acompanha por você.</p>
             <Link href="#frentes-seguidas" className="button-secondary">Abrir</Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Ver o que mudou</h3>
-            <p>Abra o radar e retorne ao pulso do momento.</p>
+            <p>Abra o radar e volte ao pulso do momento.</p>
             <Link href="/agora" className="button-secondary">Abrir radar</Link>
           </article>
-          <article className="card">
-            <h3>Salvar para depois</h3>
-            <p>Guarde uma leitura específica sem seguir a frente inteira.</p>
-            <Link href="/salvos" className="button-secondary">Abrir salvos</Link>
-          </article>
-          <article className="card">
-            <h3>Mandar pista rápida</h3>
-            <p>Se a frente seguida virou fato novo, envie sem atrasar.</p>
+          <article className="card card--compact">
+            <h3>Mandar pista</h3>
+            <p>Se virou fato novo, envie sem atrasar.</p>
             <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">Enviar rápido</Link>
           </article>
         </div>
@@ -319,10 +312,10 @@ export default async function AcompanharPage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">radar e retorno</p>
-            <h2>O que está quente agora.</h2>
+            <h2>O que segue quente.</h2>
           </div>
           <p className="section__lead">
-            O radar continua sendo o pulso editorial. Acompanhar organiza o que você escolheu seguir para que a volta ao site venha com direção.
+            O radar continua sendo o pulso editorial. Acompanhar organiza o que você escolheu seguir.
           </p>
         </div>
 
@@ -350,10 +343,10 @@ export default async function AcompanharPage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">sugestões para começar</p>
-            <h2>Escolha algumas frentes para o app trazer de volta.</h2>
+            <h2>Escolha frentes para o app trazer de volta.</h2>
           </div>
           <p className="section__lead">
-            Acompanhar começa com poucos gestos. Você pode seguir um eixo, um território, um dossiê, uma campanha ou um ator e deixar o celular fazer o resto.
+            Você pode seguir um eixo, um território, um dossiê, uma campanha ou um ator.
           </p>
         </div>
 
@@ -364,7 +357,7 @@ export default async function AcompanharPage() {
             ...dossiers.slice(0, 1).map((dossier) => ({ kind: "dossier", key: dossier.slug, title: dossier.title, summary: dossier.excerpt || dossier.description || "", href: `/dossies/${dossier.slug}`, label: "Dossiê" })),
             ...campaigns.slice(0, 1).map((campaign) => ({ kind: "campaign", key: campaign.slug, title: campaign.title, summary: campaign.excerpt || campaign.description || "", href: `/campanhas/${campaign.slug}`, label: "Campanha" })),
           ].map((item) => (
-            <article className="card" key={`${item.kind}:${item.key}`}>
+            <article className="card card--compact" key={`${item.kind}:${item.key}`}>
               <span className="pill">{item.label}</span>
               <h3>{item.title}</h3>
               <p>{item.summary}</p>

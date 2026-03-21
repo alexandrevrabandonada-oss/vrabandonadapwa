@@ -30,9 +30,9 @@ export default async function ParticipatePage() {
       <section className="hero hero--split participate-hero">
         <div className="hero__copy">
           <p className="eyebrow">participe</p>
-          <h1 className="hero__title">Como colaborar com o VR Abandonada.</h1>
+          <h1 className="hero__title">Como colaborar.</h1>
           <p className="hero__lead">
-            Se o projeto fez sentido para você, aqui estão as portas públicas de colaboração: enviar, apoiar, preservar memória, acompanhar e compartilhar.
+            Se fez sentido, escolha a porta mais curta.
           </p>
           <div className="home-hero__signals" aria-label="Sinais editoriais">
             <span className="home-hero__signal">acolhimento editorial</span>
@@ -73,39 +73,26 @@ export default async function ParticipatePage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">em 1 minuto</p>
-            <h2>Escolha a porta mais curta para agir.</h2>
+            <h2>Mandar pista, apoiar ou ver agora.</h2>
           </div>
-          <p className="section__lead">Se você já sabe o que quer fazer, vá direto: mandar pista, apoiar, preservar memória ou abrir o que está vivo agora.</p>
+          <p className="section__lead">Se já sabe o que quer fazer, vá direto para a porta que resolve.</p>
         </div>
 
-        <div className="grid-4">
-          <article className="card">
-            <h3>Mandar pista rápida</h3>
+        <div className="grid-3">
+          <article className="card card--compact">
+            <h3>Mandar pista</h3>
             <p>Quando você viu algo agora e quer registrar sem perder tempo.</p>
-            <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">
-              Enviar rápido
-            </Link>
+            <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">Enviar rápido</Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Apoiar</h3>
-            <p>Ajuda a sustentar apuração, design e continuidade editorial.</p>
-            <Link href="/apoie" className="button-secondary">
-              Ver apoio
-            </Link>
+            <p>Sustenta apuração, design e continuidade editorial.</p>
+            <Link href="/apoie" className="button-secondary">Ver apoio</Link>
           </article>
-          <article className="card">
-            <h3>Ver o que mudou</h3>
+          <article className="card card--compact">
+            <h3>Ver agora</h3>
             <p>Abra o radar antes de decidir o próximo gesto.</p>
-            <Link href="/agora" className="button-secondary">
-              Abrir radar
-            </Link>
-          </article>
-          <article className="card">
-            <h3>Entender primeiro</h3>
-            <p>Se você chegou agora, vale começar pelo mapa guiado.</p>
-            <Link href="/comecar" className="button-secondary">
-              Abrir rotas
-            </Link>
+            <Link href="/agora" className="button-secondary">Abrir radar</Link>
           </article>
         </div>
       </section>
@@ -125,7 +112,7 @@ export default async function ParticipatePage() {
       <section className="section participate-cards-section">
         <div className="grid-2">
           {featured.map((path) => (
-            <ParticipationPathCard key={path.id} path={path} href={`/participe/${path.slug}`} itemCount={counts.get(path.id) ?? 0} />
+            <ParticipationPathCard key={path.id} path={path} href={`/participe/${path.slug}`} itemCount={counts.get(path.id) ?? 0} compact />
           ))}
         </div>
       </section>
@@ -136,36 +123,36 @@ export default async function ParticipatePage() {
             <p className="eyebrow">quatro portas</p>
             <h2>Escolha a colaboração que combina com sua situação.</h2>
           </div>
-          <p className="section__lead">Cada caminho abaixo foi desenhado para reduzir ruído e aumentar a chance de a sua contribuição entrar do jeito certo.</p>
+          <p className="section__lead">Cada caminho abaixo reduz ruído e aumenta a chance de a sua contribuição entrar do jeito certo.</p>
         </div>
 
         <div className="grid-2">
-          <article className="card">
+          <article className="card card--compact">
             <h3>Tem relato, pista ou documento?</h3>
-            <p>Use o canal de envio e deixe claro o que aconteceu, onde foi e por que isso importa.</p>
+            <p>Use o canal de envio e diga o essencial: o que aconteceu, onde foi e por que importa.</p>
             <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">
               Ir para o envio
             </Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Quer fortalecer o projeto?</h3>
-            <p>Apoio ajuda a sustentar apuração, arquivo, design e manutenção da casa digital.</p>
+            <p>Apoio sustenta apuração, arquivo, design e manutenção.</p>
             <Link href="/apoie" className="button-secondary">
               Ver formas de apoio
             </Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Tem foto, recorte ou memória?</h3>
-            <p>Colabore com o arquivo vivo e ajude a preservar a cidade antes que ela seja reescrita.</p>
+            <p>Colabore com o arquivo vivo e ajude a preservar a cidade.</p>
             <Link href="/memoria" className="button-secondary">
               Entrar na memória
             </Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Quer acompanhar o que está em curso?</h3>
-            <p>Veja o radar, os dossiês e as rotas de entrada para não perder a linha do momento.</p>
+            <p>Veja o radar, os dossiês e as rotas de entrada.</p>
             <Link href="/agora" className="button-secondary">
-              Abrir o radar
+              Abrir radar
             </Link>
           </article>
         </div>
@@ -190,7 +177,7 @@ export default async function ParticipatePage() {
             Ver pós-envio
           </Link>
           <Link href="/envie" className="button-secondary">
-            Abrir o envio
+            Abrir envio
           </Link>
         </div>
       </section>
@@ -205,28 +192,28 @@ export default async function ParticipatePage() {
         </div>
 
         <div className="grid-4">
-          <article className="card">
+          <article className="card card--compact">
             <h3>Começar</h3>
             <p>Entenda o projeto em uma rota guiada.</p>
             <Link href="/comecar" className="button-secondary">
               Abrir rotas
             </Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Dossiês</h3>
             <p>Siga investigações em andamento com updates e próximos passos.</p>
             <Link href="/dossies" className="button-secondary">
               Ver dossiês
             </Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Memória e acervo</h3>
             <p>Ajude a sustentar o arquivo vivo da cidade.</p>
             <Link href="/acervo" className="button-secondary">
               Ver acervo
             </Link>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Agora</h3>
             <p>Veja o que mudou recentemente e o que merece retorno.</p>
             <Link href="/agora" className="button-secondary">

@@ -65,10 +65,8 @@ export function HomeReturnPanel() {
       <section className="home-return-panel home-return-panel--first">
         <div>
           <p className="eyebrow">uso diário</p>
-          <h2>Comece pelo radar e pelas rotas guiadas.</h2>
-          <p className="section__lead">
-            A home continua forte para a primeira visita. Se quiser entrar mais rápido, use as portas curtas para o que está vivo agora.
-          </p>
+          <h2>Retome o que já começou.</h2>
+          <p className="section__lead">A home traz de volta o que você abriu, salvou ou acompanha neste aparelho.</p>
         </div>
         <div className="home-return-panel__actions">
           <Link href="/agora" className="button">
@@ -78,7 +76,7 @@ export function HomeReturnPanel() {
             Escolher frentes
           </Link>
           <Link href="/salvos" className="button-secondary">
-            Abrir salvos
+            Salvos
           </Link>
         </div>
       </section>
@@ -89,10 +87,8 @@ export function HomeReturnPanel() {
     <section className="home-return-panel home-return-panel--return">
       <div className="home-return-panel__copy">
         <p className="eyebrow">retorno recorrente</p>
-        <h2>Continue de onde a cidade ficou em aberto.</h2>
-        <p className="section__lead">
-          A home traz de volta o que você já abriu neste aparelho, o que salvou e o que escolheu acompanhar.
-        </p>
+        <h2>Continue de onde parou.</h2>
+        <p className="section__lead">A home traz de volta o que você abriu, salvou ou acompanha neste aparelho.</p>
       </div>
 
       <div className="home-return-panel__grid">
@@ -110,7 +106,7 @@ export function HomeReturnPanel() {
                 Abrir agora
               </Link>
               <Link href="/salvos" className="button-secondary">
-                Ver salvos
+                Salvos
               </Link>
             </div>
           </article>
@@ -122,10 +118,10 @@ export function HomeReturnPanel() {
           <p>{formatCount(state.saves.length, "item salvo")}</p>
           <div className="stack-actions">
             <Link href="/acompanhar" className="button-secondary">
-              Abrir acompanhar
+              Acompanhar
             </Link>
             <Link href="/salvos" className="button-secondary">
-              Abrir salvos
+              Salvos
             </Link>
           </div>
         </article>
@@ -141,7 +137,7 @@ export function HomeReturnPanel() {
             </p>
             <div className="stack-actions">
               <Link href={latestSave.href} className="button-secondary">
-                Continuar leitura
+                Continuar
               </Link>
             </div>
           </article>
@@ -158,7 +154,7 @@ export function HomeReturnPanel() {
             </p>
             <div className="stack-actions">
               <Link href={activeFollow.href} className="button-secondary">
-                Ver frente
+                Abrir
               </Link>
             </div>
           </article>
@@ -170,7 +166,7 @@ export function HomeReturnPanel() {
           Ver o que mudou
         </Link>
         <Link href="/edicoes" className="button-secondary">
-          Abrir edição do momento
+          Edição do momento
         </Link>
         <Link href="/buscar" className="button-secondary">
           Buscar no arquivo

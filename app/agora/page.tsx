@@ -46,7 +46,7 @@ export default async function AgoraPage() {
           <p className="eyebrow">radar vivo</p>
           <h1 className="hero__title">Agora no VR Abandonada.</h1>
           <p className="hero__lead">
-            O pulso editorial mostra o que mudou, o que está em curso e o que pede retorno responsável. Sem feed solto. Sem ruído. Só o que importa agora.
+            O radar mostra o que mudou, o que segue quente e o que dá para agir agora.
           </p>
           <div className="home-hero__signals" aria-label="Sinais editoriais">
             <span className="home-hero__signal">última atualização</span>
@@ -113,38 +113,31 @@ export default async function AgoraPage() {
         <div className="grid-2">
           <div>
             <p className="eyebrow">em 1 minuto</p>
-            <h2>Abra, mande, siga ou volte depois.</h2>
+            <h2>Ver o que mudou, mandar pista ou seguir uma frente.</h2>
           </div>
-          <p className="section__lead">A tela de bolso entrega decisão rápida: o que mudou, o que você pode seguir e onde mandar pista sem perder tempo.</p>
+          <p className="section__lead">A tela de bolso responde rápido: o que mudou, onde agir e como voltar depois.</p>
         </div>
 
-        <div className="grid-4">
-          <article className="card">
+        <div className="grid-3">
+          <article className="card card--compact">
             <h3>Ver o que mudou</h3>
-            <p>Volte direto para a parte que responde ao seu retorno.</p>
+            <p>Abra direto a parte que responde ao seu retorno.</p>
             <div className="stack-actions">
               <Link href="#mudou" className="button-secondary">Abrir</Link>
             </div>
           </article>
-          <article className="card">
-            <h3>Mandar pista rápida</h3>
-            <p>Quando você viu algo agora e quer registrar sem burocracia.</p>
+          <article className="card card--compact">
+            <h3>Mandar pista</h3>
+            <p>Quando você viu algo agora e quer registrar sem travar a rotina.</p>
             <div className="stack-actions">
               <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">Enviar rápido</Link>
             </div>
           </article>
-          <article className="card">
+          <article className="card card--compact">
             <h3>Seguir uma frente</h3>
             <p>Escolha um eixo, território, dossiê ou campanha para voltar depois.</p>
             <div className="stack-actions">
-              <Link href="/acompanhar" className="button-secondary">Abrir acompanhar</Link>
-            </div>
-          </article>
-          <article className="card">
-            <h3>Retomar leitura</h3>
-            <p>Abra o último conteúdo lido neste aparelho sem caça ao link.</p>
-            <div className="stack-actions">
-              <Link href="/" className="button-secondary">Voltar à home</Link>
+              <Link href="/acompanhar" className="button-secondary">Acompanhar</Link>
             </div>
           </article>
         </div>

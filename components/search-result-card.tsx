@@ -48,14 +48,15 @@ function renderHighlightedText(text: string, query: string) {
 type Props = {
   item: SearchIndexEntry;
   query: string;
+  compact?: boolean;
 };
 
-export function SearchResultCard({ item, query }: Props) {
-  const labels = item.labels.slice(0, 3);
+export function SearchResultCard({ item, query, compact = false }: Props) {
+  const labels = item.labels.slice(0, compact ? 2 : 3);
   const timelineHref = getTimelineEntryHref(item.contentType, item.contentKey);
 
   return (
-    <article className="card search-result-card">
+    <article className={`card search-result-card ${compact ? "search-result-card--compact" : ""}`.trim()}>
       <div className="search-result-card__meta meta-row">
         <span className="pill">{item.kindLabel}</span>
         {item.territoryLabel ? <span>{item.territoryLabel}</span> : null}
@@ -81,7 +82,7 @@ export function SearchResultCard({ item, query }: Props) {
           Abrir
         </Link>
         <Link href={timelineHref} className="button-secondary" aria-label={`Ver linha do tempo de ${item.title}`}>
-          Linha do tempo
+          {compact ? "Tempo" : "Linha do tempo"}
         </Link>
         {item.saveKind ? (
           <SaveReadButton kind={item.saveKind} keyValue={item.contentKey} title={item.title} summary={item.excerpt} href={item.href} compact />

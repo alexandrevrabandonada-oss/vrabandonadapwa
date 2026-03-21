@@ -11,6 +11,12 @@ type Props = {
   compact?: boolean;
 };
 
+function trimText(value: string | null | undefined, max = 90) {
+  if (!value) return "";
+  const clean = value.trim();
+  return clean.length > max ? `${clean.slice(0, max).trim()}…` : clean;
+}
+
 export function ParticipationPathCard({ path, href, itemCount = 0, compact = false }: Props) {
   return (
     <article className={`card participation-card ${compact ? "participation-card--compact" : ""}`.trim()}>
@@ -29,9 +35,9 @@ export function ParticipationPathCard({ path, href, itemCount = 0, compact = fal
           <span>{itemCount} passo{itemCount === 1 ? "" : "s"}</span>
         </div>
         <h3>{path.title}</h3>
-        <p>{path.excerpt || path.description}</p>
+        <p>{compact ? trimText(path.excerpt || path.description) : path.excerpt || path.description}</p>
         <Link href={href} className="button-secondary">
-          Abrir caminho
+          {compact ? "Abrir" : "Abrir caminho"}
         </Link>
       </div>
     </article>
