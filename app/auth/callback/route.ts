@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
-  const next = requestUrl.searchParams.get("next") ?? "/interno/intake";
+  const next = requestUrl.searchParams.get("next") ?? "/interno/entrada";
   const code = requestUrl.searchParams.get("code");
 
   if (!code) {
@@ -36,3 +36,4 @@ export async function GET(request: NextRequest) {
 
   return response;
 }
+
