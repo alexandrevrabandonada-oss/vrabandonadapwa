@@ -79,8 +79,8 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
             </div>
 
             <div className="site-menu__groups">
-              {site.menuGroups.map((group: SiteGroup) => (
-                <section key={group.title} className="site-menu__group">
+              {site.menuGroups.map((group: SiteGroup, index) => (
+                <section key={group.title} className={`site-menu__group ${index === 0 ? "site-menu__group--featured" : ""}`}>
                   <h3>{group.title}</h3>
                   <nav aria-label={group.title}>
                     <ul>
@@ -121,3 +121,4 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
     </>
   );
 }
+

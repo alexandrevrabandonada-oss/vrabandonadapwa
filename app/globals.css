@@ -2728,3 +2728,13 @@ body.vr-low-vision .memory-collection-card .button-secondary {
 .site-footer__note {
   font-size: 0.9rem;
 }
+
+
+.site-menu__group--featured {
+  border-color: rgba(243, 178, 26, 0.24);
+  background: linear-gradient(180deg, rgba(243, 178, 26, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.site-menu__group--featured h3 {
+  color: var(--text);
+}
