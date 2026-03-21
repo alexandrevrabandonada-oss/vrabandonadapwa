@@ -11,13 +11,29 @@ type EditionFormState = {
   message: string;
 };
 
+type EditionFormInitialValues = {
+  title?: string;
+  slug?: string;
+  excerpt?: string;
+  description?: string;
+  edition_type?: string;
+  period_label?: string;
+  published_at?: string;
+  cover_image_url?: string;
+  sort_order?: number | null;
+  public_visibility?: boolean;
+  status?: string;
+  featured?: boolean;
+};
+
 type Props = {
   edition?: EditorialEdition | null;
+  initialValues?: EditionFormInitialValues;
 };
 
 const initialState: EditionFormState = { ok: false, message: "" };
 
-export function EditionForm({ edition }: Props) {
+export function EditionForm({ edition, initialValues }: Props) {
   const [state, formAction, pending] = useActionState(saveEditionAction, initialState);
 
   return (
@@ -27,29 +43,29 @@ export function EditionForm({ edition }: Props) {
       <div className="grid-2">
         <label className="field">
           <span>Título</span>
-          <input name="title" type="text" defaultValue={edition?.title ?? ""} placeholder="Edição do momento" required />
+          <input name="title" type="text" defaultValue={edition?.title ?? initialValues?.title ?? ""} placeholder="Edição do momento" required />
         </label>
 
         <label className="field">
           <span>Slug</span>
-          <input name="slug" type="text" defaultValue={edition?.slug ?? ""} placeholder="edicao-do-momento" required readOnly={Boolean(edition)} />
+          <input name="slug" type="text" defaultValue={edition?.slug ?? initialValues?.slug ?? ""} placeholder="edicao-do-momento" required readOnly={Boolean(edition)} />
         </label>
       </div>
 
       <label className="field">
         <span>Resumo curto</span>
-        <input name="excerpt" type="text" defaultValue={edition?.excerpt ?? ""} placeholder="Síntese curta do caderno." />
+        <input name="excerpt" type="text" defaultValue={edition?.excerpt ?? initialValues?.excerpt ?? ""} placeholder="Síntese curta do caderno." />
       </label>
 
       <label className="field">
         <span>Descrição / tese</span>
-        <textarea name="description" rows={5} defaultValue={edition?.description ?? ""} placeholder="Explique por que esta edição existe e o que ela condensa." />
+        <textarea name="description" rows={5} defaultValue={edition?.description ?? initialValues?.description ?? ""} placeholder="Explique por que esta edição existe e o que ela condensa." />
       </label>
 
       <div className="grid-2">
         <label className="field">
           <span>Tipo de edição</span>
-          <select name="edition_type" defaultValue={edition?.edition_type ?? "city_pulse"}>
+          <select name="edition_type" defaultValue={edition?.edition_type ?? initialValues?.edition_type ?? "city_pulse"}>
             {editorialEditionTypes.map((type) => (
               <option key={type} value={type}>
                 {getEditionTypeLabel(type)}
@@ -60,19 +76,19 @@ export function EditionForm({ edition }: Props) {
 
         <label className="field">
           <span>Período</span>
-          <input name="period_label" type="text" defaultValue={edition?.period_label ?? ""} placeholder="Semana de 20 a 27 de março de 2026" />
+          <input name="period_label" type="text" defaultValue={edition?.period_label ?? initialValues?.period_label ?? ""} placeholder="Semana de 20 a 27 de março de 2026" />
         </label>
       </div>
 
       <div className="grid-2">
         <label className="field">
           <span>Data de publicação</span>
-          <input name="published_at" type="datetime-local" defaultValue={edition?.published_at ? new Date(edition.published_at).toISOString().slice(0, 16) : ""} />
+          <input name="published_at" type="datetime-local" defaultValue={edition?.published_at ? new Date(edition.published_at).toISOString().slice(0, 16) : initialValues?.published_at ?? ""} />
         </label>
 
         <label className="field">
           <span>Status</span>
-          <select name="status" defaultValue={edition?.status ?? "draft"}>
+          <select name="status" defaultValue={edition?.status ?? initialValues?.status ?? "draft"}>
             {editorialEditionStatuses.map((status) => (
               <option key={status} value={status}>
                 {getEditionStatusLabel(status)}
@@ -84,18 +100,18 @@ export function EditionForm({ edition }: Props) {
 
       <label className="field">
         <span>Imagem de capa</span>
-        <input name="cover_image_url" type="url" defaultValue={edition?.cover_image_url ?? ""} placeholder="/editorial/covers/..." />
+        <input name="cover_image_url" type="url" defaultValue={edition?.cover_image_url ?? initialValues?.cover_image_url ?? ""} placeholder="/editorial/covers/..." />
       </label>
 
       <div className="grid-2">
         <label className="field">
           <span>Ordenação</span>
-          <input name="sort_order" type="number" min={0} step={1} defaultValue={edition?.sort_order ?? 0} />
+          <input name="sort_order" type="number" min={0} step={1} defaultValue={edition?.sort_order ?? initialValues?.sort_order ?? 0} />
         </label>
 
         <label className="field">
           <span>Visibilidade pública</span>
-          <select name="public_visibility" defaultValue={edition?.public_visibility ? "true" : "false"}>
+          <select name="public_visibility" defaultValue={edition?.public_visibility ? "true" : initialValues?.public_visibility ? "true" : "false"}>
             <option value="true">Pública</option>
             <option value="false">Interna</option>
           </select>
@@ -106,7 +122,7 @@ export function EditionForm({ edition }: Props) {
         <span>Destaque</span>
         <div className="support-box">
           <label className="check">
-            <input name="featured" type="checkbox" defaultChecked={edition?.featured ?? false} />
+            <input name="featured" type="checkbox" defaultChecked={edition?.featured ?? initialValues?.featured ?? false} />
             <span>Marcar como destaque</span>
           </label>
         </div>

@@ -8,10 +8,12 @@ const internalFields =
 function sortEntries(items: EditorialEntry[]) {
   const statusOrder: Record<EditorialEntryStatus, number> = {
     published: 0,
-    ready_for_enrichment: 1,
-    stored: 2,
-    draft: 3,
-    archived: 4,
+    linked: 1,
+    enriched: 2,
+    ready_for_enrichment: 3,
+    stored: 4,
+    draft: 5,
+    archived: 6,
   };
 
   return [...items].sort((a, b) => {
@@ -99,7 +101,7 @@ export async function getInternalEditorialEntryCounts() {
       acc[entry.entry_status as EditorialEntryStatus] += 1;
       return acc;
     },
-    { total: 0, draft: 0, stored: 0, ready_for_enrichment: 0, published: 0, archived: 0 },
+    { total: 0, draft: 0, stored: 0, ready_for_enrichment: 0, enriched: 0, linked: 0, published: 0, archived: 0 },
   );
 }
 

@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierForm } from "@/components/dossier-form";
+import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
+import { buildEntrySeed } from "@/lib/enriquecimento/resolve";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -11,7 +13,11 @@ export const metadata: Metadata = {
   description: "Criar uma nova linha de investigação pública.",
 };
 
-export default async function NewInternalDossierPage() {
+type PageProps = {
+  searchParams?: Promise<{ entry_id?: string }>;
+};
+
+export default async function NewInternalDossierPage({ searchParams }: PageProps) {
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -20,6 +26,10 @@ export default async function NewInternalDossierPage() {
   if (!user) {
     redirect("/interno/entrar");
   }
+
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const entry = resolvedSearchParams.entry_id ? await getInternalEditorialEntryById(resolvedSearchParams.entry_id) : null;
+  const seed = entry ? buildEntrySeed(entry) : null;
 
   return (
     <Container className="intro-grid internal-page dossier-internal-page">
@@ -38,8 +48,47 @@ export default async function NewInternalDossierPage() {
         </div>
       </section>
 
+      {entry && seed ? (
+        <section className="section internal-panel">
+          <div className="grid-2">
+            <article className="support-box">
+              <p className="eyebrow">entrada de origem</p>
+              <h3>{entry.title}</h3>
+              <p>{seed.excerpt}</p>
+            </article>
+            <article className="support-box">
+              <p className="eyebrow">sinal rápido</p>
+              <ul>
+                <li>Território: {seed.territoryLabel || "não informado"}</li>
+                <li>Período: {seed.yearLabel || "não informado"}</li>
+                <li>Eixo: {seed.axisLabel || "não informado"}</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section internal-panel">
-        <DossierForm />
+        <DossierForm
+          initialValues={
+            seed
+              ? {
+                  title: seed.title,
+                  slug: seed.slug,
+                  excerpt: seed.excerpt,
+                  description: seed.description,
+                  lead_question: seed.leadQuestion,
+                  period_label: seed.yearLabel,
+                  territory_label: seed.territoryLabel || seed.placeLabel,
+                  cover_image_url: "",
+                  sort_order: 0,
+                  status: "draft",
+                  public_visibility: false,
+                  featured: false,
+                }
+              : undefined
+          }
+        />
       </section>
     </Container>
   );

@@ -3,13 +3,23 @@ import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { ImpactForm } from "@/components/impact-form";
+import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
+import { buildEntrySeed } from "@/lib/enriquecimento/resolve";
 
 export const metadata: Metadata = {
   title: "Novo impacto",
   description: "Criação de chamado público do VR Abandonada.",
 };
 
-export default function NewImpactPage() {
+type PageProps = {
+  searchParams?: Promise<{ entry_id?: string }>;
+};
+
+export default async function NewImpactPage({ searchParams }: PageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const entry = resolvedSearchParams.entry_id ? await getInternalEditorialEntryById(resolvedSearchParams.entry_id) : null;
+  const seed = entry ? buildEntrySeed(entry) : null;
+
   return (
     <Container className="intro-grid internal-page impact-internal-page">
       <section className="hero internal-hero">
@@ -28,6 +38,26 @@ export default function NewImpactPage() {
         </div>
       </section>
 
+      {entry && seed ? (
+        <section className="section internal-panel">
+          <div className="grid-2">
+            <article className="support-box">
+              <p className="eyebrow">entrada de origem</p>
+              <h3>{entry.title}</h3>
+              <p>{seed.excerpt}</p>
+            </article>
+            <article className="support-box">
+              <p className="eyebrow">sinal rápido</p>
+              <ul>
+                <li>Território: {seed.territoryLabel || "não informado"}</li>
+                <li>Eixo: {seed.axisLabel || "não informado"}</li>
+                <li>Fonte: {seed.sourceLabel || "não informada"}</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
@@ -37,11 +67,29 @@ export default function NewImpactPage() {
           <p className="section__lead">Defina título, pergunta central, status, tipo e a visibilidade pública antes de montar os vínculos.</p>
         </div>
 
-        <ImpactForm />
+        <ImpactForm
+          initialValues={
+            seed
+              ? {
+                  title: seed.title,
+                  slug: seed.slug,
+                  excerpt: seed.excerpt,
+                  description: seed.description,
+                  lead_question: seed.leadQuestion,
+                  impact_type: entry?.entry_type === "document" ? "document" : entry?.entry_type === "image" ? "archive_growth" : "public_pressure",
+                  status: "observed",
+                  date_label: seed.yearLabel,
+                  happened_at: "",
+                  territory_label: seed.territoryLabel,
+                  cover_image_url: "",
+                  sort_order: 0,
+                  public_visibility: false,
+                  featured: false,
+                }
+              : undefined
+          }
+        />
       </section>
     </Container>
   );
 }
-
-
-

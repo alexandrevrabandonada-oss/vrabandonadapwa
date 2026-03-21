@@ -8,6 +8,8 @@ import { Container } from "@/components/container";
 import { getInternalArchiveCollections } from "@/lib/archive/collections";
 import { getInternalEditorialItems } from "@/lib/editorial/queries";
 import { getInternalMemoryItems } from "@/lib/memory/queries";
+import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
+import { buildEntrySeed } from "@/lib/enriquecimento/resolve";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -16,8 +18,12 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams?: Promise<{ memory_item_id?: string; editorial_item_id?: string; collection_slug?: string }>;
+  searchParams?: Promise<{ memory_item_id?: string; editorial_item_id?: string; collection_slug?: string; entry_id?: string }>;
 };
+
+function normalizeSlug(value: string) {
+  return value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+}
 
 export default async function InternalArchiveNewPage({ searchParams }: PageProps) {
   const supabase = await createSupabaseServerClient();
@@ -33,12 +39,18 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
   const memoryItems = await getInternalMemoryItems();
   const editorialItems = await getInternalEditorialItems();
   const archiveCollections = await getInternalArchiveCollections();
+  const entry = resolvedSearchParams.entry_id ? await getInternalEditorialEntryById(resolvedSearchParams.entry_id) : null;
+  const seed = entry ? buildEntrySeed(entry) : null;
   const selectedMemory = resolvedSearchParams.memory_item_id
     ? memoryItems.find((item) => item.id === resolvedSearchParams.memory_item_id) ?? null
     : null;
   const selectedCollection = resolvedSearchParams.collection_slug
     ? archiveCollections.find((item) => item.slug === resolvedSearchParams.collection_slug) ?? null
     : null;
+  const suggestedCollectionSlug =
+    seed && !resolvedSearchParams.collection_slug
+      ? archiveCollections.find((collection) => normalizeSlug(collection.slug) === normalizeSlug(seed.axisLabel) || normalizeSlug(collection.title) === normalizeSlug(seed.axisLabel))?.slug ?? ""
+      : "";
 
   return (
     <Container className="intro-grid internal-page">
@@ -57,15 +69,22 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
           <Link href="/interno/acervo" className="button-secondary">
             Voltar ao acervo
           </Link>
-          <Link href="/interno/memoria" className="button-secondary">
-            Memória
+          <Link href="/interno/enriquecer" className="button-secondary">
+            Abrir enriquecimento
           </Link>
         </div>
       </section>
 
-      {selectedMemory || selectedCollection ? (
+      {selectedMemory || selectedCollection || entry ? (
         <section className="section internal-panel">
           <div className="grid-2">
+            {entry && seed ? (
+              <div className="support-box">
+                <p className="eyebrow">entrada de origem</p>
+                <h3>{entry.title}</h3>
+                <p>{seed.excerpt}</p>
+              </div>
+            ) : null}
             {selectedMemory ? (
               <div className="support-box">
                 <p className="eyebrow">vínculo de memória</p>
@@ -100,7 +119,24 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
           allowBatch
           initialMemoryItemId={resolvedSearchParams.memory_item_id ?? ""}
           initialEditorialItemId={resolvedSearchParams.editorial_item_id ?? ""}
-          initialCollectionSlug={resolvedSearchParams.collection_slug ?? ""}
+          initialCollectionSlug={resolvedSearchParams.collection_slug ?? suggestedCollectionSlug}
+          initialValues={
+            seed
+              ? {
+                  title: seed.title,
+                  asset_type: entry?.entry_type === "image" ? "photo" : entry?.entry_type === "document" ? "document" : "other",
+                  source_label: seed.sourceLabel,
+                  source_date_label: seed.yearLabel || "",
+                  approximate_year: seed.approximateYear,
+                  place_label: seed.placeLabel,
+                  description: seed.description,
+                  collection_slug: suggestedCollectionSlug,
+                  rights_note: "Uso editorial controlado",
+                  featured: false,
+                  sort_order: 0,
+                }
+              : undefined
+          }
         />
       </section>
     </Container>

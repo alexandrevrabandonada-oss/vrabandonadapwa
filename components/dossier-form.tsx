@@ -11,14 +11,32 @@ type DossierFormState = {
   message: string;
 };
 
+type DossierFormInitialValues = {
+  title?: string;
+  slug?: string;
+  excerpt?: string;
+  description?: string;
+  lead_question?: string;
+  period_label?: string;
+  territory_label?: string;
+  cover_image_url?: string;
+  sort_order?: number | null;
+  status?: string;
+  public_visibility?: boolean;
+  featured?: boolean;
+};
+
 type Props = {
   dossier?: InvestigationDossier | null;
+  initialValues?: DossierFormInitialValues;
 };
 
 const initialState: DossierFormState = { ok: false, message: "" };
 
-export function DossierForm({ dossier }: Props) {
+export function DossierForm({ dossier, initialValues }: Props) {
   const [state, formAction, pending] = useActionState(saveInvestigationDossierAction, initialState);
+  const titleDefault = dossier?.title ?? initialValues?.title ?? "";
+  const slugDefault = dossier?.slug ?? initialValues?.slug ?? "";
 
   return (
     <form className="intake-form" action={formAction}>
@@ -27,56 +45,56 @@ export function DossierForm({ dossier }: Props) {
       <div className="grid-2">
         <label className="field">
           <span>Título</span>
-          <input name="title" type="text" defaultValue={dossier?.title ?? ""} placeholder="Ar, fumaça e rotina industrial" required />
+          <input name="title" type="text" defaultValue={titleDefault} placeholder="Ar, fumaça e rotina industrial" required />
         </label>
 
         <label className="field">
           <span>Slug</span>
-          <input name="slug" type="text" defaultValue={dossier?.slug ?? ""} placeholder="ar-fumaca-e-rotina-industrial" required readOnly={Boolean(dossier)} />
+          <input name="slug" type="text" defaultValue={slugDefault} placeholder="ar-fumaca-e-rotina-industrial" required readOnly={Boolean(dossier)} />
         </label>
       </div>
 
       <label className="field">
         <span>Resumo curto</span>
-        <input name="excerpt" type="text" defaultValue={dossier?.excerpt ?? ""} placeholder="Linha de investigação pública" />
+        <input name="excerpt" type="text" defaultValue={dossier?.excerpt ?? initialValues?.excerpt ?? ""} placeholder="Linha de investigação pública" />
       </label>
 
       <label className="field">
         <span>Descrição</span>
-        <textarea name="description" rows={5} defaultValue={dossier?.description ?? ""} placeholder="Explique o contexto, o percurso e o que este dossiê quer provar." />
+        <textarea name="description" rows={5} defaultValue={dossier?.description ?? initialValues?.description ?? ""} placeholder="Explique o contexto, o percurso e o que este dossiê quer provar." />
       </label>
 
       <label className="field">
         <span>Pergunta central</span>
-        <input name="lead_question" type="text" defaultValue={dossier?.lead_question ?? ""} placeholder="Qual é a hipótese investigativa?" />
+        <input name="lead_question" type="text" defaultValue={dossier?.lead_question ?? initialValues?.lead_question ?? ""} placeholder="Qual é a hipótese investigativa?" />
       </label>
 
       <div className="grid-2">
         <label className="field">
           <span>Período</span>
-          <input name="period_label" type="text" defaultValue={dossier?.period_label ?? ""} placeholder="Anos 1990-2020" />
+          <input name="period_label" type="text" defaultValue={dossier?.period_label ?? initialValues?.period_label ?? ""} placeholder="Anos 1990-2020" />
         </label>
 
         <label className="field">
           <span>Território</span>
-          <input name="territory_label" type="text" defaultValue={dossier?.territory_label ?? ""} placeholder="Aterrado e entorno industrial" />
+          <input name="territory_label" type="text" defaultValue={dossier?.territory_label ?? initialValues?.territory_label ?? ""} placeholder="Aterrado e entorno industrial" />
         </label>
       </div>
 
       <label className="field">
         <span>Imagem de capa</span>
-        <input name="cover_image_url" type="url" defaultValue={dossier?.cover_image_url ?? ""} placeholder="/archive/assets/..." />
+        <input name="cover_image_url" type="url" defaultValue={dossier?.cover_image_url ?? initialValues?.cover_image_url ?? ""} placeholder="/archive/assets/..." />
       </label>
 
       <div className="grid-2">
         <label className="field">
           <span>Ordenação</span>
-          <input name="sort_order" type="number" min={0} step={1} defaultValue={dossier?.sort_order ?? 0} />
+          <input name="sort_order" type="number" min={0} step={1} defaultValue={dossier?.sort_order ?? initialValues?.sort_order ?? 0} />
         </label>
 
         <label className="field">
           <span>Status público</span>
-          <select name="status" defaultValue={dossier?.status ?? "draft"}>
+          <select name="status" defaultValue={dossier?.status ?? initialValues?.status ?? "draft"}>
             {dossierStatuses.map((status) => (
               <option key={status} value={status}>
                 {getDossierStatusLabel(status)}
@@ -89,7 +107,7 @@ export function DossierForm({ dossier }: Props) {
       <div className="grid-2">
         <label className="field">
           <span>Visibilidade pública</span>
-          <select name="public_visibility" defaultValue={dossier?.public_visibility ? "true" : "false"}>
+          <select name="public_visibility" defaultValue={dossier?.public_visibility ? "true" : initialValues?.public_visibility ? "true" : "false"}>
             <option value="true">Pública</option>
             <option value="false">Interna</option>
           </select>
@@ -99,7 +117,7 @@ export function DossierForm({ dossier }: Props) {
           <span>Publicação em destaque</span>
           <div className="support-box">
             <label className="check">
-              <input name="featured" type="checkbox" defaultChecked={dossier?.featured ?? false} />
+              <input name="featured" type="checkbox" defaultChecked={dossier?.featured ?? initialValues?.featured ?? false} />
               <span>Marcar como destaque</span>
             </label>
           </div>

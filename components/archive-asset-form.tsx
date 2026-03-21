@@ -13,6 +13,21 @@ type ArchiveAssetFormState = {
   message: string;
 };
 
+type ArchiveAssetFormInitialValues = {
+  title?: string;
+  asset_type?: ArchiveAssetType;
+  source_label?: string;
+  source_date_label?: string;
+  approximate_year?: number | null;
+  place_label?: string;
+  rights_note?: string;
+  description?: string;
+  collection_slug?: string;
+  public_visibility?: boolean;
+  featured?: boolean;
+  sort_order?: number | null;
+};
+
 type Props = {
   asset?: ArchiveAsset | null;
   memoryItems: MemoryItem[];
@@ -22,6 +37,7 @@ type Props = {
   initialMemoryItemId?: string;
   initialEditorialItemId?: string;
   initialCollectionSlug?: string;
+  initialValues?: ArchiveAssetFormInitialValues;
 };
 
 const initialState: ArchiveAssetFormState = { ok: false, message: "" };
@@ -36,8 +52,18 @@ export function ArchiveAssetForm({
   initialMemoryItemId,
   initialEditorialItemId,
   initialCollectionSlug,
+  initialValues,
 }: Props) {
   const [state, formAction, pending] = useActionState(saveArchiveAssetAction, initialState);
+  const titleDefault = asset?.title ?? initialValues?.title ?? "";
+  const assetTypeDefault = asset?.asset_type ?? initialValues?.asset_type ?? "other";
+  const sourceLabelDefault = asset?.source_label ?? initialValues?.source_label ?? "";
+  const sourceDateLabelDefault = asset?.source_date_label ?? initialValues?.source_date_label ?? "";
+  const approximateYearDefault = asset?.approximate_year ?? initialValues?.approximate_year ?? "";
+  const placeLabelDefault = asset?.place_label ?? initialValues?.place_label ?? "";
+  const rightsNoteDefault = asset?.rights_note ?? initialValues?.rights_note ?? "";
+  const descriptionDefault = asset?.description ?? initialValues?.description ?? "";
+  const collectionSlugDefault = asset?.collection_slug ?? initialCollectionSlug ?? initialValues?.collection_slug ?? "";
 
   return (
     <form className="intake-form" action={formAction} encType="multipart/form-data">
@@ -46,12 +72,12 @@ export function ArchiveAssetForm({
       <div className="grid-2">
         <label className="field">
           <span>Título</span>
-          <input name="title" type="text" defaultValue={asset?.title ?? ""} placeholder="Nome do recorte, foto ou documento" />
+          <input name="title" type="text" defaultValue={titleDefault} placeholder="Nome do recorte, foto ou documento" />
         </label>
 
         <label className="field">
           <span>Tipo de asset</span>
-          <select name="asset_type" defaultValue={asset?.asset_type ?? "other"} required>
+          <select name="asset_type" defaultValue={assetTypeDefault} required>
             {assetTypes.map((type) => (
               <option key={type} value={type}>
                 {type}
@@ -89,7 +115,7 @@ export function ArchiveAssetForm({
 
       <label className="field">
         <span>Coleção</span>
-        <select name="collection_slug" defaultValue={asset?.collection_slug ?? initialCollectionSlug ?? ""}>
+        <select name="collection_slug" defaultValue={collectionSlugDefault}>
           <option value="">Sem coleção</option>
           {archiveCollections.map((collection) => (
             <option key={collection.slug} value={collection.slug}>
@@ -102,41 +128,41 @@ export function ArchiveAssetForm({
       <div className="grid-2">
         <label className="field">
           <span>Fonte / origem</span>
-          <input name="source_label" type="text" defaultValue={asset?.source_label ?? ""} placeholder="Arquivo pessoal, jornal local, relato, instituição..." />
+          <input name="source_label" type="text" defaultValue={sourceLabelDefault} placeholder="Arquivo pessoal, jornal local, relato, instituição..." />
         </label>
 
         <label className="field">
           <span>Data aproximada</span>
-          <input name="source_date_label" type="text" defaultValue={asset?.source_date_label ?? ""} placeholder="aprox. 1998" />
+          <input name="source_date_label" type="text" defaultValue={sourceDateLabelDefault} placeholder="aprox. 1998" />
         </label>
       </div>
 
       <div className="grid-2">
         <label className="field">
           <span>Ano aproximado</span>
-          <input name="approximate_year" type="number" defaultValue={asset?.approximate_year ?? ""} placeholder="1998" />
+          <input name="approximate_year" type="number" defaultValue={approximateYearDefault} placeholder="1998" />
         </label>
 
         <label className="field">
           <span>Lugar</span>
-          <input name="place_label" type="text" defaultValue={asset?.place_label ?? ""} placeholder="Vila Santa Cecília" />
+          <input name="place_label" type="text" defaultValue={placeLabelDefault} placeholder="Vila Santa Cecília" />
         </label>
       </div>
 
       <label className="field">
         <span>Direitos / observação</span>
-        <input name="rights_note" type="text" defaultValue={asset?.rights_note ?? ""} placeholder="Uso editorial controlado" />
+        <input name="rights_note" type="text" defaultValue={rightsNoteDefault} placeholder="Uso editorial controlado" />
       </label>
 
       <label className="field">
         <span>Descrição</span>
-        <textarea name="description" rows={4} defaultValue={asset?.description ?? ""} placeholder="Conte o que esse anexo registra e por que ele importa." />
+        <textarea name="description" rows={4} defaultValue={descriptionDefault} placeholder="Conte o que esse anexo registra e por que ele importa." />
       </label>
 
       <div className="grid-2">
         <label className="field">
           <span>Ordenação</span>
-          <input name="sort_order" type="number" min={0} step={1} defaultValue={asset?.sort_order ?? 0} />
+          <input name="sort_order" type="number" min={0} step={1} defaultValue={asset?.sort_order ?? initialValues?.sort_order ?? 0} />
         </label>
 
         <label className="field">
@@ -177,7 +203,7 @@ export function ArchiveAssetForm({
       <div className="grid-2">
         <label className="field">
           <span>Visibilidade pública</span>
-          <select name="public_visibility" defaultValue={asset?.public_visibility ? "true" : "false"}>
+          <select name="public_visibility" defaultValue={asset?.public_visibility ? "true" : initialValues?.public_visibility ? "true" : "false"}>
             <option value="false">Interno</option>
             <option value="true">Público</option>
           </select>
@@ -187,7 +213,7 @@ export function ArchiveAssetForm({
           <span>Publicação destacada</span>
           <div className="support-box">
             <label className="check">
-              <input name="featured" type="checkbox" defaultChecked={asset?.featured ?? false} />
+              <input name="featured" type="checkbox" defaultChecked={asset?.featured ?? initialValues?.featured ?? false} />
               <span>Marcar como destaque</span>
             </label>
           </div>

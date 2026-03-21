@@ -68,6 +68,7 @@ export default async function EntradaDetailPage({ params }: PageProps) {
               <Link href="/interno/acervo" className="button-secondary">Abrir acervo</Link>
               <Link href="/interno/memoria" className="button-secondary">Abrir memória</Link>
               <Link href="/interno/editorial" className="button-secondary">Abrir editorial</Link>
+              <Link href="/interno/enriquecer" className="button-secondary">Ir para etapa 2</Link>
             </div>
           </article>
         </div>

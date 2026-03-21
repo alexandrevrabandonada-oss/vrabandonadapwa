@@ -11,13 +11,30 @@ type CampaignFormState = {
   message: string;
 };
 
+type CampaignFormInitialValues = {
+  title?: string;
+  slug?: string;
+  excerpt?: string;
+  description?: string;
+  lead_question?: string;
+  campaign_type?: string;
+  status?: string;
+  start_date?: string;
+  end_date?: string;
+  cover_image_url?: string;
+  sort_order?: number | null;
+  public_visibility?: boolean;
+  featured?: boolean;
+};
+
 type Props = {
   campaign?: PublicCampaign | null;
+  initialValues?: CampaignFormInitialValues;
 };
 
 const initialState: CampaignFormState = { ok: false, message: "" };
 
-export function CampaignForm({ campaign }: Props) {
+export function CampaignForm({ campaign, initialValues }: Props) {
   const [state, formAction, pending] = useActionState(saveCampaignAction, initialState);
 
   return (
@@ -27,34 +44,34 @@ export function CampaignForm({ campaign }: Props) {
       <div className="grid-2">
         <label className="field">
           <span>Título</span>
-          <input name="title" type="text" defaultValue={campaign?.title ?? ""} placeholder="Respira Volta Redonda" required />
+          <input name="title" type="text" defaultValue={campaign?.title ?? initialValues?.title ?? ""} placeholder="Respira Volta Redonda" required />
         </label>
 
         <label className="field">
           <span>Slug</span>
-          <input name="slug" type="text" defaultValue={campaign?.slug ?? ""} placeholder="respira-volta-redonda" required readOnly={Boolean(campaign)} />
+          <input name="slug" type="text" defaultValue={campaign?.slug ?? initialValues?.slug ?? ""} placeholder="respira-volta-redonda" required readOnly={Boolean(campaign)} />
         </label>
       </div>
 
       <label className="field">
         <span>Resumo curto</span>
-        <input name="excerpt" type="text" defaultValue={campaign?.excerpt ?? ""} placeholder="Chamado público sobre ar, fumaça e impacto industrial." />
+        <input name="excerpt" type="text" defaultValue={campaign?.excerpt ?? initialValues?.excerpt ?? ""} placeholder="Chamado público sobre ar, fumaça e impacto industrial." />
       </label>
 
       <label className="field">
         <span>Descrição</span>
-        <textarea name="description" rows={5} defaultValue={campaign?.description ?? ""} placeholder="Explique o que está em jogo, o foco do momento e por que isso importa." />
+        <textarea name="description" rows={5} defaultValue={campaign?.description ?? initialValues?.description ?? ""} placeholder="Explique o que está em jogo, o foco do momento e por que isso importa." />
       </label>
 
       <label className="field">
         <span>Pergunta central</span>
-        <input name="lead_question" type="text" defaultValue={campaign?.lead_question ?? ""} placeholder="O que a cidade está respirando agora?" />
+        <input name="lead_question" type="text" defaultValue={campaign?.lead_question ?? initialValues?.lead_question ?? ""} placeholder="O que a cidade está respirando agora?" />
       </label>
 
       <div className="grid-2">
         <label className="field">
           <span>Tipo de campanha</span>
-          <select name="campaign_type" defaultValue={campaign?.campaign_type ?? "call"}>
+          <select name="campaign_type" defaultValue={campaign?.campaign_type ?? initialValues?.campaign_type ?? "call"}>
             {campaignTypes.map((type) => (
               <option key={type} value={type}>
                 {getCampaignTypeLabel(type)}
@@ -65,7 +82,7 @@ export function CampaignForm({ campaign }: Props) {
 
         <label className="field">
           <span>Status</span>
-          <select name="status" defaultValue={campaign?.status ?? "upcoming"}>
+          <select name="status" defaultValue={campaign?.status ?? initialValues?.status ?? "upcoming"}>
             {campaignStatuses.map((status) => (
               <option key={status} value={status}>
                 {getCampaignStatusLabel(status)}
@@ -78,29 +95,29 @@ export function CampaignForm({ campaign }: Props) {
       <div className="grid-2">
         <label className="field">
           <span>Data de início</span>
-          <input name="start_date" type="date" defaultValue={campaign?.start_date ?? ""} />
+          <input name="start_date" type="date" defaultValue={campaign?.start_date ?? initialValues?.start_date ?? ""} />
         </label>
 
         <label className="field">
           <span>Data de término</span>
-          <input name="end_date" type="date" defaultValue={campaign?.end_date ?? ""} />
+          <input name="end_date" type="date" defaultValue={campaign?.end_date ?? initialValues?.end_date ?? ""} />
         </label>
       </div>
 
       <label className="field">
         <span>Imagem de capa</span>
-        <input name="cover_image_url" type="url" defaultValue={campaign?.cover_image_url ?? ""} placeholder="/editorial/covers/..." />
+        <input name="cover_image_url" type="url" defaultValue={campaign?.cover_image_url ?? initialValues?.cover_image_url ?? ""} placeholder="/editorial/covers/..." />
       </label>
 
       <div className="grid-2">
         <label className="field">
           <span>Ordenação</span>
-          <input name="sort_order" type="number" min={0} step={1} defaultValue={campaign?.sort_order ?? 0} />
+          <input name="sort_order" type="number" min={0} step={1} defaultValue={campaign?.sort_order ?? initialValues?.sort_order ?? 0} />
         </label>
 
         <label className="field">
           <span>Visibilidade pública</span>
-          <select name="public_visibility" defaultValue={campaign?.public_visibility ? "true" : "false"}>
+          <select name="public_visibility" defaultValue={campaign?.public_visibility ? "true" : initialValues?.public_visibility ? "true" : "false"}>
             <option value="true">Pública</option>
             <option value="false">Interna</option>
           </select>
@@ -111,7 +128,7 @@ export function CampaignForm({ campaign }: Props) {
         <span>Destaque</span>
         <div className="support-box">
           <label className="check">
-            <input name="featured" type="checkbox" defaultChecked={campaign?.featured ?? false} />
+            <input name="featured" type="checkbox" defaultChecked={campaign?.featured ?? initialValues?.featured ?? false} />
             <span>Marcar como destaque</span>
           </label>
         </div>

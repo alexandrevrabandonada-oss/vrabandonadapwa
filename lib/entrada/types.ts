@@ -1,7 +1,7 @@
 export const editorialEntryTypes = ["post", "document", "image"] as const;
 export type EditorialEntryType = (typeof editorialEntryTypes)[number];
 
-export const editorialEntryStatuses = ["draft", "stored", "ready_for_enrichment", "published", "archived"] as const;
+export const editorialEntryStatuses = ["draft", "stored", "ready_for_enrichment", "enriched", "linked", "published", "archived"] as const;
 export type EditorialEntryStatus = (typeof editorialEntryStatuses)[number];
 
 export const editorialEntryTargets = ["agora", "acervo", "memoria", "dossie", "campaign", "impacto", "edition"] as const;
@@ -45,6 +45,8 @@ export const editorialEntryStatusLabels: Record<EditorialEntryStatus, string> = 
   draft: "Rascunho",
   stored: "Guardado",
   ready_for_enrichment: "Pronto para enriquecer",
+  enriched: "Enriquecido",
+  linked: "Vinculado",
   published: "Publicado",
   archived: "Arquivado",
 };
@@ -60,4 +62,4 @@ export const editorialEntryTargetLabels: Record<NonNullable<EditorialEntryTarget
 };
 
 export const editorialEntryTypeOrder: EditorialEntryType[] = ["post", "document", "image"];
-export const editorialEntryStatusOrder: EditorialEntryStatus[] = ["published", "ready_for_enrichment", "stored", "draft", "archived"];
+export const editorialEntryStatusOrder: EditorialEntryStatus[] = ["published", "linked", "enriched", "ready_for_enrichment", "stored", "draft", "archived"];
