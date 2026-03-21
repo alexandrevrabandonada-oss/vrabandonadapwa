@@ -1,5 +1,5 @@
-const CACHE_VERSION = "vr-abandonada-pwa-v1";
-const RUNTIME_CACHE = "vr-abandonada-runtime-v1";
+const CACHE_VERSION = "vr-abandonada-pwa-v2";
+const RUNTIME_CACHE = "vr-abandonada-runtime-v2";
 const PRECACHE_URLS = [
   "/",
   "/agora",

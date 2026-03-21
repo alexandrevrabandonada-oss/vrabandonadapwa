@@ -8,7 +8,12 @@ export function PwaRegister() {
       return;
     }
 
-    void navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch(() => null);
+    void navigator.serviceWorker
+      .register("/sw.js", { scope: "/", updateViaCache: "none" })
+      .then((registration) => {
+        void registration.update().catch(() => null);
+      })
+      .catch(() => null);
   }, []);
 
   return null;
