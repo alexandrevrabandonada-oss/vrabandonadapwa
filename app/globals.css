@@ -2748,3 +2748,16 @@ body.vr-low-vision .memory-collection-card .button-secondary {
 .mobile-bottom-nav__link--featured span {
   color: var(--accent);
 }
+
+.nav__link--featured {
+  color: var(--text);
+  border-color: rgba(243, 178, 26, 0.22);
+  background: rgba(243, 178, 26, 0.08);
+}
+
+.nav__link--featured:hover,
+.nav__link--featured:focus-visible,
+.nav__link--featured[aria-current="page"] {
+  border-color: rgba(243, 178, 26, 0.42);
+  background: rgba(243, 178, 26, 0.14);
+}

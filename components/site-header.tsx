@@ -39,7 +39,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="nav__link"
+              className={`nav__link ${item.href === "/agora" ? "nav__link--featured" : ""}`.trim()}
               aria-current={isActive(pathname, item.href) ? "page" : undefined}
             >
               {item.label}
