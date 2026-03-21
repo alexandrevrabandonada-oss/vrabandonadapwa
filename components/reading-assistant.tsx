@@ -256,6 +256,24 @@ export function ReadingAssistant() {
     }
   };
 
+  useEffect(() => {
+    const onOpenAssistant = () => {
+      setOpen(true);
+      window.setTimeout(() => {
+        document.getElementById("a11y-reading-assistant")?.scrollIntoView({
+          block: "start",
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        });
+      }, 0);
+    };
+
+    window.addEventListener("vr:open-reading-assistant", onOpenAssistant as EventListener);
+
+    return () => {
+      window.removeEventListener("vr:open-reading-assistant", onOpenAssistant as EventListener);
+    };
+  }, []);
+
   const toggleLowVision = () => {
     const next = !lowVisionEnabled;
     setLowVisionEnabled(next);
@@ -272,7 +290,7 @@ export function ReadingAssistant() {
 
   return (
     <Container className="a11y-reading-assistant-shell">
-      <section className={`a11y-reading-assistant ${open ? "a11y-reading-assistant--open" : ""}`} aria-labelledby="a11y-reading-assistant-title">
+      <section id="a11y-reading-assistant" className={`a11y-reading-assistant ${open ? "a11y-reading-assistant--open" : ""}`} aria-labelledby="a11y-reading-assistant-title">
         <div className="a11y-reading-assistant__header">
           <div>
             <p className="eyebrow">leitura assistida</p>
@@ -355,3 +373,4 @@ export function ReadingAssistant() {
     </Container>
   );
 }
+

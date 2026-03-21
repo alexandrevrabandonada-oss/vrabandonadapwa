@@ -4,17 +4,24 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { Container } from "@/components/container";
-import { PwaInstallButton } from "@/components/pwa-install-button";
-import { ReadingTrailQuickLink } from "@/components/reading-trail-quick-link";
+import { SiteMenu } from "@/components/site-menu";
+import { ReadingAssistantTrigger } from "@/components/reading-assistant-trigger";
 import { site } from "@/lib/site";
+
+function isActive(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function SiteHeader() {
   const pathname = usePathname();
 
   return (
     <header className="site-header">
-      <Container className="site-header__inner">
+      <div className="site-header__inner container">
         <Link href="/" className="brand" aria-label={site.name}>
           <Image
             src="/brand/vr-abandonada-logo.svg"
@@ -28,21 +35,23 @@ export function SiteHeader() {
         </Link>
 
         <nav className="nav" aria-label="Navegação principal">
-          {site.nav.map((item) => (
-            <Link key={item.href} href={item.href} className="nav__link" aria-current={pathname === item.href ? "page" : undefined}>
+          {site.primaryNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="nav__link"
+              aria-current={isActive(pathname, item.href) ? "page" : undefined}
+            >
               {item.label}
             </Link>
           ))}
         </nav>
 
         <div className="site-header__tools">
-          <ReadingTrailQuickLink />
-          <Link href="/buscar" className="button-secondary site-header__search-link">
-            Buscar
-          </Link>
-          <PwaInstallButton />
+          <ReadingAssistantTrigger className="button-secondary site-header__a11y-link" />
+          <SiteMenu variant="header" />
         </div>
-      </Container>
+      </div>
     </header>
   );
 }

@@ -15,13 +15,22 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <nav className="site-footer__links" aria-label="Links do rodapé">
-          {site.nav.map((item) => (
-            <Link key={item.href} href={item.href}>
-              {item.label}
-            </Link>
+        <div className="site-footer__groups" aria-label="Mapa rápido do site">
+          {site.footerGroups.map((group) => (
+            <section key={group.title} className="site-footer__group">
+              <p className="site-footer__group-title">{group.title}</p>
+              <nav aria-label={group.title}>
+                <ul>
+                  {group.items.map((item) => (
+                    <li key={item.href}>
+                      <Link href={item.href}>{item.label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            </section>
           ))}
-        </nav>
+        </div>
 
         <p className="site-footer__note">
           Projeto em base inicial. Estrutura preparada para Vercel, PWA e

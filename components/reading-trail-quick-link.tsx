@@ -6,7 +6,11 @@ import { usePathname } from "next/navigation";
 
 import { getReadingTrailItems, subscribeToReadingTrailChanges } from "@/lib/pwa/reading-trail";
 
-export function ReadingTrailQuickLink() {
+type ReadingTrailQuickLinkProps = {
+  className?: string;
+};
+
+export function ReadingTrailQuickLink({ className = "button-secondary site-header__continue-link" }: ReadingTrailQuickLinkProps) {
   const pathname = usePathname();
   const [href, setHref] = useState<string | null>(null);
   const [label, setLabel] = useState<string | null>(null);
@@ -29,7 +33,7 @@ export function ReadingTrailQuickLink() {
   }
 
   return (
-    <Link href={href} className="button-secondary site-header__continue-link" aria-label={`Continuar leitura em ${label}`}>
+    <Link href={href} className={className} aria-label={`Continuar leitura em ${label}`}>
       Continuar
     </Link>
   );

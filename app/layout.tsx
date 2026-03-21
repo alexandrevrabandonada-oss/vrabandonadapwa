@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { NetworkStatusBanner } from "@/components/network-status-banner";
 import { PwaReadingTrailTracker } from "@/components/pwa-reading-trail";
 import { PwaRegister } from "@/components/pwa-register";
@@ -62,6 +63,7 @@ export default function RootLayout({
           <main id="conteudo" className="site-main">
             {children}
           </main>
+          <MobileBottomNav />
           <SiteFooter />
         </div>
       </body>

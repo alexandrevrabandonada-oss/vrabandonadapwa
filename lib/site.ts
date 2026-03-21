@@ -1,36 +1,114 @@
+export type SiteLink = {
+  href: string;
+  label: string;
+};
+
+export type SiteGroup = {
+  title: string;
+  items: SiteLink[];
+};
+
 export const site = {
   name: "VR Abandonada",
   description:
     "Casa digital de memória, denúncia e organização popular sobre Volta Redonda.",
   shortDescription:
     "Memória, denúncia e organização popular sobre Volta Redonda.",
-  nav: [
+  primaryNav: [
     { href: "/", label: "Início" },
-    { href: "/buscar", label: "Buscar" },
     { href: "/agora", label: "Agora" },
-    { href: "/linha-do-tempo", label: "Linha do tempo" },
-    { href: "/campanhas", label: "Campanhas" },
-    { href: "/impacto", label: "Impacto" },
-    { href: "/edicoes", label: "Edições" },
-    { href: "/compartilhar", label: "Compartilhar" },
-    { href: "/salvos", label: "Salvos" },
+    { href: "/buscar", label: "Buscar" },
     { href: "/acompanhar", label: "Acompanhar" },
-    { href: "/comecar", label: "Começar" },
-    { href: "/sobre", label: "Sobre" },
-    { href: "/pautas", label: "Pautas" },
-    { href: "/memoria", label: "Memória" },
-    { href: "/acervo", label: "Acervo" },
-    { href: "/dossies", label: "Dossiês" },
-    { href: "/eixos", label: "Eixos" },
-    { href: "/territorios", label: "Territórios" },
-    { href: "/atores", label: "Atores" },
-    { href: "/padroes", label: "Padrões" },
-    { href: "/apoie", label: "Apoie" },
     { href: "/participe", label: "Participe" },
-    { href: "/metodo", label: "Método" },
-    { href: "/envie", label: "Envie" },
-    { href: "/manifesto", label: "Manifesto" },
-  ],
+  ] satisfies SiteLink[],
+  mobileNav: [
+    { href: "/agora", label: "Agora" },
+    { href: "/buscar", label: "Buscar" },
+    { href: "/acompanhar", label: "Acompanhar" },
+    { href: "/salvos", label: "Salvos" },
+  ] satisfies SiteLink[],
+  menuGroups: [
+    {
+      title: "Uso diário",
+      items: [
+        { href: "/agora", label: "Agora" },
+        { href: "/buscar", label: "Buscar" },
+        { href: "/acompanhar", label: "Acompanhar" },
+        { href: "/salvos", label: "Salvos" },
+      ],
+    },
+    {
+      title: "Entender",
+      items: [
+        { href: "/comecar", label: "Começar" },
+        { href: "/sobre", label: "Sobre" },
+        { href: "/metodo", label: "Método" },
+        { href: "/manifesto", label: "Manifesto" },
+      ],
+    },
+    {
+      title: "Investigar",
+      items: [
+        { href: "/pautas", label: "Pautas" },
+        { href: "/dossies", label: "Dossiês" },
+        { href: "/campanhas", label: "Campanhas" },
+        { href: "/impacto", label: "Impacto" },
+        { href: "/padroes", label: "Padrões" },
+      ],
+    },
+    {
+      title: "Cidade",
+      items: [
+        { href: "/eixos", label: "Eixos" },
+        { href: "/territorios", label: "Territórios" },
+        { href: "/atores", label: "Atores" },
+        { href: "/linha-do-tempo", label: "Linha do tempo" },
+      ],
+    },
+    {
+      title: "Arquivo",
+      items: [
+        { href: "/memoria", label: "Memória" },
+        { href: "/acervo", label: "Acervo" },
+        { href: "/edicoes", label: "Edições" },
+      ],
+    },
+    {
+      title: "Participar",
+      items: [
+        { href: "/participe", label: "Participe" },
+        { href: "/envie", label: "Envie" },
+        { href: "/apoie", label: "Apoie" },
+        { href: "/compartilhar", label: "Compartilhar" },
+      ],
+    },
+  ] satisfies SiteGroup[],
+  footerGroups: [
+    {
+      title: "Entender",
+      items: [
+        { href: "/comecar", label: "Começar" },
+        { href: "/sobre", label: "Sobre" },
+        { href: "/metodo", label: "Método" },
+      ],
+    },
+    {
+      title: "Investigar",
+      items: [
+        { href: "/pautas", label: "Pautas" },
+        { href: "/dossies", label: "Dossiês" },
+        { href: "/campanhas", label: "Campanhas" },
+      ],
+    },
+    {
+      title: "Participar",
+      items: [
+        { href: "/participe", label: "Participe" },
+        { href: "/envie", label: "Envie" },
+        { href: "/apoie", label: "Apoie" },
+      ],
+    },
+  ] satisfies SiteGroup[],
   hero: {
     kicker: "arquivo vivo da cidade operária",
     title: "Volta Redonda não é cenário. É disputa.",
@@ -127,6 +205,4 @@ export const site = {
     "Denunciar é um ato coletivo quando o problema é estrutural.",
   ],
 } as const;
-
-
 
