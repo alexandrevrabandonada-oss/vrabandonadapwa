@@ -2761,3 +2761,16 @@ body.vr-low-vision .memory-collection-card .button-secondary {
   border-color: rgba(243, 178, 26, 0.42);
   background: rgba(243, 178, 26, 0.14);
 }
+
+.site-menu__link--featured {
+  border-color: rgba(243, 178, 26, 0.26) !important;
+  background: linear-gradient(180deg, rgba(243, 178, 26, 0.1), rgba(255, 255, 255, 0.04));
+  color: var(--text);
+}
+
+.site-menu__link--featured:hover,
+.site-menu__link--featured:focus-visible,
+.site-menu__link--featured[aria-current="page"] {
+  border-color: rgba(243, 178, 26, 0.46) !important;
+  background: linear-gradient(180deg, rgba(243, 178, 26, 0.16), rgba(255, 255, 255, 0.06));
+}

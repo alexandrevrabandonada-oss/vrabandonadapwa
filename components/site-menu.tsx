@@ -88,6 +88,11 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
                         <li key={item.href}>
                           <Link
                             href={item.href}
+                            className={
+                              group.title === "Uso diário" && item.href === "/agora"
+                                ? "site-menu__link site-menu__link--featured"
+                                : "site-menu__link"
+                            }
                             aria-current={isActive(pathname, item.href) ? "page" : undefined}
                             onClick={() => setOpen(false)}
                           >
@@ -121,4 +126,5 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
     </>
   );
 }
+
 
