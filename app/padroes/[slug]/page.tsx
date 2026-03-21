@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { SharePanel } from "@/components/share-panel";
 import { PatternReadLinkCard } from "@/components/pattern-read-link-card";
 import { PatternReadPrimaryPiece } from "@/components/pattern-read-primary-piece";
@@ -109,6 +110,17 @@ export default async function PatternReadPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid actors-page">
+      <DeepPageWayfinding
+        parentHref="/padroes"
+        parentLabel="padrões"
+        currentLabel="leitura estrutural"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/acompanhar", label: "Acompanhar" },
+          { href: "/atores", label: "Ver atores" },
+        ]}
+      />
+
       <section className="hero hero--split territories-hero">
         <div className="hero__copy">
           <p className="eyebrow">padrão estrutural</p>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { FollowButton } from "@/components/follow-button";
 import { SaveReadButton } from "@/components/save-read-button";
 import { TimelineEntryCard } from "@/components/timeline-entry-card";
@@ -100,6 +101,17 @@ export default async function TimelineEntryPage({ params }: { params: Promise<Pa
 
   return (
     <Container className="intro-grid timeline-detail-page">
+      <DeepPageWayfinding
+        parentHref="/linha-do-tempo"
+        parentLabel="linha do tempo"
+        currentLabel="marco temporal"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/salvos", label: "Salvos" },
+          { href: "/acompanhar", label: "Acompanhar" },
+        ]}
+      />
+
       <section className="hero hero--split timeline-detail-hero">
         <div className="hero__copy">
           <p className="eyebrow">marco temporal</p>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { FollowButton } from "@/components/follow-button";
 import { EditorialCover } from "@/components/editorial-cover";
 import { PlaceHubCard } from "@/components/place-hub-card";
@@ -101,6 +102,17 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid territory-detail-page">
+      <DeepPageWayfinding
+        parentHref="/territorios"
+        parentLabel="territórios"
+        currentLabel="território vivo"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/acompanhar", label: "Acompanhar" },
+          { href: "/eixos", label: "Ver eixos" },
+        ]}
+      />
+
       <section className="section editorial-detail-hero">
         <div className="editorial-hero__copy">
           <p className="eyebrow">território público</p>

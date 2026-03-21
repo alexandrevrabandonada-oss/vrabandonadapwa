@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { DossierPrimaryPiece } from "@/components/dossier-primary-piece";
 import { DossierTimeline } from "@/components/dossier-timeline";
 import { DossierUpdateCard } from "@/components/dossier-update-card";
@@ -111,6 +112,17 @@ export default async function DossierDetailPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid dossier-detail-page">
+      <DeepPageWayfinding
+        parentHref="/dossies"
+        parentLabel="dossiês"
+        currentLabel="dossiê vivo"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/acompanhar", label: "Acompanhar" },
+          { href: "/compartilhar", label: "Compartilhar" },
+        ]}
+      />
+
       <section className="hero hero--split dossier-detail-hero">
         <div className="hero__copy">
           <p className="eyebrow">dossiê vivo</p>

@@ -35,6 +35,7 @@ import { getPublishedTimelineHighlights, getPublishedTimelineHighlightLinks } fr
 import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
 import { getPublishedEditorialEditionLinks, getPublishedEditorialEditions } from "@/lib/editions/queries";
 import { site } from "@/lib/site";
+import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 
 export const metadata: Metadata = {
   title: site.name,
@@ -162,6 +163,9 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      <ReadingTrailPanel />
+
 
       <section className="section home-start-section">
         <div className="grid-2">
@@ -815,6 +819,7 @@ export default async function HomePage() {
     </Container>
   );
 }
+
 
 
 

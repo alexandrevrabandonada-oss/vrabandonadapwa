@@ -15,13 +15,13 @@ export function SiteFooter() {
           </p>
         </div>
 
-        <div className="site-footer__links" aria-label="Links do rodapé">
+        <nav className="site-footer__links" aria-label="Links do rodapé">
           {site.nav.map((item) => (
             <Link key={item.href} href={item.href}>
               {item.label}
             </Link>
           ))}
-        </div>
+        </nav>
 
         <p className="site-footer__note">
           Projeto em base inicial. Estrutura preparada para Vercel, PWA e

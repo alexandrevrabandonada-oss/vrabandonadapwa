@@ -51,6 +51,23 @@ button, input, textarea, select { font: inherit; }
 ::selection { background: rgba(243, 178, 26, 0.32); color: var(--text); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
+.skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 40;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  background: #000;
+  color: var(--text);
+  transform: translateY(-180%);
+  transition: transform 140ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 .site-shell { position: relative; z-index: 1; }
 
 .site-header, .site-footer {
@@ -117,7 +134,7 @@ button, input, textarea, select { font: inherit; }
   font-size: 0.86rem;
   transition: border-color 140ms ease, background-color 140ms ease, color 140ms ease;
 }
-.nav__link:hover, .nav__link:focus-visible {
+.nav__link:hover, .nav__link:focus-visible, .nav__link[aria-current="page"] {
   border-color: rgba(243, 178, 26, 0.32);
   background: rgba(255, 255, 255, 0.04);
   color: var(--text);
@@ -2066,5 +2083,163 @@ button, input, textarea, select { font: inherit; }
 @media (max-width: 640px) {
   .timeline-toolbar__fields {
     grid-template-columns: 1fr;
+  }
+}
+
+.deep-wayfinding {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.deep-wayfinding__context {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.deep-wayfinding__back {
+  width: fit-content;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(243, 178, 26, 0.28);
+}
+
+.deep-wayfinding__back:hover,
+.deep-wayfinding__back:focus-visible {
+  color: var(--accent);
+  border-bottom-color: currentColor;
+}
+
+.deep-wayfinding__actions,
+.deep-continuation__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.deep-continuation .section__lead {
+  max-width: 44rem;
+}
+/* Accessibility hardening for reduced motion and small-chip contrast */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.home-hero__signal,
+.tag-row__item,
+.status-chip,
+.pwa-install-status,
+.timeline-basis {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.home-hero__signal,
+.tag-row__item,
+.status-chip,
+.pwa-install-status,
+.timeline-basis,
+.deep-wayfinding__back,
+.search-result-card__snippet,
+.section__lead {
+  text-wrap: pretty;
+}
+
+.button-secondary,
+.button,
+.nav__link,
+.status-chip,
+.tag-row__item,
+.home-hero__signal,
+.pwa-install-status,
+.deep-wayfinding__back,
+.deep-continuation .button,
+.deep-continuation .button-secondary {
+  min-height: 2.8rem;
+}
+.reading-trail-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.reading-trail-section--compact {
+  gap: 0.85rem;
+}
+
+.reading-trail-current {
+  display: grid;
+  gap: 1rem;
+}
+
+.reading-trail-current__card,
+.reading-trail-current__list,
+.reading-trail-empty {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.reading-trail-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.reading-trail-item {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.reading-trail-item h3,
+.reading-trail-current__card h3,
+.reading-trail-empty h3 {
+  margin: 0;
+}
+
+.reading-trail-item p,
+.reading-trail-current__card p,
+.reading-trail-current__list p,
+.reading-trail-empty p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.reading-trail-current__card .stack-actions,
+.reading-trail-item .button-secondary {
+  margin-top: 0.2rem;
+}
+
+.site-header__continue-link {
+  white-space: nowrap;
+}
+
+@media (min-width: 921px) {
+  .reading-trail-current {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 0.82fr);
+    align-items: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .reading-trail-item {
+    padding: 0.8rem;
   }
 }

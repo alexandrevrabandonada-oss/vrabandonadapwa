@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { EditorialCover } from "@/components/editorial-cover";
 import { SharePanel } from "@/components/share-panel";
 import { ImpactCard } from "@/components/impact-card";
@@ -71,6 +72,17 @@ export default async function ImpactDetailPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid impact-detail-page">
+      <DeepPageWayfinding
+        parentHref="/impacto"
+        parentLabel="impactos"
+        currentLabel="consequência pública"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/acompanhar", label: "Acompanhar" },
+          { href: "/compartilhar", label: "Compartilhar" },
+        ]}
+      />
+
       <section className="section editorial-detail-hero">
         <div className="editorial-hero__copy">
           <p className="eyebrow">impacto público</p>

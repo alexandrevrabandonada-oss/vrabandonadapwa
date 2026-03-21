@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 
 import { NetworkStatusBanner } from "@/components/network-status-banner";
+import { PwaReadingTrailTracker } from "@/components/pwa-reading-trail";
 import { PwaRegister } from "@/components/pwa-register";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -54,11 +55,13 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
+        <a className="skip-link" href="#conteudo">Pular para o conteúdo principal</a>
         <PwaRegister />
+        <PwaReadingTrailTracker />
         <div className="site-shell">
           <SiteHeader />
           <NetworkStatusBanner />
-          <main className="site-main">{children}</main>
+          <main id="conteudo" className="site-main">{children}</main>
           <SiteFooter />
         </div>
       </body>

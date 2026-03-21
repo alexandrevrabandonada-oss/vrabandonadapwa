@@ -7,6 +7,7 @@ import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublicSearchIndex, getSearchHotTerms, searchPublicContent } from "@/lib/search/index";
 import { getSearchContentTypeLabel } from "@/lib/search/navigation";
 import type { SearchSortMode } from "@/lib/search/types";
+import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 
 export const metadata: Metadata = {
   title: "Buscar",
@@ -137,6 +138,8 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
           </div>
         </article>
       </section>
+
+      <ReadingTrailPanel compact />
 
       <section className="section search-toolbar-section">
         <form method="get" className="search-toolbar">
@@ -333,17 +336,17 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
               <h3>{topResult.title}</h3>
               <p>{topResult.excerpt}</p>
               <div className="stack-actions">
-                <Link href={topResult.href} className="button">
+                <Link href={topResult.href} className="button" aria-label={`Abrir ${topResult.kindLabel}: ${topResult.title}`}>
                   Abrir
                 </Link>
-                <Link href="/salvos" className="button-secondary">
-  Ver salvos
-</Link>
-<Link href="/linha-do-tempo" className="button-secondary">
-  Ver linha do tempo
-</Link>
+                <Link href="/salvos" className="button-secondary" aria-label={`Salvar ${topResult.title}`}>
+                  Ver salvos
+                </Link>
+                <Link href="/linha-do-tempo" className="button-secondary" aria-label={`Ver a linha do tempo relacionada a ${topResult.title}`}>
+                  Ver linha do tempo
+                </Link>
                 {topResult.followKind ? (
-                  <Link href="/acompanhar" className="button-secondary">
+                  <Link href="/acompanhar" className="button-secondary" aria-label={`Acompanhar ${topResult.title}`}>
                     Acompanhar
                   </Link>
                 ) : null}
@@ -410,6 +413,8 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
     </Container>
   );
 }
+
+
 
 
 

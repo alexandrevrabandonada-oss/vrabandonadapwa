@@ -3,59 +3,42 @@ import { getArchiveAssetTypeLabel } from "@/lib/archive/navigation";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedActorHubs } from "@/lib/actors/queries";
 import { getPublishedCampaigns } from "@/lib/campaigns/queries";
-import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
+
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getPublishedEditorialEditions } from "@/lib/editions/queries";
-import { getEditionStatusLabel, getEditionTypeLabel } from "@/lib/editions/navigation";
-import { getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
+
+import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getDossierUpdateNarrativeLabel, getDossierUpdatePreviewText } from "@/lib/dossiers/updates";
 import { getPublishedImpacts } from "@/lib/impact/queries";
-import { getImpactStatusLabel, getImpactTypeLabel } from "@/lib/impact/navigation";
+
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedPatternReads } from "@/lib/patterns/queries";
-import { getPatternReadStatusLabel, getPatternReadTypeLabel } from "@/lib/patterns/navigation";
+
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
-import { getPlaceHubPlaceTypeLabel, getPlaceHubStatusLabel } from "@/lib/territories/navigation";
+
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
-import { getThemeHubStatusLabel } from "@/lib/hubs/navigation";
-import type { ArchiveAsset, ArchiveCollection } from "@/lib/archive/types";
-import type { ActorHub } from "@/lib/actors/types";
-import type { PublicCampaign } from "@/lib/campaigns/types";
-import type { EditorialEdition } from "@/lib/editions/types";
+
+
+
+
+
 import type { InvestigationDossierUpdate } from "@/lib/dossiers/types";
-import type { PublicImpact } from "@/lib/impact/types";
-import type { MemoryItem } from "@/lib/memory/types";
-import type { PatternRead } from "@/lib/patterns/types";
-import type { PlaceHub } from "@/lib/territories/types";
-import type { ThemeHub } from "@/lib/hubs/types";
+
+
+
+
+
 import type {
   TimelineHighlight,
   TimelineHighlightLink,
   TimelineHighlightLinkOption,
-  TimelineHighlightLinkRole,
+
   TimelineHighlightLinkType,
   TimelineHighlightResolvedLink,
   TimelineHighlightTimelineEntry,
 } from "@/lib/timeline/highlights";
 import { getTimelineHighlightLinkRoleLabel } from "@/lib/timeline/highlights";
 
-function normalize(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function formatDateLabel(value: string | null | undefined) {
-  if (!value) return null;
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  }).format(new Date(value));
-}
 
 function linkRef(type: TimelineHighlightLinkType | string, key: string) {
   return `${type}:${key}`;
@@ -263,3 +246,4 @@ export function getTimelineHighlightHeroVariant(type: string) {
 export function getTimelineHighlightContentLabels(highlight: TimelineHighlight) {
   return [highlight.highlight_type, highlight.period_label, highlight.date_label].filter(Boolean) as string[];
 }
+

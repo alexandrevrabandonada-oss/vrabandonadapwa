@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 
 import { FollowButton } from "@/components/follow-button";
@@ -79,10 +77,10 @@ export function SearchResultCard({ item, query }: Props) {
       </div>
 
       <div className="search-result-card__actions stack-actions">
-        <Link href={item.href} className="button">
+        <Link href={item.href} className="button" aria-label={`Abrir ${item.kindLabel}: ${item.title}`}>
           Abrir
         </Link>
-        <Link href={timelineHref} className="button-secondary">
+        <Link href={timelineHref} className="button-secondary" aria-label={`Ver linha do tempo de ${item.title}`}>
           Linha do tempo
         </Link>
         {item.saveKind ? (

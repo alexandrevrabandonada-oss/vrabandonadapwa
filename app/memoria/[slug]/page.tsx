@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
+import { DeepPageContinuation } from "@/components/deep-page-continuation";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { MemoryBridge } from "@/components/memory-bridge";
@@ -80,6 +82,17 @@ export default async function MemoryDetailPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid memory-detail-page">
+      <DeepPageWayfinding
+        parentHref="/memoria"
+        parentLabel="memória"
+        currentLabel="memória viva"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/acervo", label: "Abrir acervo" },
+          { href: "/pautas", label: "Ver pautas" },
+        ]}
+      />
+
       <section className="hero hero--split memory-detail-hero">
         <div className="hero__copy">
           <p className="eyebrow">memória viva</p>
@@ -187,6 +200,17 @@ export default async function MemoryDetailPage({ params }: PageProps) {
           ) : null}
         </div>
       </section>
+      <DeepPageContinuation
+        eyebrow="continue lendo"
+        title="A memória volta melhor quando encontra acervo e pauta."
+        lead="Use as rotas abaixo para continuar a leitura sem perder o contexto do arquivo vivo."
+        actions={[
+          { href: "/memoria", label: "Voltar à memória" },
+          { href: "/acervo", label: "Abrir acervo" },
+          { href: "/pautas", label: "Ver pautas" },
+          { href: "/buscar", label: "Buscar" },
+        ]}
+      />
     </Container>
   );
 }

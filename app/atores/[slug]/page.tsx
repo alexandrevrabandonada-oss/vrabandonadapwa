@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { FollowButton } from "@/components/follow-button";
 import { ActorHubLinkCard } from "@/components/actor-hub-link-card";
 import { ActorHubPrimaryPiece } from "@/components/actor-hub-primary-piece";
@@ -107,6 +108,17 @@ export default async function ActorHubPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid actors-page">
+      <DeepPageWayfinding
+        parentHref="/atores"
+        parentLabel="atores"
+        currentLabel="ator recorrente"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/acompanhar", label: "Acompanhar" },
+          { href: "/territorios", label: "Ver territórios" },
+        ]}
+      />
+
       <section className="hero hero--split territories-hero">
         <div className="hero__copy">
           <p className="eyebrow">ator recorrente</p>

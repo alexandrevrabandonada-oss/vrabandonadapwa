@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
+import { DeepPageContinuation } from "@/components/deep-page-continuation";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { EditorialCover } from "@/components/editorial-cover";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug } from "@/lib/editorial/taxonomy";
@@ -85,6 +87,17 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid archive-detail-page">
+      <DeepPageWayfinding
+        parentHref="/acervo"
+        parentLabel="acervo"
+        currentLabel="arquivo vivo"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/memoria", label: "Ver memória" },
+          { href: "/pautas", label: "Ver pautas" },
+        ]}
+      />
+
       <section className="hero hero--split archive-detail-hero">
         <div className="hero__copy">
           <p className="eyebrow">acervo</p>
@@ -253,6 +266,17 @@ export default async function ArchiveAssetDetailPage({ params }: PageProps) {
           )}
         </div>
       </section>
+      <DeepPageContinuation
+        eyebrow="continue lendo"
+        title="O documento ganha força quando volta para a cidade."
+        lead="Volte para memória, pauta ou coleção para continuar a leitura documental sem perder o fio."
+        actions={[
+          { href: "/acervo", label: "Voltar ao acervo" },
+          { href: "/memoria", label: "Abrir memória" },
+          { href: "/pautas", label: "Ver pautas" },
+          { href: "/buscar", label: "Buscar" },
+        ]}
+      />
     </Container>
   );
 }

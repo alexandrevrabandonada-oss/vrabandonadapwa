@@ -23,7 +23,7 @@ export default function EnviePage() {
       <section className="section">
         <div className="grid-2">
           <article className="support-box">
-            <h3>Orientações iniciais</h3>
+            <h2>Orientações iniciais</h2>
             <ul>
               {site.intakeNotes.map((item) => (
                 <li key={item}>{item}</li>
@@ -31,7 +31,7 @@ export default function EnviePage() {
             </ul>
           </article>
           <article className="support-box">
-            <h3>O que enviar</h3>
+            <h2>O que enviar</h2>
             <ul>
               <li>Relato objetivo do fato</li>
               <li>Local, data e contexto</li>

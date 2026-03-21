@@ -9,6 +9,7 @@ import { getRadarPageData } from "@/lib/radar/queries";
 import { getRadarSectionIntro, getRadarSectionLabel } from "@/lib/radar/navigation";
 import type { RadarItem } from "@/lib/radar/types";
 import { SaveReadButton } from "@/components/save-read-button";
+import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 
 export const metadata: Metadata = {
   title: "Agora",
@@ -108,6 +109,9 @@ export default async function AgoraPage() {
           </article>
         </div>
       </section>
+
+      <ReadingTrailPanel compact />
+
 
       <section className="section radar-section" id="mudou">
         <div className="grid-2">
@@ -253,6 +257,7 @@ export default async function AgoraPage() {
     </Container>
   );
 }
+
 
 
 

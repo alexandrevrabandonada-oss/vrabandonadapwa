@@ -7,6 +7,7 @@ import { EditionCard } from "@/components/edition-card";
 import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
 import { getPublishedEditorialEditionLinks, getPublishedEditorialEditions } from "@/lib/editions/queries";
+import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 import { getEditionStatusLabel, getEditionStatusTone, getEditionTypeLabel } from "@/lib/editions/navigation";
 import { getEditionsOpenGraphImagePath } from "@/lib/editions/share";
 
@@ -90,6 +91,9 @@ export default async function EditionsPage() {
             </Link>
           </article>
         )}
+
+      <ReadingTrailPanel compact />
+
       </section>
 
       <section className="section">

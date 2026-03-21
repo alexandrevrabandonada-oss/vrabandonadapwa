@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { EditionLinkCard } from "@/components/edition-link-card";
 import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
@@ -119,6 +120,17 @@ export default async function EditionPage({ params }: PageProps) {
 
   return (
     <Container className="intro-grid editions-page">
+      <DeepPageWayfinding
+        parentHref="/edicoes"
+        parentLabel="edições"
+        currentLabel="edição pública"
+        actions={[
+          { href: "/agora", label: "Ver radar" },
+          { href: "/compartilhar", label: "Compartilhar" },
+          { href: "/acompanhar", label: "Acompanhar" },
+        ]}
+      />
+
       <section className="hero hero--split editions-hero">
         <div className="hero__copy">
           <p className="eyebrow">edição pública</p>

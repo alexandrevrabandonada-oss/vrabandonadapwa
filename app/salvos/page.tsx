@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { SavedReadsClient } from "@/components/saved-reads-client";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
+import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 
 export const metadata: Metadata = {
   title: "Salvos",
@@ -55,6 +56,8 @@ export default function SalvosPage() {
         </article>
       </section>
 
+      <ReadingTrailPanel compact />
+
       <section className="section">
         <div className="grid-2">
           <div>
@@ -77,3 +80,4 @@ export default function SalvosPage() {
     </Container>
   );
 }
+

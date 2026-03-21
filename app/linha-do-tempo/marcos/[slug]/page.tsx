@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { EditorialCover } from "@/components/editorial-cover";
 import { FollowButton } from "@/components/follow-button";
 import { SaveReadButton } from "@/components/save-read-button";
@@ -165,6 +166,17 @@ export default async function TimelineHighlightPage({ params }: { params: Promis
 
   return (
     <Container className="intro-grid timeline-highlight-page">
+      <DeepPageWayfinding
+        parentHref="/linha-do-tempo"
+        parentLabel="linha do tempo"
+        currentLabel="marco curado"
+        actions={[
+          { href: "/buscar", label: "Buscar" },
+          { href: "/acompanhar", label: "Acompanhar" },
+          { href: "/agora", label: "Abrir radar" },
+        ]}
+      />
+
       <section className="hero hero--split timeline-highlight-hero">
         <div className="hero__copy">
           <p className="eyebrow">marco curado</p>

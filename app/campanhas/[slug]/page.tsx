@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { CampaignLinkCard } from "@/components/campaign-link-card";
 import { CampaignPrimaryPiece } from "@/components/campaign-primary-piece";
 import { EditorialCover } from "@/components/editorial-cover";
@@ -61,6 +62,17 @@ export default async function CampaignPage({ params }: { params: Promise<{ slug:
 
   return (
     <Container className="intro-grid campaign-page">
+      <DeepPageWayfinding
+        parentHref="/campanhas"
+        parentLabel="campanhas"
+        currentLabel="campanha pública"
+        actions={[
+          { href: "/agora", label: "Ver radar" },
+          { href: "/participe", label: "Participar" },
+          { href: "/metodo", label: "Método" },
+        ]}
+      />
+
       <section className="hero hero--split campaign-hero">
         <div className="hero__copy">
           <p className="eyebrow">campanha</p>

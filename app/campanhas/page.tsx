@@ -5,6 +5,7 @@ import { Container } from "@/components/container";
 import { CampaignCard } from "@/components/campaign-card";
 import { CampaignPrimaryPiece } from "@/components/campaign-primary-piece";
 import { getPublishedCampaignLinks, getPublishedCampaigns } from "@/lib/campaigns/queries";
+import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
 
 export const metadata: Metadata = {
@@ -86,6 +87,9 @@ export default async function CampaignsPage() {
             </Link>
           </article>
         )}
+
+      <ReadingTrailPanel compact />
+
       </section>
 
       <section className="section">

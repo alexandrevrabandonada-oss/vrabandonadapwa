@@ -23,6 +23,7 @@ import { getEditionStatusLabel, getEditionTypeLabel } from "@/lib/editions/navig
 import { getPatternReadStatusLabel, getPatternReadTypeLabel } from "@/lib/patterns/navigation";
 import { getImpactStatusLabel, getImpactTypeLabel } from "@/lib/impact/navigation";
 import { getDossierUpdatePreviewText, sortDossierUpdates } from "@/lib/dossiers/updates";
+import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 
 export const metadata: Metadata = {
   title: "Acompanhar",
@@ -307,6 +308,9 @@ export default async function AcompanharPage() {
         </div>
       </section>
 
+      <ReadingTrailPanel compact />
+
+
       <FollowedWatchlistClient snapshots={snapshots} />
 
       <section className="section follow-suggestions-section">
@@ -344,5 +348,6 @@ export default async function AcompanharPage() {
     </Container>
   );
 }
+
 
 
