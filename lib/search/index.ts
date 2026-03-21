@@ -18,6 +18,8 @@ import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedParticipationPaths } from "@/lib/participation/queries";
 import { getPublishedPatternReads } from "@/lib/patterns/queries";
 import { getPatternReadStatusLabel, getPatternReadTypeLabel } from "@/lib/patterns/navigation";
+import { getPublishedTimelineHighlights } from "@/lib/timeline/highlight-queries";
+import { getTimelineHighlightHref, getTimelineHighlightStatusLabel, getTimelineHighlightTypeLabel } from "@/lib/timeline/highlights";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
 import { getPlaceHubPlaceTypeLabel, getPlaceHubStatusLabel } from "@/lib/territories/navigation";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
@@ -227,6 +229,7 @@ function buildPublicEntries(
   actors: Awaited<ReturnType<typeof getPublishedActorHubs>>,
   patterns: Awaited<ReturnType<typeof getPublishedPatternReads>>,
   editions: Awaited<ReturnType<typeof getPublishedEditorialEditions>>,
+  highlights: Awaited<ReturnType<typeof getPublishedTimelineHighlights>>,
   entryRoutes: Awaited<ReturnType<typeof getPublishedEntryRoutes>>,
   participationPaths: Awaited<ReturnType<typeof getPublishedParticipationPaths>>,
 ) {
@@ -360,6 +363,25 @@ function buildPublicEntries(
         updatedAt: getMostRecentValue(impact.happened_at, impact.updated_at, impact.created_at),
         featured: Boolean(impact.featured || impact.status === "ongoing"),
         searchTextParts: [impact.lead_question, impact.date_label],
+      }),
+    );
+  }
+
+  for (const highlight of highlights) {
+    entries.push(
+      makeEntry({
+        contentType: "marco",
+        contentKey: highlight.slug,
+        title: highlight.title,
+        excerpt: highlight.excerpt || highlight.description || highlight.lead_question || "Marco curado da linha do tempo.",
+        href: getTimelineHighlightHref(highlight.slug),
+        kindLabel: "Marco",
+        labels: uniqueLabels([getTimelineHighlightTypeLabel(highlight.highlight_type), getTimelineHighlightStatusLabel(highlight.status), highlight.period_label, highlight.date_label]),
+        territoryLabel: null,
+        actorLabel: null,
+        updatedAt: getMostRecentValue(highlight.updated_at, highlight.created_at),
+        featured: Boolean(highlight.featured || highlight.status === "active"),
+        searchTextParts: [highlight.description, highlight.lead_question, highlight.period_label, highlight.date_label],
       }),
     );
   }
@@ -527,6 +549,7 @@ export const getPublicSearchIndex = cache(async () => {
     dossiers,
     campaigns,
     impacts,
+    highlights,
     hubs,
     territories,
     actors,
@@ -542,6 +565,7 @@ export const getPublicSearchIndex = cache(async () => {
     getPublishedDossiers(),
     getPublishedCampaigns(),
     getPublishedImpacts(),
+    getPublishedTimelineHighlights(),
     getPublishedThemeHubs(),
     getPublishedPlaceHubs(),
     getPublishedActorHubs(),
@@ -564,6 +588,7 @@ export const getPublicSearchIndex = cache(async () => {
     actors,
     patterns,
     editions,
+    highlights,
     entryRoutes,
     participationPaths,
   );

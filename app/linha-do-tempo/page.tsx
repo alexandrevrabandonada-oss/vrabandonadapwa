@@ -3,8 +3,10 @@ import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { TimelineEntryCard } from "@/components/timeline-entry-card";
+import { TimelineHighlightCard } from "@/components/timeline-highlight-card";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
-import { getTimelineChronologicalGroups, getTimelineFeaturedEntries, getTimelinePageData, getTimelineQueryHotTerms } from "@/lib/timeline/queries";
+import { getPublishedTimelineHighlights, getPublishedTimelineHighlightLinks } from "@/lib/timeline/highlight-queries";
+import { getTimelineChronologicalGroups, getTimelinePageData, getTimelineQueryHotTerms } from "@/lib/timeline/queries";
 import type { TimelineSortMode } from "@/lib/timeline/types";
 
 export const metadata: Metadata = {
@@ -69,7 +71,10 @@ export default async function TimelinePage({ searchParams }: { searchParams: Pro
   const sort = (firstParam(resolvedSearchParams.sort) as TimelineSortMode) || "chronological";
 
   const data = await getTimelinePageData({ query, contentType, territory, actor, period, sort });
-  const featured = getTimelineFeaturedEntries(data.entries, 3);
+  const curatedHighlights = await getPublishedTimelineHighlights();
+  const highlightCounts = new Map(
+    await Promise.all(curatedHighlights.slice(0, 4).map(async (highlight) => [highlight.id, (await getPublishedTimelineHighlightLinks(highlight.id)).length] as const)),
+  );
   const groups = getTimelineChronologicalGroups(data.entries);
   const hotTerms = getTimelineQueryHotTerms().slice(0, 8);
   const currentParams = { q: query, type: contentType, territory, actor, period, sort };
@@ -92,8 +97,8 @@ export default async function TimelinePage({ searchParams }: { searchParams: Pro
             <span className="home-hero__signal">presente em curso</span>
           </div>
           <div className="hero__actions">
-            <Link href="#marcos-em-destaque" className="button">
-              Ver marcos
+            <Link href="#marcos-centrais" className="button">
+              Ver marcos centrais
             </Link>
             <Link href="/buscar" className="button-secondary">
               Buscar
@@ -231,19 +236,25 @@ export default async function TimelinePage({ searchParams }: { searchParams: Pro
         </div>
       </section>
 
-      {featured.length ? (
-        <section className="section" id="marcos-em-destaque">
+      {curatedHighlights.length ? (
+        <section className="section" id="marcos-centrais">
           <div className="grid-2">
             <div>
-              <p className="eyebrow">marcos em destaque</p>
-              <h2>Leituras centrais do momento histórico.</h2>
+              <p className="eyebrow">marcos centrais</p>
+              <h2>Rupturas, reaparições e consequências que estruturam a cidade.</h2>
             </div>
-            <p className="section__lead">Os marcos destacados ajudam a puxar a cronologia para o que importa primeiro.</p>
+            <p className="section__lead">Esses marcos curados abrem a linha do tempo por viradas reais, antes de devolver o leitor à cronologia ampla.</p>
           </div>
 
-          <div className="grid-3">
-            {featured.map((entry) => (
-              <TimelineEntryCard key={entry.id} entry={entry} query={query} />
+          <div className="grid-2">
+            {curatedHighlights.slice(0, 4).map((highlight) => (
+              <TimelineHighlightCard
+                key={highlight.id}
+                highlight={highlight}
+                href={`/linha-do-tempo/marcos/${highlight.slug}`}
+                itemCount={highlightCounts.get(highlight.id) ?? 0}
+                latestMovement={highlight.lead_question || highlight.description || highlight.excerpt}
+              />
             ))}
           </div>
         </section>

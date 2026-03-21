@@ -5,6 +5,7 @@ export const searchContentTypeLabels: Record<SearchContentType, string> = {
   memoria: "Memória",
   acervo: "Acervo",
   colecao: "Coleção",
+  marco: "Marco",
   dossie: "Dossiê",
   campanha: "Campanha",
   impacto: "Impacto",
@@ -19,6 +20,7 @@ export const searchContentTypeLabels: Record<SearchContentType, string> = {
 };
 
 export const searchContentTypeOrder: SearchContentType[] = [
+  "marco",
   "dossie",
   "campanha",
   "impacto",
@@ -37,6 +39,7 @@ export const searchContentTypeOrder: SearchContentType[] = [
 ];
 
 export const searchFollowKindByContentType: Partial<Record<SearchContentType, string>> = {
+  marco: "marco",
   eixo: "hub",
   territorio: "territory",
   ator: "actor",
@@ -48,6 +51,7 @@ export const searchFollowKindByContentType: Partial<Record<SearchContentType, st
 };
 
 export const searchSaveKindByContentType: Partial<Record<SearchContentType, string>> = {
+  marco: "marco",
   pauta: "pauta",
   memoria: "memory",
   acervo: "archive",

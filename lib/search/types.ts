@@ -3,6 +3,7 @@ export type SearchContentType =
   | "memoria"
   | "acervo"
   | "colecao"
+  | "marco"
   | "dossie"
   | "campanha"
   | "impacto"

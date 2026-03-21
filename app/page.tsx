@@ -6,6 +6,7 @@ import { DossierCard } from "@/components/dossier-card";
 import { PlaceHubCard } from "@/components/place-hub-card";
 import { ActorHubCard } from "@/components/actor-hub-card";
 import { PatternReadCard } from "@/components/pattern-read-card";
+import { TimelineHighlightCard } from "@/components/timeline-highlight-card";
 import { EditorialCard } from "@/components/editorial-card";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialHero } from "@/components/editorial-hero";
@@ -30,6 +31,7 @@ import { getRadarHomeItems } from "@/lib/radar/queries";
 import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
 import { getPublishedActorHubLinks, getPublishedActorHubs } from "@/lib/actors/queries";
 import { getPublishedPatternReadLinks, getPublishedPatternReads } from "@/lib/patterns/queries";
+import { getPublishedTimelineHighlights, getPublishedTimelineHighlightLinks } from "@/lib/timeline/highlight-queries";
 import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
 import { getPublishedEditorialEditionLinks, getPublishedEditorialEditions } from "@/lib/editions/queries";
 import { site } from "@/lib/site";
@@ -83,6 +85,11 @@ export default async function HomePage() {
   const patternReads = await getPublishedPatternReads();
   const featuredPattern = patternReads.find((pattern) => pattern.featured && pattern.status === "active") ?? patternReads.find((pattern) => pattern.status === "active") ?? patternReads[0] ?? null;
   const featuredPatternLinks = featuredPattern ? await getPublishedPatternReadLinks(featuredPattern.id) : [];
+  const timelineHighlights = await getPublishedTimelineHighlights();
+  const featuredTimelineHighlights = timelineHighlights.slice(0, 2);
+  const timelineHighlightCounts = new Map(
+    await Promise.all(featuredTimelineHighlights.map(async (highlight) => [highlight.id, (await getPublishedTimelineHighlightLinks(highlight.id)).length] as const)),
+  );
   const radarItems = await getRadarHomeItems(3);
   const entryRoutes = await getPublishedEntryRoutes();
   const entryRouteCounts = new Map(
@@ -290,6 +297,40 @@ export default async function HomePage() {
             </Link>
             <Link href="/acompanhar" className="button-secondary">
               Acompanhar frentes
+            </Link>
+          </div>
+        </section>
+      ) : null}
+
+      {featuredTimelineHighlights.length ? (
+        <section className="section home-timeline-section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">marcos da cidade</p>
+              <h2>Rupturas e continuidades que estruturam a leitura histórica.</h2>
+            </div>
+            <p className="section__lead">Os marcos curados dão o mapa da disputa antes de seguir para a cronologia ampla e para a camada de acompanhamento.</p>
+          </div>
+
+          <div className="grid-2">
+            {featuredTimelineHighlights.map((highlight) => (
+              <TimelineHighlightCard
+                key={highlight.id}
+                highlight={highlight}
+                href={`/linha-do-tempo/marcos/${highlight.slug}`}
+                itemCount={timelineHighlightCounts.get(highlight.id) ?? 0}
+                latestMovement={highlight.lead_question || highlight.excerpt || highlight.description}
+                compact
+              />
+            ))}
+          </div>
+
+          <div className="stack-actions">
+            <Link href="/linha-do-tempo" className="button-secondary">
+              Abrir linha do tempo
+            </Link>
+            <Link href="/buscar" className="button-secondary">
+              Buscar marcos
             </Link>
           </div>
         </section>

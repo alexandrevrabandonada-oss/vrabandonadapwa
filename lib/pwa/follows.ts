@@ -8,6 +8,7 @@ export type FollowKind =
   | "pattern"
   | "impact"
   | "page"
+  | "marco"
   | string;
 
 export type FollowItem = {
@@ -33,6 +34,7 @@ export const followKindLabels: Record<string, string> = {
   pattern: "Padrão",
   impact: "Impacto",
   page: "Página",
+  marco: "Marco",
 };
 
 function isBrowser() {

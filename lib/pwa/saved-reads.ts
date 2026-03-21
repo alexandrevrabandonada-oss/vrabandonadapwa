@@ -15,6 +15,7 @@ export type SavedReadKind =
   | "archive"
   | "route"
   | "participation"
+  | "marco"
   | string;
 
 export type SavedRead = {
@@ -46,6 +47,7 @@ export const savedReadKindLabels: Record<string, string> = {
   archive: "Acervo",
   route: "Rota",
   participation: "Participação",
+  marco: "Marco",
 };
 
 function isBrowser() {

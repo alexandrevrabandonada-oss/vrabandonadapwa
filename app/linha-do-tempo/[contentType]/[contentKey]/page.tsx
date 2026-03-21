@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { FollowButton } from "@/components/follow-button";
@@ -11,6 +11,7 @@ import { getDossierUpdateNarrativeLabel } from "@/lib/dossiers/updates";
 import { getDossierUpdatePreviewText } from "@/lib/dossiers/updates";
 import { getPublishedDossierBySlug, getPublishedDossierUpdates } from "@/lib/dossiers/queries";
 import { getTimelineContentTypeLabel, getTimelineDateBasisLabel, getTimelineEntryHref } from "@/lib/timeline/navigation";
+import { getTimelineHighlightHref } from "@/lib/timeline/highlights";
 import { getPublishedTimelineEntries, getTimelineEntryByContent, getTimelineRelatedEntries } from "@/lib/timeline/queries";
 import type { SearchContentType } from "@/lib/search/types";
 
@@ -84,6 +85,10 @@ export default async function TimelineEntryPage({ params }: { params: Promise<Pa
 
   if (!entry) {
     notFound();
+  }
+
+  if (entry.contentType === "marco") {
+    redirect(getTimelineHighlightHref(entry.contentKey));
   }
 
   const relatedEntries = getTimelineRelatedEntries(entry, allEntries).slice(0, 6);

@@ -4,6 +4,7 @@ import { getSearchContentTypeLabel, getSearchFollowKind, getSearchSaveKind } fro
 import type { TimelineDateBasis, TimelinePeriodKey } from "@/lib/timeline/types";
 
 export const timelineContentTypeOrder: SearchContentType[] = [
+  "marco",
   "dossie",
   "campanha",
   "impacto",
@@ -100,5 +101,9 @@ export function getTimelineDateBasisTone(basis: TimelineDateBasis) {
 }
 
 export function getTimelineEntryHref(contentType: SearchContentType, contentKey: string) {
+  if (contentType === "marco") {
+    return `/linha-do-tempo/marcos/${contentKey}`;
+  }
+
   return `/linha-do-tempo/${contentType}/${contentKey}`;
 }

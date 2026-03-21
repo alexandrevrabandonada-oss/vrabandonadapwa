@@ -16,6 +16,9 @@ import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedParticipationPaths } from "@/lib/participation/queries";
 import { getPublishedPatternReads } from "@/lib/patterns/queries";
 import { getPatternReadStatusLabel, getPatternReadTypeLabel } from "@/lib/patterns/navigation";
+import { getPublishedTimelineHighlights } from "@/lib/timeline/highlight-queries";
+import { getTimelineHighlightContentLabels } from "@/lib/timeline/highlight-resolve";
+import { getTimelineHighlightHref, getTimelineHighlightStatusLabel, getTimelineHighlightTypeLabel } from "@/lib/timeline/highlights";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
 import { getPlaceHubPlaceTypeLabel, getPlaceHubStatusLabel } from "@/lib/territories/navigation";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
@@ -478,6 +481,33 @@ function buildImpactItems(impacts: PublicImpact[]) {
   );
 }
 
+function buildHighlightItems(highlights: Awaited<ReturnType<typeof getPublishedTimelineHighlights>>) {
+  return highlights.map((highlight) => {
+    const yearValue = highlight.year_start ?? extractYear(highlight.date_label) ?? extractYear(highlight.updated_at || highlight.created_at);
+    const yearLabel = highlight.date_label || (highlight.year_start && highlight.year_end && highlight.year_start !== highlight.year_end ? `${highlight.year_start}–${highlight.year_end}` : highlight.year_start ? String(highlight.year_start) : formatDateLabel(highlight.updated_at || highlight.created_at));
+
+    return makeEntry({
+      contentType: "marco",
+      contentKey: highlight.slug,
+      title: highlight.title,
+      excerpt: highlight.excerpt || highlight.description || highlight.lead_question || "Marco curado da linha do tempo.",
+      contentHref: getTimelineHighlightHref(highlight.slug),
+      kindLabel: `Marco · ${getTimelineHighlightTypeLabel(String(highlight.highlight_type))}`,
+      labels: getTimelineHighlightContentLabels(highlight).concat(getTimelineHighlightStatusLabel(String(highlight.status))),
+      territoryLabel: null,
+      actorLabel: null,
+      yearValue,
+      yearLabel,
+      dateLabel: yearLabel,
+      dateBasis: highlight.year_start ? "historical" : "editorial",
+      featured: Boolean(highlight.featured || highlight.status === "active"),
+      sortDate: highlight.updated_at || highlight.created_at,
+      sortOrder: highlight.sort_order,
+      sourceNote: highlight.lead_question || highlight.description,
+    });
+  });
+}
+
 function buildThemeHubItems(hubs: ThemeHub[]) {
   return hubs.map((hub) =>
     makeEntry({
@@ -670,7 +700,7 @@ function buildParticipationItems(paths: ParticipationPath[]) {
 }
 
 async function buildTimelineEntries() {
-  const [editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, hubs, territories, actors, patterns, editions, routes, participationPaths] = await Promise.all([
+  const [editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, highlights, hubs, territories, actors, patterns, editions, routes, participationPaths] = await Promise.all([
     getPublishedEditorialItems(),
     getPublishedMemoryItems(),
     getPublishedArchiveAssets(),
@@ -678,6 +708,7 @@ async function buildTimelineEntries() {
     getPublishedDossiers(),
     getPublishedCampaigns(),
     getPublishedImpacts(),
+    getPublishedTimelineHighlights(),
     getPublishedThemeHubs(),
     getPublishedPlaceHubs(),
     getPublishedActorHubs(),
@@ -698,6 +729,7 @@ async function buildTimelineEntries() {
     ...buildDossierItems(dossiers, updatesByDossierId),
     ...buildCampaignItems(campaigns),
     ...buildImpactItems(impacts),
+    ...buildHighlightItems(highlights),
     ...buildThemeHubItems(hubs),
     ...buildTerritoryItems(territories),
     ...buildActorItems(actors),
