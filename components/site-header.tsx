@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -15,11 +16,15 @@ export function SiteHeader() {
     <header className="site-header">
       <Container className="site-header__inner">
         <Link href="/" className="brand" aria-label={site.name}>
-          <span className="brand__mark">VR</span>
-          <span className="brand__text">
-            <strong>{site.name}</strong>
-            <small>{site.shortDescription}</small>
-          </span>
+          <Image
+            src="/brand/vr-abandonada-logo.svg"
+            alt=""
+            aria-hidden="true"
+            className="brand__logo"
+            width={960}
+            height={260}
+            priority
+          />
         </Link>
 
         <nav className="nav" aria-label="Navegação principal">

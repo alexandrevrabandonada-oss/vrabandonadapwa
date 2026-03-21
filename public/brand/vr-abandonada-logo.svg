@@ -1,0 +1,14 @@
+<svg width="960" height="260" viewBox="0 0 960 260" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="VR Abandonada">
+  <rect width="960" height="260" rx="10" fill="#14100A"/>
+  <rect y="0" width="960" height="8" fill="#A6ECEC"/>
+  <g opacity="0.22">
+    <circle cx="312" cy="130" r="104" fill="#F3B21A"/>
+    <path d="M312 38L332 92L386 112L332 132L312 186L292 132L238 112L292 92L312 38Z" fill="#F3B21A"/>
+  </g>
+  <rect x="48" y="66" width="72" height="128" rx="32" fill="none" stroke="#D79C12" stroke-width="4"/>
+  <text x="84" y="149" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="900" letter-spacing="-0.08em" fill="#F3B21A">VR</text>
+  <text x="176" y="104" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="900" letter-spacing="0.04em" fill="#F3EFE7">VR</text>
+  <text x="176" y="154" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="900" letter-spacing="0.03em" fill="#F3EFE7">ABANDONADA</text>
+  <text x="176" y="195" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#9E978E">Memória, denúncia e organização popular</text>
+  <text x="176" y="225" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#9E978E">sobre Volta Redonda.</text>
+</svg>
