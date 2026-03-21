@@ -2245,3 +2245,153 @@ button, input, textarea, select { font: inherit; }
 }
 
 
+
+.a11y-reading-assistant-shell {
+  padding-top: 0.9rem;
+}
+
+.a11y-reading-assistant {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem;
+  border: 1px solid rgba(243, 178, 26, 0.22);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent), rgba(16, 16, 16, 0.95);
+  box-shadow: var(--shadow);
+}
+
+.a11y-reading-assistant__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.a11y-reading-assistant__header h2 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+}
+
+.a11y-reading-assistant__message {
+  margin: 0;
+  color: var(--muted);
+}
+
+.a11y-reading-assistant__panel {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.a11y-reading-assistant__controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.a11y-reading-assistant__controls .button,
+.a11y-reading-assistant__controls .button-secondary {
+  min-height: 3.1rem;
+}
+
+.a11y-reading-assistant__controls--secondary .button-secondary {
+  min-width: 9.5rem;
+}
+
+.a11y-reading-assistant__context {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.a11y-reading-assistant__active,
+.a11y-reading-assistant__empty {
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.vr-reading-current {
+  outline: 3px solid rgba(243, 178, 26, 0.55);
+  outline-offset: 0.5rem;
+  border-radius: 18px;
+  scroll-margin-top: 7rem;
+}
+
+body.vr-low-vision {
+  font-size: 1.06rem;
+  line-height: 1.72;
+  letter-spacing: 0.01em;
+}
+
+body.vr-low-vision::before {
+  opacity: 0.22;
+  background-size: 100% 32px, 32px 100%;
+}
+
+body.vr-low-vision .site-header,
+body.vr-low-vision .site-footer,
+body.vr-low-vision .hero,
+body.vr-low-vision .section,
+body.vr-low-vision .card,
+body.vr-low-vision .entry,
+body.vr-low-vision .quote,
+body.vr-low-vision .support-box,
+body.vr-low-vision .search-toolbar,
+body.vr-low-vision .a11y-reading-assistant {
+  background: rgba(14, 14, 14, 0.98);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+}
+
+body.vr-low-vision .section__lead,
+body.vr-low-vision .card p,
+body.vr-low-vision .entry p,
+body.vr-low-vision .quote p,
+body.vr-low-vision .support-box p,
+body.vr-low-vision .site-footer p,
+body.vr-low-vision .a11y-reading-assistant__message,
+body.vr-low-vision .a11y-reading-assistant__empty {
+  color: rgba(255, 248, 238, 0.94);
+}
+
+body.vr-low-vision .brand__logo {
+  width: clamp(11rem, 24vw, 16rem);
+  max-height: 4.2rem;
+}
+
+body.vr-low-vision .nav__link,
+body.vr-low-vision .button,
+body.vr-low-vision .button-secondary {
+  min-height: 3.15rem;
+}
+
+body.vr-low-vision .button,
+body.vr-low-vision .button-secondary {
+  border-width: 2px;
+}
+
+body.vr-low-vision .eyebrow {
+  color: #ffd45d;
+}
+
+@media (max-width: 640px) {
+  .a11y-reading-assistant-shell {
+    padding-top: 0.7rem;
+  }
+
+  .a11y-reading-assistant {
+    padding: 0.95rem;
+    border-radius: 18px;
+  }
+
+  .a11y-reading-assistant__header {
+    flex-direction: column;
+  }
+
+  .a11y-reading-assistant__controls--secondary .button-secondary {
+    min-width: 0;
+    flex: 1 1 8rem;
+  }
+}
