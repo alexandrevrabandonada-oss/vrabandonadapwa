@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
-import { signOutAction } from "@/app/interno/actions";
 import { getInternalEditorialItems } from "@/lib/editorial/queries";
 import { editorialReviewStatusLabels, editorialStatusLabels, type EditorialReviewStatus, type EditorialStatus } from "@/lib/editorial/types";
 
@@ -23,6 +22,15 @@ type PageProps = {
   searchParams?: Promise<{ status?: string }>;
 };
 
+const filterLabels: Record<FilterValue, string> = {
+  all: "Tudo",
+  draft: "Rascunhos",
+  in_review: "Em revisão",
+  ready: "Prontos",
+  published: "Publicados",
+  archived: "Arquivados",
+};
+
 export default async function InternalEditorialPage({ searchParams }: PageProps) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const status = isFilterValue(resolvedSearchParams.status) ? resolvedSearchParams.status : "all";
@@ -33,15 +41,13 @@ export default async function InternalEditorialPage({ searchParams }: PageProps)
     <Container className="intro-grid internal-page">
       <section className="hero internal-hero">
         <p className="eyebrow">editorial interno</p>
-        <h1 className="hero__title">Arquivo público</h1>
+        <h1 className="hero__title">Fila editorial.</h1>
         <p className="hero__lead">
-          Rascunhos, revisões e itens publicados em fila editorial.
+          Rascunhos, revisões e itens publicados em um painel curto para seguir o trabalho sem ruído.
         </p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/intake" className="button-secondary">Voltar à triagem</Link>
+          <Link href="/interno/entrada" className="button-secondary">Voltar à entrada</Link>
+          <Link href="/interno/enriquecer" className="button-secondary">Abrir enriquecimento</Link>
         </div>
       </section>
 
@@ -56,14 +62,14 @@ export default async function InternalEditorialPage({ searchParams }: PageProps)
           </p>
         </div>
 
-        <div className="status-filters">
+        <div className="status-filters" aria-label="Filtro por status">
           {filters.map((filter) => (
             <Link
               key={filter}
               href={filter === "all" ? "/interno/editorial" : `/interno/editorial?status=${filter}`}
               className={`status-chip ${status === filter ? "status-chip--active" : ""}`}
             >
-              {filter}
+              {filterLabels[filter]}
             </Link>
           ))}
         </div>
@@ -71,7 +77,7 @@ export default async function InternalEditorialPage({ searchParams }: PageProps)
         <div className="grid-2" style={{ alignItems: "stretch" }}>
           {items.length ? (
             items.map((item) => (
-              <article className="entry" key={item.id}>
+              <article className="entry editorial-card editorial-card--compact" key={item.id}>
                 <span className="entry__tag">{item.featured ? "Destaque" : item.category}</span>
                 <h3>{item.title}</h3>
                 <p>{item.excerpt}</p>
