@@ -60,7 +60,7 @@ export const site = {
       title: "Cidade",
       items: [
         { href: "/eixos", label: "Eixos" },
-        { href: "/territorios", label: "Territórios" },
+        { href: "/territorios", label: "Lugares" },
         { href: "/atores", label: "Atores" },
         { href: "/linha-do-tempo", label: "Tempo" },
       ],
@@ -79,7 +79,7 @@ export const site = {
         { href: "/participe", label: "Participe" },
         { href: "/envie", label: "Envie" },
         { href: "/apoie", label: "Apoie" },
-        { href: "/compartilhar", label: "Compartilhar" },
+        { href: "/compartilhar", label: "Circular" },
       ],
     },
   ] satisfies SiteGroup[],
@@ -187,4 +187,5 @@ export const site = {
     "Denunciar é um ato coletivo quando o problema é estrutural.",
   ],
 } as const;
+
 
