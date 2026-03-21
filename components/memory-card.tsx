@@ -11,7 +11,7 @@ type Props = {
 
 export function MemoryCard({ item, href, compact = false }: Props) {
   return (
-    <article className={`entry memory-card ${compact ? "memory-card--compact" : ""}`}>
+    <article className={`entry memory-card ${compact ? "memory-card--compact" : ""}`} data-reading-block>
       <EditorialCover
         title={item.title}
         primaryTag={item.memory_type}
@@ -25,8 +25,8 @@ export function MemoryCard({ item, href, compact = false }: Props) {
           <span>{item.period_label}</span>
           <span>{item.place_label || "Volta Redonda"}</span>
         </div>
-        <h3>{item.title}</h3>
-        <p>{item.excerpt}</p>
+        <h3 data-reading-title>{item.title}</h3>
+        <p data-reading-summary>{item.excerpt}</p>
         <div className="meta-row">
           <span>{item.collection_title || item.memory_collection}</span>
           <span>{item.year_start ? String(item.year_start) : "data aberta"}</span>
@@ -38,4 +38,5 @@ export function MemoryCard({ item, href, compact = false }: Props) {
     </article>
   );
 }
+
 

@@ -9,10 +9,10 @@ type Props = {
 
 export function MemoryCollectionCard({ collection, count }: Props) {
   return (
-    <article className="card memory-collection-card">
+    <article className="card memory-collection-card" data-reading-block>
       <span className="pill">Recorte</span>
-      <h3>{collection.title}</h3>
-      <p>{collection.description}</p>
+      <h3 data-reading-title>{collection.title}</h3>
+      <p data-reading-summary>{collection.description}</p>
       <p className="series-card__count">
         {count} item{count === 1 ? "" : "s"}
       </p>
@@ -22,3 +22,4 @@ export function MemoryCollectionCard({ collection, count }: Props) {
     </article>
   );
 }
+

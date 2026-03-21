@@ -2395,3 +2395,39 @@ body.vr-low-vision .eyebrow {
     flex: 1 1 8rem;
   }
 }
+
+body.vr-low-vision .memory-card,
+body.vr-low-vision .memory-collection-card,
+body.vr-low-vision .archive-card,
+body.vr-low-vision .memory-bridge .support-box,
+body.vr-low-vision .memory-feature .support-box,
+body.vr-low-vision .archive-detail-page .support-box {
+  padding: 1.15rem;
+  border-width: 2px;
+}
+
+body.vr-low-vision .memory-card h3,
+body.vr-low-vision .memory-collection-card h3,
+body.vr-low-vision .archive-card h3 {
+  font-size: 1.18rem;
+  line-height: 1.18;
+}
+
+body.vr-low-vision .memory-card p,
+body.vr-low-vision .memory-collection-card p,
+body.vr-low-vision .archive-card p {
+  color: rgba(255, 248, 238, 0.96);
+}
+
+body.vr-low-vision .archive-card__meta,
+body.vr-low-vision .archive-card__labels,
+body.vr-low-vision .tag-row,
+body.vr-low-vision .meta-row {
+  gap: 0.7rem;
+}
+
+body.vr-low-vision .archive-card__action,
+body.vr-low-vision .memory-card .button-secondary,
+body.vr-low-vision .memory-collection-card .button-secondary {
+  min-height: 3.2rem;
+}

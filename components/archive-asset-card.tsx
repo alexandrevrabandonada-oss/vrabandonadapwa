@@ -35,7 +35,7 @@ export function ArchiveAssetCard({
   const visual = isArchiveVisualAsset(asset);
 
   return (
-    <article className={`card archive-card ${compact ? "archive-card--compact" : ""}`}>
+    <article className={`card archive-card ${compact ? "archive-card--compact" : ""}`} data-reading-block>
       <div className={`archive-card__media archive-card__media--${asset.asset_type}`}>
         {visual ? (
           <Image
@@ -62,8 +62,8 @@ export function ArchiveAssetCard({
           {asset.public_visibility ? <span>público</span> : <span>interno</span>}
           {asset.featured ? <span>destaque</span> : null}
         </div>
-        <h3>{asset.title}</h3>
-        <p>{asset.description || asset.source_label || "Anexo de arquivo vivo."}</p>
+        <h3 data-reading-title>{asset.title}</h3>
+        <p data-reading-summary>{asset.description || asset.source_label || "Anexo de arquivo vivo."}</p>
         <div className="archive-card__labels">
           {collectionLabel ? (
             collectionHref ? (
@@ -99,3 +99,4 @@ export function ArchiveAssetCard({
     </article>
   );
 }
+
