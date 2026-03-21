@@ -17,6 +17,7 @@ type InternalNavGroup = {
 };
 
 const operatorItems: InternalNavItem[] = [
+  { href: "/interno/semana", label: "Semana" },
   { href: "/interno/entrada", label: "Entrada" },
   { href: "/interno/enriquecer", label: "Enriquecer" },
   { href: "/interno/intake", label: "Intake" },

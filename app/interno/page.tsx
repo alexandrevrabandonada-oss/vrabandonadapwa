@@ -7,6 +7,6 @@ export const metadata: Metadata = {
 };
 
 export default function InternalHomePage() {
-  redirect("/interno/entrada");
+  redirect("/interno/semana");
 }
 

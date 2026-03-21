@@ -125,16 +125,24 @@ export async function saveMemoryItemAction(
   let coverImageUrl = current?.cover_image_url ?? null;
   let coverImagePath = currentCoverPath;
 
-  if (coverImageClear) {
-    coverImageUrl = null;
-    coverImagePath = null;
-  } else if (coverImageFile) {
-    const uploaded = await uploadMemoryCover(coverImageFile, id);
-    coverImageUrl = uploaded.url;
-    coverImagePath = uploaded.path;
-  } else if (coverImageUrlInput) {
-    coverImageUrl = coverImageUrlInput;
-    coverImagePath = null;
+  try {
+    if (coverImageClear) {
+      coverImageUrl = null;
+      coverImagePath = null;
+    } else if (coverImageFile) {
+      const uploaded = await uploadMemoryCover(coverImageFile, id);
+      coverImageUrl = uploaded.url;
+      coverImagePath = uploaded.path;
+    } else if (coverImageUrlInput) {
+      coverImageUrl = coverImageUrlInput;
+      coverImagePath = null;
+    }
+  } catch (uploadError) {
+    console.error("Failed to upload memory cover", uploadError);
+    return {
+      ok: false,
+      message: "Não foi possível enviar a imagem de capa agora.",
+    };
   }
 
   const published = editorialStatus === "published";
@@ -209,4 +217,3 @@ export async function saveMemoryItemAction(
           : "Memória salva com segurança editorial.",
   };
 }
-

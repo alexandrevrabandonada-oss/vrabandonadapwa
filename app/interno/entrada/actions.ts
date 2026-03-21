@@ -155,11 +155,19 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
   let filePath = current?.file_path ?? null;
   let fileName = current?.file_name ?? null;
 
-  if (file) {
-    const uploaded = await uploadArchiveAsset(file, entryId);
-    fileUrl = uploaded.url;
-    filePath = uploaded.path;
-    fileName = file.name;
+  try {
+    if (file) {
+      const uploaded = await uploadArchiveAsset(file, entryId);
+      fileUrl = uploaded.url;
+      filePath = uploaded.path;
+      fileName = file.name;
+    }
+  } catch (uploadError) {
+    console.error("Failed to upload editorial entry asset", uploadError);
+    return {
+      ok: false,
+      message: "Não foi possível enviar o arquivo agora. Tente novamente.",
+    };
   }
 
   const payload = {

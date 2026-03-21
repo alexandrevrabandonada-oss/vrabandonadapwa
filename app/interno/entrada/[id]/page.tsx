@@ -36,16 +36,21 @@ export default async function EntradaDetailPage({ params }: PageProps) {
   const entryTypeLabel = editorialEntryTypeLabels[entry.entry_type] ?? entry.entry_type;
 
   return (
-    <Container className="intro-grid internal-page">
-      <section className="hero internal-hero">
+    <Container className="intro-grid internal-page internal-page--operator">
+      <section className="hero internal-hero internal-hero--operator">
         <p className="eyebrow">entrada simplificada</p>
         <h1 className="hero__title">{entry.title}</h1>
         <p className="hero__lead">
           {entryTypeLabel} · {editorialEntryStatusLabels[entry.entry_status]}
           {entry.target_surface ? ` · ${editorialEntryTargetLabels[entry.target_surface]}` : ""}
         </p>
-        <div className="hero__actions">`r`n          <Link href="/interno/entrada" className="button-secondary">Voltar à central</Link>
-          <Link href="/interno/intake" className="button-secondary">Ver fila pública</Link>
+        <div className="hero__actions">
+          <Link href="/interno/entrada" className="button-secondary">
+            Voltar à central
+          </Link>
+          <Link href="/interno/intake" className="button-secondary">
+            Ver fila pública
+          </Link>
         </div>
       </section>
 
@@ -119,5 +124,3 @@ export default async function EntradaDetailPage({ params }: PageProps) {
     </Container>
   );
 }
-
-

@@ -180,13 +180,21 @@ export async function saveArchiveAssetAction(
     let thumbUrl = current.thumb_url;
     let thumbPath = current.thumb_path;
 
-    if (nextFile) {
-      const uploaded = await uploadArchiveAsset(nextFile, currentId);
-      fileUrl = uploaded.url;
-      filePath = uploaded.path;
-      const visual = isVisualAssetType(assetType, nextFile);
-      thumbUrl = visual ? uploaded.url : null;
-      thumbPath = visual ? uploaded.path : null;
+    try {
+      if (nextFile) {
+        const uploaded = await uploadArchiveAsset(nextFile, currentId);
+        fileUrl = uploaded.url;
+        filePath = uploaded.path;
+        const visual = isVisualAssetType(assetType, nextFile);
+        thumbUrl = visual ? uploaded.url : null;
+        thumbPath = visual ? uploaded.path : null;
+      }
+    } catch (uploadError) {
+      console.error("Failed to upload archive asset", uploadError);
+      return {
+        ok: false,
+        message: "Não foi possível enviar o arquivo agora. Tente novamente.",
+      };
     }
 
     const { error } = await supabase
@@ -311,3 +319,4 @@ export async function saveArchiveAssetAction(
     message: errors.length > 0 ? `${createdIds.length} anexo(s) salvo(s). Falha em: ${errors.join(", ")}.` : `${createdIds.length} anexo(s) salvo(s) com sucesso.`,
   };
 }
+
