@@ -57,13 +57,12 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
   const editorialById = new Map(editorialItems.map((editorial) => [editorial.id, editorial.title]));
   const publicCount = allAssets.filter((asset) => asset.public_visibility).length;
   const linkedCount = allAssets.filter((asset) => asset.memory_item_id || asset.editorial_item_id).length;
-  const collectionCount = allAssets.filter((asset) => asset.collection_slug).length;
 
   return (
     <Container className="intro-grid internal-page archive-page">
       <section className="hero internal-hero">
         <p className="eyebrow">acervo interno</p>
-        <h1 className="hero__title">Fontes e anexos</h1>
+        <h1 className="hero__title">Acervo.</h1>
         <p className="hero__lead">
           Suba fotos, scans, PDFs e documentos-base. O acervo sustenta a memória sem virar um DAM pesado.
         </p>
@@ -79,33 +78,25 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
           <Link href="/interno/acervo/colecoes" className="button-secondary">
             Coleções
           </Link>
-          <Link href="/interno/memoria" className="button-secondary">
-            Ir para memória
-          </Link>
         </div>
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-4">
+        <div className="grid-3">
           <article className="support-box">
             <p className="eyebrow">itens</p>
             <h3>{allAssets.length}</h3>
-            <p>Anexos cadastrados no acervo.</p>
+            <p>Anexos cadastrados.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">públicos</p>
             <h3>{publicCount}</h3>
-            <p>Objetos liberados para a camada pública.</p>
+            <p>Objetos prontos para circular.</p>
           </article>
           <article className="support-box">
             <p className="eyebrow">vínculos</p>
             <h3>{linkedCount}</h3>
-            <p>Materiais ligados a memória ou pauta.</p>
-          </article>
-          <article className="support-box">
-            <p className="eyebrow">coleções</p>
-            <h3>{collectionCount}</h3>
-            <p>Assets já encaixados em recortes editoriais.</p>
+            <p>Materiais ligados a memória ou editorial.</p>
           </article>
         </div>
       </section>
@@ -116,7 +107,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
             <p className="eyebrow">fila</p>
             <h2>Visibilidade</h2>
           </div>
-          <p className="section__lead">Filtre rapidamente o que já pode circular e o que ainda precisa de curadoria.</p>
+          <p className="section__lead">Filtre o que já pode circular e o que ainda precisa de curadoria.</p>
         </div>
 
         <div className="status-filters" aria-label="Filtro por visibilidade">
@@ -138,7 +129,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
             <p className="eyebrow">coleções</p>
             <h2>Recortes editoriais</h2>
           </div>
-          <p className="section__lead">A coleção ajuda a operar o arquivo por linhas de investigação, não por acumulação crua.</p>
+          <p className="section__lead">As coleções ajudam a operar o arquivo por linhas de investigação, não por acumulação crua.</p>
         </div>
 
         <div className="status-filters" aria-label="Filtro por coleção">
@@ -188,25 +179,6 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
               <p>Crie o primeiro objeto de acervo ou ajuste a visibilidade para ver material publicado.</p>
             </div>
           )}
-        </div>
-      </section>
-
-      <section className="section internal-panel">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">lote pequeno</p>
-            <h2>Operação rápida</h2>
-          </div>
-          <p className="section__lead">
-            Use o lote pequeno para subir material bruto primeiro e completar os metadados logo depois.
-          </p>
-        </div>
-
-        <div className="support-box">
-          <p>Envie vários arquivos de uma vez, vincule à memória e deixe a publicação pública desativada até revisar o material.</p>
-          <Link href="/interno/acervo/novo" className="button-secondary">
-            Iniciar lote
-          </Link>
         </div>
       </section>
     </Container>

@@ -48,7 +48,7 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
     <Container className="intro-grid internal-page campaign-internal-page">
       <section className="hero internal-hero">
         <p className="eyebrow">campanhas internas</p>
-        <h1 className="hero__title">Foco editorial temporário</h1>
+        <h1 className="hero__title">Campanhas.</h1>
         <p className="hero__lead">
           Organize chamados públicos que condensam investigação, participação, método e apoio.
         </p>
@@ -61,14 +61,11 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
           <Link href="/interno/campanhas/novo" className="button">
             Nova campanha
           </Link>
-          <Link href="/campanhas" className="button-secondary">
-            Ver público
-          </Link>
         </div>
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-4">
+        <div className="grid-3">
           <article className="support-box">
             <p className="eyebrow">itens</p>
             <h3>{allCampaigns.length}</h3>
@@ -83,11 +80,6 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
             <p className="eyebrow">em foco</p>
             <h3>{activeCount}</h3>
             <p>Campanhas ativas ou em monitoramento.</p>
-          </article>
-          <article className="support-box">
-            <p className="eyebrow">vínculos</p>
-            <h3>{linkPairs.reduce((sum, [, links]) => sum + links.length, 0)}</h3>
-            <p>Peças conectadas às campanhas.</p>
           </article>
         </div>
       </section>
@@ -108,7 +100,7 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
               href={filter === "all" ? "/interno/campanhas" : `/interno/campanhas?status=${filter}`}
               className={`status-chip ${status === filter ? "status-chip--active" : ""}`}
             >
-              {filter === "all" ? "todos" : getCampaignStatusLabel(filter)}
+              {filter === "all" ? "Todos" : getCampaignStatusLabel(filter)}
             </Link>
           ))}
         </div>
@@ -144,6 +136,3 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
     </Container>
   );
 }
-
-
-
