@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { FollowButton } from "@/components/follow-button";
 import { SaveReadButton } from "@/components/save-read-button";
+import { getTimelineEntryHref } from "@/lib/timeline/navigation";
 import type { SearchIndexEntry } from "@/lib/search/types";
 
 function normalize(value: string) {
@@ -53,6 +54,7 @@ type Props = {
 
 export function SearchResultCard({ item, query }: Props) {
   const labels = item.labels.slice(0, 3);
+  const timelineHref = getTimelineEntryHref(item.contentType, item.contentKey);
 
   return (
     <article className="card search-result-card">
@@ -79,6 +81,9 @@ export function SearchResultCard({ item, query }: Props) {
       <div className="search-result-card__actions stack-actions">
         <Link href={item.href} className="button">
           Abrir
+        </Link>
+        <Link href={timelineHref} className="button-secondary">
+          Linha do tempo
         </Link>
         {item.saveKind ? (
           <SaveReadButton kind={item.saveKind} keyValue={item.contentKey} title={item.title} summary={item.excerpt} href={item.href} compact />

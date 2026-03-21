@@ -115,6 +115,9 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
             <Link href="/salvos" className="button-secondary">
               Salvos
             </Link>
+            <Link href="/linha-do-tempo" className="button-secondary">
+              Linha do tempo
+            </Link>
           </div>
         </div>
 
@@ -333,11 +336,12 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
                 <Link href={topResult.href} className="button">
                   Abrir
                 </Link>
-                {topResult.saveKind ? (
-                  <Link href="/salvos" className="button-secondary">
-                    Ver salvos
-                  </Link>
-                ) : null}
+                <Link href="/salvos" className="button-secondary">
+  Ver salvos
+</Link>
+<Link href="/linha-do-tempo" className="button-secondary">
+  Ver linha do tempo
+</Link>
                 {topResult.followKind ? (
                   <Link href="/acompanhar" className="button-secondary">
                     Acompanhar
@@ -406,5 +410,11 @@ export default async function BuscarPage({ searchParams }: { searchParams: Promi
     </Container>
   );
 }
+
+
+
+
+
+
 
 
