@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
 
 export type SupabaseConfig = {
   url: string;
@@ -24,5 +24,5 @@ export function getSupabaseConfig(): SupabaseConfig {
 
 export function createSupabaseBrowserClient() {
   const { url, anonKey } = getSupabaseConfig();
-  return createClient(url, anonKey);
+  return createBrowserClient(url, anonKey);
 }
