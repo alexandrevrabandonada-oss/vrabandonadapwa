@@ -5,7 +5,6 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
 import { EditorialForm } from "@/components/editorial-form";
-import { signOutAction } from "@/app/interno/actions";
 import { getEditorialAuditLog, getInternalEditorialById } from "@/lib/editorial/queries";
 import {
   editorialAuditEventLabels,
@@ -44,11 +43,7 @@ export default async function InternalEditorialDetailPage({ params }: PageProps)
           {editorialStatusLabels[item.editorial_status as EditorialStatus] ?? item.editorial_status}
           {item.published ? " · Publicado" : " · Não publicado"}
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/editorial" className="button-secondary">Voltar à fila</Link>
+        <div className="hero__actions">`r`n          <Link href="/interno/editorial" className="button-secondary">Voltar à fila</Link>
         </div>
       </section>
 
@@ -156,3 +151,5 @@ export default async function InternalEditorialDetailPage({ params }: PageProps)
     </Container>
   );
 }
+
+

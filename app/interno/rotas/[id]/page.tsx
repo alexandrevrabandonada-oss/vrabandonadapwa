@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { removeEntryRouteItemAction } from "@/app/interno/rotas/actions";
 import { Container } from "@/components/container";
 import { EntryRouteForm } from "@/components/entry-route-form";
@@ -55,13 +54,7 @@ export default async function InternalEntryRouteDetailPage({ params }: PageProps
           <span>{totalItems} passo{totalItems === 1 ? "" : "s"}</span>
           {route.audience_label ? <span>{route.audience_label}</span> : null}
         </div>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/rotas" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/rotas" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={`/comecar/${route.slug}`} className="button">
@@ -188,3 +181,4 @@ export default async function InternalEntryRouteDetailPage({ params }: PageProps
     </Container>
   );
 }
+

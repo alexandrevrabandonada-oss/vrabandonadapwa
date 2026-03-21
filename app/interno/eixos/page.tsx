@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { ThemeHubCard } from "@/components/theme-hub-card";
 import { getInternalThemeHubs, getInternalThemeHubLinks } from "@/lib/hubs/queries";
@@ -52,13 +51,7 @@ export default async function InternalThemeHubsPage({ searchParams }: PageProps)
         <p className="hero__lead">
           Organize o projeto por temas que atravessam pauta, memória, acervo e dossiê. O eixo não substitui o caso, ele o enquadra.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/eixos/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/eixos/novo" className="button">
             Novo eixo
           </Link>
           <Link href="/eixos" className="button-secondary">
@@ -144,3 +137,4 @@ export default async function InternalThemeHubsPage({ searchParams }: PageProps)
     </Container>
   );
 }
+

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { PlaceHubCard } from "@/components/place-hub-card";
 import { PlaceHubForm } from "@/components/place-hub-form";
@@ -82,13 +81,7 @@ export default async function InternalTerritoryDetailPage({ params }: PageProps)
           {placeHub.territory_label ? <span>{placeHub.territory_label}</span> : null}
           {timelineEntries.length ? <span>{timelineEntries.length} marcos</span> : null}
         </div>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/territorios" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/territorios" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={`/territorios/${placeHub.slug}`} className="button">
@@ -220,3 +213,5 @@ export default async function InternalTerritoryDetailPage({ params }: PageProps)
     </Container>
   );
 }
+
+

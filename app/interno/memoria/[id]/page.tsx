@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
@@ -49,13 +48,7 @@ export default async function InternalMemoryDetailPage({ params }: PageProps) {
         <p className="hero__lead">
           {item.editorial_status} · {item.published ? "Publicado" : "Não publicado"}
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/memoria" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/memoria" className="button-secondary">
             Voltar à fila
           </Link>
           <Link href={`/memoria/${item.slug}`} className="button-secondary">
@@ -103,8 +96,7 @@ export default async function InternalMemoryDetailPage({ params }: PageProps) {
           </p>
         </div>
 
-        <div className="hero__actions">
-          <Link href={`/interno/acervo/novo?memory_item_id=${item.id}`} className="button">
+        <div className="hero__actions">`r`n          <Link href={`/interno/acervo/novo?memory_item_id=${item.id}`} className="button">
             Adicionar anexo
           </Link>
           <Link href="/interno/acervo" className="button-secondary">
@@ -148,3 +140,5 @@ export default async function InternalMemoryDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+

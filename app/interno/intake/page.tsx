@@ -3,7 +3,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
-import { signOutAction } from "@/app/interno/actions";
 import { intakeStatusLabels, intakeStatuses, type IntakeStatus } from "@/lib/intake/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -22,6 +21,22 @@ type FilterStatus = (typeof statusOptions)[number];
 
 function isStatusFilter(value: string | undefined): value is FilterStatus {
   return Boolean(value) && statusOptions.includes(value as FilterStatus);
+}
+
+function getTone(status: IntakeStatus) {
+  if (status === "new") {
+    return "hot";
+  }
+
+  if (status === "reviewing") {
+    return "watch";
+  }
+
+  if (status === "published") {
+    return "calm";
+  }
+
+  return "muted";
 }
 
 export default async function IntakeListPage({ searchParams }: PageProps) {
@@ -67,18 +82,15 @@ export default async function IntakeListPage({ searchParams }: PageProps) {
   const totalCount = counts.new + counts.reviewing + counts.archived + counts.published;
 
   return (
-    <Container className="intro-grid internal-page">
-      <section className="hero internal-hero">
-        <p className="eyebrow">painel interno</p>
-        <h1 className="hero__title">Triagem editorial</h1>
-        <p className="hero__lead">
-          Revisão rápida, foco em contexto e cuidado com relatos sensíveis.
-        </p>
+    <Container className="intro-grid internal-page internal-page--operator">
+      <section className="hero internal-hero internal-hero--operator">
+        <p className="eyebrow">modo operador</p>
+        <h1 className="hero__title">Triagem.</h1>
+        <p className="hero__lead">O que chegou por fora fica aqui até ganhar destino.</p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/envie" className="button-secondary">Ver canal público</Link>
+          <Link href="/envie" className="button-secondary">
+            Ver canal público
+          </Link>
         </div>
       </section>
 
@@ -114,7 +126,7 @@ export default async function IntakeListPage({ searchParams }: PageProps) {
         <div className="grid-2" style={{ alignItems: "stretch" }}>
           {submissions && submissions.length > 0 ? (
             submissions.map((item) => (
-              <article className="entry" key={item.id}>
+              <article className={`entry intake-item intake-item--${getTone(item.status as IntakeStatus)}`} key={item.id}>
                 <span className="entry__tag">{item.source_type ?? item.category}</span>
                 <h3>{item.title}</h3>
                 <p>{item.location || "Sem local informado"}</p>

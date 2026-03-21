@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { TimelineEntryCard } from "@/components/timeline-entry-card";
 import { TimelineHighlightCard } from "@/components/timeline-highlight-card";
@@ -162,13 +161,7 @@ export default async function InternalTimelineHighlightPage({ params }: PageProp
         <p className="eyebrow">marco interno</p>
         <h1 className="hero__title">{highlight.title}</h1>
         <p className="hero__lead">{titleSentence}</p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/cronologia/marcos" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/cronologia/marcos" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={getTimelineHighlightHref(highlight.slug)} className="button">
@@ -322,3 +315,5 @@ export default async function InternalTimelineHighlightPage({ params }: PageProp
     </Container>
   );
 }
+
+

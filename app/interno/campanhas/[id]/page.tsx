@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { CampaignCard } from "@/components/campaign-card";
 import { CampaignForm } from "@/components/campaign-form";
@@ -55,13 +54,7 @@ export default async function InternalCampaignPage({ params }: { params: Promise
         <p className="hero__lead">
           {campaign.lead_question || campaign.excerpt || campaign.description || "Foco público do momento."}
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/campanhas" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/campanhas" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={`/campanhas/${campaign.slug}`} className="button">
@@ -162,3 +155,5 @@ export default async function InternalCampaignPage({ params }: { params: Promise
     </Container>
   );
 }
+
+

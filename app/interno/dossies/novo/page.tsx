@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierForm } from "@/components/dossier-form";
 import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
@@ -39,13 +38,7 @@ export default async function NewInternalDossierPage({ searchParams }: PageProps
         <p className="hero__lead">
           Crie uma investigação pública com pergunta, território e caminho de leitura antes de ligar as peças.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-        </div>
+        <div className="hero__actions">        </div>
       </section>
 
       {entry && seed ? (
@@ -93,3 +86,4 @@ export default async function NewInternalDossierPage({ searchParams }: PageProps
     </Container>
   );
 }
+

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { ArchiveCollectionForm } from "@/components/archive-collection-form";
 import { Container } from "@/components/container";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -28,13 +27,7 @@ export default async function InternalArchiveNewCollectionPage() {
         <p className="eyebrow">coleções internas</p>
         <h1 className="hero__title">Nova coleção</h1>
         <p className="hero__lead">Crie um recorte público do arquivo vivo sem depender de estruturas pesadas.</p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/acervo/colecoes" className="button-secondary">
+        <div className="hero__actions">          <Link href="/interno/acervo/colecoes" className="button-secondary">
             Voltar às coleções
           </Link>
           <Link href="/interno/acervo" className="button-secondary">
@@ -49,3 +42,4 @@ export default async function InternalArchiveNewCollectionPage() {
     </Container>
   );
 }
+

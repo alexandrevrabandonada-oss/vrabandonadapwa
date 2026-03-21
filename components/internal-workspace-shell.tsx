@@ -16,10 +16,11 @@ type InternalNavGroup = {
   items: InternalNavItem[];
 };
 
-const featuredItems: InternalNavItem[] = [
+const operatorItems: InternalNavItem[] = [
   { href: "/interno/entrada", label: "Entrada" },
-  { href: "/interno/enriquecer", label: "Enriquecimento" },
+  { href: "/interno/enriquecer", label: "Enriquecer" },
   { href: "/interno/intake", label: "Intake" },
+  { href: "/interno/editorial", label: "Editorial" },
 ];
 
 const groups: InternalNavGroup[] = [
@@ -28,18 +29,23 @@ const groups: InternalNavGroup[] = [
     items: [
       { href: "/interno/acervo", label: "Acervo" },
       { href: "/interno/memoria", label: "Memória" },
-      { href: "/interno/dossies", label: "Dossiês" },
       { href: "/interno/edicoes", label: "Edições" },
+    ],
+  },
+  {
+    title: "Frentes",
+    items: [
+      { href: "/interno/dossies", label: "Dossiês" },
+      { href: "/interno/campanhas", label: "Campanhas" },
+      { href: "/interno/impacto", label: "Impacto" },
     ],
   },
   {
     title: "Contexto",
     items: [
-      { href: "/interno/campanhas", label: "Campanhas" },
-      { href: "/interno/impacto", label: "Impacto" },
-      { href: "/interno/eixos", label: "Eixos" },
       { href: "/interno/territorios", label: "Territórios" },
       { href: "/interno/atores", label: "Atores" },
+      { href: "/interno/eixos", label: "Eixos" },
       { href: "/interno/cronologia/marcos", label: "Marcos" },
     ],
   },
@@ -61,27 +67,17 @@ export function InternalWorkspaceShell({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className="internal-workspace">
+    <div className="internal-workspace internal-workspace--operator">
       <section className="internal-workspace__bar">
         <Container className="internal-workspace__bar-inner">
           <div className="internal-workspace__copy">
-            <p className="eyebrow">fluxo interno</p>
-            <h1>Entrada, fila e transformação num só lugar.</h1>
-            <p>
-              A porta única vira o primeiro passo; a fila de enriquecimento vira o segundo; o resto fica reduzido ao que realmente ajuda a operar.
-            </p>
+            <p className="eyebrow">modo operador</p>
+            <h1>Cockpit interno.</h1>
+            <p>Entrada curta, fila viva e transformação rápida. O resto fica fora da primeira dobra.</p>
           </div>
 
           <div className="internal-workspace__top-actions">
-            <Link href="/interno/entrada" className={`internal-workspace__quick-link ${isActive(pathname, "/interno/entrada") ? "internal-workspace__quick-link--active" : ""}`}>
-              Entrada
-            </Link>
-            <Link href="/interno/enriquecer" className={`internal-workspace__quick-link ${isActive(pathname, "/interno/enriquecer") ? "internal-workspace__quick-link--active" : ""}`}>
-              Enriquecimento
-            </Link>
-            <Link href="/interno/intake" className={`internal-workspace__quick-link ${isActive(pathname, "/interno/intake") ? "internal-workspace__quick-link--active" : ""}`}>
-              Intake
-            </Link>
+            <span className="internal-workspace__status">Operação ativa</span>
             <form action={signOutAction}>
               <button type="submit" className="button-secondary internal-workspace__signout">
                 Sair
@@ -93,12 +89,12 @@ export function InternalWorkspaceShell({ children }: { children: React.ReactNode
 
       <section className="internal-workspace__nav-shell">
         <Container className="internal-workspace__nav-inner">
-          <nav className="internal-workspace__featured" aria-label="Fluxo principal interno">
-            {featuredItems.map((item) => (
+          <nav className="internal-workspace__primary" aria-label="Navegação interna principal">
+            {operatorItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`internal-workspace__featured-link ${isActive(pathname, item.href) ? "internal-workspace__featured-link--active" : ""}`}
+                className={`internal-workspace__primary-link ${isActive(pathname, item.href) ? "internal-workspace__primary-link--active" : ""}`}
                 aria-current={isActive(pathname, item.href) ? "page" : undefined}
               >
                 {item.label}
@@ -106,7 +102,7 @@ export function InternalWorkspaceShell({ children }: { children: React.ReactNode
             ))}
           </nav>
 
-          <div className="internal-workspace__groups">
+          <div className="internal-workspace__groups" aria-label="Núcleos internos">
             {groups.map((group) => (
               <section key={group.title} className="internal-workspace__group">
                 <p className="eyebrow">{group.title}</p>

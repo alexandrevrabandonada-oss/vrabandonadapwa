@@ -11,10 +11,11 @@ type Props = {
   entryType: EditorialEntryType;
   config: EntryTypeConfig;
   href: string;
+  count?: number;
   active?: boolean;
 };
 
-export function EntryCentralTypeCard({ entryType, config, href, active = false }: Props) {
+export function EntryCentralTypeCard({ entryType, config, href, count = 0, active = false }: Props) {
   return (
     <article className={`card entry-central-type-card ${active ? "entry-central-type-card--active" : ""}`.trim()}>
       <p className="eyebrow">entrada rápida</p>
@@ -27,6 +28,7 @@ export function EntryCentralTypeCard({ entryType, config, href, active = false }
           </span>
         ))}
       </div>
+      <p className="entry-central-type-card__count">{count} item{count === 1 ? "" : "s"} nesta porta.</p>
       <div className="stack-actions">
         <Link href={href} className="button">
           {config.actionPrimary}

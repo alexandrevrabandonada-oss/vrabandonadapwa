@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { EntryCentralForm } from "@/components/entry-central-form";
-import { signOutAction } from "@/app/interno/actions";
 import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
 import { editorialEntryStatusLabels, editorialEntryTargetLabels, editorialEntryTypeLabels } from "@/lib/entrada/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -45,11 +44,7 @@ export default async function EntradaDetailPage({ params }: PageProps) {
           {entryTypeLabel} · {editorialEntryStatusLabels[entry.entry_status]}
           {entry.target_surface ? ` · ${editorialEntryTargetLabels[entry.target_surface]}` : ""}
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/entrada" className="button-secondary">Voltar à central</Link>
+        <div className="hero__actions">`r`n          <Link href="/interno/entrada" className="button-secondary">Voltar à central</Link>
           <Link href="/interno/intake" className="button-secondary">Ver fila pública</Link>
         </div>
       </section>
@@ -124,3 +119,5 @@ export default async function EntradaDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+

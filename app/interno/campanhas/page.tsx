@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { CampaignCard } from "@/components/campaign-card";
 import { getCampaignStatusLabel } from "@/lib/campaigns/navigation";
@@ -52,13 +51,7 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
         <p className="hero__lead">
           Organize chamados públicos que condensam investigação, participação, método e apoio.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/campanhas/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/campanhas/novo" className="button">
             Nova campanha
           </Link>
         </div>
@@ -136,3 +129,4 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
     </Container>
   );
 }
+

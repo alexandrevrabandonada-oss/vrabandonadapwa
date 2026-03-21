@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { PlaceHubCard } from "@/components/place-hub-card";
 import { getPlaceHubStatusLabel } from "@/lib/territories/navigation";
@@ -50,13 +49,7 @@ export default async function InternalTerritoriesPage({ searchParams }: PageProp
         <p className="eyebrow">territórios internos</p>
         <h1 className="hero__title">Lugar vivo</h1>
         <p className="hero__lead">Organize bairros, marcos e pontos críticos para que memória, arquivo e impacto tenham endereço.</p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/territorios/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/territorios/novo" className="button">
             Novo lugar
           </Link>
           <Link href="/territorios" className="button-secondary">
@@ -137,3 +130,4 @@ export default async function InternalTerritoriesPage({ searchParams }: PageProp
     </Container>
   );
 }
+

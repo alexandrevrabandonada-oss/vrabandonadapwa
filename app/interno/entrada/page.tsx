@@ -4,12 +4,12 @@ import { redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { EntryCentralForm } from "@/components/entry-central-form";
+import { InternalPriorityBoard } from "@/components/internal-priority-board";
 import { EntryCentralReviewCard } from "@/components/entry-central-review-card";
 import { EntryCentralTypeCard } from "@/components/entry-central-type-card";
-import { signOutAction } from "@/app/interno/actions";
 import { entryTypeConfig } from "@/lib/entrada/navigation";
 import { getInternalEditorialEntries, getInternalEditorialEntryCounts, getInternalEditorialTypeCounts } from "@/lib/entrada/queries";
-import { editorialEntryStatusLabels, editorialEntryStatuses, editorialEntryTypeLabels, editorialEntryTypes, type EditorialEntryStatus, type EditorialEntryType } from "@/lib/entrada/types";
+import { editorialEntryStatuses, editorialEntryTypeLabels, editorialEntryTypes, type EditorialEntryStatus, type EditorialEntryType } from "@/lib/entrada/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -57,41 +57,70 @@ export default async function EntradaPage({ searchParams }: { searchParams?: Pro
     getInternalEditorialTypeCounts(),
   ]);
 
+  const resolvedCount = counts.enriched + counts.linked + counts.published;
+
   return (
-    <Container className="intro-grid internal-page">
-      <section className="hero internal-hero">
-        <p className="eyebrow">entrada simplificada</p>
-        <h1 className="hero__title">Uma porta, três entradas.</h1>
+    <Container className="intro-grid internal-page internal-page--operator">
+      <section className="hero internal-hero internal-hero--operator">
+        <p className="eyebrow">modo operador</p>
+        <h1 className="hero__title">Entrada rápida.</h1>
         <p className="hero__lead">
           Suba o mínimo agora. Depois você liga, enriquece e decide a camada certa sem travar a entrada.
         </p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/enriquecer" className="button-secondary">Abrir enriquecimento</Link>
-          <Link href="/interno/intake" className="button-secondary">Ver fila pública</Link>
+          <Link href="/interno/enriquecer" className="button-secondary">
+            Ir para enriquecimento
+          </Link>
+          <Link href="/interno/intake" className="button-secondary">
+            Ver intake
+          </Link>
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-4 internal-operator-metrics">
+          <article className="card internal-operator-metric internal-operator-metric--hot">
+            <p className="eyebrow">urgentes</p>
+            <h3>{counts.draft + counts.stored}</h3>
+            <p>Itens que pedem decisão.</p>
+          </article>
+          <article className="card internal-operator-metric internal-operator-metric--watch">
+            <p className="eyebrow">prontos</p>
+            <h3>{counts.ready_for_enrichment}</h3>
+            <p>Itens para enriquecer.</p>
+          </article>
+          <article className="card internal-operator-metric internal-operator-metric--calm">
+            <p className="eyebrow">fechados</p>
+            <h3>{resolvedCount}</h3>
+            <p>Itens já amarrados.</p>
+          </article>
+          <article className="card internal-operator-metric internal-operator-metric--muted">
+            <p className="eyebrow">arquivo</p>
+            <h3>{counts.archived}</h3>
+            <p>Itens guardados.</p>
+          </article>
         </div>
       </section>
 
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
-            <p className="eyebrow">como funciona</p>
-            <h2>Etapa 1 guarda o mínimo. Etapa 2 enriquece depois.</h2>
+            <p className="eyebrow">três portas</p>
+            <h2>Escolha a entrada mínima agora.</h2>
           </div>
           <p className="section__lead">
-            A central reduz a decisão inicial para que você consiga subir conteúdo mesmo sobrecarregado.
+            Cada porta reduz a decisão inicial. Depois você aprofunda onde fizer sentido.
           </p>
         </div>
 
-        <div className="grid-3">
+        <div className="grid-3 internal-operator-strip">
           {editorialEntryTypes.map((entryTypeItem) => (
             <EntryCentralTypeCard
               key={entryTypeItem}
               entryType={entryTypeItem}
               config={entryTypeConfig[entryTypeItem]}
               href={`/interno/entrada?tipo=${entryTypeItem}`}
+              count={typeCounts[entryTypeItem]}
               active={entryType === entryTypeItem}
             />
           ))}
@@ -117,56 +146,36 @@ export default async function EntradaPage({ searchParams }: { searchParams?: Pro
                 O item entra como rascunho, guardado ou pronto para enriquecer. Depois você decide se ele vira Agora, Acervo, Memória ou algo maior.
               </p>
               <div className="stack-actions">
-                <Link href="/interno/entrada" className="button-secondary">Voltar à central</Link>
-                <Link href="/interno/enriquecer" className="button-secondary">Ir para etapa 2</Link>
+                <Link href="/interno/entrada" className="button-secondary">
+                  Voltar à central
+                </Link>
+                <Link href="/interno/enriquecer" className="button-secondary">
+                  Ir para etapa 2
+                </Link>
               </div>
             </article>
           </div>
         </section>
       ) : null}
 
+      <InternalPriorityBoard
+        entries={entries}
+        title="O que precisa de ação agora."
+        lead="A fila separa o que está frio, o que está pronto e o que já saiu rápido mas ainda pede revisão."
+      />
+
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
-            <p className="eyebrow">painel de revisão</p>
-            <h2>O que entrou e ainda pede tratamento.</h2>
+            <p className="eyebrow">últimas entradas</p>
+            <h2>O que entrou por último.</h2>
           </div>
-          <p className="section__lead">
-            A fila curta ajuda a ver o que já está guardado, o que precisa de enriquecimento e o que está pronto para seguir.
-          </p>
-        </div>
-
-        <div className="status-filters" aria-label="Filtro por status">
-          {(["all", ...editorialEntryStatuses] as const).map((status) => {
-            const label =
-              status === "all"
-                ? `Tudo (${counts.total})`
-                : `${editorialEntryStatusLabels[status as EditorialEntryStatus]} (${counts[status]})`;
-            return (
-              <Link
-                key={status}
-                href={status === "all" ? "/interno/entrada" : `/interno/entrada?status=${status}${entryType ? `&tipo=${entryType}` : ""}`}
-                className={`status-chip ${statusFilter === status ? "status-chip--active" : ""}`}
-              >
-                {label}
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="grid-3">
-          {editorialEntryTypes.map((type) => (
-            <article key={type} className="card">
-              <p className="eyebrow">{editorialEntryTypeLabels[type]}</p>
-              <h3>{typeCounts[type]}</h3>
-              <p>Entradas registradas nesta forma.</p>
-            </article>
-          ))}
+          <p className="section__lead">As últimas movimentações ficam aqui para você retomar sem refazer a leitura.</p>
         </div>
 
         <div className="grid-2">
           {entries.length > 0 ? (
-            entries.slice(0, 8).map((entry) => <EntryCentralReviewCard key={entry.id} entry={entry} />)
+            entries.slice(0, 6).map((entry) => <EntryCentralReviewCard key={entry.id} entry={entry} />)
           ) : (
             <article className="support-box">
               <h3>Sem entradas nesta visão</h3>
@@ -178,3 +187,5 @@ export default async function EntradaPage({ searchParams }: { searchParams?: Pro
     </Container>
   );
 }
+
+

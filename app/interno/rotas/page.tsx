@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { EntryRouteCard } from "@/components/entry-route-card";
 import { getInternalEntryRoutes, getInternalEntryRouteItems } from "@/lib/entry-routes/queries";
@@ -52,13 +51,7 @@ export default async function InternalEntryRoutesPage({ searchParams }: PageProp
         <p className="hero__lead">
           Organize caminhos de entrada para primeira visita, tema, memória, dossiê e acompanhamento do agora.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/rotas/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/rotas/novo" className="button">
             Nova rota
           </Link>
           <Link href="/comecar" className="button-secondary">

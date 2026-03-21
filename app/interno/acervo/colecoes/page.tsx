@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
 import { getInternalArchiveAssets } from "@/lib/archive/queries";
@@ -36,13 +35,7 @@ export default async function InternalArchiveCollectionsPage() {
         <p className="hero__lead">
           Organize materiais em recortes editoriais sem transformar o acervo em catalogação rígida.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/acervo/colecoes/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/acervo/colecoes/novo" className="button">
             Nova coleção
           </Link>
           <Link href="/interno/acervo" className="button-secondary">
@@ -101,3 +94,4 @@ export default async function InternalArchiveCollectionsPage() {
     </Container>
   );
 }
+

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { EnrichmentQueueCard } from "@/components/enrichment-queue-card";
+import { InternalPriorityBoard } from "@/components/internal-priority-board";
 import { editorialEntryStatusLabels, editorialEntryStatuses, editorialEntryTypeLabels, editorialEntryTypes, type EditorialEntryStatus, type EditorialEntryType } from "@/lib/entrada/types";
 import { getInternalEditorialEntries, getInternalEditorialEntryCounts, getInternalEditorialTypeCounts } from "@/lib/entrada/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -56,51 +56,53 @@ export default async function EnrichmentPage({ searchParams }: { searchParams?: 
 
   const currentUrl = `/interno/enriquecer${statusFilter !== "all" || entryType ? `?${new URLSearchParams({ ...(statusFilter !== "all" ? { status: statusFilter } : {}), ...(entryType ? { tipo: entryType } : {}) }).toString()}` : ""}`;
 
+  const readyCount = counts.ready_for_enrichment;
+  const waitingCount = counts.stored + counts.draft;
+  const resolvedCount = counts.enriched + counts.linked + counts.published;
+
   return (
-    <Container className="intro-grid internal-page">
-      <section className="hero internal-hero">
-        <p className="eyebrow">enriquecimento posterior</p>
-        <h1 className="hero__title">Uma fila curta para transformar o que entrou.</h1>
+    <Container className="intro-grid internal-page internal-page--operator">
+      <section className="hero internal-hero internal-hero--operator">
+        <p className="eyebrow">modo operador</p>
+        <h1 className="hero__title">Fila viva.</h1>
         <p className="hero__lead">
           Pegue o que foi guardado, escolha um destino rápido e deixe o conteúdo seguir para memória, acervo ou uma peça editorial sem retrabalho.
         </p>
         <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/entrada" className="button-secondary">Voltar à central</Link>
+          <Link href="/interno/entrada" className="button-secondary">
+            Voltar à central
+          </Link>
+          <Link href="/interno/intake" className="button-secondary">
+            Ver intake
+          </Link>
         </div>
       </section>
 
       <section className="section internal-panel">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">como usar</p>
-            <h2>Etapa 2 pega a entrada guardada e reduz o trabalho manual.</h2>
-          </div>
-          <p className="section__lead">
-            A fila mostra o que está parado, o que já pode seguir e o que precisa só de um destino para virar parte útil do ecossistema.
-          </p>
-        </div>
-
-        <div className="grid-3">
-          <article className="card">
-            <p className="eyebrow">Fila total</p>
+        <div className="grid-3 internal-operator-metrics">
+          <article className="card internal-operator-metric internal-operator-metric--hot">
+            <p className="eyebrow">fila total</p>
             <h3>{counts.total}</h3>
             <p>Entradas no caminho de transformação.</p>
           </article>
-          <article className="card">
-            <p className="eyebrow">Guardados</p>
-            <h3>{counts.stored}</h3>
+          <article className="card internal-operator-metric internal-operator-metric--watch">
+            <p className="eyebrow">guardados</p>
+            <h3>{waitingCount}</h3>
             <p>Itens para decidir depois.</p>
           </article>
-          <article className="card">
-            <p className="eyebrow">Prontos</p>
-            <h3>{counts.ready_for_enrichment}</h3>
-            <p>Itens com destino esperado.</p>
+          <article className="card internal-operator-metric internal-operator-metric--calm">
+            <p className="eyebrow">caminho aberto</p>
+            <h3>{readyCount + resolvedCount}</h3>
+            <p>Itens prontos ou resolvidos.</p>
           </article>
         </div>
       </section>
+
+      <InternalPriorityBoard
+        entries={entries}
+        title="O que muda primeiro."
+        lead="A fila mostra o que está parado, o que já pode seguir e o que precisa só de um destino para virar parte útil do ecossistema."
+      />
 
       <section className="section internal-panel">
         <div className="grid-2">
@@ -171,3 +173,4 @@ export default async function EnrichmentPage({ searchParams }: { searchParams?: 
     </Container>
   );
 }
+

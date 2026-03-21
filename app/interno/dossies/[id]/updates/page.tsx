@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierUpdateCard } from "@/components/dossier-update-card";
 import { DossierUpdateForm } from "@/components/dossier-update-form";
@@ -52,13 +51,7 @@ export default async function InternalDossierUpdatesPage({ params }: PageProps) 
           <span>{publishedCount} publicados</span>
           {latestUpdate ? <span>Último: {latestUpdate.title}</span> : null}
         </div>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href={`/interno/dossies/${dossier.id}`} className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href={`/interno/dossies/${dossier.id}`} className="button-secondary">
             Voltar ao dossiê
           </Link>
           <Link href={`/dossies/${dossier.slug}`} className="button">
@@ -102,3 +95,5 @@ export default async function InternalDossierUpdatesPage({ params }: PageProps) 
     </Container>
   );
 }
+
+

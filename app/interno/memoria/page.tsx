@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { MemoryCollectionCard } from "@/components/memory-collection-card";
 import { MemoryTimelineEntryCard } from "@/components/memory-timeline-entry";
@@ -62,11 +61,7 @@ export default async function InternalMemoryPage({ searchParams }: PageProps) {
         <p className="hero__lead">
           Crie, edite, publique e arquive memória sem mexer no código. O fluxo continua leve e editorial.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/memoria/novo" className="button">Nova memória</Link>
+        <div className="hero__actions">          <Link href="/interno/memoria/novo" className="button">Nova memória</Link>
           <Link href="/memoria" className="button-secondary">Ver área pública</Link>
         </div>
       </section>
@@ -166,3 +161,4 @@ export default async function InternalMemoryPage({ searchParams }: PageProps) {
     </Container>
   );
 }
+

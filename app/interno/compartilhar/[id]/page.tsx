@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { SharePackCard } from "@/components/share-pack-card";
 import { SharePackExportPanel } from "@/components/share-pack-export";
@@ -82,13 +81,7 @@ export default async function InternalSharePackPage({ params }: PageProps) {
         <p className="eyebrow">compartilhar interno</p>
         <h1 className="hero__title">{resolved.title}</h1>
         <p className="hero__lead">{resolved.summary}</p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/compartilhar" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/compartilhar" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={resolved.href} className="button">
@@ -167,3 +160,5 @@ export default async function InternalSharePackPage({ params }: PageProps) {
     </Container>
   );
 }
+
+

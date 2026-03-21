@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { ArchiveAssetForm } from "@/components/archive-asset-form";
 import { Container } from "@/components/container";
@@ -53,13 +52,7 @@ export default async function InternalArchiveDetailPage({ params }: PageProps) {
         <p className="hero__lead">
           {asset.asset_type} · {asset.public_visibility ? "público" : "interno"} · {asset.featured ? "destaque" : "normal"}
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/acervo" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/acervo" className="button-secondary">
             Voltar ao acervo
           </Link>
           {asset.collection_slug ? (
@@ -133,4 +126,6 @@ export default async function InternalArchiveDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
 

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
 import { getInternalArchiveCollections } from "@/lib/archive/collections";
@@ -66,13 +65,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
         <p className="hero__lead">
           Suba fotos, scans, PDFs e documentos-base. O acervo sustenta a memória sem virar um DAM pesado.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/acervo/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/acervo/novo" className="button">
             Novo anexo
           </Link>
           <Link href="/interno/acervo/colecoes" className="button-secondary">
@@ -184,3 +177,4 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
     </Container>
   );
 }
+

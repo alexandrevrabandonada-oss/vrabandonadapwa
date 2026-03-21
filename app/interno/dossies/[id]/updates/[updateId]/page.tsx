@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { DossierUpdateForm } from "@/components/dossier-update-form";
 import { getInternalDossierById, getInternalDossierUpdateById } from "@/lib/dossiers/queries";
@@ -51,13 +50,7 @@ export default async function InternalDossierUpdateEditPage({ params }: PageProp
           <span>{getDossierUpdateTypeLabel(update.update_type)}</span>
           <span>{getDossierUpdateYearLabel(update)}</span>
         </div>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href={`/interno/dossies/${dossier.id}/updates`} className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href={`/interno/dossies/${dossier.id}/updates`} className="button-secondary">
             Voltar aos updates
           </Link>
           <Link href={`/dossies/${dossier.slug}`} className="button">
@@ -80,3 +73,5 @@ export default async function InternalDossierUpdateEditPage({ params }: PageProp
     </Container>
   );
 }
+
+

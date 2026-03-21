@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { ArchiveAssetForm } from "@/components/archive-asset-form";
 import { Container } from "@/components/container";
 import { getInternalArchiveCollections } from "@/lib/archive/collections";
@@ -60,13 +59,7 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
         <p className="hero__lead">
           Suba um objeto de acervo e amarre-o a uma memória, pauta ou série. O lote pequeno ajuda a alimentar o arquivo sem travar a operação.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/acervo" className="button-secondary">
+        <div className="hero__actions">          <Link href="/interno/acervo" className="button-secondary">
             Voltar ao acervo
           </Link>
           <Link href="/interno/enriquecer" className="button-secondary">
@@ -142,3 +135,4 @@ export default async function InternalArchiveNewPage({ searchParams }: PageProps
     </Container>
   );
 }
+

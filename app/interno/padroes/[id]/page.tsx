@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { PatternReadForm } from "@/components/pattern-read-form";
 import { PatternReadLinkForm } from "@/components/pattern-read-link-form";
@@ -109,13 +108,7 @@ export default async function InternalPatternPage({ params }: PageProps) {
         <p className="eyebrow">padrão interno</p>
         <h1 className="hero__title">{patternRead.title}</h1>
         <p className="hero__lead">{patternRead.lead_question || patternRead.excerpt || patternRead.description}</p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/padroes" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/padroes" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={`/padroes/${patternRead.slug}`} className="button">
@@ -223,4 +216,6 @@ export default async function InternalPatternPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
 

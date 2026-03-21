@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { ActorHubForm } from "@/components/actor-hub-form";
 import { ActorHubLinkForm } from "@/components/actor-hub-link-form";
@@ -108,13 +107,7 @@ export default async function InternalActorPage({ params }: PageProps) {
         <p className="eyebrow">ator interno</p>
         <h1 className="hero__title">{actorHub.title}</h1>
         <p className="hero__lead">{actorHub.lead_question || actorHub.excerpt || actorHub.description}</p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/atores" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/atores" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={`/atores/${actorHub.slug}`} className="button">
@@ -218,6 +211,8 @@ export default async function InternalActorPage({ params }: PageProps) {
     </Container>
   );
 }
+
+
 
 
 

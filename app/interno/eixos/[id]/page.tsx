@@ -24,7 +24,6 @@ import { getInternalThemeHubById, getInternalThemeHubLinks } from "@/lib/hubs/qu
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { removeThemeHubLinkAction } from "@/app/interno/eixos/actions";
-import { signOutAction } from "@/app/interno/actions";
 
 export const metadata: Metadata = {
   title: "Eixo interno",
@@ -93,13 +92,7 @@ export default async function InternalThemeHubDetailPage({ params }: PageProps) 
           <span>{links.length} vínculo(s)</span>
           {latestMovements.length ? <span>Última movimentação: {latestMovements[0].update?.title}</span> : null}
         </div>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/eixos" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/eixos" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={`/eixos/${hub.slug}`} className="button">
@@ -313,5 +306,7 @@ export default async function InternalThemeHubDetailPage({ params }: PageProps) 
     </Container>
   );
 }
+
+
 
 

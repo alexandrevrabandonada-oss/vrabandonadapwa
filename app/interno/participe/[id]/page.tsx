@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { removeParticipationPathItemAction } from "@/app/interno/participe/actions";
 import { Container } from "@/components/container";
 import { ParticipationPathForm } from "@/components/participation-path-form";
@@ -55,13 +54,7 @@ export default async function InternalParticipationDetailPage({ params }: PagePr
           <span>{totalItems} passo{totalItems === 1 ? "" : "s"}</span>
           {path.audience_label ? <span>{path.audience_label}</span> : null}
         </div>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/participe" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/participe" className="button-secondary">
             Voltar à lista
           </Link>
           <Link href={`/participe/${path.slug}`} className="button">
@@ -188,3 +181,4 @@ export default async function InternalParticipationDetailPage({ params }: PagePr
     </Container>
   );
 }
+

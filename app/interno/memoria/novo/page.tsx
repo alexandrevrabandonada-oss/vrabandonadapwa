@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { MemoryForm } from "@/components/memory-form";
 import { getPublishedMemoryCollections } from "@/lib/memory/queries";
@@ -40,11 +39,7 @@ export default async function InternalMemoryNewPage({ searchParams }: PageProps)
         <p className="eyebrow">memória interna</p>
         <h1 className="hero__title">Nova memória</h1>
         <p className="hero__lead">Cadastre um recorte leve e já pense nele como peça do arquivo público.</p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/memoria" className="button-secondary">Voltar à fila</Link>
+        <div className="hero__actions">          <Link href="/interno/memoria" className="button-secondary">Voltar à fila</Link>
           <Link href="/interno/enriquecer" className="button-secondary">Abrir enriquecimento</Link>
         </div>
       </section>
@@ -112,3 +107,4 @@ export default async function InternalMemoryNewPage({ searchParams }: PageProps)
     </Container>
   );
 }
+

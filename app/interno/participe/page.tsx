@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { ParticipationPathCard } from "@/components/participation-path-card";
 import { getInternalParticipationPaths, getInternalParticipationPathItems } from "@/lib/participation/queries";
@@ -52,13 +51,7 @@ export default async function InternalParticipationPage({ searchParams }: PagePr
         <p className="hero__lead">
           Organize as portas públicas do projeto: envio, apoio, memória, acervo, acompanhamento e compartilhamento.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/participe/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/participe/novo" className="button">
             Nova rota
           </Link>
           <Link href="/participe" className="button-secondary">

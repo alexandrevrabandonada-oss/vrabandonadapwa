@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { TimelineHighlightCard } from "@/components/timeline-highlight-card";
 import { getInternalTimelineHighlightLinks, getInternalTimelineHighlights } from "@/lib/timeline/highlight-queries";
@@ -52,13 +51,7 @@ export default async function InternalTimelineHighlightsPage({ searchParams }: P
         <p className="hero__lead">
           Organize os marcos centrais que condensam a leitura histórica do site. O marco não substitui a cronologia ampla, ele orienta a leitura do que importa.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/cronologia/marcos/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/cronologia/marcos/novo" className="button">
             Novo marco
           </Link>
           <Link href="/linha-do-tempo" className="button-secondary">
@@ -148,3 +141,4 @@ export default async function InternalTimelineHighlightsPage({ searchParams }: P
     </Container>
   );
 }
+

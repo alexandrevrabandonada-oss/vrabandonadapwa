@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { editorialEntryStatusLabels, editorialEntryTargetLabels, editorialEntryTypeLabels, type EditorialEntry } from "@/lib/entrada/types";
+import { editorialEntryStatusLabels, editorialEntryTargetLabels, editorialEntryTypeLabels, type EditorialEntry, type EditorialEntryStatus } from "@/lib/entrada/types";
 
 type Props = {
   entry: EditorialEntry;
@@ -15,9 +15,43 @@ function formatDate(value: string) {
   }).format(new Date(value));
 }
 
+function getTone(status: EditorialEntryStatus) {
+  if (status === "draft" || status === "stored") {
+    return "hot";
+  }
+
+  if (status === "ready_for_enrichment") {
+    return "watch";
+  }
+
+  if (status === "enriched" || status === "linked" || status === "published") {
+    return "calm";
+  }
+
+  return "muted";
+}
+
+function getNextStep(status: EditorialEntryStatus) {
+  if (status === "draft" || status === "stored") {
+    return "Abrir e decidir";
+  }
+
+  if (status === "ready_for_enrichment") {
+    return "Ir para enriquecer";
+  }
+
+  if (status === "enriched" || status === "linked" || status === "published") {
+    return "Abrir destino";
+  }
+
+  return "Rever arquivo";
+}
+
 export function EntryCentralReviewCard({ entry }: Props) {
+  const tone = getTone(entry.entry_status);
+
   return (
-    <article className="card entry-central-review-card">
+    <article className={`card entry-central-review-card entry-central-review-card--${tone}`}>
       <div className="meta-row">
         <span className="pill">{editorialEntryTypeLabels[entry.entry_type]}</span>
         <span>{editorialEntryStatusLabels[entry.entry_status]}</span>
@@ -31,6 +65,7 @@ export function EntryCentralReviewCard({ entry }: Props) {
         <span>{formatDate(entry.updated_at)}</span>
       </p>
       <div className="stack-actions">
+        <span className={`internal-next-step internal-next-step--${tone}`}>{getNextStep(entry.entry_status)}</span>
         <Link href={`/interno/entrada/${entry.id}`} className="button-secondary">
           Abrir
         </Link>

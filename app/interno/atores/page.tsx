@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { ActorHubCard } from "@/components/actor-hub-card";
 import { getInternalActorHubLinks, getInternalActorHubs } from "@/lib/actors/queries";
@@ -52,13 +51,7 @@ export default async function InternalActorsPage({ searchParams }: PageProps) {
         <p className="hero__lead">
           Organize o projeto por empresas, órgãos, hospitais, secretarias e instituições que voltam a atravessar os conflitos da cidade. O ator não substitui o caso, ele o enquadra.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/atores/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/atores/novo" className="button">
             Novo ator
           </Link>
           <Link href="/atores" className="button-secondary">
@@ -144,3 +137,4 @@ export default async function InternalActorsPage({ searchParams }: PageProps) {
     </Container>
   );
 }
+

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { ArchiveCollectionForm } from "@/components/archive-collection-form";
 import { Container } from "@/components/container";
@@ -45,13 +44,7 @@ export default async function InternalArchiveCollectionDetailPage({ params }: Pa
         <p className="hero__lead">
           {collection.excerpt || collection.description || "Recorte editorial do arquivo vivo."}
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/acervo/colecoes" className="button-secondary">
+        <div className="hero__actions">`r`n          <Link href="/interno/acervo/colecoes" className="button-secondary">
             Voltar às coleções
           </Link>
           <Link href={`/acervo/colecoes/${collection.slug}`} className="button-secondary">
@@ -122,3 +115,5 @@ export default async function InternalArchiveCollectionDetailPage({ params }: Pa
     </Container>
   );
 }
+
+

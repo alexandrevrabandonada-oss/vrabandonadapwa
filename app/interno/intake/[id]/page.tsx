@@ -6,7 +6,6 @@ import { Container } from "@/components/container";
 import { EditorialCover } from "@/components/editorial-cover";
 import { createEditorialDraftFromIntakeAction } from "@/app/interno/editorial/actions";
 import { IntakeTriageForm } from "@/components/intake-triage-form";
-import { signOutAction } from "@/app/interno/actions";
 import { getEditorialByIntakeId } from "@/lib/editorial/queries";
 import { intakeStatusLabels, type IntakeStatus, type IntakeSubmission } from "@/lib/intake/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -56,11 +55,7 @@ export default async function IntakeDetailPage({ params }: PageProps) {
         <p className="hero__lead">
           {intakeStatusLabels[item.status as IntakeStatus] ?? item.status} · {item.location || "Sem local informado"}
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">Sair</button>
-          </form>
-          <Link href="/interno/intake" className="button-secondary">Voltar à fila</Link>
+        <div className="hero__actions">`r`n          <Link href="/interno/intake" className="button-secondary">Voltar à fila</Link>
           <Link href="/interno/editorial" className="button-secondary">Ver editorial</Link>
         </div>
       </section>
@@ -144,3 +139,5 @@ export default async function IntakeDetailPage({ params }: PageProps) {
     </Container>
   );
 }
+
+

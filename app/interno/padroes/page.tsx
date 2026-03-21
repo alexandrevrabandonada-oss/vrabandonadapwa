@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
 import { PatternReadCard } from "@/components/pattern-read-card";
 import { getInternalPatternReadLinks, getInternalPatternReads } from "@/lib/patterns/queries";
@@ -52,13 +51,7 @@ export default async function InternalPatternsPage({ searchParams }: PageProps) 
         <p className="hero__lead">
           Organize hipóteses públicas sobre o que se repete entre atores, territórios, campanhas, impactos e casos. O padrão não substitui o caso, ele o sintetiza.
         </p>
-        <div className="hero__actions">
-          <form action={signOutAction}>
-            <button className="button-secondary" type="submit">
-              Sair
-            </button>
-          </form>
-          <Link href="/interno/padroes/novo" className="button">
+        <div className="hero__actions">          <Link href="/interno/padroes/novo" className="button">
             Novo padrão
           </Link>
           <Link href="/padroes" className="button-secondary">
@@ -144,3 +137,4 @@ export default async function InternalPatternsPage({ searchParams }: PageProps) 
     </Container>
   );
 }
+
