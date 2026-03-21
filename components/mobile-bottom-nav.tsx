@@ -23,7 +23,7 @@ export function MobileBottomNav() {
         <Link
           key={item.href}
           href={item.href}
-          className="mobile-bottom-nav__link"
+          className={`mobile-bottom-nav__link ${item.href === "/agora" ? "mobile-bottom-nav__link--featured" : ""}`.trim()}
           aria-current={isActive(pathname, item.href) ? "page" : undefined}
         >
           <span>{item.label}</span>

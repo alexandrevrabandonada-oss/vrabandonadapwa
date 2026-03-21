@@ -2738,3 +2738,13 @@ body.vr-low-vision .memory-collection-card .button-secondary {
 .site-menu__group--featured h3 {
   color: var(--text);
 }
+
+.mobile-bottom-nav__link--featured {
+  color: var(--text);
+  border-color: rgba(243, 178, 26, 0.28);
+  background: linear-gradient(180deg, rgba(243, 178, 26, 0.16), rgba(255, 255, 255, 0.04));
+}
+
+.mobile-bottom-nav__link--featured span {
+  color: var(--accent);
+}
