@@ -119,6 +119,13 @@ button, input, textarea, select { font: inherit; }
 }
 .brand__text small { color: var(--muted); font-size: 0.8rem; }
 
+.brand__logo {
+  width: clamp(6.8rem, 8.2vw, 8.75rem);
+  height: auto;
+  max-height: 2.15rem;
+  flex: none;
+}
+
 .nav {
   display: flex;
   flex-wrap: wrap;
@@ -2357,8 +2364,8 @@ body.vr-low-vision .a11y-reading-assistant__empty {
 }
 
 body.vr-low-vision .brand__logo {
-  width: clamp(11rem, 24vw, 16rem);
-  max-height: 4.2rem;
+  width: clamp(7.6rem, 12vw, 10rem);
+  max-height: 2.7rem;
 }
 
 body.vr-low-vision .nav__link,
@@ -2431,3 +2438,4 @@ body.vr-low-vision .memory-card .button-secondary,
 body.vr-low-vision .memory-collection-card .button-secondary {
   min-height: 3.2rem;
 }
+
