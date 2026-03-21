@@ -147,7 +147,7 @@ button, input, textarea, select { font: inherit; }
   color: var(--text);
 }
 
-.site-main { padding-block: 1.2rem 3.5rem; }
+.site-main { padding-block: 1.2rem 6.25rem; }
 .container {
   width: min(100% - 1.5rem, var(--container));
   margin-inline: auto;
@@ -2844,5 +2844,109 @@ body.vr-low-vision .memory-collection-card .button-secondary {
 
   .home-hero__signals {
     gap: 0.45rem;
+  }
+}
+
+
+.a11y-reading-assistant {
+  position: sticky;
+  top: 0.9rem;
+  z-index: 18;
+}
+
+.a11y-reading-assistant--closed {
+  gap: 0.55rem;
+}
+
+.a11y-reading-assistant--closed .a11y-reading-assistant__panel {
+  display: none;
+}
+
+.a11y-reading-assistant--closed .a11y-reading-assistant__message {
+  display: none;
+}
+
+.a11y-reading-assistant--active {
+  border-color: rgba(243, 178, 26, 0.35);
+}
+
+.a11y-reading-assistant__mini {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.a11y-reading-assistant__mini-copy {
+  display: grid;
+  gap: 0.3rem;
+  min-width: min(100%, 18rem);
+}
+
+.a11y-reading-assistant__mini-copy strong {
+  font-size: 1.1rem;
+  line-height: 1.05;
+}
+
+.a11y-reading-assistant__mini-copy span {
+  color: var(--muted);
+}
+
+.a11y-reading-assistant__mini-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.a11y-reading-assistant__mini .button,
+.a11y-reading-assistant__mini .button-secondary {
+  min-height: 3rem;
+}
+
+.a11y-reading-assistant__panel {
+  padding-top: 0.35rem;
+}
+
+@media (max-width: 640px) {
+  .a11y-reading-assistant {
+    position: fixed;
+    left: 0.65rem;
+    right: 0.65rem;
+    bottom: calc(4.85rem + env(safe-area-inset-bottom));
+    padding: 0.85rem;
+    border-radius: 18px;
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+  }
+
+  .a11y-reading-assistant__mini {
+    gap: 0.65rem;
+  }
+
+  .a11y-reading-assistant__mini-actions {
+    width: 100%;
+  }
+
+  .a11y-reading-assistant__mini-actions .button,
+  .a11y-reading-assistant__mini-actions .button-secondary {
+    min-height: 2.85rem;
+    flex: 1 1 8rem;
+  }
+}
+
+body.vr-low-vision .a11y-reading-assistant {
+  background: rgba(10, 10, 10, 0.99);
+}
+
+body.vr-low-vision .a11y-reading-assistant__mini-copy span,
+body.vr-low-vision .a11y-reading-assistant__message,
+body.vr-low-vision .a11y-reading-assistant__empty {
+  color: rgba(255, 248, 238, 0.96);
+}
+
+@media (max-width: 640px) {
+  .site-main {
+    padding-block-end: 10rem;
   }
 }

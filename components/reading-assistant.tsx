@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { Container } from "@/components/container";
@@ -63,10 +63,14 @@ function markCurrentSection(element: HTMLElement | null) {
   });
 }
 
+function getTrailExcerpt(text: string) {
+  return text.slice(0, 170) + (text.length > 170 ? "…" : "");
+}
+
 export function ReadingAssistant() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [supported, setSupported] = useState(false);
   const [sections, setSections] = useState<ReadingAssistantSection[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -76,11 +80,11 @@ export function ReadingAssistant() {
   const [lowVisionEnabled, setLowVisionEnabled] = useState(false);
   const [message, setMessage] = useState("Pronto para ouvir esta página.");
 
-  const storageKey = useMemo(() => getReadingAssistantStorageKey(pathname), [pathname]);
+  const storageKey = getReadingAssistantStorageKey(pathname);
+  const lowVisionStorageKey = getLowVisionStorageKey();
+  const openStorageKey = getReadingAssistantOpenKey();
+  const rateStorageKey = getReadingAssistantRateKey();
   const activeSection = sections[currentIndex] ?? null;
-  const lowVisionStorageKey = useMemo(() => getLowVisionStorageKey(), []);
-  const openStorageKey = useMemo(() => getReadingAssistantOpenKey(), []);
-  const rateStorageKey = useMemo(() => getReadingAssistantRateKey(), []);
 
   useEffect(() => {
     if (!isA11yPublicPath(pathname)) return;
@@ -166,6 +170,24 @@ export function ReadingAssistant() {
     };
   }, []);
 
+  useEffect(() => {
+    const onOpenAssistant = () => {
+      setOpen(true);
+      window.setTimeout(() => {
+        document.getElementById("a11y-reading-assistant")?.scrollIntoView({
+          block: "start",
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        });
+      }, 0);
+    };
+
+    window.addEventListener("vr:open-reading-assistant", onOpenAssistant as EventListener);
+
+    return () => {
+      window.removeEventListener("vr:open-reading-assistant", onOpenAssistant as EventListener);
+    };
+  }, []);
+
   const stop = () => {
     if (isSpeechSupported()) {
       window.speechSynthesis.cancel();
@@ -191,6 +213,7 @@ export function ReadingAssistant() {
       setPlaying(true);
       setPaused(false);
       setCurrentIndex(index);
+      setOpen(true);
       setMessage(`Lendo seção ${index + 1} de ${sections.length}: ${section.title}.`);
     };
     utterance.onend = () => {
@@ -256,24 +279,6 @@ export function ReadingAssistant() {
     }
   };
 
-  useEffect(() => {
-    const onOpenAssistant = () => {
-      setOpen(true);
-      window.setTimeout(() => {
-        document.getElementById("a11y-reading-assistant")?.scrollIntoView({
-          block: "start",
-          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        });
-      }, 0);
-    };
-
-    window.addEventListener("vr:open-reading-assistant", onOpenAssistant as EventListener);
-
-    return () => {
-      window.removeEventListener("vr:open-reading-assistant", onOpenAssistant as EventListener);
-    };
-  }, []);
-
   const toggleLowVision = () => {
     const next = !lowVisionEnabled;
     setLowVisionEnabled(next);
@@ -290,15 +295,32 @@ export function ReadingAssistant() {
 
   return (
     <Container className="a11y-reading-assistant-shell">
-      <section id="a11y-reading-assistant" className={`a11y-reading-assistant ${open ? "a11y-reading-assistant--open" : ""}`} aria-labelledby="a11y-reading-assistant-title">
-        <div className="a11y-reading-assistant__header">
-          <div>
+      <section
+        id="a11y-reading-assistant"
+        className={`a11y-reading-assistant ${open ? "a11y-reading-assistant--open" : "a11y-reading-assistant--closed"} ${playing ? "a11y-reading-assistant--active" : ""}`}
+        aria-labelledby="a11y-reading-assistant-title"
+      >
+        <div className="a11y-reading-assistant__mini" aria-label="Mini-player de leitura assistida">
+          <div className="a11y-reading-assistant__mini-copy">
             <p className="eyebrow">leitura assistida</p>
-            <h2 id="a11y-reading-assistant-title">Ouça a página e ajuste a leitura para baixa visão.</h2>
+            <strong>{playing ? (paused ? "Pausada" : "Lendo") : "Pronta"}</strong>
+            <span>{activeSection ? activeSection.title : "Abra uma página para ouvir por seções."}</span>
           </div>
-          <button type="button" className="button-secondary a11y-reading-assistant__toggle" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="a11y-reading-assistant-panel">
-            {open ? "Recolher" : "Abrir"}
-          </button>
+
+          <div className="a11y-reading-assistant__mini-actions" role="group" aria-label="Controles rápidos de leitura assistida">
+            <button type="button" className="button" onClick={handlePlay} disabled={!supported} aria-label={playing && paused ? "Retomar leitura por voz" : "Ouvir esta página"}>
+              {playing && paused ? "Retomar" : "Ouvir"}
+            </button>
+            <button type="button" className="button-secondary" onClick={handlePause} disabled={!supported || !playing || paused} aria-label="Pausar leitura por voz">
+              Pausar
+            </button>
+            <button type="button" className="button-secondary" onClick={stop} disabled={!supported && !playing} aria-label="Parar leitura por voz">
+              Parar
+            </button>
+            <button type="button" className="button-secondary" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="a11y-reading-assistant-panel" aria-label={open ? "Recolher painel de leitura assistida" : "Abrir painel de leitura assistida"}>
+              {open ? "Recolher" : "Abrir painel"}
+            </button>
+          </div>
         </div>
 
         <p className="a11y-reading-assistant__message" aria-live="polite">
@@ -307,19 +329,7 @@ export function ReadingAssistant() {
 
         {open ? (
           <div id="a11y-reading-assistant-panel" className="a11y-reading-assistant__panel">
-            <div className="a11y-reading-assistant__controls" role="group" aria-label="Controles de leitura por voz">
-              <button type="button" className="button" onClick={handlePlay} disabled={!supported} aria-label={playing && paused ? "Retomar leitura por voz" : "Ouvir esta página"}>
-                {playing && paused ? "Retomar" : "Ouvir"}
-              </button>
-              <button type="button" className="button-secondary" onClick={handlePause} disabled={!supported || !playing || paused} aria-label="Pausar leitura por voz">
-                Pausar
-              </button>
-              <button type="button" className="button-secondary" onClick={stop} disabled={!supported && !playing} aria-label="Parar leitura por voz">
-                Parar
-              </button>
-            </div>
-
-            <div className="a11y-reading-assistant__controls a11y-reading-assistant__controls--secondary" role="group" aria-label="Navegação por seções e ajustes">
+            <div className="a11y-reading-assistant__controls" role="group" aria-label="Navegação por seções e ajustes">
               <button type="button" className="button-secondary" onClick={handlePrevious} disabled={!sections.length} aria-label="Ir para a seção anterior">
                 Seção anterior
               </button>
@@ -348,10 +358,7 @@ export function ReadingAssistant() {
                 <article className="a11y-reading-assistant__active">
                   <p className="eyebrow">seção atual</p>
                   <h3>{activeSection.title}</h3>
-                  <p>
-                    {activeSection.text.slice(0, 220)}
-                    {activeSection.text.length > 220 ? "…" : ""}
-                  </p>
+                  <p>{getTrailExcerpt(activeSection.text)}</p>
                   <div className="stack-actions">
                     <button type="button" className="button-secondary" onClick={() => markCurrentSection(activeSection.element)} aria-label={`Retomar o foco visual na seção ${activeSection.title}`}>
                       Centralizar trecho
@@ -373,4 +380,3 @@ export function ReadingAssistant() {
     </Container>
   );
 }
-
