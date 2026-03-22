@@ -8,8 +8,8 @@ export type UniversalCapture = {
   file_type: string | null;
   suggested_type: string | null;
   status: "inbox" | "archived" | "published" | "enriched" | "discarded";
-  created_at: string;
-  updated_at: string;
+  created_at: string | null;
+  updated_at: string | null;
 };
 
 export async function getUniversalInboxItems() {
@@ -18,7 +18,7 @@ export async function getUniversalInboxItems() {
     .from("universal_captures")
     .select("*")
     .eq("status", "inbox")
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false, nullsFirst: false });
 
   if (error || !data) {
     console.error("Failed to fetch inbox items", error);

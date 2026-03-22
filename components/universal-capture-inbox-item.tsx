@@ -8,6 +8,19 @@ type Props = {
   item: UniversalCapture;
 };
 
+function formatSafeDate(value: string | null | undefined) {
+  if (!value) {
+    return "Data indefinida";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "Data indefinida";
+  }
+
+  return date.toLocaleDateString("pt-BR");
+}
+
 export function UniversalCaptureInboxItem({ item }: Props) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [feedback, setFeedback] = useState<{ msg: string; err: boolean } | null>(null);
@@ -46,7 +59,7 @@ export function UniversalCaptureInboxItem({ item }: Props) {
           </p>
         </div>
         <span style={{ fontSize: "0.75rem", color: "var(--foreground-50)" }}>
-          {new Date(item.created_at).toLocaleDateString()}
+          {formatSafeDate(item.created_at)}
         </span>
       </div>
 
