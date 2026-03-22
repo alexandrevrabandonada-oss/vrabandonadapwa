@@ -17,14 +17,21 @@ type InternalNavGroup = {
 };
 
 const operatorItems: InternalNavItem[] = [
+  { href: "/interno/capturar", label: "Capturar" },
   { href: "/interno/semana", label: "Semana" },
-  { href: "/interno/entrada", label: "Entrada" },
-  { href: "/interno/enriquecer", label: "Enriquecer" },
-  { href: "/interno/intake", label: "Intake" },
-  { href: "/interno/editorial", label: "Editorial" },
 ];
 
 const groups: InternalNavGroup[] = [
+  {
+    title: "Triagem Legada (Avançada)",
+    items: [
+      { href: "/interno/entrada", label: "Entrada Antiga" },
+      { href: "/interno/enriquecer", label: "Enriquecer" },
+      { href: "/interno/intake", label: "Intake Público" },
+      { href: "/interno/editorial", label: "Editorial Completo" },
+    ],
+  },
+
   {
     title: "Arquivo",
     items: [
