@@ -7,6 +7,9 @@ import { MemoryCollectionCard } from "@/components/memory-collection-card";
 import { MemoryTimelineEntryCard } from "@/components/memory-timeline-entry";
 import { getMemoryCollectionCount, getMemoryTimelineEntries } from "@/lib/memory/navigation";
 import { getPublishedMemoryCollections, getInternalMemoryItems } from "@/lib/memory/queries";
+import { getInternalArchiveAssets } from "@/lib/archive/queries";
+import { getInternalEditorialEntries } from "@/lib/entrada/queries";
+import { editorialEntryStatusLabels, editorialEntryTypeLabels, type EditorialEntry } from "@/lib/entrada/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -26,6 +29,19 @@ type PageProps = {
   searchParams?: Promise<{ status?: string }>;
 };
 
+function isRecentCentralEntry(entry: EditorialEntry) {
+  return (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url);
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
 export default async function InternalMemoryPage({ searchParams }: PageProps) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -38,12 +54,22 @@ export default async function InternalMemoryPage({ searchParams }: PageProps) {
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const status = isFilterValue(resolvedSearchParams.status) ? resolvedSearchParams.status : "all";
-  const items = await getInternalMemoryItems({ status });
-  const collections = await getPublishedMemoryCollections();
-  const allItems = await getInternalMemoryItems();
-  const timelineEntries = getMemoryTimelineEntries(
-    allItems.filter((item) => item.published || item.editorial_status === "published"),
-  );
+
+  const [itemsResult, collectionsResult, allItemsResult, editorialEntriesResult, archiveAssetsResult] = await Promise.allSettled([
+    getInternalMemoryItems({ status }),
+    getPublishedMemoryCollections(),
+    getInternalMemoryItems(),
+    getInternalEditorialEntries(),
+    getInternalArchiveAssets(),
+  ]);
+
+  const items = itemsResult.status === "fulfilled" ? itemsResult.value : [];
+  const collections = collectionsResult.status === "fulfilled" ? collectionsResult.value : [];
+  const allItems = allItemsResult.status === "fulfilled" ? allItemsResult.value : [];
+  const timelineEntries = getMemoryTimelineEntries(allItems.filter((item) => item.published || item.editorial_status === "published"));
+  const centralEntries = editorialEntriesResult.status === "fulfilled" ? editorialEntriesResult.value.filter(isRecentCentralEntry).slice(0, 6) : [];
+  const archiveAssets = archiveAssetsResult.status === "fulfilled" ? archiveAssetsResult.value : [];
+  const archiveByPath = new Map(archiveAssets.filter((asset) => asset.file_path).map((asset) => [asset.file_path, asset]));
 
   const counts = filters.reduce<Record<FilterValue, number>>(
     (acc, value) => {
@@ -61,8 +87,13 @@ export default async function InternalMemoryPage({ searchParams }: PageProps) {
         <p className="hero__lead">
           Crie, edite, publique e arquive memória sem mexer no código. O fluxo continua leve e editorial.
         </p>
-        <div className="hero__actions">          <Link href="/interno/memoria/novo" className="button">Nova memória</Link>
-          <Link href="/memoria" className="button-secondary">Ver área pública</Link>
+        <div className="hero__actions">
+          <Link href="/interno/memoria/novo" className="button">
+            Nova memória
+          </Link>
+          <Link href="/memoria" className="button-secondary">
+            Ver área pública
+          </Link>
         </div>
       </section>
 
@@ -118,6 +149,60 @@ export default async function InternalMemoryPage({ searchParams }: PageProps) {
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
+            <p className="eyebrow">recentes da central</p>
+            <h2>O que virou base de memória.</h2>
+          </div>
+          <p className="section__lead">Foto ou documento guardado na entrada simplificada aparece aqui para virar memória sem se perder.</p>
+        </div>
+
+        <div className="grid-3">
+          {centralEntries.length ? (
+            centralEntries.map((entry) => {
+              const linkedAsset = entry.file_path ? archiveByPath.get(entry.file_path) ?? null : null;
+
+              return (
+                <article key={entry.id} className={`card entry-central-review-card entry-central-review-card--${linkedAsset ? "calm" : "watch"}`}>
+                  <div className="meta-row">
+                    <span className="pill">{editorialEntryTypeLabels[entry.entry_type]}</span>
+                    <span>{editorialEntryStatusLabels[entry.entry_status]}</span>
+                    {entry.target_surface ? <span>{entry.target_surface}</span> : null}
+                  </div>
+                  <h3>{entry.title}</h3>
+                  <p>{entry.summary || entry.details || "Sem resumo ainda."}</p>
+                  <p className="meta-row">
+                    <span>{entry.territory_label || entry.place_label || "Sem território"}</span>
+                    <span>{entry.actor_label || entry.source_label || "Sem ator/fonte"}</span>
+                    <span>{formatDate(entry.updated_at)}</span>
+                  </p>
+                  <div className="stack-actions">
+                    <Link href={`/interno/entrada/${entry.id}`} className="button-secondary">
+                      Abrir entrada
+                    </Link>
+                    {linkedAsset ? (
+                      <Link href={`/interno/acervo/${linkedAsset.id}`} className="button-secondary">
+                        Abrir no acervo
+                      </Link>
+                    ) : (
+                      <Link href={`/interno/memoria/novo?entry_id=${entry.id}`} className="button-secondary">
+                        Levar à memória
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="support-box">
+              <h3>Sem recentes da central</h3>
+              <p>Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para virar memória sem retrabalho.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
             <p className="eyebrow">coleções</p>
             <h2>Recortes alimentados por dados</h2>
           </div>
@@ -128,11 +213,7 @@ export default async function InternalMemoryPage({ searchParams }: PageProps) {
 
         <div className="grid-3">
           {collections.map((collection) => (
-            <MemoryCollectionCard
-              key={collection.slug}
-              collection={collection}
-              count={getMemoryCollectionCount(collection, allItems)}
-            />
+            <MemoryCollectionCard key={collection.slug} collection={collection} count={getMemoryCollectionCount(collection, allItems)} />
           ))}
         </div>
       </section>
@@ -161,4 +242,3 @@ export default async function InternalMemoryPage({ searchParams }: PageProps) {
     </Container>
   );
 }
-
