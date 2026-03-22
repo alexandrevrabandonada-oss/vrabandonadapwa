@@ -3,7 +3,6 @@
 import { randomUUID } from "node:crypto";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import type { ArchiveAssetType } from "@/lib/archive/types";
 import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
@@ -100,10 +99,10 @@ async function ensureAdmin() {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    redirect("/interno/entrar");
+    return { supabase, user: null, authError: true as const };
   }
 
-  return { supabase, user };
+  return { supabase, user, authError: false as const };
 }
 
 async function syncArchiveAssetFromEntry({
@@ -259,7 +258,15 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
 
   const { status, target } = resolveEntryState(entryType, saveMode);
   const supabaseResult = await ensureAdmin();
-  const { supabase, user } = supabaseResult;
+  const { supabase, user, authError } = supabaseResult;
+
+  if (authError || !user) {
+    return {
+      ok: false,
+      message: "Sua sessão interna expirou. Entre novamente antes de salvar.",
+    };
+  }
+
   const now = new Date().toISOString();
   const entryId = currentId ?? randomUUID();
 
