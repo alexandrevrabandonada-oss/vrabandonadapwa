@@ -74,7 +74,7 @@ export function InternalWorkspaceShell({ children }: { children: React.ReactNode
           <div className="internal-workspace__copy">
             <p className="eyebrow">modo operador</p>
             <h1>Cockpit interno.</h1>
-            <p>Entrada curta, fila viva e transformação rápida. O resto fica fora da primeira dobra.</p>
+            <p>Entrada curta, fila viva e transformação rápida.</p>
           </div>
 
           <div className="internal-workspace__top-actions">
