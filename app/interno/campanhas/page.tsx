@@ -6,6 +6,9 @@ import { Container } from "@/components/container";
 import { CampaignCard } from "@/components/campaign-card";
 import { getCampaignStatusLabel } from "@/lib/campaigns/navigation";
 import { getInternalCampaignLinks, getInternalCampaigns } from "@/lib/campaigns/queries";
+import { getInternalArchiveAssets } from "@/lib/archive/queries";
+import { editorialEntryStatusLabels, editorialEntryTypeLabels, type EditorialEntry } from "@/lib/entrada/types";
+import { getInternalEditorialEntries } from "@/lib/entrada/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -24,6 +27,19 @@ function isFilterValue(value: string | undefined): value is FilterValue {
   return Boolean(value) && filters.includes(value as FilterValue);
 }
 
+function isRecentCentralEntry(entry: EditorialEntry) {
+  return (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url);
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
 export default async function InternalCampaignsPage({ searchParams }: PageProps) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -38,10 +54,13 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
   const status = isFilterValue(resolvedSearchParams.status) ? resolvedSearchParams.status : "all";
   const campaigns = await getInternalCampaigns({ status });
   const allCampaigns = status === "all" ? campaigns : await getInternalCampaigns({ status: "all" });
+  const [editorialEntries, archiveAssets] = await Promise.all([getInternalEditorialEntries(), getInternalArchiveAssets()]);
   const linkPairs = await Promise.all(allCampaigns.map(async (campaign) => [campaign.id, await getInternalCampaignLinks(campaign.id)] as const));
   const linkCountById = new Map(linkPairs.map(([id, links]) => [id, links.length]));
   const publishedCount = allCampaigns.filter((campaign) => campaign.public_visibility).length;
   const activeCount = allCampaigns.filter((campaign) => campaign.status === "active" || campaign.status === "monitoring").length;
+  const centralEntries = editorialEntries.filter(isRecentCentralEntry).slice(0, 6);
+  const archiveByPath = new Map(archiveAssets.filter((asset) => asset.file_path).map((asset) => [asset.file_path, asset]));
 
   return (
     <Container className="intro-grid internal-page campaign-internal-page">
@@ -51,7 +70,8 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
         <p className="hero__lead">
           Organize chamados públicos que condensam investigação, participação, método e apoio.
         </p>
-        <div className="hero__actions">          <Link href="/interno/campanhas/novo" className="button">
+        <div className="hero__actions">
+          <Link href="/interno/campanhas/novo" className="button">
             Nova campanha
           </Link>
         </div>
@@ -102,6 +122,60 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
+            <p className="eyebrow">recentes da central</p>
+            <h2>O que pode virar campanha.</h2>
+          </div>
+          <p className="section__lead">Entradas de foto e documento aparecem aqui quando já carregam lastro para mobilização pública.</p>
+        </div>
+
+        <div className="grid-3">
+          {centralEntries.length ? (
+            centralEntries.map((entry) => {
+              const linkedAsset = entry.file_path ? archiveByPath.get(entry.file_path) ?? null : null;
+
+              return (
+                <article key={entry.id} className={`card entry-central-review-card entry-central-review-card--${linkedAsset ? "calm" : "watch"}`}>
+                  <div className="meta-row">
+                    <span className="pill">{editorialEntryTypeLabels[entry.entry_type]}</span>
+                    <span>{editorialEntryStatusLabels[entry.entry_status]}</span>
+                    {entry.target_surface ? <span>{entry.target_surface}</span> : null}
+                  </div>
+                  <h3>{entry.title}</h3>
+                  <p>{entry.summary || entry.details || "Sem resumo ainda."}</p>
+                  <p className="meta-row">
+                    <span>{entry.territory_label || entry.place_label || "Sem território"}</span>
+                    <span>{entry.actor_label || entry.source_label || "Sem ator/fonte"}</span>
+                    <span>{formatDate(entry.updated_at)}</span>
+                  </p>
+                  <div className="stack-actions">
+                    <Link href={`/interno/entrada/${entry.id}`} className="button-secondary">
+                      Abrir entrada
+                    </Link>
+                    {linkedAsset ? (
+                      <Link href={`/interno/acervo/${linkedAsset.id}`} className="button-secondary">
+                        Abrir no acervo
+                      </Link>
+                    ) : (
+                      <Link href={`/interno/campanhas/novo?entry_id=${entry.id}`} className="button-secondary">
+                        Levar à campanha
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="support-box">
+              <h3>Sem recentes da central</h3>
+              <p>Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para abrir campanha sem retrabalho.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
             <p className="eyebrow">lista</p>
             <h2>Campanhas registradas</h2>
           </div>
@@ -129,4 +203,3 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
     </Container>
   );
 }
-
