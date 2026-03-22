@@ -57,8 +57,8 @@ export function UniversalCaptureComposer() {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
 
         const { error: uploadError } = await supabase.storage
-          .from("universal_captures")
-          .upload(fileName, file, {
+          .from("archive-assets")
+          .upload(`captures/${fileName}`, file, {
             contentType: file.type,
             upsert: false,
           });
@@ -71,8 +71,8 @@ export function UniversalCaptureComposer() {
         }
 
         const { data: publicUrlData } = supabase.storage
-          .from("universal_captures")
-          .getPublicUrl(fileName);
+          .from("archive-assets")
+          .getPublicUrl(`captures/${fileName}`);
 
         fileUrl = publicUrlData.publicUrl;
         title = file.name;
