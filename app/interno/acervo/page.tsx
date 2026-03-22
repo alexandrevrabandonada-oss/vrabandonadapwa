@@ -41,16 +41,37 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
   const visibility = isVisibilityFilter(resolvedSearchParams.visibility) ? resolvedSearchParams.visibility : "all";
   const activeCollection = resolvedSearchParams.collection ?? "";
 
-  const allAssets = await getInternalArchiveAssets();
-  const collections = await getInternalArchiveCollections();
-  const assets =
+  const [assetsResult, collectionsResult, memoryResult, editorialResult] = await Promise.allSettled([
     visibility === "all"
       ? activeCollection
-        ? await getInternalArchiveAssets({ collectionSlug: activeCollection })
-        : allAssets
-      : await getInternalArchiveAssets({ visibility, collectionSlug: activeCollection || undefined });
-  const memoryItems = await getInternalMemoryItems();
-  const editorialItems = await getInternalEditorialItems();
+        ? getInternalArchiveAssets({ collectionSlug: activeCollection })
+        : getInternalArchiveAssets()
+      : getInternalArchiveAssets({ visibility, collectionSlug: activeCollection || undefined }),
+    getInternalArchiveCollections(),
+    getInternalMemoryItems(),
+    getInternalEditorialItems(),
+  ]);
+
+  const allAssets = assetsResult.status === "fulfilled" ? assetsResult.value : [];
+  const collections = collectionsResult.status === "fulfilled" ? collectionsResult.value : [];
+  const memoryItems = memoryResult.status === "fulfilled" ? memoryResult.value : [];
+  const editorialItems = editorialResult.status === "fulfilled" ? editorialResult.value : [];
+
+  if (assetsResult.status === "rejected") {
+    console.error("Failed to load archive assets", assetsResult.reason);
+  }
+
+  if (collectionsResult.status === "rejected") {
+    console.error("Failed to load archive collections", collectionsResult.reason);
+  }
+
+  if (memoryResult.status === "rejected") {
+    console.error("Failed to load memory items for archive page", memoryResult.reason);
+  }
+
+  if (editorialResult.status === "rejected") {
+    console.error("Failed to load editorial items for archive page", editorialResult.reason);
+  }
 
   const memoryById = new Map(memoryItems.map((memory) => [memory.id, memory.title]));
   const editorialById = new Map(editorialItems.map((editorial) => [editorial.id, editorial.title]));
@@ -65,7 +86,8 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
         <p className="hero__lead">
           Suba fotos, scans, PDFs e documentos-base. O acervo sustenta a memória sem virar um DAM pesado.
         </p>
-        <div className="hero__actions">          <Link href="/interno/acervo/novo" className="button">
+        <div className="hero__actions">
+          <Link href="/interno/acervo/novo" className="button">
             Novo anexo
           </Link>
           <Link href="/interno/acervo/colecoes" className="button-secondary">
@@ -153,9 +175,18 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
           <p className="section__lead">Cada card abaixo carrega o lastro documental do projeto, não só a narrativa final.</p>
         </div>
 
+        {assetsResult.status === "rejected" || collectionsResult.status === "rejected" || memoryResult.status === "rejected" || editorialResult.status === "rejected" ? (
+          <div className="support-box" style={{ marginBottom: "1rem" }}>
+            <h3>Parte dos dados não carregou</h3>
+            <p>
+              A página continua aberta, mas algum bloco do acervo falhou ao consultar o banco. Você ainda pode criar um novo anexo ou ajustar os filtros.
+            </p>
+          </div>
+        ) : null}
+
         <div className="grid-3">
-          {assets.length ? (
-            assets.map((asset) => (
+          {allAssets.length ? (
+            allAssets.map((asset) => (
               <ArchiveAssetCard
                 key={asset.id}
                 asset={asset}
@@ -177,4 +208,3 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
     </Container>
   );
 }
-
