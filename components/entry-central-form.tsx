@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import { saveEditorialEntryAction } from "@/app/interno/entrada/actions";
 import { entryTypeConfig } from "@/lib/entrada/navigation";
@@ -9,6 +10,7 @@ import { editorialEntryTargetLabels, editorialEntryTypeLabels, type EditorialEnt
 type EntryCentralFormState = {
   ok: boolean;
   message: string;
+  redirectTo?: string | null;
 };
 
 type Props = {
@@ -16,7 +18,7 @@ type Props = {
   entry?: EditorialEntry | null;
 };
 
-const initialState: EntryCentralFormState = { ok: false, message: "" };
+const initialState: EntryCentralFormState = { ok: false, message: "", redirectTo: null };
 
 function pickFirst(value: string | null, fallback: string) {
   const trimmed = value?.trim();
@@ -47,8 +49,15 @@ function getActionLabel(entryType: EditorialEntryType, saveMode: string, editing
 
 export function EntryCentralForm({ entryType, entry }: Props) {
   const [state, formAction, pending] = useActionState(saveEditorialEntryAction, initialState);
+  const router = useRouter();
   const config = entryTypeConfig[entryType];
   const isEditing = Boolean(entry);
+
+  useEffect(() => {
+    if (state.ok && state.redirectTo) {
+      router.replace(state.redirectTo);
+    }
+  }, [router, state.ok, state.redirectTo]);
 
   return (
     <form className="intake-form entry-central-form" action={formAction} encType="multipart/form-data">
@@ -115,8 +124,6 @@ export function EntryCentralForm({ entryType, entry }: Props) {
               <input name="territory_label" type="text" placeholder="CSN e entorno" defaultValue={pickFirst(entry?.territory_label ?? null, "")} />
             </label>
           </div>
-
-
         </>
       ) : null}
 
@@ -210,5 +217,3 @@ export function EntryCentralForm({ entryType, entry }: Props) {
     </form>
   );
 }
-
-

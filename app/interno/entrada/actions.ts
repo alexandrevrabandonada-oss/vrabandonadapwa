@@ -14,6 +14,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 export type EntryActionState = {
   ok: boolean;
   message: string;
+  redirectTo?: string | null;
 };
 
 function normalize(value: FormDataEntryValue | null) {
@@ -386,5 +387,11 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
     revalidatePath(`/interno/acervo/${archiveResult.archiveAssetId}`);
   }
 
-  redirect(`/interno/entrada/${entryId}?saved=1${archiveResult ? `&archive=1&archive_asset_id=${archiveResult.archiveAssetId}` : shouldMaterializeArchive ? "&archive=0" : ""}`);
+  return {
+    ok: true,
+    message: "Entrada guardada com sucesso.",
+    redirectTo: `/interno/entrada/${entryId}?saved=1${archiveResult ? `&archive=1&archive_asset_id=${archiveResult.archiveAssetId}` : shouldMaterializeArchive ? "&archive=0" : ""}`,
+  };
 }
+
+
