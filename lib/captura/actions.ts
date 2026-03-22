@@ -199,7 +199,7 @@ export async function archiveCapture(id: string) {
 
   if (insErr) {
     console.error("Erro insert memory_items", insErr);
-    return { ok: false, message: "Erro ao guardar no Acervo." };
+    return { ok: false, message: `Erro ao guardar no Acervo: ${insErr.message}` };
   }
 
   await supabase.from("universal_captures").update({ status: "archived" }).eq("id", id);
