@@ -4,10 +4,10 @@ import { redirect } from "next/navigation";
 
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
+import { InternalRecentCentralEntries } from "@/components/internal-recent-central-entries";
 import { getInternalArchiveCollections } from "@/lib/archive/collections";
 import { getInternalArchiveAssets } from "@/lib/archive/queries";
 import { getInternalEditorialEntries } from "@/lib/entrada/queries";
-import { editorialEntryStatusLabels, editorialEntryTypeLabels, type EditorialEntry } from "@/lib/entrada/types";
 import { getInternalEditorialItems } from "@/lib/editorial/queries";
 import { getInternalMemoryItems } from "@/lib/memory/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -27,19 +27,6 @@ type VisibilityFilter = (typeof visibilityFilters)[number];
 
 function isVisibilityFilter(value: string | undefined): value is VisibilityFilter {
   return Boolean(value) && visibilityFilters.includes(value as VisibilityFilter);
-}
-
-function isRecentCentralEntry(entry: EditorialEntry) {
-  return (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url);
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
 }
 
 export default async function InternalArchivePage({ searchParams }: PageProps) {
@@ -72,7 +59,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
   const collections = collectionsResult.status === "fulfilled" ? collectionsResult.value : [];
   const memoryItems = memoryResult.status === "fulfilled" ? memoryResult.value : [];
   const editorialItems = editorialItemsResult.status === "fulfilled" ? editorialItemsResult.value : [];
-  const centralEntries = editorialEntriesResult.status === "fulfilled" ? editorialEntriesResult.value.filter(isRecentCentralEntry).slice(0, 6) : [];
+  const centralEntries = editorialEntriesResult.status === "fulfilled" ? editorialEntriesResult.value.filter((entry) => (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url)).slice(0, 6) : [];
 
   if (assetsResult.status === "rejected") {
     console.error("Failed to load archive assets", assetsResult.reason);
@@ -96,7 +83,6 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
 
   const memoryById = new Map(memoryItems.map((memory) => [memory.id, memory.title]));
   const editorialById = new Map(editorialItems.map((editorial) => [editorial.id, editorial.title]));
-  const assetByPath = new Map(allAssets.filter((asset) => asset.file_path).map((asset) => [asset.file_path, asset]));
   const publicCount = allAssets.filter((asset) => asset.public_visibility).length;
   const linkedCount = allAssets.filter((asset) => asset.memory_item_id || asset.editorial_item_id).length;
 
@@ -160,59 +146,16 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
         </div>
       </section>
 
-      <section className="section internal-panel">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">recentes da central</p>
-            <h2>O que guardou agora.</h2>
-          </div>
-          <p className="section__lead">Entradas rápidas de foto e documento aparecem aqui antes da curadoria profunda.</p>
-        </div>
-
-        <div className="grid-3">
-          {centralEntries.length ? (
-            centralEntries.map((entry) => {
-              const linkedAsset = entry.file_path ? assetByPath.get(entry.file_path) ?? null : null;
-
-              return (
-                <article key={entry.id} className={`card entry-central-review-card entry-central-review-card--${linkedAsset ? "calm" : "watch"}`}>
-                  <div className="meta-row">
-                    <span className="pill">{editorialEntryTypeLabels[entry.entry_type]}</span>
-                    <span>{editorialEntryStatusLabels[entry.entry_status]}</span>
-                    {entry.target_surface ? <span>{entry.target_surface}</span> : null}
-                  </div>
-                  <h3>{entry.title}</h3>
-                  <p>{entry.summary || entry.details || "Sem resumo ainda."}</p>
-                  <p className="meta-row">
-                    <span>{entry.territory_label || entry.place_label || "Sem território"}</span>
-                    <span>{entry.actor_label || entry.source_label || "Sem ator/fonte"}</span>
-                    <span>{formatDate(entry.updated_at)}</span>
-                  </p>
-                  <div className="stack-actions">
-                    <Link href={`/interno/entrada/${entry.id}`} className="button-secondary">
-                      Abrir entrada
-                    </Link>
-                    {linkedAsset ? (
-                      <Link href={`/interno/acervo/${linkedAsset.id}`} className="button-secondary">
-                        Abrir no acervo
-                      </Link>
-                    ) : (
-                      <Link href={`/interno/acervo/novo?entry_id=${entry.id}`} className="button-secondary">
-                        Levar ao acervo
-                      </Link>
-                    )}
-                  </div>
-                </article>
-              );
-            })
-          ) : (
-            <div className="support-box">
-              <h3>Sem recentes da central</h3>
-              <p>Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para virar acervo sem retrabalho.</p>
-            </div>
-          )}
-        </div>
-      </section>
+      <InternalRecentCentralEntries
+        title="O que guardou agora."
+        lead="Entradas rápidas de foto e documento aparecem aqui antes da curadoria profunda."
+        entries={centralEntries}
+        archiveAssets={allAssets}
+        emptyTitle="Sem recentes da central"
+        emptyDescription="Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para virar acervo sem retrabalho."
+        fallbackLabel="Levar ao acervo"
+        fallbackHref={(entry) => `/interno/acervo/novo?entry_id=${entry.id}`}
+      />
 
       <section className="section internal-panel">
         <div className="grid-2">
@@ -260,26 +203,24 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
           </div>
         ) : null}
 
-        <div className="grid-3">
-          {allAssets.length ? (
-            allAssets.map((asset) => (
+        {allAssets.length ? (
+          <div className="grid-2">
+            {allAssets.map((asset) => (
               <ArchiveAssetCard
                 key={asset.id}
                 asset={asset}
+                memoryLabel={asset.memory_item_id ? memoryById.get(asset.memory_item_id) : undefined}
+                editorialLabel={asset.editorial_item_id ? editorialById.get(asset.editorial_item_id) : undefined}
                 href={`/interno/acervo/${asset.id}`}
-                actionLabel="Abrir anexo"
-                memoryLabel={asset.memory_item_id ? memoryById.get(asset.memory_item_id) ?? null : null}
-                editorialLabel={asset.editorial_item_id ? editorialById.get(asset.editorial_item_id) ?? null : null}
-                collectionLabel={asset.collection_slug ? collections.find((collection) => collection.slug === asset.collection_slug)?.title ?? null : null}
               />
-            ))
-          ) : (
-            <div className="support-box">
-              <h3>Sem anexos neste filtro</h3>
-              <p>Crie o primeiro objeto de acervo ou ajuste a visibilidade para ver material publicado.</p>
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="support-box">
+            <h3>Sem anexos neste filtro</h3>
+            <p>Crie o primeiro objeto de acervo ou ajuste a visibilidade para ver material publicado.</p>
+          </div>
+        )}
       </section>
     </Container>
   );
