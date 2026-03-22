@@ -237,5 +237,6 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
   revalidatePath(`/interno/entrada/${entryId}`);
   revalidatePath("/interno");
 
-  redirect(`/interno/entrada/${entryId}`);
+  redirect(`/interno/entrada/${entryId}?saved=1`);
 }
+

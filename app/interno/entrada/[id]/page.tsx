@@ -15,10 +15,13 @@ export const metadata: Metadata = {
 
 type PageProps = {
   params: Promise<{ id: string }>;
+  searchParams?: Promise<{ saved?: string }>;
 };
 
-export default async function EntradaDetailPage({ params }: PageProps) {
+export default async function EntradaDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const saved = resolvedSearchParams.saved === "1";
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -44,6 +47,11 @@ export default async function EntradaDetailPage({ params }: PageProps) {
           {entryTypeLabel} · {editorialEntryStatusLabels[entry.entry_status]}
           {entry.target_surface ? ` · ${editorialEntryTargetLabels[entry.target_surface]}` : ""}
         </p>
+        {saved ? (
+          <p className="form-status form-status--ok" aria-live="polite">
+            Entrada guardada com sucesso. Se for foto ou documento, ela ainda pode virar acervo na etapa 2.
+          </p>
+        ) : null}
         <div className="hero__actions">
           <Link href="/interno/entrada" className="button-secondary">
             Voltar à central
