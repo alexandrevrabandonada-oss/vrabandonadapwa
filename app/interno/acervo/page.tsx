@@ -6,6 +6,8 @@ import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { Container } from "@/components/container";
 import { getInternalArchiveCollections } from "@/lib/archive/collections";
 import { getInternalArchiveAssets } from "@/lib/archive/queries";
+import { getInternalEditorialEntries } from "@/lib/entrada/queries";
+import { editorialEntryStatusLabels, editorialEntryTypeLabels, type EditorialEntry } from "@/lib/entrada/types";
 import { getInternalEditorialItems } from "@/lib/editorial/queries";
 import { getInternalMemoryItems } from "@/lib/memory/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -27,6 +29,19 @@ function isVisibilityFilter(value: string | undefined): value is VisibilityFilte
   return Boolean(value) && visibilityFilters.includes(value as VisibilityFilter);
 }
 
+function isRecentCentralEntry(entry: EditorialEntry) {
+  return (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url);
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
 export default async function InternalArchivePage({ searchParams }: PageProps) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -41,7 +56,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
   const visibility = isVisibilityFilter(resolvedSearchParams.visibility) ? resolvedSearchParams.visibility : "all";
   const activeCollection = resolvedSearchParams.collection ?? "";
 
-  const [assetsResult, collectionsResult, memoryResult, editorialResult] = await Promise.allSettled([
+  const [assetsResult, collectionsResult, memoryResult, editorialItemsResult, editorialEntriesResult] = await Promise.allSettled([
     visibility === "all"
       ? activeCollection
         ? getInternalArchiveAssets({ collectionSlug: activeCollection })
@@ -50,12 +65,14 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
     getInternalArchiveCollections(),
     getInternalMemoryItems(),
     getInternalEditorialItems(),
+    getInternalEditorialEntries(),
   ]);
 
   const allAssets = assetsResult.status === "fulfilled" ? assetsResult.value : [];
   const collections = collectionsResult.status === "fulfilled" ? collectionsResult.value : [];
   const memoryItems = memoryResult.status === "fulfilled" ? memoryResult.value : [];
-  const editorialItems = editorialResult.status === "fulfilled" ? editorialResult.value : [];
+  const editorialItems = editorialItemsResult.status === "fulfilled" ? editorialItemsResult.value : [];
+  const centralEntries = editorialEntriesResult.status === "fulfilled" ? editorialEntriesResult.value.filter(isRecentCentralEntry).slice(0, 6) : [];
 
   if (assetsResult.status === "rejected") {
     console.error("Failed to load archive assets", assetsResult.reason);
@@ -69,12 +86,17 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
     console.error("Failed to load memory items for archive page", memoryResult.reason);
   }
 
-  if (editorialResult.status === "rejected") {
-    console.error("Failed to load editorial items for archive page", editorialResult.reason);
+  if (editorialItemsResult.status === "rejected") {
+    console.error("Failed to load editorial items for archive page", editorialItemsResult.reason);
+  }
+
+  if (editorialEntriesResult.status === "rejected") {
+    console.error("Failed to load editorial entries for archive page", editorialEntriesResult.reason);
   }
 
   const memoryById = new Map(memoryItems.map((memory) => [memory.id, memory.title]));
   const editorialById = new Map(editorialItems.map((editorial) => [editorial.id, editorial.title]));
+  const assetByPath = new Map(allAssets.filter((asset) => asset.file_path).map((asset) => [asset.file_path, asset]));
   const publicCount = allAssets.filter((asset) => asset.public_visibility).length;
   const linkedCount = allAssets.filter((asset) => asset.memory_item_id || asset.editorial_item_id).length;
 
@@ -141,6 +163,60 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
       <section className="section internal-panel">
         <div className="grid-2">
           <div>
+            <p className="eyebrow">recentes da central</p>
+            <h2>O que guardou agora.</h2>
+          </div>
+          <p className="section__lead">Entradas rápidas de foto e documento aparecem aqui antes da curadoria profunda.</p>
+        </div>
+
+        <div className="grid-3">
+          {centralEntries.length ? (
+            centralEntries.map((entry) => {
+              const linkedAsset = entry.file_path ? assetByPath.get(entry.file_path) ?? null : null;
+
+              return (
+                <article key={entry.id} className={`card entry-central-review-card entry-central-review-card--${linkedAsset ? "calm" : "watch"}`}>
+                  <div className="meta-row">
+                    <span className="pill">{editorialEntryTypeLabels[entry.entry_type]}</span>
+                    <span>{editorialEntryStatusLabels[entry.entry_status]}</span>
+                    {entry.target_surface ? <span>{entry.target_surface}</span> : null}
+                  </div>
+                  <h3>{entry.title}</h3>
+                  <p>{entry.summary || entry.details || "Sem resumo ainda."}</p>
+                  <p className="meta-row">
+                    <span>{entry.territory_label || entry.place_label || "Sem território"}</span>
+                    <span>{entry.actor_label || entry.source_label || "Sem ator/fonte"}</span>
+                    <span>{formatDate(entry.updated_at)}</span>
+                  </p>
+                  <div className="stack-actions">
+                    <Link href={`/interno/entrada/${entry.id}`} className="button-secondary">
+                      Abrir entrada
+                    </Link>
+                    {linkedAsset ? (
+                      <Link href={`/interno/acervo/${linkedAsset.id}`} className="button-secondary">
+                        Abrir no acervo
+                      </Link>
+                    ) : (
+                      <Link href={`/interno/acervo/novo?entry_id=${entry.id}`} className="button-secondary">
+                        Levar ao acervo
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="support-box">
+              <h3>Sem recentes da central</h3>
+              <p>Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para virar acervo sem retrabalho.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
             <p className="eyebrow">coleções</p>
             <h2>Recortes editoriais</h2>
           </div>
@@ -175,7 +251,7 @@ export default async function InternalArchivePage({ searchParams }: PageProps) {
           <p className="section__lead">Cada card abaixo carrega o lastro documental do projeto, não só a narrativa final.</p>
         </div>
 
-        {assetsResult.status === "rejected" || collectionsResult.status === "rejected" || memoryResult.status === "rejected" || editorialResult.status === "rejected" ? (
+        {assetsResult.status === "rejected" || collectionsResult.status === "rejected" || memoryResult.status === "rejected" || editorialItemsResult.status === "rejected" ? (
           <div className="support-box" style={{ marginBottom: "1rem" }}>
             <h3>Parte dos dados não carregou</h3>
             <p>
