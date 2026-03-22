@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import { signOutAction } from "@/app/interno/actions";
 import { Container } from "@/components/container";
@@ -31,7 +28,6 @@ const groups: InternalNavGroup[] = [
       { href: "/interno/editorial", label: "Editorial Completo" },
     ],
   },
-
   {
     title: "Arquivo",
     items: [
@@ -59,21 +55,7 @@ const groups: InternalNavGroup[] = [
   },
 ];
 
-function isActive(pathname: string, href: string) {
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
-function isLoginRoute(pathname: string) {
-  return pathname === "/interno/entrar";
-}
-
 export function InternalWorkspaceShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  if (isLoginRoute(pathname)) {
-    return <>{children}</>;
-  }
-
   return (
     <div className="internal-workspace internal-workspace--operator">
       <section className="internal-workspace__bar">
@@ -99,12 +81,7 @@ export function InternalWorkspaceShell({ children }: { children: React.ReactNode
         <Container className="internal-workspace__nav-inner">
           <nav className="internal-workspace__primary" aria-label="Navegação interna principal">
             {operatorItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`internal-workspace__primary-link ${isActive(pathname, item.href) ? "internal-workspace__primary-link--active" : ""}`}
-                aria-current={isActive(pathname, item.href) ? "page" : undefined}
-              >
+              <Link key={item.href} href={item.href} className="internal-workspace__primary-link">
                 {item.label}
               </Link>
             ))}
@@ -118,11 +95,7 @@ export function InternalWorkspaceShell({ children }: { children: React.ReactNode
                   <ul>
                     {group.items.map((item) => (
                       <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className={`internal-workspace__link ${isActive(pathname, item.href) ? "internal-workspace__link--active" : ""}`}
-                          aria-current={isActive(pathname, item.href) ? "page" : undefined}
-                        >
+                        <Link href={item.href} className="internal-workspace__link">
                           {item.label}
                         </Link>
                       </li>

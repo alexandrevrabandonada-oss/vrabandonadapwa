@@ -26,6 +26,38 @@ function detectFileType(mime: string) {
   return { fileType: "other", suggestedType: "doc" };
 }
 
+function extractArchivePathFromUrl(fileUrl: string | null) {
+  if (!fileUrl) {
+    return null;
+  }
+
+  const marker = "/storage/v1/object/public/archive-assets/";
+  const index = fileUrl.index(marker);
+
+  if (index === -1) {
+    return null;
+  }
+
+  return fileUrl.slice(index + marker.length);
+}
+
+function resolveArchiveAssetType(capture: { suggested_type: string | null; file_type: string | null }) {
+  if (capture.suggested_type === "photo" || capture.file_type === "image") {
+    return "photo";
+  }
+
+  if (capture.file_type === "pdf") {
+    return "pdf";
+  }
+
+  if (capture.file_type === "audio") {
+    return "audio";
+  }
+
+  return "document";
+}
+
+
 function getFile(formData: FormData) {
   const file = formData.get("file");
   return file instanceof File && file.size > 0 ? file : null;
@@ -175,37 +207,61 @@ export async function publishCaptureAction(formData: FormData) {
 }
 
 export async function archiveCapture(id: string) {
-  const supabase = await createSupabaseServerClient();
+  const { supabase, user, authError } = await ensureInternalSession();
+
+  if (authError || !user) {
+    return { ok: false, message: "Sua sessao interna expirou. Entre novamente antes de arquivar." };
+  }
 
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
   if (!capture) return { ok: false, message: "Captura nao encontrada." };
 
-  const slug = `acervo-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
-  let memoryType = "document";
-  if (capture.suggested_type === "photo") memoryType = "image";
-  if (capture.suggested_type === "post") memoryType = "post";
+  const filePath = extractArchivePathFromUrl(capture.file_url);
 
-  const { error: insErr } = await supabase.from("memory_items").insert({
+  if (!capture.file_url || !filePath) {
+    return { ok: false, message: "Esse item nao tem arquivo valido para entrar no Acervo." };
+  }
+
+  const assetId = randomUUID();
+  const assetType = resolveArchiveAssetType(capture);
+  const thumbUrl = assetType === "photo" ? capture.file_url : null;
+  const thumbPath = assetType === "photo" ? filePath : null;
+
+  const { error: insErr } = await supabase.from("archive_assets").insert({
+    id: assetId,
+    memory_item_id: null,
+    editorial_item_id: null,
+    collection_slug: null,
     title: capture.title || "Material Guardado",
-    slug,
-    body: capture.raw_text || "",
-    excerpt: capture.raw_text ? capture.raw_text.substring(0, 50) : "Material bruto do Acervo.",
-    memory_type: memoryType,
-    memory_collection: "acervo-geral",
-    period_label: "Sem data",
-    cover_image_url: capture.file_url,
-    archive_status: "archived",
+    asset_type: assetType,
+    file_url: capture.file_url,
+    file_path: filePath,
+    thumb_url: thumbUrl,
+    thumb_path: thumbPath,
+    source_label: capture.suggested_type === "photo" ? "Captura universal" : "Inbox de captura",
+    source_date_label: "",
+    approximate_year: null,
+    place_label: null,
+    rights_note: "Uso editorial controlado",
+    description: capture.raw_text || null,
+    public_visibility: false,
+    featured: false,
+    sort_order: 0,
+    created_by: user.email || null,
+    updated_by: user.email || null,
   });
 
   if (insErr) {
-    console.error("Erro insert memory_items", insErr);
+    console.error("Erro insert archive_assets", insErr);
     return { ok: false, message: `Erro ao guardar no Acervo: ${insErr.message}` };
   }
 
   await supabase.from("universal_captures").update({ status: "archived" }).eq("id", id);
   revalidatePath("/interno/capturar");
+  revalidatePath("/interno/acervo");
+  revalidatePath(`/interno/acervo/${assetId}`);
 
-  return { ok: true, message: "O material esta seguro e guardado no Acervo." };
+  return { ok: true, message: "O material entrou no Acervo interno." };
 }
 
 export async function archiveCaptureAction(formData: FormData) {

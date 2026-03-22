@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import { submitUniversalCaptureAction } from "@/lib/captura/actions";
 
 type Props = {
@@ -9,29 +6,12 @@ type Props = {
 };
 
 export function UniversalCaptureComposer({ message, status }: Props) {
-  const [localError, setLocalError] = useState<string | null>(null);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const fileInput = e.currentTarget.elements.namedItem("file") as HTMLInputElement;
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      // 9MB limit to stay safely under Next.js 10MB bodySizeLimit
-      if (file.size > 9 * 1024 * 1024) {
-        e.preventDefault();
-        setLocalError("O arquivo é muito grande. O limite máximo é 9MB.");
-      }
-    }
-  };
-
-  const currentStatus = localError ? "error" : status;
-  const currentMessage = localError || message;
-
-  const tone = currentStatus === "error" ? "var(--alert)" : currentStatus === "ok" ? "var(--success)" : "var(--foreground-50)";
-  const text = currentMessage || "Jogue o material aqui primeiro. Decida para onde vai depois.";
+  const tone = status === "error" ? "var(--alert)" : status === "ok" ? "var(--success)" : "var(--foreground-50)";
+  const text = message || "Jogue o material aqui primeiro. Decida para onde vai depois.";
 
   return (
     <div className="card" style={{ padding: "1.5rem", background: "var(--background-alt)", border: "1px solid var(--border)" }}>
-      <form onSubmit={handleSubmit} action={submitUniversalCaptureAction} encType="multipart/form-data" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <form action={submitUniversalCaptureAction} encType="multipart/form-data" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <label htmlFor="raw_text" className="eyebrow" style={{ color: "var(--foreground-50)" }}>
             Anotacao ou Link
@@ -54,8 +34,10 @@ export function UniversalCaptureComposer({ message, status }: Props) {
             name="file"
             type="file"
             style={{ padding: "0.75rem", borderRadius: "4px", border: "1px dotted var(--foreground-50)", background: "var(--foreground-5)", cursor: "pointer" }}
-            onChange={() => setLocalError(null)}
           />
+          <p style={{ margin: 0, fontSize: "0.8125rem", color: "var(--foreground-50)" }}>
+            Limite pratico: 9MB por arquivo.
+          </p>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "0.5rem", gap: "1rem", flexWrap: "wrap" }}>
