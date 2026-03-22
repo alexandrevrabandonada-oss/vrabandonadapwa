@@ -33,7 +33,12 @@ export function getArchiveAssetPublicUrl(storagePath: string) {
 export async function uploadArchiveAsset(file: File, assetId: string) {
   const supabase = createSupabaseServiceClient();
   const storagePath = buildArchiveAssetPath(assetId, file.name);
-  const { error } = await supabase.storage.from(ARCHIVE_ASSETS_BUCKET).upload(storagePath, file, {
+  
+  // Convert File to Buffer for server-side upload in Next.js Server Actions
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  
+  const { error } = await supabase.storage.from(ARCHIVE_ASSETS_BUCKET).upload(storagePath, buffer, {
     contentType: file.type || "application/octet-stream",
     upsert: false,
   });
