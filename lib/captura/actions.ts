@@ -1,56 +1,133 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
+
 import { revalidatePath } from "next/cache";
 
+import { removeArchiveAsset, uploadArchiveAsset } from "@/lib/media/archive";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-type CaptureMetadata = {
-  rawText: string | null;
-  fileUrl: string | null;
-  fileType: string | null;
-  suggestedType: string | null;
-  title: string | null;
+export type CaptureActionState = {
+  ok: boolean;
+  message: string;
 };
 
-export async function saveUniversalCaptureMetadata(meta: CaptureMetadata) {
-  const supabase = await createSupabaseServerClient();
+const initialCaptureState: CaptureActionState = {
+  ok: false,
+  message: "",
+};
 
-  if (!meta.fileUrl && !meta.rawText) {
-    return { ok: false, message: "Envie um texto, link ou arquivo para capturar." };
+function detectFileType(mime: string) {
+  if (mime.startsWith("image/")) return { fileType: "image", suggestedType: "photo" };
+  if (mime === "application/pdf") return { fileType: "pdf", suggestedType: "doc" };
+  if (mime.startsWith("video/")) return { fileType: "video", suggestedType: "video" };
+  if (mime.startsWith("audio/")) return { fileType: "audio", suggestedType: "audio" };
+  return { fileType: "other", suggestedType: "doc" };
+}
+
+function getFile(formData: FormData) {
+  const file = formData.get("file");
+  return file instanceof File && file.size > 0 ? file : null;
+}
+
+async function ensureInternalSession() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return { supabase, user: null, authError: true as const };
+  }
+
+  return { supabase, user, authError: false as const };
+}
+
+export async function saveUniversalCapture(
+  previousState: CaptureActionState = initialCaptureState,
+  formData: FormData,
+): Promise<CaptureActionState> {
+  void previousState;
+  const rawText = formData.get("raw_text")?.toString().trim() || null;
+  const file = getFile(formData);
+
+  if (!rawText && !file) {
+    return { ok: false, message: "Adicione um texto, link ou arquivo para colar na Inbox." };
+  }
+
+  const { supabase, user, authError } = await ensureInternalSession();
+
+  if (authError || !user) {
+    return { ok: false, message: "Sua sessão interna expirou. Entre novamente antes de capturar." };
+  }
+
+  let fileUrl: string | null = null;
+  let fileType: string | null = null;
+  let suggestedType: string | null = null;
+  let title: string | null = null;
+  let uploadedPath: string | null = null;
+
+  if (file) {
+    const detected = detectFileType(file.type || "");
+    fileType = detected.fileType;
+    suggestedType = detected.suggestedType;
+
+    try {
+      const uploaded = await uploadArchiveAsset(file, randomUUID());
+      fileUrl = uploaded.url;
+      uploadedPath = uploaded.path;
+      title = file.name;
+    } catch (uploadError) {
+      console.error("Failed to upload universal capture file", uploadError);
+      return { ok: false, message: "Nao foi possivel enviar o arquivo agora. Tente novamente." };
+    }
+  }
+
+  if (!fileUrl && rawText) {
+    suggestedType = rawText.startsWith("http") ? "link" : "post";
+    title = rawText.substring(0, 50) + (rawText.length > 50 ? "..." : "");
   }
 
   const { error } = await supabase.from("universal_captures").insert({
-    raw_text: meta.rawText,
-    file_url: meta.fileUrl,
-    file_type: meta.fileType,
-    suggested_type: meta.suggestedType,
-    title: meta.title,
-    status: "inbox"
+    raw_text: rawText,
+    file_url: fileUrl,
+    file_type: fileType,
+    suggested_type: suggestedType,
+    title,
+    status: "inbox",
+    created_by: user.email || null,
+    updated_by: user.email || null,
   });
 
   if (error) {
     console.error("DB Insert error", error);
+
+    if (uploadedPath) {
+      await removeArchiveAsset(uploadedPath).catch((cleanupError) => {
+        console.error("Failed to remove failed universal capture file", cleanupError);
+      });
+    }
+
     return { ok: false, message: `Erro ao salvar na inbox: ${error.message}` };
   }
 
   revalidatePath("/interno/capturar");
-  return { ok: true, message: "Capturado com sucesso!" };
+  return { ok: true, message: "Material capturado com sucesso!" };
 }
 
 export async function publishCapture(id: string) {
   const supabase = await createSupabaseServerClient();
   
-  // 1. Get capture
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
-  if (!capture) return { ok: false, message: "Captura não encontrada." };
+  if (!capture) return { ok: false, message: "Captura nao encontrada." };
   
-  // 2. Insert into Agora (editorial_items)
   const slug = `agora-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
   const { error: insErr } = await supabase.from("editorial_items").insert({
-    title: capture.title || "Publicação Rápida",
+    title: capture.title || "Publicacao Rapida",
     slug,
     body: capture.raw_text || "",
-    excerpt: capture.raw_text ? capture.raw_text.substring(0, 50) : "Publicação direta",
+    excerpt: capture.raw_text ? capture.raw_text.substring(0, 50) : "Publicacao direta",
     category: "post",
     cover_image_url: capture.file_url,
     editorial_status: "published",
@@ -60,24 +137,21 @@ export async function publishCapture(id: string) {
 
   if (insErr) {
     console.error("Erro insert editorial_items", insErr);
-    return { ok: false, message: "Erro ao publicar peça." };
+    return { ok: false, message: "Erro ao publicar peca." };
   }
   
-  // 3. Update capture
   await supabase.from("universal_captures").update({ status: "published" }).eq("id", id);
   revalidatePath("/interno/capturar");
   
-  return { ok: true, message: "A peça já está viva em Agora." };
+  return { ok: true, message: "A peca ja esta viva em Agora." };
 }
 
 export async function archiveCapture(id: string) {
   const supabase = await createSupabaseServerClient();
   
-  // 1. Get capture
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
-  if (!capture) return { ok: false, message: "Captura não encontrada." };
+  if (!capture) return { ok: false, message: "Captura nao encontrada." };
   
-  // 2. Insert into Acervo (memory_items)
   const slug = `acervo-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
   let memoryType = "document";
   if (capture.suggested_type === "photo") memoryType = "image";
@@ -100,21 +174,18 @@ export async function archiveCapture(id: string) {
     return { ok: false, message: "Erro ao guardar no Acervo." };
   }
   
-  // 3. Update capture
   await supabase.from("universal_captures").update({ status: "archived" }).eq("id", id);
   revalidatePath("/interno/capturar");
   
-  return { ok: true, message: "O material está seguro e guardado no Acervo." };
+  return { ok: true, message: "O material esta seguro e guardado no Acervo." };
 }
 
 export async function sendToEnrichment(id: string) {
   const supabase = await createSupabaseServerClient();
   
-  // 1. Get capture
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
-  if (!capture) return { ok: false, message: "Captura não encontrada." };
+  if (!capture) return { ok: false, message: "Captura nao encontrada." };
   
-  // 2. Insert into Enrichment Queue (editorial_entries)
   let entryType = "document";
   if (capture.suggested_type === "photo" || capture.suggested_type === "image") entryType = "image";
   if (capture.suggested_type === "post" || capture.suggested_type === "link") entryType = "post";
@@ -133,7 +204,6 @@ export async function sendToEnrichment(id: string) {
     return { ok: false, message: "Erro ao mandar para enriquecimento." };
   }
   
-  // 3. Update capture
   await supabase.from("universal_captures").update({ status: "enriched" }).eq("id", id);
   revalidatePath("/interno/capturar");
   
