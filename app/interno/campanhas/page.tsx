@@ -4,10 +4,10 @@ import { redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { CampaignCard } from "@/components/campaign-card";
+import { InternalRecentCentralEntries } from "@/components/internal-recent-central-entries";
 import { getCampaignStatusLabel } from "@/lib/campaigns/navigation";
 import { getInternalCampaignLinks, getInternalCampaigns } from "@/lib/campaigns/queries";
 import { getInternalArchiveAssets } from "@/lib/archive/queries";
-import { editorialEntryStatusLabels, editorialEntryTypeLabels, type EditorialEntry } from "@/lib/entrada/types";
 import { getInternalEditorialEntries } from "@/lib/entrada/queries";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -25,19 +25,6 @@ type PageProps = {
 
 function isFilterValue(value: string | undefined): value is FilterValue {
   return Boolean(value) && filters.includes(value as FilterValue);
-}
-
-function isRecentCentralEntry(entry: EditorialEntry) {
-  return (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url);
-}
-
-function formatDate(value: string) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
 }
 
 export default async function InternalCampaignsPage({ searchParams }: PageProps) {
@@ -59,17 +46,14 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
   const linkCountById = new Map(linkPairs.map(([id, links]) => [id, links.length]));
   const publishedCount = allCampaigns.filter((campaign) => campaign.public_visibility).length;
   const activeCount = allCampaigns.filter((campaign) => campaign.status === "active" || campaign.status === "monitoring").length;
-  const centralEntries = editorialEntries.filter(isRecentCentralEntry).slice(0, 6);
-  const archiveByPath = new Map(archiveAssets.filter((asset) => asset.file_path).map((asset) => [asset.file_path, asset]));
+  const centralEntries = editorialEntries.filter((entry) => (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url)).slice(0, 6);
 
   return (
     <Container className="intro-grid internal-page campaign-internal-page">
       <section className="hero internal-hero">
         <p className="eyebrow">campanhas internas</p>
         <h1 className="hero__title">Campanhas.</h1>
-        <p className="hero__lead">
-          Organize chamados públicos que condensam investigação, participação, método e apoio.
-        </p>
+        <p className="hero__lead">Organize chamados públicos que condensam investigação, participação, método e apoio.</p>
         <div className="hero__actions">
           <Link href="/interno/campanhas/novo" className="button">
             Nova campanha
@@ -119,59 +103,16 @@ export default async function InternalCampaignsPage({ searchParams }: PageProps)
         </div>
       </section>
 
-      <section className="section internal-panel">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">recentes da central</p>
-            <h2>O que pode virar campanha.</h2>
-          </div>
-          <p className="section__lead">Entradas de foto e documento aparecem aqui quando já carregam lastro para mobilização pública.</p>
-        </div>
-
-        <div className="grid-3">
-          {centralEntries.length ? (
-            centralEntries.map((entry) => {
-              const linkedAsset = entry.file_path ? archiveByPath.get(entry.file_path) ?? null : null;
-
-              return (
-                <article key={entry.id} className={`card entry-central-review-card entry-central-review-card--${linkedAsset ? "calm" : "watch"}`}>
-                  <div className="meta-row">
-                    <span className="pill">{editorialEntryTypeLabels[entry.entry_type]}</span>
-                    <span>{editorialEntryStatusLabels[entry.entry_status]}</span>
-                    {entry.target_surface ? <span>{entry.target_surface}</span> : null}
-                  </div>
-                  <h3>{entry.title}</h3>
-                  <p>{entry.summary || entry.details || "Sem resumo ainda."}</p>
-                  <p className="meta-row">
-                    <span>{entry.territory_label || entry.place_label || "Sem território"}</span>
-                    <span>{entry.actor_label || entry.source_label || "Sem ator/fonte"}</span>
-                    <span>{formatDate(entry.updated_at)}</span>
-                  </p>
-                  <div className="stack-actions">
-                    <Link href={`/interno/entrada/${entry.id}`} className="button-secondary">
-                      Abrir entrada
-                    </Link>
-                    {linkedAsset ? (
-                      <Link href={`/interno/acervo/${linkedAsset.id}`} className="button-secondary">
-                        Abrir no acervo
-                      </Link>
-                    ) : (
-                      <Link href={`/interno/campanhas/novo?entry_id=${entry.id}`} className="button-secondary">
-                        Levar à campanha
-                      </Link>
-                    )}
-                  </div>
-                </article>
-              );
-            })
-          ) : (
-            <div className="support-box">
-              <h3>Sem recentes da central</h3>
-              <p>Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para abrir campanha sem retrabalho.</p>
-            </div>
-          )}
-        </div>
-      </section>
+      <InternalRecentCentralEntries
+        title="O que pode virar campanha."
+        lead="Entradas de foto e documento aparecem aqui quando já carregam lastro para mobilização pública."
+        entries={centralEntries}
+        archiveAssets={archiveAssets}
+        emptyTitle="Sem recentes da central"
+        emptyDescription="Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para abrir campanha sem retrabalho."
+        fallbackLabel="Levar à campanha"
+        fallbackHref={(entry) => `/interno/campanhas/novo?entry_id=${entry.id}`}
+      />
 
       <section className="section internal-panel">
         <div className="grid-2">
