@@ -5,6 +5,7 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import type { ArchiveAssetType } from "@/lib/archive/types";
 import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
 import { editorialEntryTypes, type EditorialEntryStatus, type EditorialEntryTarget, type EditorialEntryType } from "@/lib/entrada/types";
 import { removeArchiveAsset, uploadArchiveAsset } from "@/lib/media/archive";
@@ -44,6 +45,14 @@ function getFile(formData: FormData) {
 
 function isEntryType(value: string): value is EditorialEntryType {
   return editorialEntryTypes.includes(value as EditorialEntryType);
+}
+
+function resolveArchiveAssetType(entryType: EditorialEntryType, mimeType: string | null): ArchiveAssetType {
+  if (entryType === "image") {
+    return mimeType === "application/pdf" ? "scan" : "photo";
+  }
+
+  return mimeType === "application/pdf" ? "pdf" : "document";
 }
 
 function resolveEntryState(entryType: EditorialEntryType, saveMode: string): { status: EditorialEntryStatus; target: EditorialEntryTarget | null } {
@@ -94,6 +103,109 @@ async function ensureAdmin() {
   }
 
   return { supabase, user };
+}
+
+async function syncArchiveAssetFromEntry({
+  supabase,
+  userEmail,
+  entryType,
+  title,
+  summary,
+  details,
+  sourceLabel,
+  yearLabel,
+  approximateYear,
+  placeLabel,
+  territoryLabel,
+  actorLabel,
+  notes,
+  featured,
+  sortOrder,
+  fileUrl,
+  filePath,
+  currentFilePath,
+  fileMimeType,
+}: {
+  supabase: Awaited<ReturnType<typeof createSupabaseServerClient>>;
+  userEmail: string | null;
+  entryType: EditorialEntryType;
+  title: string;
+  summary: string | null;
+  details: string | null;
+  sourceLabel: string | null;
+  yearLabel: string | null;
+  approximateYear: number | null;
+  placeLabel: string | null;
+  territoryLabel: string | null;
+  actorLabel: string | null;
+  notes: string | null;
+  featured: boolean;
+  sortOrder: number;
+  fileUrl: string;
+  filePath: string;
+  currentFilePath: string | null;
+  fileMimeType: string | null;
+}) {
+  const searchPath = currentFilePath || filePath;
+  const { data: existingAsset, error: lookupError } = searchPath
+    ? await supabase.from("archive_assets").select("id, file_path, asset_type, thumb_url, thumb_path").eq("file_path", searchPath).maybeSingle()
+    : { data: null, error: null };
+
+  if (lookupError) {
+    throw lookupError;
+  }
+
+  const nextAssetType = fileMimeType ? resolveArchiveAssetType(entryType, fileMimeType) : ((existingAsset?.asset_type as ArchiveAssetType | undefined) ?? resolveArchiveAssetType(entryType, null));
+  const nextThumbUrl = fileMimeType ? (nextAssetType === "photo" || nextAssetType === "scan" ? fileUrl : null) : existingAsset?.thumb_url ?? null;
+  const nextThumbPath = fileMimeType ? (nextAssetType === "photo" || nextAssetType === "scan" ? filePath : null) : existingAsset?.thumb_path ?? null;
+  const now = new Date().toISOString();
+
+  const payload = {
+    title,
+    asset_type: nextAssetType,
+    file_url: fileUrl,
+    file_path: filePath,
+    thumb_url: nextThumbUrl,
+    thumb_path: nextThumbPath,
+    source_label: sourceLabel || actorLabel || territoryLabel || "Entrada simplificada",
+    source_date_label: yearLabel || "",
+    approximate_year: approximateYear,
+    place_label: placeLabel || territoryLabel || null,
+    rights_note: notes || "Uso editorial controlado",
+    description: details || summary || notes || null,
+    public_visibility: false,
+    featured,
+    sort_order: sortOrder,
+    updated_at: now,
+    updated_by: userEmail,
+  };
+
+  if (existingAsset) {
+    const { error } = await supabase.from("archive_assets").update(payload).eq("id", existingAsset.id);
+
+    if (error) {
+      throw error;
+    }
+
+    return { archiveAssetId: existingAsset.id, created: false };
+  }
+
+  const archiveAssetId = randomUUID();
+  const { error } = await supabase.from("archive_assets").insert({
+    id: archiveAssetId,
+    memory_item_id: null,
+    editorial_item_id: null,
+    collection_slug: null,
+    ...payload,
+    created_at: now,
+    created_by: userEmail,
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  return { archiveAssetId, created: true };
 }
 
 export async function saveEditorialEntryAction(_: EntryActionState, formData: FormData): Promise<EntryActionState> {
@@ -154,6 +266,8 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
   let fileUrl = current?.file_url ?? null;
   let filePath = current?.file_path ?? null;
   let fileName = current?.file_name ?? null;
+  const shouldMaterializeArchive = (entryType === "document" || entryType === "image") && saveMode === "primary";
+  const currentArchivePath = current?.file_path ?? null;
 
   try {
     if (file) {
@@ -233,10 +347,44 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
     }
   }
 
+  let archiveResult: { archiveAssetId: string; created: boolean } | null = null;
+
+  if (shouldMaterializeArchive && fileUrl && filePath) {
+    try {
+      archiveResult = await syncArchiveAssetFromEntry({
+        supabase,
+        userEmail: user.email || null,
+        entryType,
+        title,
+        summary,
+        details,
+        sourceLabel,
+        yearLabel,
+        approximateYear,
+        placeLabel,
+        territoryLabel,
+        actorLabel,
+        notes,
+        featured,
+        sortOrder,
+        fileUrl,
+        filePath,
+        currentFilePath: currentArchivePath,
+        fileMimeType: file?.type || null,
+      });
+    } catch (archiveError) {
+      console.error("Failed to sync archive asset from editorial entry", archiveError);
+    }
+  }
+
   revalidatePath("/interno/entrada");
   revalidatePath(`/interno/entrada/${entryId}`);
+  revalidatePath("/interno/acervo");
   revalidatePath("/interno");
 
-  redirect(`/interno/entrada/${entryId}?saved=1`);
-}
+  if (archiveResult) {
+    revalidatePath(`/interno/acervo/${archiveResult.archiveAssetId}`);
+  }
 
+  redirect(`/interno/entrada/${entryId}?saved=1${archiveResult ? `&archive=1&archive_asset_id=${archiveResult.archiveAssetId}` : shouldMaterializeArchive ? "&archive=0" : ""}`);
+}

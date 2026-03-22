@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -15,13 +15,15 @@ export const metadata: Metadata = {
 
 type PageProps = {
   params: Promise<{ id: string }>;
-  searchParams?: Promise<{ saved?: string }>;
+  searchParams?: Promise<{ saved?: string; archive?: string; archive_asset_id?: string }>;
 };
 
 export default async function EntradaDetailPage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const saved = resolvedSearchParams.saved === "1";
+  const archiveCreated = resolvedSearchParams.archive === "1";
+  const archiveAssetId = resolvedSearchParams.archive_asset_id ?? "";
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -49,8 +51,16 @@ export default async function EntradaDetailPage({ params, searchParams }: PagePr
         </p>
         {saved ? (
           <p className="form-status form-status--ok" aria-live="polite">
-            Entrada guardada com sucesso. Se for foto ou documento, ela ainda pode virar acervo na etapa 2.
+            Entrada guardada com sucesso.
+            {archiveCreated ? " A foto/documento também entrou no acervo interno." : " Se for foto ou documento, ela ainda pode virar acervo na etapa 2."}
           </p>
+        ) : null}
+        {archiveCreated && archiveAssetId ? (
+          <div className="stack-actions">
+            <Link href={`/interno/acervo/${archiveAssetId}`} className="button">
+              Abrir objeto no acervo
+            </Link>
+          </div>
         ) : null}
         <div className="hero__actions">
           <Link href="/interno/entrada" className="button-secondary">
@@ -73,10 +83,18 @@ export default async function EntradaDetailPage({ params, searchParams }: PagePr
               Use esta entrada como base. Depois, se fizer sentido, ela pode ser ligada ao acervo, à memória, ao dossiê, à campanha, ao impacto ou à edição.
             </p>
             <div className="stack-actions">
-              <Link href="/interno/acervo" className="button-secondary">Abrir acervo</Link>
-              <Link href="/interno/memoria" className="button-secondary">Abrir memória</Link>
-              <Link href="/interno/editorial" className="button-secondary">Abrir editorial</Link>
-              <Link href="/interno/enriquecer" className="button-secondary">Ir para etapa 2</Link>
+              <Link href="/interno/acervo" className="button-secondary">
+                Abrir acervo
+              </Link>
+              <Link href="/interno/memoria" className="button-secondary">
+                Abrir memória
+              </Link>
+              <Link href="/interno/editorial" className="button-secondary">
+                Abrir editorial
+              </Link>
+              <Link href="/interno/enriquecer" className="button-secondary">
+                Ir para etapa 2
+              </Link>
             </div>
           </article>
         </div>
