@@ -1,27 +1,17 @@
-"use client";
+import { submitUniversalCaptureAction } from "@/lib/captura/actions";
 
-import { useActionState, useEffect, useRef } from "react";
-
-import { saveUniversalCapture, type CaptureActionState } from "@/lib/captura/actions";
-
-const initialState: CaptureActionState = {
-  ok: false,
-  message: "",
+type Props = {
+  message?: string | null;
+  status?: string | null;
 };
 
-export function UniversalCaptureComposer() {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction, pending] = useActionState(saveUniversalCapture, initialState);
-
-  useEffect(() => {
-    if (state.ok) {
-      formRef.current?.reset();
-    }
-  }, [state.ok]);
+export function UniversalCaptureComposer({ message, status }: Props) {
+  const tone = status === "error" ? "var(--alert)" : status === "ok" ? "var(--success)" : "var(--foreground-50)";
+  const text = message || "Jogue o material aqui primeiro. Decida para onde vai depois.";
 
   return (
     <div className="card" style={{ padding: "1.5rem", background: "var(--background-alt)", border: "1px solid var(--border)" }}>
-      <form ref={formRef} action={formAction} encType="multipart/form-data" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <form action={submitUniversalCaptureAction} encType="multipart/form-data" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <label htmlFor="raw_text" className="eyebrow" style={{ color: "var(--foreground-50)" }}>
             Anotacao ou Link
@@ -48,17 +38,12 @@ export function UniversalCaptureComposer() {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "0.5rem", gap: "1rem", flexWrap: "wrap" }}>
-          <button
-            type="submit"
-            className="button"
-            disabled={pending}
-            style={{ padding: "0.75rem 1.5rem", fontWeight: "bold" }}
-          >
-            {pending ? "Subindo..." : "Guardar na Inbox"}
+          <button type="submit" className="button" style={{ padding: "0.75rem 1.5rem", fontWeight: "bold" }}>
+            Guardar na Inbox
           </button>
 
-          <span style={{ fontSize: "0.875rem", color: state.message.includes("Erro") || state.message.includes("Nao") ? "var(--alert)" : state.ok ? "var(--success)" : "var(--foreground-50)" }} aria-live="polite">
-            {state.message || "Jogue o material aqui primeiro. Decida para onde vai depois."}
+          <span style={{ fontSize: "0.875rem", color: tone }} aria-live="polite">
+            {text}
           </span>
         </div>
       </form>

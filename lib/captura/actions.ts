@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { removeArchiveAsset, uploadArchiveAsset } from "@/lib/media/archive";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -44,6 +45,18 @@ async function ensureInternalSession() {
   return { supabase, user, authError: false as const };
 }
 
+function redirectToCapture(result: CaptureActionState, itemId?: string) {
+  const params = new URLSearchParams();
+  params.set("status", result.ok ? "ok" : "error");
+  params.set("message", result.message);
+
+  if (itemId) {
+    params.set("item", itemId);
+  }
+
+  redirect(`/interno/capturar?${params.toString()}`);
+}
+
 export async function saveUniversalCapture(
   previousState: CaptureActionState = initialCaptureState,
   formData: FormData,
@@ -59,7 +72,7 @@ export async function saveUniversalCapture(
   const { supabase, user, authError } = await ensureInternalSession();
 
   if (authError || !user) {
-    return { ok: false, message: "Sua sessão interna expirou. Entre novamente antes de capturar." };
+    return { ok: false, message: "Sua sessao interna expirou. Entre novamente antes de capturar." };
   }
 
   let fileUrl: string | null = null;
@@ -116,12 +129,17 @@ export async function saveUniversalCapture(
   return { ok: true, message: "Material capturado com sucesso!" };
 }
 
+export async function submitUniversalCaptureAction(formData: FormData) {
+  const result = await saveUniversalCapture(initialCaptureState, formData);
+  redirectToCapture(result);
+}
+
 export async function publishCapture(id: string) {
   const supabase = await createSupabaseServerClient();
-  
+
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
   if (!capture) return { ok: false, message: "Captura nao encontrada." };
-  
+
   const slug = `agora-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
   const { error: insErr } = await supabase.from("editorial_items").insert({
     title: capture.title || "Publicacao Rapida",
@@ -132,26 +150,36 @@ export async function publishCapture(id: string) {
     cover_image_url: capture.file_url,
     editorial_status: "published",
     published: true,
-    published_at: new Date().toISOString()
+    published_at: new Date().toISOString(),
   });
 
   if (insErr) {
     console.error("Erro insert editorial_items", insErr);
     return { ok: false, message: "Erro ao publicar peca." };
   }
-  
+
   await supabase.from("universal_captures").update({ status: "published" }).eq("id", id);
   revalidatePath("/interno/capturar");
-  
+
   return { ok: true, message: "A peca ja esta viva em Agora." };
+}
+
+export async function publishCaptureAction(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  if (!id) {
+    redirectToCapture({ ok: false, message: "Captura invalida para publicar." });
+  }
+
+  const result = await publishCapture(id!);
+  redirectToCapture(result, id!);
 }
 
 export async function archiveCapture(id: string) {
   const supabase = await createSupabaseServerClient();
-  
+
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
   if (!capture) return { ok: false, message: "Captura nao encontrada." };
-  
+
   const slug = `acervo-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
   let memoryType = "document";
   if (capture.suggested_type === "photo") memoryType = "image";
@@ -166,26 +194,36 @@ export async function archiveCapture(id: string) {
     memory_collection: "acervo-geral",
     period_label: "Sem data",
     cover_image_url: capture.file_url,
-    archive_status: "archived"
+    archive_status: "archived",
   });
 
   if (insErr) {
     console.error("Erro insert memory_items", insErr);
     return { ok: false, message: "Erro ao guardar no Acervo." };
   }
-  
+
   await supabase.from("universal_captures").update({ status: "archived" }).eq("id", id);
   revalidatePath("/interno/capturar");
-  
+
   return { ok: true, message: "O material esta seguro e guardado no Acervo." };
+}
+
+export async function archiveCaptureAction(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  if (!id) {
+    redirectToCapture({ ok: false, message: "Captura invalida para arquivar." });
+  }
+
+  const result = await archiveCapture(id!);
+  redirectToCapture(result, id!);
 }
 
 export async function sendToEnrichment(id: string) {
   const supabase = await createSupabaseServerClient();
-  
+
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
   if (!capture) return { ok: false, message: "Captura nao encontrada." };
-  
+
   let entryType = "document";
   if (capture.suggested_type === "photo" || capture.suggested_type === "image") entryType = "image";
   if (capture.suggested_type === "post" || capture.suggested_type === "link") entryType = "post";
@@ -196,16 +234,26 @@ export async function sendToEnrichment(id: string) {
     entry_status: "ready_for_enrichment",
     summary: capture.raw_text,
     file_url: capture.file_url,
-    notes: "Vindo da Inbox de Captura Universal"
+    notes: "Vindo da Inbox de Captura Universal",
   });
 
   if (insErr) {
     console.error("Erro insert editorial_entries", insErr);
     return { ok: false, message: "Erro ao mandar para enriquecimento." };
   }
-  
+
   await supabase.from("universal_captures").update({ status: "enriched" }).eq("id", id);
   revalidatePath("/interno/capturar");
-  
+
   return { ok: true, message: "Item na fila de Enriquecimento (/interno/enriquecer)." };
+}
+
+export async function sendToEnrichmentAction(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  if (!id) {
+    redirectToCapture({ ok: false, message: "Captura invalida para enriquecimento." });
+  }
+
+  const result = await sendToEnrichment(id!);
+  redirectToCapture(result, id!);
 }
