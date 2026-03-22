@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServiceClient } from "@/lib/supabase/service";
 
 export async function saveUniversalCapture(formData: FormData) {
   const supabase = await createSupabaseServerClient();
+  const serviceClient = createSupabaseServiceClient();
 
   const rawText = formData.get("raw_text")?.toString().trim() || null;
   const file = formData.get("file") as File | null;
@@ -35,20 +37,27 @@ export async function saveUniversalCapture(formData: FormData) {
       suggestedType = "doc";
     }
 
-    // Upload reliable file
+    // Convert File to Buffer for server-side upload
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
     const ext = file.name.split(".").pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
     
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    // Use service client (bypasses RLS) for reliable storage upload
+    const { error: uploadError } = await serviceClient.storage
       .from("universal_captures")
-      .upload(fileName, file);
+      .upload(fileName, buffer, {
+        contentType: mime,
+        upsert: false,
+      });
 
     if (uploadError) {
       console.error("Upload error", uploadError);
-      return { ok: false, message: "Erro ao fazer upload do arquivo. Tente novamente." };
+      return { ok: false, message: `Erro ao fazer upload: ${uploadError.message}` };
     }
     
-    const { data: publicUrlData } = supabase.storage
+    const { data: publicUrlData } = serviceClient.storage
       .from("universal_captures")
       .getPublicUrl(fileName);
       
