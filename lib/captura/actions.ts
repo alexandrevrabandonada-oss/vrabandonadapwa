@@ -3,96 +3,34 @@
 import { revalidatePath } from "next/cache";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { createSupabaseServiceClient } from "@/lib/supabase/service";
 
-export async function saveUniversalCapture(formData: FormData) {
+type CaptureMetadata = {
+  rawText: string | null;
+  fileUrl: string | null;
+  fileType: string | null;
+  suggestedType: string | null;
+  title: string | null;
+};
+
+export async function saveUniversalCaptureMetadata(meta: CaptureMetadata) {
   const supabase = await createSupabaseServerClient();
-  const serviceClient = createSupabaseServiceClient();
 
-  const rawText = formData.get("raw_text")?.toString().trim() || null;
-  const file = formData.get("file") as File | null;
-
-  let fileUrl: string | null = null;
-  let fileType: string | null = null;
-  let suggestedType: string | null = null;
-  let title: string | null = null;
-
-  if (file && file.size > 0) {
-    // Basic type suggestion based on mime
-    const mime = file.type;
-    if (mime.startsWith("image/")) {
-      fileType = "image";
-      suggestedType = "photo";
-    } else if (mime === "application/pdf") {
-      fileType = "pdf";
-      suggestedType = "doc";
-    } else if (mime.startsWith("video/")) {
-      fileType = "video";
-      suggestedType = "video";
-    } else if (mime.startsWith("audio/")) {
-      fileType = "audio";
-      suggestedType = "audio";
-    } else {
-      fileType = "other";
-      suggestedType = "doc";
-    }
-
-    // Convert File to Buffer for server-side upload
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    const ext = file.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
-    
-    // Use service client (bypasses RLS) for reliable storage upload
-    const { error: uploadError } = await serviceClient.storage
-      .from("universal_captures")
-      .upload(fileName, buffer, {
-        contentType: mime,
-        upsert: false,
-      });
-
-    if (uploadError) {
-      console.error("Upload error", uploadError);
-      return { ok: false, message: `Erro ao fazer upload: ${uploadError.message}` };
-    }
-    
-    const { data: publicUrlData } = serviceClient.storage
-      .from("universal_captures")
-      .getPublicUrl(fileName);
-      
-    fileUrl = publicUrlData.publicUrl;
-    title = file.name;
-  }
-
-  if (!fileUrl && rawText) {
-    // If no file but there's a link
-    if (rawText.startsWith("http")) {
-      suggestedType = "link";
-    } else {
-      suggestedType = "post";
-    }
-    
-    // Auto title for text
-    title = rawText.substring(0, 50) + (rawText.length > 50 ? "..." : "");
-  }
-
-  if (!fileUrl && !rawText) {
+  if (!meta.fileUrl && !meta.rawText) {
     return { ok: false, message: "Envie um texto, link ou arquivo para capturar." };
   }
 
   const { error } = await supabase.from("universal_captures").insert({
-    raw_text: rawText,
-    file_url: fileUrl,
-    file_type: fileType,
-    suggested_type: suggestedType,
-    title: title,
+    raw_text: meta.rawText,
+    file_url: meta.fileUrl,
+    file_type: meta.fileType,
+    suggested_type: meta.suggestedType,
+    title: meta.title,
     status: "inbox"
   });
 
   if (error) {
     console.error("DB Insert error", error);
-    return { ok: false, message: "Erro ao salvar na inbox." };
+    return { ok: false, message: `Erro ao salvar na inbox: ${error.message}` };
   }
 
   revalidatePath("/interno/capturar");

@@ -1,7 +1,23 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { saveUniversalCapture } from "@/lib/captura/actions";
+import { createClient } from "@supabase/supabase-js";
+import { saveUniversalCaptureMetadata } from "@/lib/captura/actions";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+function getClientSupabase() {
+  return createClient(supabaseUrl, supabaseAnonKey);
+}
+
+function detectFileType(mime: string) {
+  if (mime.startsWith("image/")) return { fileType: "image" as const, suggestedType: "photo" };
+  if (mime === "application/pdf") return { fileType: "pdf" as const, suggestedType: "doc" };
+  if (mime.startsWith("video/")) return { fileType: "video" as const, suggestedType: "video" };
+  if (mime.startsWith("audio/")) return { fileType: "audio" as const, suggestedType: "audio" };
+  return { fileType: "other" as const, suggestedType: "doc" };
+}
 
 export function UniversalCaptureComposer() {
   const [isCapturing, setIsCapturing] = useState(false);
@@ -14,18 +30,65 @@ export function UniversalCaptureComposer() {
     setMessage(null);
 
     const formData = new FormData(e.currentTarget);
-    const text = formData.get("raw_text")?.toString().trim();
-    const file = formData.get("file") as File;
+    const rawText = formData.get("raw_text")?.toString().trim() || null;
+    const file = formData.get("file") as File | null;
+    const hasFile = file && file.size > 0;
 
-    if (!text && (!file || file.size === 0)) {
-        setMessage("Adicione um texto, link ou arquivo para colar na Inbox.");
-        setIsCapturing(false);
-        return;
+    if (!rawText && !hasFile) {
+      setMessage("Adicione um texto, link ou arquivo para colar na Inbox.");
+      setIsCapturing(false);
+      return;
     }
 
     try {
-      // For real application, this should use a proper client upload or server action with RLS
-      const res = await saveUniversalCapture(formData);
+      let fileUrl: string | null = null;
+      let fileType: string | null = null;
+      let suggestedType: string | null = null;
+      let title: string | null = null;
+
+      // 1. Upload file client-side directly to Supabase Storage
+      if (hasFile) {
+        const supabase = getClientSupabase();
+        const detected = detectFileType(file.type);
+        fileType = detected.fileType;
+        suggestedType = detected.suggestedType;
+
+        const ext = file.name.split(".").pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${ext}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("universal_captures")
+          .upload(fileName, file, {
+            contentType: file.type,
+            upsert: false,
+          });
+
+        if (uploadError) {
+          console.error("Upload error", uploadError);
+          setMessage(`Erro no upload: ${uploadError.message}`);
+          setIsCapturing(false);
+          return;
+        }
+
+        const { data: publicUrlData } = supabase.storage
+          .from("universal_captures")
+          .getPublicUrl(fileName);
+
+        fileUrl = publicUrlData.publicUrl;
+        title = file.name;
+      }
+
+      // 2. Detect type for text-only captures
+      if (!fileUrl && rawText) {
+        suggestedType = rawText.startsWith("http") ? "link" : "post";
+        title = rawText.substring(0, 50) + (rawText.length > 50 ? "..." : "");
+      }
+
+      // 3. Save metadata via server action (no file in payload, just strings)
+      const res = await saveUniversalCaptureMetadata({
+        rawText, fileUrl, fileType, suggestedType, title,
+      });
+
       if (res.ok) {
         formRef.current?.reset();
         setMessage("Material capturado com sucesso!");
@@ -34,8 +97,8 @@ export function UniversalCaptureComposer() {
         setMessage(res.message);
       }
     } catch (err) {
-       console.error(err);
-       setMessage("Erro inesperado ao capturar. Tente novamente.");
+      console.error(err);
+      setMessage("Erro inesperado ao capturar. Tente novamente.");
     } finally {
       setIsCapturing(false);
     }
@@ -86,3 +149,4 @@ export function UniversalCaptureComposer() {
     </div>
   );
 }
+
