@@ -6,6 +6,9 @@ import { Container } from "@/components/container";
 import { DossierCard } from "@/components/dossier-card";
 import { getInternalDossiers, getInternalDossierLinks } from "@/lib/dossiers/queries";
 import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
+import { getInternalEditorialEntries } from "@/lib/entrada/queries";
+import { getInternalArchiveAssets } from "@/lib/archive/queries";
+import { editorialEntryStatusLabels, editorialEntryTypeLabels, type EditorialEntry } from "@/lib/entrada/types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -25,6 +28,19 @@ function isFilterValue(value: string | undefined): value is FilterValue {
   return Boolean(value) && filters.includes(value as FilterValue);
 }
 
+function isRecentCentralEntry(entry: EditorialEntry) {
+  return (entry.entry_type === "document" || entry.entry_type === "image") && Boolean(entry.file_url);
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
 export default async function InternalDossiersPage({ searchParams }: PageProps) {
   const supabase = await createSupabaseServerClient();
   const {
@@ -37,12 +53,18 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const status = isFilterValue(resolvedSearchParams.status) ? resolvedSearchParams.status : "all";
-  const dossiers = await getInternalDossiers({ status });
-  const allDossiers = status === "all" ? dossiers : await getInternalDossiers({ status: "all" });
+  const [dossiers, allDossiers, editorialEntries, archiveAssets] = await Promise.all([
+    getInternalDossiers({ status }),
+    status === "all" ? getInternalDossiers({ status: "all" }) : getInternalDossiers({ status: "all" }),
+    getInternalEditorialEntries(),
+    getInternalArchiveAssets(),
+  ]);
   const linkPairs = await Promise.all(allDossiers.map(async (dossier) => [dossier.id, await getInternalDossierLinks(dossier.id)] as const));
   const linkCountById = new Map(linkPairs.map(([id, links]) => [id, links.length]));
   const publishedCount = allDossiers.filter((dossier) => dossier.status !== "draft" && dossier.public_visibility).length;
   const activeCount = allDossiers.filter((dossier) => dossier.status === "in_progress" || dossier.status === "monitoring").length;
+  const centralEntries = editorialEntries.filter(isRecentCentralEntry).slice(0, 6);
+  const archiveByPath = new Map(archiveAssets.filter((asset) => asset.file_path).map((asset) => [asset.file_path, asset]));
 
   return (
     <Container className="intro-grid internal-page dossier-internal-page">
@@ -101,6 +123,60 @@ export default async function InternalDossiersPage({ searchParams }: PageProps) 
               {filter === "all" ? "Todos" : getDossierStatusLabel(filter)}
             </Link>
           ))}
+        </div>
+      </section>
+
+      <section className="section internal-panel">
+        <div className="grid-2">
+          <div>
+            <p className="eyebrow">recentes da central</p>
+            <h2>O que pode virar dossiê.</h2>
+          </div>
+          <p className="section__lead">Entradas de foto e documento aparecem aqui quando já carregam lastro para abrir investigação.</p>
+        </div>
+
+        <div className="grid-3">
+          {centralEntries.length ? (
+            centralEntries.map((entry) => {
+              const linkedAsset = entry.file_path ? archiveByPath.get(entry.file_path) ?? null : null;
+
+              return (
+                <article key={entry.id} className={`card entry-central-review-card entry-central-review-card--${linkedAsset ? "calm" : "watch"}`}>
+                  <div className="meta-row">
+                    <span className="pill">{editorialEntryTypeLabels[entry.entry_type]}</span>
+                    <span>{editorialEntryStatusLabels[entry.entry_status]}</span>
+                    {entry.target_surface ? <span>{entry.target_surface}</span> : null}
+                  </div>
+                  <h3>{entry.title}</h3>
+                  <p>{entry.summary || entry.details || "Sem resumo ainda."}</p>
+                  <p className="meta-row">
+                    <span>{entry.territory_label || entry.place_label || "Sem território"}</span>
+                    <span>{entry.actor_label || entry.source_label || "Sem ator/fonte"}</span>
+                    <span>{formatDate(entry.updated_at)}</span>
+                  </p>
+                  <div className="stack-actions">
+                    <Link href={`/interno/entrada/${entry.id}`} className="button-secondary">
+                      Abrir entrada
+                    </Link>
+                    {linkedAsset ? (
+                      <Link href={`/interno/acervo/${linkedAsset.id}`} className="button-secondary">
+                        Abrir no acervo
+                      </Link>
+                    ) : (
+                      <Link href={`/interno/dossies/novo?entry_id=${entry.id}`} className="button-secondary">
+                        Levar ao dossiê
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="support-box">
+              <h3>Sem recentes da central</h3>
+              <p>Quando subir foto ou PDF pela entrada simplificada, eles aparecem aqui para virar dossiê sem retrabalho.</p>
+            </div>
+          )}
         </div>
       </section>
 
