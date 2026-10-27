@@ -1,8 +1,13 @@
-import { editionLinkMockItems, editionMockItems } from "@/lib/editions/mock";
+import { editionLinkMockItems as editionLinkMockItemsDemo, editionMockItems as editionMockItemsDemo } from "@/lib/editions/mock";
 import { getEditionStatusSortOrder } from "@/lib/editions/navigation";
 import type { EditorialEdition, EditorialEditionLink } from "@/lib/editions/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const editionLinkMockItems = allowPublicDemoContent() ? editionLinkMockItemsDemo : [];
+const editionMockItems = allowPublicDemoContent() ? editionMockItemsDemo : [];
 
 const editionFields =
   "id, title, slug, excerpt, description, edition_type, period_label, published_at, cover_image_url, featured, public_visibility, status, sort_order, created_at, updated_at, created_by, updated_by";

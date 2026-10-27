@@ -7,10 +7,15 @@ import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { participationPathItemMockItems, participationPathMockItems } from "@/lib/participation/mock";
+import { participationPathItemMockItems as participationPathItemMockItemsDemo, participationPathMockItems as participationPathMockItemsDemo } from "@/lib/participation/mock";
 import type { ParticipationPath, ParticipationPathItem } from "@/lib/participation/types";
 import { participationStatusOrder } from "@/lib/participation/navigation";
 import { buildParticipationLinkOptions, resolveParticipationItems, type ParticipationResolutionContext } from "@/lib/participation/resolve";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const participationPathItemMockItems = allowPublicDemoContent() ? participationPathItemMockItemsDemo : [];
+const participationPathMockItems = allowPublicDemoContent() ? participationPathMockItemsDemo : [];
 
 const publicPathFields = "id, title, slug, excerpt, description, audience_label, featured, public_visibility, sort_order, status, created_at, updated_at, created_by, updated_by";
 const publicItemFields = "id, path_id, item_type, item_key, role, sort_order, note, created_at, updated_at";

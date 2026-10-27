@@ -1,9 +1,14 @@
 
-import { timelineHighlightLinkMockItems, timelineHighlightMockItems } from "@/lib/timeline/highlight-mock";
+import { timelineHighlightLinkMockItems as timelineHighlightLinkMockItemsDemo, timelineHighlightMockItems as timelineHighlightMockItemsDemo } from "@/lib/timeline/highlight-mock";
 import type { TimelineHighlight, TimelineHighlightLink } from "@/lib/timeline/highlights";
 import { getTimelineHighlightStatusSortOrder } from "@/lib/timeline/highlights";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const timelineHighlightLinkMockItems = allowPublicDemoContent() ? timelineHighlightLinkMockItemsDemo : [];
+const timelineHighlightMockItems = allowPublicDemoContent() ? timelineHighlightMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, highlight_type, date_label, year_start, year_end, period_label, lead_question, cover_image_url, featured, public_visibility, status, sort_order, created_at, updated_at, created_by, updated_by";

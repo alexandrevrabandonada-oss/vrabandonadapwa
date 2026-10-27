@@ -1,8 +1,13 @@
-import { patternReadLinkMockItems, patternReadMockItems } from "@/lib/patterns/mock";
+import { patternReadLinkMockItems as patternReadLinkMockItemsDemo, patternReadMockItems as patternReadMockItemsDemo } from "@/lib/patterns/mock";
 import type { PatternRead, PatternReadLink } from "@/lib/patterns/types";
 import { getPatternReadStatusSortOrder } from "@/lib/patterns/navigation";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const patternReadLinkMockItems = allowPublicDemoContent() ? patternReadLinkMockItemsDemo : [];
+const patternReadMockItems = allowPublicDemoContent() ? patternReadMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, pattern_type, lead_question, status, cover_image_url, featured, public_visibility, sort_order, created_at, updated_at, created_by, updated_by";

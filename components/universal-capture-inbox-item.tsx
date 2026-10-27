@@ -75,6 +75,10 @@ export function UniversalCaptureInboxItem({ item, feedbackMessage, feedbackStatu
         <div style={{ display: "flex", gap: "0.5rem", marginTop: "auto", flexWrap: "wrap" }}>
           <form action={publishCaptureAction}>
             <input type="hidden" name="id" value={item.id} />
+            <label style={{ display: "flex", alignItems: "flex-start", gap: "0.4rem", fontSize: "0.78rem", marginBottom: "0.5rem", lineHeight: 1.4 }}>
+              <input type="checkbox" name="confirm_editorial_review" value="yes" required />
+              Conferi o texto e autorizo esta publicação como conteúdo editorial.
+            </label>
             <button className="button-secondary" style={{ padding: "0.5rem 0.75rem", fontSize: "0.875rem" }} type="submit">
               Publicar (Agora)
             </button>

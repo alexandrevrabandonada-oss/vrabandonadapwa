@@ -1,7 +1,11 @@
-import { archiveAssetMockItems } from "@/lib/archive/mock";
+import { archiveAssetMockItems as archiveAssetMockItemsDemo } from "@/lib/archive/mock";
 import type { ArchiveAsset } from "@/lib/archive/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const archiveAssetMockItems = allowPublicDemoContent() ? archiveAssetMockItemsDemo : [];
 
 const publicFields =
   "id, memory_item_id, editorial_item_id, collection_slug, title, asset_type, file_url, thumb_url, source_label, source_date_label, approximate_year, place_label, rights_note, description, public_visibility, featured, sort_order, created_at, updated_at, created_by, updated_by";

@@ -1,8 +1,13 @@
-import { impactLinkMockItems, impactMockItems } from "@/lib/impact/mock";
+import { impactLinkMockItems as impactLinkMockItemsDemo, impactMockItems as impactMockItemsDemo } from "@/lib/impact/mock";
 import { getImpactStatusSortOrder } from "@/lib/impact/navigation";
 import type { PublicImpact, PublicImpactLink } from "@/lib/impact/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const impactLinkMockItems = allowPublicDemoContent() ? impactLinkMockItemsDemo : [];
+const impactMockItems = allowPublicDemoContent() ? impactMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, lead_question, impact_type, status, date_label, happened_at, territory_label, cover_image_url, featured, public_visibility, sort_order, created_at, updated_at, created_by, updated_by";

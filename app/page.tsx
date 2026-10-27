@@ -149,6 +149,7 @@ export default async function HomePage() {
         />
       </section>
 
+      <MateriasHome />
       <InstagramHomePanel />
 
       <section className="section">
@@ -172,7 +173,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <MateriasHome />
       <ReadingTrailPanel compact />
 
 

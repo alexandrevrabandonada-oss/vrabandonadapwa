@@ -7,10 +7,15 @@ import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedThemeHubs } from "@/lib/hubs/queries";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { entryRouteMockItems, entryRouteItemMockItems } from "@/lib/entry-routes/mock";
+import { entryRouteMockItems as entryRouteMockItemsDemo, entryRouteItemMockItems as entryRouteItemMockItemsDemo } from "@/lib/entry-routes/mock";
 import type { EntryRoute, EntryRouteItem } from "@/lib/entry-routes/types";
 import { getEntryRouteSortOrder } from "@/lib/entry-routes/navigation";
 import { buildEntryRouteLinkOptions, resolveEntryRouteItems, type EntryRouteResolutionContext } from "@/lib/entry-routes/resolve";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const entryRouteMockItems = allowPublicDemoContent() ? entryRouteMockItemsDemo : [];
+const entryRouteItemMockItems = allowPublicDemoContent() ? entryRouteItemMockItemsDemo : [];
 
 const publicRouteFields = "id, title, slug, excerpt, description, audience_label, featured, public_visibility, sort_order, status, created_at, updated_at, created_by, updated_by";
 const internalRouteFields = publicRouteFields;

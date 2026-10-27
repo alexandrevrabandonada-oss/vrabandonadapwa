@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 
 import { removeArchiveAsset, uploadArchiveAsset } from "@/lib/media/archive";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isAdminEmailAllowed } from "@/lib/admin";
 
 export type CaptureActionState = {
   ok: boolean;
@@ -70,7 +71,7 @@ async function ensureInternalSession() {
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
+  if (error || !user?.email || !(await isAdminEmailAllowed(user.email))) {
     return { supabase, user: null, authError: true as const };
   }
 
@@ -166,43 +167,91 @@ export async function submitUniversalCaptureAction(formData: FormData) {
   redirectToCapture(result);
 }
 
-export async function publishCapture(id: string) {
-  const supabase = await createSupabaseServerClient();
+export async function publishCapture(id: string, editorialApproved = false) {
+  if (!editorialApproved) {
+    return { ok: false, message: "Confirme a revisão editorial antes de publicar." };
+  }
 
-  const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
-  if (!capture) return { ok: false, message: "Captura nao encontrada." };
+  const { supabase, user, authError } = await ensureInternalSession();
+  if (authError || !user) {
+    return { ok: false, message: "Acesso editorial não autorizado. Entre novamente." };
+  }
 
-  const slug = `agora-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
-  const { error: insErr } = await supabase.from("editorial_items").insert({
-    title: capture.title || "Publicacao Rapida",
+  const { data: capture, error: readError } = await supabase
+    .from("universal_captures")
+    .select("id,title,raw_text,file_url,status")
+    .eq("id", id)
+    .eq("status", "inbox")
+    .maybeSingle();
+  if (readError || !capture) {
+    return { ok: false, message: "Item não encontrado na inbox ou já encaminhado." };
+  }
+
+  const title = String(capture.title || "").trim();
+  const body = String(capture.raw_text || "").trim();
+  // Não criar notícia a partir de nome de arquivo ou texto insuficiente.
+  if (title.length < 10 || body.length < 60) {
+    return { ok: false, message: "Para publicar, descreva e confira o conteúdo (mínimo de 60 caracteres). Use 'Revisar Depois' para itens incompletos." };
+  }
+
+  // Condição no servidor para impedir que dois cliques publiquem o mesmo registro.
+  // Na próxima etapa, substituir por transação RPC para recuperação após queda.
+  const { data: claimed, error: claimError } = await supabase
+    .from("universal_captures")
+    .update({ status: "published", updated_by: user.email })
+    .eq("id", id)
+    .eq("status", "inbox")
+    .select("id")
+    .maybeSingle();
+  if (claimError || !claimed) {
+    return { ok: false, message: "Este material já foi processado ou não pôde ser reservado." };
+  }
+
+  const slug = `agora-${id.replace(/-/g, "")}`;
+  const { error: publicationError } = await supabase.from("editorial_items").insert({
+    title,
     slug,
-    body: capture.raw_text || "",
-    excerpt: capture.raw_text ? capture.raw_text.substring(0, 50) : "Publicacao direta",
+    body,
+    excerpt: body.slice(0, 220),
     category: "post",
     cover_image_url: capture.file_url,
     editorial_status: "published",
+    review_status: "reviewed",
+    sensitivity_check_passed: true,
+    fact_check_note: "Conferência editorial confirmada na Captura Universal; revisar evidências e contexto nas atualizações.",
     published: true,
     published_at: new Date().toISOString(),
+    published_by: user.email,
+    last_reviewed_at: new Date().toISOString(),
+    last_reviewed_by: user.email,
   });
 
-  if (insErr) {
-    console.error("Erro insert editorial_items", insErr);
-    return { ok: false, message: "Erro ao publicar peca." };
+  if (publicationError) {
+    console.error("Falha na publicação rápida", { code: publicationError.code, id });
+    const { error: rollbackError } = await supabase
+      .from("universal_captures")
+      .update({ status: "inbox", updated_by: user.email })
+      .eq("id", id)
+      .eq("status", "published");
+    if (rollbackError) {
+      console.error("Falha ao restaurar item de publicação rápida", { code: rollbackError.code, id });
+      return { ok: false, message: "Falha na publicação e na recuperação automática. Verifique o item com a equipe antes de repetir." };
+    }
+    return { ok: false, message: "Não foi possível publicar. O material retornou para a inbox." };
   }
 
-  await supabase.from("universal_captures").update({ status: "published" }).eq("id", id);
   revalidatePath("/interno/capturar");
-
-  return { ok: true, message: "A peca ja esta viva em Agora." };
+  revalidatePath("/");
+  revalidatePath("/agora");
+  revalidatePath("/pautas");
+  return { ok: true, message: "Publicação criada. Confira a URL pública e o conteúdo." };
 }
 
 export async function publishCaptureAction(formData: FormData) {
   const id = formData.get("id")?.toString();
-  if (!id) {
-    redirectToCapture({ ok: false, message: "Captura invalida para publicar." });
-  }
-
-  const result = await publishCapture(id!);
+  if (!id) redirectToCapture({ ok: false, message: "Captura inválida para publicação." });
+  const approval = formData.get("confirm_editorial_review") === "yes";
+  const result = await publishCapture(id!, approval);
   redirectToCapture(result, id!);
 }
 
@@ -275,7 +324,10 @@ export async function archiveCaptureAction(formData: FormData) {
 }
 
 export async function sendToEnrichment(id: string) {
-  const supabase = await createSupabaseServerClient();
+  const { supabase, user, authError } = await ensureInternalSession();
+  if (authError || !user) {
+    return { ok: false, message: "Acesso editorial não autorizado." };
+  }
 
   const { data: capture } = await supabase.from("universal_captures").select("*").eq("id", id).single();
   if (!capture) return { ok: false, message: "Captura nao encontrada." };
