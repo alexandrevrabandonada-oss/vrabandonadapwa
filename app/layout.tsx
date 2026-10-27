@@ -11,6 +11,7 @@ import { site } from "@/lib/site";
 import { getSiteUrl } from "@/lib/site-url";
 
 import "./globals.css";
+import "./instagram.css";
 
 const siteUrl = getSiteUrl();
 
@@ -30,9 +31,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-  },
-  alternates: {
-    canonical: "/",
   },
   icons: [
     { rel: "icon", url: "/icon" },

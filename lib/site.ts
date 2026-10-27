@@ -11,17 +11,19 @@ export type SiteGroup = {
 export const site = {
   name: "VR Abandonada",
   description:
-    "Casa digital de memória, denúncia e organização popular sobre Volta Redonda.",
+    "Publicações, investigações e comunicação popular sobre Volta Redonda.",
   shortDescription:
-    "Memória, denúncia e organização popular sobre Volta Redonda.",
+    "Notícias, Reels e memória popular de Volta Redonda.",
   primaryNav: [
     { href: "/", label: "Início" },
+    { href: "/publicacoes", label: "Publicações" },
     { href: "/agora", label: "Agora" },
     { href: "/buscar", label: "Buscar" },
     { href: "/acompanhar", label: "Acompanhar" },
     { href: "/participe", label: "Participe" },
   ] satisfies SiteLink[],
   mobileNav: [
+    { href: "/publicacoes", label: "Publicações" },
     { href: "/agora", label: "Agora" },
     { href: "/buscar", label: "Buscar" },
     { href: "/acompanhar", label: "Acompanhar" },
@@ -31,6 +33,7 @@ export const site = {
     {
       title: "Uso diário",
       items: [
+        { href: "/publicacoes", label: "Publicações" },
         { href: "/agora", label: "Agora" },
         { href: "/buscar", label: "Buscar" },
         { href: "/acompanhar", label: "Acompanhar" },
@@ -84,6 +87,7 @@ export const site = {
     },
   ] satisfies SiteGroup[],
   footerQuickLinks: [
+    { href: "/publicacoes", label: "Publicações" },
     { href: "/comecar", label: "Começar" },
     { href: "/buscar", label: "Buscar" },
     { href: "/agora", label: "Agora" },
@@ -98,7 +102,7 @@ export const site = {
       "VR Abandonada documenta o que tentam apagar: memória da cidade, abandono urbano, denúncias públicas e organização popular com método, contexto e responsabilidade.",
     ctas: [
       { href: "/buscar", label: "Buscar na cidade" },
-      { href: "/envie", label: "Enviar denúncia" },
+      { href: "https://comunsocial.online", label: "Participar no COMUN" },
       { href: "/pautas", label: "Ler pautas" },
       { href: "/linha-do-tempo", label: "Tempo" },
     ],
