@@ -155,3 +155,15 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 **Não concluído:** merge em main, teste HTTP/celular, banco e RLS conectados, teste E2E de publicação real, remoção definitiva da possibilidade de inconsistência entre duas gravações no fluxo rápido, três primeiras reportagens originais.
 
 **Decisão:** conservar PR #5 isolada até verificar a prévia final e segurança operacional.
+
+## Registro de execução — 27/10/2026, etapa seguinte
+
+**Segurança entregue no código:** PR #5 integrada em `main`, commit `2d1ac0597cd508271bf6807298747641e28d5cfb`. Testes GitHub Actions passaram e prévia Vercel do commit revisado `f755ad6abaa3943747097e42a6b129cc59a8b016` ficou READY. Produção passou ao processo de implantação automática; confirmar estado READY antes de relatar publicação efetiva.
+
+**Novo risco documentado:** as migrações 0031/0032 declaram `archive-assets` e `universal_captures` como buckets públicos, com leitura aberta. Uma linha marcada `public_visibility=false` NÃO protege o arquivo nessa arquitetura. Até migrar documentos sensíveis para bucket privado com URLs assinadas e RLS, o formulário interno da Captura Universal não aceita novos anexos, o botão rápido de arquivamento está suspenso e o botão de publicação rápida exige `VR_ENABLE_FAST_PUBLISH=true`, flag não configurada por padrão. Notas textuais sem dados pessoais permanecem disponíveis. **Objetos legados exigem inventário e tratamento posterior, não foram removidos.**
+
+**Integridade editorial:** fixtures de demonstração não aparecem no site de produção; categorias temáticas de memória permanecem como navegação, mas não geram falsos itens publicados. A busca integra matérias Git e sitemap inclui URLs reais publicadas da base. Os textos editoriais do Supabase não foram sobrescritos.
+
+**Primeira matéria em produção editorial:** PR #6 traz rascunho da auditoria da Rua 33 (2021–2026), apoiada pelo dossiê-mestre existente no Google Drive e fontes municipais/imprensa. Arquivo em `editorial-drafts` com `status:draft` e `reviewed:false`, fora do acervo indexável, aguardando contraditório, checagem final e aprovação do usuário. **Não foi publicada na homepage.**
+
+**Próximos blocos:** 1) confirmar deploy e testes cliente HTTP/HTTPS; 2) identificar projeto Supabase realmente usado pela Vercel e inventariar arquivos públicos legados; 3) criar armazenamento privado e migração responsável, sem expor fontes; 4) unificar publisher Git + editorial/Supabase; 5) revisar e publicar a Rua 33 com URL permanente; 6) ativar Search Console e monitorar indexação.
