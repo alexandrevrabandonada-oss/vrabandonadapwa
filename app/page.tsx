@@ -43,7 +43,9 @@ import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 export const metadata: Metadata = {
   title: site.name,
   description: site.description,
+  alternates: { canonical: "/" },
   openGraph: {
+    url: "/",
     title: site.name,
     description: site.description,
     type: "website",
