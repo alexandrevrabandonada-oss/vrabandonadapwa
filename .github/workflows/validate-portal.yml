@@ -1,0 +1,35 @@
+name: Validar portal e matérias
+on:
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'components/**'
+      - 'lib/**'
+      - 'content/materias/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tests/**'
+  push:
+    paths:
+      - 'content/materias/**'
+      - 'app/materias/**'
+      - 'lib/materias/**'
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - name: Testar formatos e segurança da importação
+        run: node --test tests/materias-validation.test.mjs tests/instagram-import.test.mjs
+      - name: Instalar dependências
+        run: npm ci
+      - name: Compilar e validar matérias
+        run: npm run build
