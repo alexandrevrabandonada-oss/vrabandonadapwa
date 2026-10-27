@@ -71,6 +71,8 @@ export function EntryCentralForm({ entryType, entry }: Props) {
         </div>
       </article>
 
+      <p className="form-status">Envio de arquivos suspenso até a validação do armazenamento privado.</p>
+
       <div className="grid-2">
         <label className="field">
           <span>Título curto</span>
@@ -87,7 +89,7 @@ export function EntryCentralForm({ entryType, entry }: Props) {
         <div className="grid-2">
           <label className="field">
             <span>Imagem opcional</span>
-            <input name="asset_file" type="file" accept={config.accept} />
+            <input name="asset_file" type="file" accept={config.accept} disabled />
           </label>
 
           <label className="field">
@@ -102,7 +104,7 @@ export function EntryCentralForm({ entryType, entry }: Props) {
           <div className="grid-2">
             <label className="field">
               <span>Arquivo</span>
-              <input name="asset_file" type="file" accept={config.accept} required={!entry?.file_url} />
+              <input name="asset_file" type="file" accept={config.accept} disabled />
             </label>
 
             <label className="field">
@@ -130,7 +132,7 @@ export function EntryCentralForm({ entryType, entry }: Props) {
           <div className="grid-2">
             <label className="field">
               <span>Imagem</span>
-              <input name="asset_file" type="file" accept={config.accept} required={!entry?.file_url} />
+              <input name="asset_file" type="file" accept={config.accept} disabled />
             </label>
 
             <label className="field">

@@ -30,27 +30,12 @@ export function getArchiveAssetPublicUrl(storagePath: string) {
   return `${assertSupabasePublicUrl()}/storage/v1/object/public/${ARCHIVE_ASSETS_BUCKET}/${storagePath}`;
 }
 
-export async function uploadArchiveAsset(file: File, assetId: string) {
-  const supabase = createSupabaseServiceClient();
-  const storagePath = buildArchiveAssetPath(assetId, file.name);
-  
-  // Convert File to Buffer for server-side upload in Next.js Server Actions
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-  
-  const { error } = await supabase.storage.from(ARCHIVE_ASSETS_BUCKET).upload(storagePath, buffer, {
-    contentType: file.type || "application/octet-stream",
-    upsert: false,
-  });
-
-  if (error) {
-    throw error;
-  }
-
-  return {
-    path: storagePath,
-    url: getArchiveAssetPublicUrl(storagePath),
-  };
+export async function uploadArchiveAsset(_file: File, _assetId: string): Promise<{ path: string; url: string }> {
+  // O bucket legado pode ser público mesmo quando o registro é interno.
+  // Mantenha esta barreira no servidor até validar o armazenamento privado.
+  void _file;
+  void _assetId;
+  throw new Error("Envio de anexos temporariamente suspenso para proteger as fontes.");
 }
 
 export async function removeArchiveAsset(storagePath: string) {

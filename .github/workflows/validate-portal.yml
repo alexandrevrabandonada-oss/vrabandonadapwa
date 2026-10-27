@@ -27,9 +27,9 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
-      - name: Testar formatos e segurança da importação
-        run: node --test tests/*.test.mjs
       - name: Instalar dependências
         run: npm ci
+      - name: Testar formatos e segurança da importação
+        run: node --test tests/*.test.mjs
       - name: Compilar e validar matérias
         run: npm run build

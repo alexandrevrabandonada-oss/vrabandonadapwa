@@ -9,6 +9,7 @@ import { getInternalEditorialById } from "@/lib/editorial/queries";
 import { getInternalMemoryById } from "@/lib/memory/queries";
 import { removeArchiveAsset, uploadArchiveAsset } from "@/lib/media/archive";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isAdminEmailAllowed } from "@/lib/admin";
 import type { ArchiveAssetType } from "@/lib/archive/types";
 
 export type ArchiveAssetActionState = {
@@ -65,7 +66,7 @@ async function ensureAdmin() {
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
+  if (error || !user?.email || !(await isAdminEmailAllowed(user.email))) {
     redirect("/interno/entrar");
   }
 
@@ -130,6 +131,10 @@ export async function saveArchiveAssetAction(
 
   const { supabase, user } = await ensureAdmin();
 
+  if (files.length > 0) {
+    return { ok: false, message: "Envio de anexos temporariamente suspenso para proteger as fontes." };
+  }
+
   if (!allowedAssetTypes.includes(assetType)) {
     return {
       ok: false,
@@ -140,7 +145,7 @@ export async function saveArchiveAssetAction(
   if (!currentId && files.length === 0) {
     return {
       ok: false,
-      message: "Envie ao menos um arquivo para criar o anexo.",
+      message: "A criação de anexos está suspensa até a validação do armazenamento privado.",
     };
   }
 

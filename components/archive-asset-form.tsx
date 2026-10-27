@@ -167,15 +167,13 @@ export function ArchiveAssetForm({
 
         <label className="field">
           <span>Envio de arquivo</span>
-          <input name="asset_files" type="file" accept="image/*,application/pdf,audio/*" multiple={allowBatch} />
+          <input name="asset_files" type="file" accept="image/*,application/pdf,audio/*" multiple={allowBatch} disabled />
         </label>
       </div>
 
       <div className="support-box archive-batch-note">
         <p>
-          {allowBatch
-            ? "Lote pequeno: envie um ou vários arquivos agora e complete os metadados depois."
-            : "Substitua o arquivo se necessário. Se não enviar novo arquivo, o anexo atual continua ativo."}
+          Envio de arquivos suspenso até a validação do armazenamento privado. A edição dos dados de anexos existentes continua disponível.
         </p>
         {asset?.file_url ? (
           <div className="archive-file-preview">
