@@ -140,3 +140,18 @@ Princípio visual: **jornalismo documental industrial**, preto/grafite/branco/am
 ## Próxima decisão editorial
 
 A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o site, reconhecer imediatamente uma investigação verdadeira, entender o contexto, acessar evidências e compartilhar — com publicação fluindo de uma única operação simples.
+## Registro de execução — Sprint 0 (27/10/2026)
+
+**PR de código:** https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/5
+
+**Executado na branch de revisão:**
+- Guard explícito de dados demonstrativos em consultas públicas (pautas, dossiês, campanhas, acervo, memória, territórios, marcos e outras coleções); comportamento de produção = sem fixtures.
+- Confirmação editorial exigida na interface e na server action de publicação da Captura Universal, com verificação de permissão no servidor, status condicional e tentativa de recuperação ao falhar.
+- Matérias Git incluídas no índice da busca; sitemap expandido para pautas, dossiês e lugares reais; home prioriza matérias autorais quando existirem.
+- Nova verificação automatizada no CI para guardas, publicação e indexação.
+
+**Validado:** testes GitHub Actions e compilação de CI concluídos com sucesso para o commit `bd770bc30fd7ef696d5a193efe8c5f34e0b94cd5`. Prévia Vercel READY confirmada para commit anterior `981a97e46073b9308a241c5b327729760224a141`; a prévia do último commit ainda precisava ser confirmada.
+
+**Não concluído:** merge em main, teste HTTP/celular, banco e RLS conectados, teste E2E de publicação real, remoção definitiva da possibilidade de inconsistência entre duas gravações no fluxo rápido, três primeiras reportagens originais.
+
+**Decisão:** conservar PR #5 isolada até verificar a prévia final e segurança operacional.
