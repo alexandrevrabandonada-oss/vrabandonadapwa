@@ -36,6 +36,8 @@ import { getPublishedTimelineHighlights, getPublishedTimelineHighlightLinks } fr
 import { EditionPrimaryPiece } from "@/components/edition-primary-piece";
 import { getPublishedEditorialEditionLinks, getPublishedEditorialEditions } from "@/lib/editions/queries";
 import { site } from "@/lib/site";
+import { InstagramHomePanel } from "@/components/instagram-home-panel";
+import { MateriasHome } from "@/components/materias-home";
 import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
 
 export const metadata: Metadata = {
@@ -145,6 +147,8 @@ export default async function HomePage() {
         />
       </section>
 
+      <InstagramHomePanel />
+
       <section className="section">
         <div className="grid-2">
           <div>
@@ -166,6 +170,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <MateriasHome />
       <ReadingTrailPanel compact />
 
 

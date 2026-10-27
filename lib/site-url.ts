@@ -21,7 +21,8 @@ export function getSiteUrl() {
   }
 
   if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+    // SEO: previews também apontam para o domínio canônico, nunca para URLs efêmeras.
+    return `https://${canonicalProductionHost}`;
   }
 
   return fallbackLocalUrl;

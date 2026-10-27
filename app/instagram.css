@@ -1,0 +1,77 @@
+/* Publicações | VR Abandonada — editorial industrial em amarelo e grafite */
+.ig-directory,.ig-story{padding-block:2rem 4rem}
+.ig-hero{position:relative;isolation:isolate;overflow:hidden;border-radius:22px;background:#f0c52b;color:#111;padding:clamp(1.5rem,5vw,4rem)}
+.ig-hero:after{content:"VR";position:absolute;right:-.08em;bottom:-.33em;z-index:-1;font-size:clamp(13rem,32vw,34rem);letter-spacing:-.15em;line-height:1;font-weight:1000;opacity:.09}
+.ig-eyebrow{font-size:.75rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+.ig-hero h1{font-size:clamp(3rem,9vw,7.8rem);font-weight:1000;text-transform:uppercase;letter-spacing:-.085em;line-height:.86;max-width:10ch;margin:1rem 0}
+.ig-hero p:not(.ig-eyebrow){font-weight:600;max-width:52ch;font-size:clamp(1rem,2vw,1.24rem)}
+.ig-hero__actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:2rem}
+.ig-hero__actions .button{background:#111;color:#fff}
+.ig-hero__actions .button-secondary{color:#111;border:1px solid #111;background:transparent}
+.ig-toolbar{display:grid;gap:1.1rem;margin-top:2rem}
+.ig-search{display:grid;gap:.4rem}
+.ig-search label{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:900}
+.ig-search>div{display:flex;overflow:hidden;border:1px solid #454545;border-radius:12px;background:#1b1b1b}
+.ig-search input{color:#fff;padding:1rem;width:100%;min-width:0;border:0;outline:none;background:transparent}
+.ig-search button{padding:.9rem 1.3rem;border:0;background:#f0c52b;color:#111;font-weight:900;cursor:pointer}
+.ig-topics{display:flex;gap:.5rem;flex-wrap:wrap}
+.ig-topics a,.ig-article__topics span{font-size:.76rem;padding:.5rem .75rem;border:1px solid #424242;border-radius:100px}
+.ig-topics a.active{border-color:#f0c52b;color:#111;background:#f0c52b;font-weight:900}
+.ig-directory__header{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin:2rem 0 1rem}
+.ig-directory__header h2,.ig-related h2{font-size:clamp(1.7rem,3vw,2.4rem);letter-spacing:-.05em;text-transform:uppercase;margin:0}
+.ig-directory__header p{color:#c4c0b8}
+.ig-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.ig-article{overflow:hidden;border-radius:14px;border:1px solid #393939;background:#1b1b1b;display:flex;flex-direction:column;transition:transform .2s,border-color .2s}
+.ig-article:hover{transform:translateY(-3px);border-color:#f0c52b}
+.ig-article__image-link{aspect-ratio:4/4.3;position:relative;display:block;background:#131313;overflow:hidden}
+.ig-article__image-link img{width:100%;height:100%;object-fit:cover}
+.ig-article__kind{position:absolute;left:.8rem;top:.8rem;font-size:.72rem;font-weight:900;letter-spacing:.1em;color:#111;background:#f0c52b;padding:.4rem .6rem}
+.ig-article__art{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;background:repeating-linear-gradient(-45deg,#171717,#171717 2px,#1d1d1d 2px,#1d1d1d 22px)}
+.ig-article__art span{font-size:5rem;font-weight:1000;line-height:1;color:#f0c52b;letter-spacing:-.1em}
+.ig-article__art strong{letter-spacing:-.04em;font-size:1.4rem}
+.ig-article__art small{margin-top:.8rem;color:#bcbcb5;letter-spacing:.18em}
+.ig-article__copy{display:flex;flex-direction:column;gap:.65rem;flex:1;padding:1.1rem}
+.ig-article__date{font-size:.76rem;color:#f0c52b;text-transform:uppercase}
+.ig-article__copy h3{font-size:1.3rem;line-height:1.15;letter-spacing:-.04em;margin:0}
+.ig-article__copy p{font-size:.92rem;color:#c9c7c0;margin:0}
+.ig-article__topics{display:flex;gap:.4rem;margin-top:auto}
+.ig-article__topics span{font-size:.7rem;padding:.2rem .5rem;color:#c5c5c0}
+.ig-empty{text-align:center;padding:3rem 1.5rem;background:#191919;border:1px dashed #555;border-radius:14px}
+.ig-empty strong{font-size:1.5rem}
+.ig-empty p{max-width:54ch;color:#c5c5bf;margin:1rem auto}
+.ig-comun-callout{display:flex;align-items:center;justify-content:space-between;gap:2rem;margin-top:3rem;padding:2rem;background:#211f16;border:1px solid #856d1c;border-radius:14px}
+.ig-comun-callout span,.ig-action-panel>span{color:#f0c52b;font-size:.73rem;letter-spacing:.13em;font-weight:900}
+.ig-comun-callout h2{letter-spacing:-.04em;font-size:1.85rem;margin:.4rem 0}
+.ig-comun-callout p{color:#c9c7c0;max-width:62ch}
+.ig-comun-callout>a{color:#f0c52b;font-weight:900;white-space:nowrap}
+.ig-breadcrumb{display:flex;gap:.65rem;flex-wrap:wrap;color:#aaa;font-size:.81rem;margin-bottom:2rem}
+.ig-story__heading{border-left:5px solid #f0c52b;padding:1rem 0 1rem 1.5rem;margin-bottom:2rem}
+.ig-story__heading .ig-eyebrow{color:#f0c52b}
+.ig-story__heading h1{font-size:clamp(2.8rem,6.7vw,6rem);line-height:.95;letter-spacing:-.08em;text-transform:uppercase;max-width:18ch;margin:.85rem 0}
+.ig-story__heading>p{font-size:1.05rem;color:#c5c5bd;max-width:65ch}
+.ig-story__columns{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,.65fr);gap:2rem;align-items:start}
+.ig-story__visual{margin:0;border:1px solid #414141;border-radius:14px;overflow:hidden;background:#151515}
+.ig-story__visual img{display:block;width:100%;max-height:650px;object-fit:contain}
+.ig-story__visual figcaption{font-size:.78rem;color:#bdbdb5;padding:.65rem 1rem}
+.ig-story__visual a,.ig-story__source a{color:#f0c52b;text-decoration:underline}
+.ig-story__placeholder{height:390px;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#171717}
+.ig-story__placeholder strong{font-size:clamp(3rem,7vw,5rem);line-height:.85;letter-spacing:-.09em;color:#f0c52b}
+.ig-story__placeholder span{font-size:.8rem;letter-spacing:.17em;margin-top:1.5rem}
+.ig-story__date{color:#f0c52b;font-size:.86rem;font-weight:900;margin:2rem 0 1rem}
+.ig-story__transcription{white-space:pre-line;overflow-wrap:anywhere;font-size:clamp(1.04rem,1.5vw,1.19rem);line-height:1.85}
+.ig-story__source{border-top:1px solid #414141;margin-top:2rem;padding-top:1rem;color:#bebeb6;font-size:.86rem}
+.ig-story__aside{display:grid;gap:1rem;position:sticky;top:6rem}
+.ig-action-panel{display:grid;gap:1rem;border-radius:13px;border:1px solid #444;background:#1a1a1a;padding:1.3rem}
+.ig-action-panel h2{font-size:1.7rem;line-height:1.1;letter-spacing:-.06em;margin:0}
+.ig-action-panel p{color:#c9c9c3;font-size:.92rem;margin:0}
+.ig-action-panel>a:not(.button):not(.button-secondary){font-weight:800;color:#f0c52b}
+.ig-related{margin-top:4rem}
+.ig-related__list{display:grid;gap:.7rem;margin-top:1rem}
+.ig-related__list a{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid #393939;padding:1rem 0;font-weight:800}
+.ig-related__list span{color:#f0c52b}
+.ig-homepanel{margin-top:2rem}
+.ig-homepanel__header{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.ig-homepanel__header h2{font-size:clamp(1.8rem,3.5vw,2.9rem);text-transform:uppercase;letter-spacing:-.065em;line-height:1;margin:.4rem 0 0}
+.ig-homepanel__header>a{color:#f0c52b;font-weight:900}
+@media(max-width:900px){.ig-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.ig-story__columns{grid-template-columns:1fr}.ig-story__aside{position:static}.ig-comun-callout{flex-direction:column;align-items:flex-start}}
+@media(max-width:600px){.ig-cards{grid-template-columns:1fr}.ig-directory,.ig-story{padding-block:1rem 3rem}.ig-hero h1{font-size:clamp(3rem,15vw,4.5rem)}.ig-topics{flex-wrap:nowrap;overflow:auto;padding-bottom:.6rem}.ig-search>div{flex-direction:column}.ig-search button{padding:.75rem}.ig-article__image-link{aspect-ratio:4/3}.ig-story__heading{padding-left:1rem}.ig-homepanel__header{flex-direction:column;align-items:flex-start}}

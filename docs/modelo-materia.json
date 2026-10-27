@@ -1,0 +1,31 @@
+{
+  "slug": "assunto-especifico-volta-redonda",
+  "title": "Título verificável com contexto de Volta Redonda",
+  "subtitle": "Uma frase de apoio explicando o fato mais relevante.",
+  "summary": "Um resumo suficiente para o leitor compreender o assunto, com o contexto da investigação, e que também aparecerá nas buscas do Google.",
+  "section": "Cidade",
+  "publishedAt": "2026-10-27T19:00:00-03:00",
+  "author": "VR Abandonada",
+  "status": "published",
+  "reviewed": true,
+  "sources": [
+    {
+      "label": "Documento ou fonte primária verificada",
+      "url": "https://example.org/documento"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Aqui entra o texto integral, cuidadosamente verificado. Substitua este exemplo antes de qualquer publicação."
+    },
+    {
+      "type": "heading",
+      "text": "O que os documentos mostram"
+    },
+    {
+      "type": "paragraph",
+      "text": "Não confunda alegações, fatos comprovados e questões em aberto."
+    }
+  ]
+}
