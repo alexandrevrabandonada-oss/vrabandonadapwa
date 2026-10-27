@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const canonicalHost = "www.vrabandonada.com.br";
-const apexHost = "vrabandonada.com.br";
+const canonicalHost = "www.vrabandonada.online";
+const apexHost = "vrabandonada.online";
 
 export function middleware(request: NextRequest) {
   const { hostname, pathname, search } = request.nextUrl;
