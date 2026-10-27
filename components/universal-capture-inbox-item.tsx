@@ -1,5 +1,5 @@
 import type { UniversalCapture } from "@/lib/captura/queries";
-import { archiveCaptureAction, publishCaptureAction, sendToEnrichmentAction } from "@/lib/captura/actions";
+import { publishCaptureAction, sendToEnrichmentAction } from "@/lib/captura/actions";
 
 type Props = {
   item: UniversalCapture;
@@ -73,18 +73,16 @@ export function UniversalCaptureInboxItem({ item, feedbackMessage, feedbackStatu
         </div>
       ) : (
         <div style={{ display: "flex", gap: "0.5rem", marginTop: "auto", flexWrap: "wrap" }}>
-          <form action={publishCaptureAction}>
+          {process.env.VR_ENABLE_FAST_PUBLISH === "true" ? <form action={publishCaptureAction}>
             <input type="hidden" name="id" value={item.id} />
+            <label style={{ display: "flex", alignItems: "flex-start", gap: "0.4rem", fontSize: "0.78rem", marginBottom: "0.5rem", lineHeight: 1.4 }}>
+              <input type="checkbox" name="confirm_editorial_review" value="yes" required />
+              Conferi o texto e autorizo esta publicação como conteúdo editorial.
+            </label>
             <button className="button-secondary" style={{ padding: "0.5rem 0.75rem", fontSize: "0.875rem" }} type="submit">
               Publicar (Agora)
             </button>
-          </form>
-          <form action={archiveCaptureAction}>
-            <input type="hidden" name="id" value={item.id} />
-            <button className="button-secondary" style={{ padding: "0.5rem 0.75rem", fontSize: "0.875rem" }} type="submit">
-              Guardar (Acervo)
-            </button>
-          </form>
+          </form> : null}
           <form action={sendToEnrichmentAction}>
             <input type="hidden" name="id" value={item.id} />
             <button className="button-secondary" style={{ padding: "0.5rem 0.75rem", fontSize: "0.875rem" }} type="submit">

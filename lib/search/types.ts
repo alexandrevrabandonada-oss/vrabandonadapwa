@@ -1,4 +1,5 @@
 export type SearchContentType =
+  | "materia"
   | "pauta"
   | "memoria"
   | "acervo"

@@ -1,7 +1,11 @@
-import { editorialMockItems } from "@/lib/editorial/mock";
+import { editorialMockItems as editorialMockItemsDemo } from "@/lib/editorial/mock";
 import type { EditorialAuditLogEntry, EditorialItem } from "@/lib/editorial/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const editorialMockItems = allowPublicDemoContent() ? editorialMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, body, category, primary_tag, secondary_tags, series_slug, series_title, reading_time, featured_order, cover_variant, neighborhood, cover_image_url, published, published_at, editorial_status, featured, created_at, updated_at";

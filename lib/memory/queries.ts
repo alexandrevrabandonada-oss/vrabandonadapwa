@@ -1,7 +1,13 @@
-import { memoryCollectionsFallback, memoryTimelineFallback } from "@/lib/memory/catalog";
+import { memoryCollectionsFallback as memoryCollectionsFallbackDemo, memoryTimelineFallback as memoryTimelineFallbackDemo } from "@/lib/memory/catalog";
 import type { MemoryCollection, MemoryItem, MemoryTimelineEntry } from "@/lib/memory/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+// Categorias temáticas são navegação editorial, não registros de reportagem.
+const memoryCollectionsFallback = memoryCollectionsFallbackDemo;
+const memoryTimelineFallback = allowPublicDemoContent() ? memoryTimelineFallbackDemo : [];
 
 const publicFields =
   "id, slug, title, excerpt, body, memory_type, memory_collection, collection_slug, collection_title, period_label, year_start, year_end, place_label, source_note, archive_status, editorial_status, published, published_at, featured, highlight_in_memory, timeline_rank, related_editorial_slug, related_series_slug, cover_image_url, cover_image_path, created_at, updated_at, created_by, updated_by";
@@ -32,39 +38,7 @@ function sortPublishedMemoryItems(items: MemoryItem[]) {
 export async function getPublishedMemoryItems() {
   const supabase = createSupabasePublicClient();
 
-  if (!supabase) {
-    return sortPublishedMemoryItems(memoryCollectionsFallback.map((collection, index) => ({
-      id: `fallback-${collection.slug}`,
-      slug: collection.slug,
-      title: collection.title,
-      excerpt: collection.description,
-      body: collection.description,
-      memory_type: "landmark",
-      memory_collection: collection.slug,
-      collection_slug: collection.slug,
-      collection_title: collection.title,
-      period_label: collection.title,
-      year_start: null,
-      year_end: null,
-      place_label: null,
-      source_note: null,
-      archive_status: "active",
-      editorial_status: "published",
-      published: true,
-      published_at: null,
-      featured: Boolean(collection.featured),
-      highlight_in_memory: Boolean(collection.featured),
-      timeline_rank: index + 1,
-      related_editorial_slug: null,
-      related_series_slug: null,
-      cover_image_url: null,
-      cover_image_path: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      created_by: null,
-      updated_by: null,
-    })) as MemoryItem[]);
-  }
+  if (!supabase) return [];
 
   const { data, error } = await supabase
     .from("memory_items")
@@ -75,39 +49,7 @@ export async function getPublishedMemoryItems() {
     .order("featured", { ascending: false })
     .order("published_at", { ascending: false });
 
-  if (error || !data || data.length === 0) {
-    return sortPublishedMemoryItems(memoryCollectionsFallback.map((collection, index) => ({
-      id: `fallback-${collection.slug}`,
-      slug: collection.slug,
-      title: collection.title,
-      excerpt: collection.description,
-      body: collection.description,
-      memory_type: "landmark",
-      memory_collection: collection.slug,
-      collection_slug: collection.slug,
-      collection_title: collection.title,
-      period_label: collection.title,
-      year_start: null,
-      year_end: null,
-      place_label: null,
-      source_note: null,
-      archive_status: "active",
-      editorial_status: "published",
-      published: true,
-      published_at: null,
-      featured: Boolean(collection.featured),
-      highlight_in_memory: Boolean(collection.featured),
-      timeline_rank: index + 1,
-      related_editorial_slug: null,
-      related_series_slug: null,
-      cover_image_url: null,
-      cover_image_path: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      created_by: null,
-      updated_by: null,
-    })) as MemoryItem[]);
-  }
+  if (error || !data || data.length === 0) return [];
 
   return sortPublishedMemoryItems(data as MemoryItem[]);
 }

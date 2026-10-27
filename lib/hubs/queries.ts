@@ -1,8 +1,13 @@
-import { themeHubMockItems, themeHubLinkMockItems } from "@/lib/hubs/mock";
+import { themeHubMockItems as themeHubMockItemsDemo, themeHubLinkMockItems as themeHubLinkMockItemsDemo } from "@/lib/hubs/mock";
 import type { ThemeHub, ThemeHubLink } from "@/lib/hubs/types";
 import { getThemeHubStatusSortOrder } from "@/lib/hubs/navigation";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const themeHubMockItems = allowPublicDemoContent() ? themeHubMockItemsDemo : [];
+const themeHubLinkMockItems = allowPublicDemoContent() ? themeHubLinkMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, lead_question, cover_image_url, featured, public_visibility, sort_order, status, created_at, updated_at, created_by, updated_by";

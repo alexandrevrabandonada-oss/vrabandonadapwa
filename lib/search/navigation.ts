@@ -1,6 +1,7 @@
 import type { SearchContentType } from "@/lib/search/types";
 
 export const searchContentTypeLabels: Record<SearchContentType, string> = {
+  materia: "Matéria",
   pauta: "Pauta",
   memoria: "Memória",
   acervo: "Acervo",
@@ -29,6 +30,7 @@ export const searchContentTypeOrder: SearchContentType[] = [
   "ator",
   "edicao",
   "padrao",
+  "materia",
   "pauta",
   "memoria",
   "acervo",

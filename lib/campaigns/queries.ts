@@ -1,8 +1,13 @@
-import { campaignMockItems, campaignLinkMockItems } from "@/lib/campaigns/mock";
+import { campaignMockItems as campaignMockItemsDemo, campaignLinkMockItems as campaignLinkMockItemsDemo } from "@/lib/campaigns/mock";
 import { getCampaignStatusSortOrder } from "@/lib/campaigns/navigation";
 import type { PublicCampaign, PublicCampaignLink } from "@/lib/campaigns/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const campaignMockItems = allowPublicDemoContent() ? campaignMockItemsDemo : [];
+const campaignLinkMockItems = allowPublicDemoContent() ? campaignLinkMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, status, campaign_type, lead_question, start_date, end_date, cover_image_url, featured, public_visibility, sort_order, created_at, updated_at, created_by, updated_by";

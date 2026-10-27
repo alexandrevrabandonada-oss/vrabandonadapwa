@@ -1,8 +1,13 @@
-import { placeHubMockItems, placeHubLinkMockItems } from "@/lib/territories/mock";
+import { placeHubMockItems as placeHubMockItemsDemo, placeHubLinkMockItems as placeHubLinkMockItemsDemo } from "@/lib/territories/mock";
 import type { PlaceHub, PlaceHubLink } from "@/lib/territories/types";
 import { getPlaceHubStatusSortOrder } from "@/lib/territories/navigation";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const placeHubMockItems = allowPublicDemoContent() ? placeHubMockItemsDemo : [];
+const placeHubLinkMockItems = allowPublicDemoContent() ? placeHubLinkMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, lead_question, place_type, parent_place_slug, territory_label, address_label, latitude, longitude, cover_image_url, featured, public_visibility, status, sort_order, created_at, updated_at, created_by, updated_by";

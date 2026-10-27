@@ -1,7 +1,11 @@
-import { archiveCollectionMockItems } from "@/lib/archive/mock";
+import { archiveCollectionMockItems as archiveCollectionMockItemsDemo } from "@/lib/archive/mock";
 import type { ArchiveCollection } from "@/lib/archive/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const archiveCollectionMockItems = allowPublicDemoContent() ? archiveCollectionMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, cover_image_url, public_visibility, featured, sort_order, created_at, updated_at, created_by, updated_by";

@@ -30,13 +30,14 @@ export function UniversalCaptureComposer({ message, status }: Props) {
             Arquivo Rapido (Opcional)
           </label>
           <input
+            disabled
             id="file"
             name="file"
             type="file"
             style={{ padding: "0.75rem", borderRadius: "4px", border: "1px dotted var(--foreground-50)", background: "var(--foreground-5)", cursor: "pointer" }}
           />
           <p style={{ margin: 0, fontSize: "0.8125rem", color: "var(--foreground-50)" }}>
-            Limite pratico: 9MB por arquivo.
+            Envio de anexos temporariamente suspenso: o armazenamento antigo é público. Não envie documentos ou dados de fontes por este formulário.
           </p>
         </div>
 

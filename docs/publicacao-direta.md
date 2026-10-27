@@ -8,7 +8,7 @@
 2. Preparar o conteúdo estruturado conforme docs/modelo-materia.json, após conferir fatos, fontes, datas, nomes e contraditório. Usar autor correto. Datas em ISO 8601 com fuso -03:00.
 3. Criar um slug único, legível, com foco no tema e território. Antes de criar, verificar content/materias/<slug>.json; se existir, não sobrescrever inadvertidamente.
 4. Preferir gerar numa branch de revisão e ver o Preview. Quando houver aprovação explícita para publicar, criar/atualizar content/materias/<slug>.json na branch main usando a integração GitHub conectada ao ChatGPT. A conexão já autorizada dispensa novo token ou acesso à Meta.
-5. O projeto Vercel vrabandonadapwa recebe push em main pela integração Git, constrói o site e publica a URL https://www.vrabandonada.com.br/materias/<slug> depois do deploy READY.
+5. O projeto Vercel vrabandonadapwa recebe push em main pela integração Git, constrói o site e publica a URL https://www.vrabandonada.online/materias/<slug> depois do deploy READY.
 6. Verificar URL final, status HTTP, sitemap.xml, feed.xml e metadados; caso não esteja disponível, informar que ficou pendente. Não afirmar publicação sem confirmar.
 7. Para corrigir uma matéria, editar o mesmo arquivo no GitHub com o SHA atual, atualizar updatedAt e documentar correções importantes em correctionNote. Manter slug e URL permanentes.
 8. Instagram: usar o mesmo material para adaptar legenda, carrossel ou Reel. A importação automática da Meta é opcional e separada, não obrigatória.
@@ -51,3 +51,6 @@
 - node --test tests/materias-validation.test.mjs
 - npm run build executa o pré-build de validação das matérias.
 - Conferir deploy de Preview antes do merge da branch no site principal.
+## Política de confiança (Sprint 0)
+
+O conteúdo de demonstração só pode aparecer em desenvolvimento local com `VR_ENABLE_DEMO_FIXTURES=true`. Não deve aparecer no build de preview/produção. `/buscar` passa a incluir matérias reais do pipeline GitHub. A Captura Universal exige confirmação explícita e autorização editorial no servidor para publicação rápida; nenhum formulário público publica automaticamente.

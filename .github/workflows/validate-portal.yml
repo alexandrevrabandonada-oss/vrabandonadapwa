@@ -28,7 +28,7 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - name: Testar formatos e segurança da importação
-        run: node --test tests/materias-validation.test.mjs tests/instagram-import.test.mjs
+        run: node --test tests/*.test.mjs
       - name: Instalar dependências
         run: npm ci
       - name: Compilar e validar matérias

@@ -1,9 +1,15 @@
-import { investigationDossierLinkMockItems, investigationDossierMockItems, investigationDossierUpdateMockItems } from "@/lib/dossiers/mock";
+import { investigationDossierLinkMockItems as investigationDossierLinkMockItemsDemo, investigationDossierMockItems as investigationDossierMockItemsDemo, investigationDossierUpdateMockItems as investigationDossierUpdateMockItemsDemo } from "@/lib/dossiers/mock";
 import { getDossierStatusSortOrder } from "@/lib/dossiers/navigation";
 import { groupDossierUpdatesByDossierId, sortDossierUpdates } from "@/lib/dossiers/updates";
 import type { InvestigationDossier, InvestigationDossierLink, InvestigationDossierUpdate } from "@/lib/dossiers/types";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const investigationDossierLinkMockItems = allowPublicDemoContent() ? investigationDossierLinkMockItemsDemo : [];
+const investigationDossierMockItems = allowPublicDemoContent() ? investigationDossierMockItemsDemo : [];
+const investigationDossierUpdateMockItems = allowPublicDemoContent() ? investigationDossierUpdateMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, status, cover_image_url, featured, public_visibility, sort_order, lead_question, period_label, territory_label, created_at, updated_at, created_by, updated_by";

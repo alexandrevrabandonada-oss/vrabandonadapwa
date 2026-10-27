@@ -1,8 +1,13 @@
-import { actorHubMockItems, actorHubLinkMockItems } from "@/lib/actors/mock";
+import { actorHubMockItems as actorHubMockItemsDemo, actorHubLinkMockItems as actorHubLinkMockItemsDemo } from "@/lib/actors/mock";
 import type { ActorHub, ActorHubLink } from "@/lib/actors/types";
 import { getActorHubStatusSortOrder } from "@/lib/actors/navigation";
 import { createSupabasePublicClient } from "@/lib/supabase/public";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+
+import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
+
+const actorHubMockItems = allowPublicDemoContent() ? actorHubMockItemsDemo : [];
+const actorHubLinkMockItems = allowPublicDemoContent() ? actorHubLinkMockItemsDemo : [];
 
 const publicFields =
   "id, title, slug, excerpt, description, lead_question, actor_type, territory_label, cover_image_url, featured, public_visibility, status, sort_order, created_at, updated_at, created_by, updated_by";
