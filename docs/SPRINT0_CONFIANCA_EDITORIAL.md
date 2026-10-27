@@ -19,3 +19,11 @@
 4. Rodar testes, compilação, preview e abrir login, publicação, busca e sitemap. Sem teste E2E, não promover automaticamente.
 5. Corrigir também arquivos `mock` ainda referenciados em componentes públicos fora das queries auditadas, se identificados.
 6. Nenhuma reportagem real foi publicada sem checagem editorial e aprovação explícita.
+
+## Revisão adicional de segurança
+- Verificado nas migrações 0031/0032 que `archive-assets` e `universal_captures` foram criados com `public=true` e leitura pública. Logo, `public_visibility=false` em uma linha não torna o arquivo privado.
+- Na branch, anexos da Captura Universal e arquivamento rápido de arquivos foram suspensos até migração a um bucket realmente privado, com assinatura de URLs e teste de RLS.
+- O envio de texto continua, com orientação para não incluir dados sensíveis. Arquivos já enviados permanecem passíveis de acesso direto; é necessária auditoria de objetos existentes e remoção/migração conforme autorização.
+- Publicação rápida recebe trava `VR_ENABLE_FAST_PUBLISH` desabilitada por padrão, inclusive no servidor. Quando desligada, encaminhar a nota para enriquecimento/edição.
+- Categorias temáticas de memória continuam visíveis como navegação, mas não geram falsos itens publicados.
+- Não ativar `VR_ENABLE_FAST_PUBLISH` até corrigir atomicidade do banco e comprovar as políticas do Supabase em uso.

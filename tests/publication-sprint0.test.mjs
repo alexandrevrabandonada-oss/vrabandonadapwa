@@ -31,6 +31,17 @@ test("publicação rápida exige aprovação e autorização no servidor", () =>
   assert.match(ui, /name="confirm_editorial_review" value="yes" required/);
 });
 
+test("anexos em bucket público e publicação rápida ficam bloqueados por padrão", () => {
+  const actions = source("lib/captura/actions.ts");
+  assert.match(actions, /VR_ENABLE_FAST_PUBLISH !== "true"/);
+  assert.match(actions, /Anexos estão temporariamente desativados/);
+  assert.match(actions, /Arquivamento de anexos suspenso/);
+  const uploadUi = source("components/universal-capture-composer.tsx");
+  assert.match(uploadUi, /disabled[\s\S]*id="file"/);
+  const memory = source("lib/memory/queries.ts");
+  assert.match(memory, /const memoryCollectionsFallback = memoryCollectionsFallbackDemo/);
+});
+
 test("acervo direto integra a busca geral e sitemap", () => {
   assert.match(source("lib/search/index.ts"), /getMaterias\(\)/);
   assert.match(source("lib/search/types.ts"), /"materia"/);
