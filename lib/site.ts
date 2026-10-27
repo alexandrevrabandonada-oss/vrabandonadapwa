@@ -16,7 +16,7 @@ export const site = {
     "Notícias, Reels e memória popular de Volta Redonda.",
   primaryNav: [
     { href: "/", label: "Início" },
-    { href: "/publicacoes", label: "Publicações" },
+    { href: "/materias", label: "Matérias" },
     { href: "/agora", label: "Agora" },
     { href: "/buscar", label: "Buscar" },
     { href: "/acompanhar", label: "Acompanhar" },
@@ -33,6 +33,7 @@ export const site = {
     {
       title: "Uso diário",
       items: [
+        { href: "/publicacoes", label: "Instagram" },
         { href: "/publicacoes", label: "Publicações" },
         { href: "/agora", label: "Agora" },
         { href: "/buscar", label: "Buscar" },
@@ -87,6 +88,7 @@ export const site = {
     },
   ] satisfies SiteGroup[],
   footerQuickLinks: [
+    { href: "/publicacoes", label: "Publicações do Instagram" },
     { href: "/publicacoes", label: "Publicações" },
     { href: "/comecar", label: "Começar" },
     { href: "/buscar", label: "Buscar" },

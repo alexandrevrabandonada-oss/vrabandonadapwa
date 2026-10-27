@@ -1,26 +1,39 @@
 import { getInstagramPosts, titleFor, summaryFor } from "@/lib/instagram/posts";
+import { getMaterias } from "@/lib/materias";
 import { getSiteUrl } from "@/lib/site-url";
-
-const escapeXml = (v: string) => v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 
 export const revalidate = 3600;
 
-export function GET() {
+const xmlEscape = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+
+export async function GET() {
   const host = getSiteUrl();
-  const items = getInstagramPosts().slice(0, 50).map((post) => {
-    const url = host + "/publicacoes/" + post.id;
-    return [
-      "<item>", "<title>" + escapeXml(titleFor(post)) + "</title>",
-      "<link>" + escapeXml(url) + "</link>",
-      "<guid isPermaLink=\"true\">" + escapeXml(url) + "</guid>",
-      "<description>" + escapeXml(summaryFor(post)) + "</description>",
-      "<pubDate>" + new Date(post.published_at).toUTCString() + "</pubDate>",
+  const articles = await getMaterias();
+  const imported = getInstagramPosts().map((p) => ({
+    title: titleFor(p),
+    url: host + "/publicacoes/" + p.id,
+    summary: summaryFor(p),
+    date: p.published_at,
+  }));
+  const originals = articles.map((a) => ({
+    title: a.title,
+    url: host + "/materias/" + a.slug,
+    summary: a.summary,
+    date: a.publishedAt,
+  }));
+  const items = [...originals, ...imported].sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+    .slice(0, 60).map((item) => [
+      "<item>",
+      "<title>" + xmlEscape(item.title) + "</title>",
+      "<link>" + xmlEscape(item.url) + "</link>",
+      '<guid isPermaLink="true">' + xmlEscape(item.url) + "</guid>",
+      "<description>" + xmlEscape(item.summary) + "</description>",
+      "<pubDate>" + new Date(item.date).toUTCString() + "</pubDate>",
       "</item>"
-    ].join("");
-  }).join("");
-  const xml = '<?xml version="1.0" encoding="UTF-8"?>' +
-    '<rss version="2.0"><channel><title>VR Abandonada - Publicações</title>' +
-    '<link>' + escapeXml(host) + '</link><language>pt-BR</language>' +
-    '<description>Notícias, vídeos e publicações de Volta Redonda</description>' + items + '</channel></rss>';
-  return new Response(xml, { headers: { "Content-Type": "application/rss+xml; charset=utf-8", "Cache-Control": "public, s-maxage=3600" } });
+    ].join("")).join("");
+  const body = '<?xml version="1.0" encoding="UTF-8"?>' + '<rss version="2.0"><channel>' +
+    "<title>VR Abandonada — Publicações</title><link>" + xmlEscape(host) + "</link>" +
+    "<language>pt-BR</language><description>Comunicação pública e memória de Volta Redonda</description>" +
+    items + "</channel></rss>";
+  return new Response(body, {headers: {"Content-Type": "application/rss+xml; charset=utf-8", "Cache-Control": "public, s-maxage=3600"}});
 }

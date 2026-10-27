@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Container } from "@/components/container";
+import { MateriasHome } from "@/components/materias-home";
 import { InstagramPublicationCard } from "@/components/instagram-publication-card";
 import { getInstagramPosts, TOPICS, topicsFor } from "@/lib/instagram/posts";
 
@@ -31,6 +32,7 @@ export default async function PublicacoesPage({ searchParams }: { searchParams: 
           <Link className="button-secondary" href="/buscar">Pesquisar o acervo</Link>
         </div>
       </header>
+      <MateriasHome />
       <div className="ig-toolbar">
         <form action="/publicacoes" className="ig-search" role="search">
           <label htmlFor="ig-q">Buscar nas publicações</label>
