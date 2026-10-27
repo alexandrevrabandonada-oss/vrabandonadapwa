@@ -1,10 +1,13 @@
 const fallbackLocalUrl = "http://localhost:3000";
-const canonicalProductionHost = "www.vrabandonada.com.br";
+const canonicalProductionHost = "www.vrabandonada.online";
 
 function normalizeCanonicalUrl(value: string) {
   try {
     const url = new URL(value);
-    if (url.hostname === "vrabandonada.com.br") {
+    if (
+      url.hostname === "vrabandonada.com.br" ||
+      url.hostname === "www.vrabandonada.com.br"
+    ) {
       url.hostname = canonicalProductionHost;
       return url.toString().replace(/\/$/, "");
     }
