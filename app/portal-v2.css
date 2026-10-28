@@ -1,12 +1,12 @@
 /* VR Abandonada V2 — linguagem jornalística, mobile-first.
    Mantém a identidade do projeto. Sem visual de "app administrativo" na homepage. */
 :root {
-  --vr2-ink: #101113;
-  --vr2-surface: #191a1c;
-  --vr2-paper: #eeeae1;
-  --vr2-muted: #bab7b0;
-  --vr2-stroke: #3b3a36;
-  --vr2-yellow: #f2c338;
+  --vr2-ink: var(--ds-canvas);
+  --vr2-surface: var(--ds-surface);
+  --vr2-paper: var(--ds-text);
+  --vr2-muted: var(--ds-text-secondary);
+  --vr2-stroke: var(--ds-border);
+  --vr2-yellow: var(--ds-accent);
 }
 html { scroll-padding-top: 5.5rem; }
 body { background: #111214; color: var(--vr2-paper); }
