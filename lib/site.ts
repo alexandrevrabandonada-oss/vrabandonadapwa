@@ -18,7 +18,7 @@ export const site = {
     { href: "/", label: "Início" },
     { href: "/agora", label: "Últimas" },
     { href: "/dossies", label: "Investigações" },
-    { href: "/noticias", label: "Notícias" },
+    { href: "/territorios", label: "Bairros" },
     { href: "/buscar", label: "Buscar" },
   ] satisfies SiteLink[],
   mobileNav: [
@@ -31,38 +31,36 @@ export const site = {
     {
       title: "Jornalismo",
       items: [
-        { href: "/agora", label: "Últimas" },
+        { href: "/agora", label: "Últimas atualizações" },
         { href: "/noticias", label: "Notícias" },
-        { href: "/materias", label: "Todas as matérias" },
+        { href: "/materias", label: "Reportagens e análises" },
         { href: "/dossies", label: "Investigações" },
-
-        { href: "/acompanhar", label: "Acompanhar" },
       ],
     },
     {
-      title: "Cidade e arquivo",
+      title: "Cidade, documentos e memória",
       items: [
         { href: "/territorios", label: "Bairros e lugares" },
-        { href: "/acervo", label: "Acervo" },
-        { href: "/memoria", label: "Memória" },
+        { href: "/acervo", label: "Documentos e acervo" },
+        { href: "/memoria", label: "Memória da cidade" },
         { href: "/linha-do-tempo", label: "Linha do tempo" },
-        { href: "/buscar", label: "Pesquisar" },
       ],
     },
     {
-      title: "Meu espaço",
+      title: "Sua leitura",
       items: [
-        { href: "/salvos", label: "Salvos" },
-        { href: "/acompanhar", label: "Acompanhar casos" },
-        { href: "/apoie", label: "Apoiar" },
+        { href: "/salvos", label: "Leituras salvas" },
+        { href: "/acompanhar", label: "Casos que acompanho" },
       ],
     },
     {
-      title: "Sobre o projeto",
+      title: "Colabore e conheça o projeto",
       items: [
+        { href: "/envie", label: "Enviar informação à redação" },
+        { href: "/participe", label: "Outras formas de participar" },
+        { href: "/apoie", label: "Apoiar o projeto" },
         { href: "/sobre", label: "Quem somos" },
         { href: "/metodo", label: "Como apuramos" },
-        { href: "/participe", label: "Participar" },
       ],
     },
   ] satisfies SiteGroup[],
