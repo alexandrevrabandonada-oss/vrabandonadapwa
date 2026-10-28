@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-import { materiaKindLabel, publishedDate, type Materia } from "@/lib/materias";
+import { EditorialStoryCard } from "@/components/editorial-story-card";
+
+import type { Materia } from "@/lib/materias";
 import type { EditorialTerritoryEntry } from "@/lib/territories/editorial";
 
 import "./editorial-navigation.css";
@@ -26,16 +28,7 @@ export function EditorialAcervoIndex({ articles }: { articles: Materia[] }) {
       {articles.length ? (
         <div className="vr-index__items">
           {articles.slice(0, 8).map((article) => (
-            <article key={article.slug} className="vr-index__item">
-              <div className="vr-index__meta"><span>{materiaKindLabel(article)} · {article.section}</span><time dateTime={article.publishedAt}>{publishedDate(article.publishedAt)}</time></div>
-              <h3><Link href={"/materias/" + article.slug}>{article.title}</Link></h3>
-              <p>{article.summary}</p>
-              <div className="vr-index__foot">
-                <Link href={"/materias/" + article.slug}>Abrir publicação ↗</Link>
-                {article.territories?.filter((place) => place.role === "main").map((place) =>
-                  <Link key={place.slug} href={"/territorios/" + place.slug}>{place.label} ↗</Link>)}
-              </div>
-            </article>
+            <EditorialStoryCard key={article.slug} article={article} showMainPlaces actionLabel="Abrir publicação" />
           ))}
         </div>
       ) : <p>As matérias verificadas aparecerão aqui depois da aprovação editorial. Nenhum registro fictício é exibido.</p>}
@@ -89,12 +82,12 @@ export function EditorialTerritoryFeed({ place }: { place: EditorialTerritoryEnt
           <h3>{group.title}</h3>
           <div className="vr-index__items">
             {group.items.map((article) => (
-              <article key={article.slug} className="vr-index__item">
-                <div className="vr-index__meta"><span>{group.label} · {materiaKindLabel(article)}</span><time dateTime={article.publishedAt}>{publishedDate(article.publishedAt)}</time></div>
-                <h4><Link href={"/materias/" + article.slug}>{article.title}</Link></h4>
-                <p>{article.summary}</p>
-                <div className="vr-index__foot"><Link href={"/materias/" + article.slug}>Ler reportagem ↗</Link>{article.sources.some((source) => /^https?:\/\//i.test(source.url)) ? <Link href={"/acervo#fontes-" + article.slug}>Consultar referências ↗</Link> : null}</div>
-              </article>
+              <EditorialStoryCard
+                key={article.slug}
+                article={article}
+                headingLevel={4}
+                contextLabel={group.label}
+              />
             ))}
           </div>
         </div>
