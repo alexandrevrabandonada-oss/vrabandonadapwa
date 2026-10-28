@@ -50,7 +50,7 @@ jobs:
           npx playwright install chromium --with-deps
       - name: Auditar jornadas e capturar telas públicas no Chromium
         run: node scripts/audit-local-ux.mjs
-      - name: Auditar acessibilidade WCAG e ampliação de texto
+      - name: Auditar acessibilidade WCAG e reflow equivalente a zoom 200/400%
         run: node scripts/audit-accessibility-v7.mjs
       - name: Publicar relatório de acessibilidade
         if: ${{ always() }}
