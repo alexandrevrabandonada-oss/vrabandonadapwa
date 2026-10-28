@@ -476,3 +476,15 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Situação antes da alteração:** PRs #25, #26 e #27 abertas, rascunho e encadeadas; `main` inalterada. No SHA `97efcfaf79447488b77ddcb32d41f593a579e20d`, 119 testes Node, Chromium, 10 varreduras axe sem violações detectadas e 10 testes de reflow aprovados; Vercel sem preview READY para esse SHA e com `build-rate-limit`. QA humano real (leitor de tela, zoom nativo, público Supabase) ainda pendente.
 
 **Critérios desta etapa:** CI obrigatório passar novamente no HEAD da V7.5, incluindo o `next build` agora sem dispensas; não considerar a etapa pronta sem comprovação. Não há alteração de dados jornalísticos, banco, logotipo, COMUN, DNS ou produção.
+
+---
+
+## Sprint V7.6 — distinguir catálogo vazio de indisponibilidade
+
+**Problema confirmado por auditoria de código:** `getPublishedDossiers()` retornava o mesmo fallback para três situações distintas: falta de configuração Supabase, falha de rede/RLS/consulta e retorno genuinamente vazio. Na produção, o fallback demonstrativo é desligado; a página `/dossies` poderia afirmar que o catálogo estava em preparação quando apenas a consulta falhou.
+
+**Mudança V7.6 na PR #27:** nova `getPublicDossierCatalogState()` com estados `available`, `not_configured`, `unavailable`; lista vazia válida permanece `available`. A API `getPublishedDossiers()` conserva o retorno anterior para as outras páginas; a rota Casos consome o estado completo, mostra mensagem informativa sobre falha/configuração e mantém as reportagens Git disponíveis. O aviso “dossiês em preparação” só aparece quando a consulta realmente foi bem-sucedida, vazia e não há reportagens Git. Nenhuma consulta exibe detalhes sensíveis do banco.
+
+**Limitação de verificação externa:** conexões Supabase listadas não permitiram identificar com segurança o projeto do banco deste portal; nenhuma base de terceiros/adjacente foi consultada, nenhuma migração ou política RLS foi modificada. O código do repositório contém políticas e seeds históricos, que não constituem evidência de estado atual do banco. Validar o Supabase real continua pendente até identificar projeto e credenciais de escopo público.
+
+**Validação exigida:** TypeScript, lint, build bloqueantes; Node tests com novo contrato de status; smoke HTTP de Casos em ambiente sem configuração; Chromium e axe; prévia Vercel para HEAD exato. Não mesclar #25/#26/#27 sem QA visual remoto e revisão de fontes.

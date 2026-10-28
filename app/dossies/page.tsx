@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { EditorialStoryCard } from "@/components/editorial-story-card";
 import { getMaterias, materiaKind } from "@/lib/materias";
-import { getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
+import { getPublicDossierCatalogState, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import type { InvestigationDossier } from "@/lib/dossiers/types";
 
@@ -39,7 +39,8 @@ function groupDossiers(dossiers: InvestigationDossier[]) {
 export default async function DossiersPage() {
   // Reportagens investigativas aprovadas no Git fazem parte do produto mesmo
   // quando ainda não há um dossiê estruturado cadastrado no Supabase.
-  const [dossiers, materias] = await Promise.all([getPublishedDossiers(), getMaterias()]);
+  const [catalog, materias] = await Promise.all([getPublicDossierCatalogState(), getMaterias()]);
+  const { dossiers, availability } = catalog;
   const updates = await getPublishedDossierUpdatesByDossierIds(dossiers.map((dossier) => dossier.id));
   const groups = groupDossiers(dossiers);
   const investigativeArticles = materias.filter((article) => materiaKind(article) === "investigation");
@@ -56,6 +57,24 @@ export default async function DossiersPage() {
           <Link href="/metodo">Como apuramos ↗</Link>
         </nav>
       </header>
+
+      {availability !== "available" ? (
+        <section className="vr3-dossiers__empty" role="status" aria-labelledby="vr7-dossier-catalog-status">
+          <p className="vr2-eyebrow">CATÁLOGO DOCUMENTAL</p>
+          <h2 id="vr7-dossier-catalog-status">
+            {availability === "unavailable"
+              ? "Os dossiês documentais estão temporariamente indisponíveis."
+              : "O catálogo de dossiês não está conectado neste ambiente."}
+          </h2>
+          <p>
+            {availability === "unavailable"
+              ? "Não foi possível consultar a base agora. Isso não significa que não existam dossiês publicados."
+              : "A ausência de conexão não permite confirmar quais dossiês documentais estão publicados."}
+            {" "}As reportagens verificadas seguem disponíveis e podem ser consultadas por seus endereços permanentes.
+          </p>
+          <Link href="/buscar">Pesquisar reportagens ↗</Link>
+        </section>
+      ) : null}
 
       {investigativeArticles.length > 0 ? (
         <section className="vr3-dossiers__section" aria-labelledby="vr7-investigations-published">
@@ -107,7 +126,7 @@ export default async function DossiersPage() {
             </section>
           ))}
         </div>
-      ) : investigativeArticles.length === 0 ? (
+      ) : investigativeArticles.length === 0 && availability === "available" ? (
         <section className="vr3-dossiers__empty" aria-labelledby="vr3-dossiers-empty-title">
           <span className="vr2-eyebrow">DOSSIÊS EM PREPARAÇÃO</span>
           <h2 id="vr3-dossiers-empty-title">A investigação continua. O arquivo público está sendo organizado.</h2>

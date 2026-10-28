@@ -12,11 +12,27 @@ test("a rota Casos exibe investigações publicadas sem depender da existência 
   assert.ok(page.includes("investigativeArticles.map((article)"));
   assert.ok(page.includes('<EditorialStoryCard'));
   assert.ok(page.includes('investigativeArticles.length === 0'));
+  assert.ok(page.includes('getPublicDossierCatalogState()'));
   assert.ok(page.includes("Reportagens investigativas"));
   assert.ok(page.includes('contextLabel={article.investigationStatus === "ongoing"'));
   assert.ok(navigation.includes('{ href: "/dossies", label: "Casos" }'));
   assert.ok(page.includes('getPublishedDossiers()'));
   assert.ok(page.includes("groups.map((group)"));
+});
+
+test("Casos diferencia falha, configuração ausente e lista realmente vazia no Supabase", () => {
+  const query = read("lib/dossiers/queries.ts");
+  const page = read("app/dossies/page.tsx");
+  assert.match(query, /availability: "available" \| "not_configured" \| "unavailable"/);
+  assert.match(query, /availability: "not_configured"/);
+  assert.match(query, /availability: "unavailable"/);
+  assert.match(query, /availability: "available"/);
+  assert.match(query, /if \(error \|\| !data\)/);
+  assert.doesNotMatch(query, /error \|\| !data \|\| data\.length === 0/);
+  assert.match(page, /availability !== "available"/);
+  assert.match(page, /role="status"/);
+  assert.match(page, /Isso não significa que não existam dossiês publicados/);
+  assert.match(page, /investigativeArticles\.length === 0 && availability === "available"/);
 });
 
 test("um cartão de reportagem é reutilizado por Acervo e bairro sem duplicar URLs", () => {
