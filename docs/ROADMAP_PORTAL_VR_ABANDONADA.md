@@ -401,3 +401,23 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Documentação dedicada:** `docs/DESIGN_SYSTEM_EDITORIAL_V7.md`. Não apagar folhas legadas até migrar e revisar cada módulo. Depois desta etapa, migrar cartões editoriais gradualmente, auditar fontes e desempenho com navegador/dispositivo real.
 
 **Sem merge automático:** a V7 deve ser revista isoladamente e integrada depois da V6 aprovada, respeitando o histórico e as verificações de cada commit.
+
+---
+
+## Sprint V7.1 — cartões compartilhados e página Casos útil
+
+**Problema real identificado:** a navegação móvel V7 dá ao leitor a aba `Casos` (rota `/dossies`), mas essa página consultava apenas dossiês estruturados no Supabase. Reportagens investigativas aprovadas e presentes no Git — como a Rua 33 — podiam estar publicadas e, mesmo assim, a área exibir a mensagem de dossiês em preparação. Esse é um erro de produto, não apenas de CSS.
+
+**Implementação V7.1, PR empilhada na V7 (#26):**
+- `app/dossies/page.tsx`: integra `getMaterias()`, filtra só `materiaKind(article) === "investigation"` e exibe estas publicações com URL original `/materias/<slug>`. Os dossiês Supabase continuam em grupos próprios. O aviso de ausência aparece **somente** se não existir nem reportagem investigativa Git, nem dossiê público no banco. Não inventar dossiês artificiais nem declarar uma relação causal entre eles.
+- `components/editorial-story-card.tsx`: cartão canônico para matérias com título, seção, data, resumo, fontes externas publicadas e bairro principal revisado. Contexto de menção ao bairro é um rótulo explícito do chamador; não é um novo fato jornalístico.
+- `components/editorial-navigation.tsx`: Acervo e cobertura por bairros usam este cartão, preservando os links de origem, o H3/H4 correto e o rótulo contextual. A página Investigações usa o mesmo cartão para reportagens investigativas.
+- `app/editorial-cards-v7.css`: superfície, foco, contraste, toque, radius e movimento reduzido aplicados a cartões de reportagem, bairro, documento, coleção e dossiê. Os componentes específicos mantêm mídia, direitos, status e metadados próprios.
+- `tests/editorial-cards-v7.test.mjs`: regressões de informações publicadas, integração de Casos, permalinks, rótulos e interface.
+- `app/layout.tsx`: novo CSS entra após os estilos legados e usa tokens V7, sem apagar folhas anteriores ou reproduzir a marca.
+
+**Não alterados:** JSON de matérias, atribuições, fontes, revisão editorial, banco, esquemas, endpoints de envio de denúncias, identidade aprovada e URLs legadas. **Sem merge automático**.
+
+**Portões da PR:** CI Node, TypeScript, lint, Next build e Vercel Preview no SHA exato; QA visual /dossies, /acervo, /territorios e leitor de reportagens em Android e desktop; conferir links para fontes no Acervo e ausência de overflow. Vercel READY não equivale a UX verificada.
+
+**Próximo:** checar a correspondência explícita entre reportagem Git e dossiê Supabase (ID estável, editorialmente curado), evitando títulos parecidos como critério de união; consolidar componentes de metadados e cartões secundários só após a revisão visual desta PR.
