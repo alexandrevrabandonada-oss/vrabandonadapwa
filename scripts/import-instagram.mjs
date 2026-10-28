@@ -52,10 +52,12 @@ async function downloadCover(item, id) {
   const response = await fetch(source, { signal: AbortSignal.timeout(20000) });
   if (!response.ok) return null;
   const mime = response.headers.get("content-type") || "";
-  if (!mime.startsWith("image/")) return null;
+  // Evitar salvar HTML, SVG, PNG ou WebP sob extensão .jpg e nunca seguir redirecionamento a domínio não autorizado.
+  if (!safeMediaUrl(response.url) || !/^image\/jpeg\b/i.test(mime)) return null;
   if (Number(response.headers.get("content-length") || 0) > 8_000_000) return null;
   const binary = Buffer.from(await response.arrayBuffer());
-  if (binary.byteLength > 8_000_000 || binary.byteLength < 64) return null;
+  if (binary.byteLength > 8_000_000 || binary.byteLength < 64 ||
+      binary[0] !== 0xff || binary[1] !== 0xd8 || binary[2] !== 0xff) return null;
   await fs.mkdir(mediaDirectory, { recursive: true });
   await fs.writeFile(destination, binary);
   return "/instagram-media/" + filename;
