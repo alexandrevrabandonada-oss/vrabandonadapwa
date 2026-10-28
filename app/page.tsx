@@ -86,8 +86,21 @@ export default async function HomePage() {
   const investigationStories = investigationPool.filter((story) => !visibleFeedIds.has("materia-" + story.slug)).slice(0, 3);
   const investigationLead = investigationPool.find((story) => visibleFeedIds.has("materia-" + story.slug)) ?? null;
   const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0 || investigationLead !== null;
-  const featuredNeighborhoods = neighborhoods.slice(0, 5);
-  const coveredNeighborhoods = editorialNeighborhoods.filter((place) => !featuredNeighborhoods.some((hub) => hub.slug === place.slug)).slice(0, 5);
+  // Bairros começam pela cobertura verificada. Hubs públicos entram como complemento,
+  // evitando duplicar localidades e preservando o papel de menção contextual.
+  const coveredSlugs = new Set(editorialNeighborhoods.map((place) => place.slug));
+  const homePlaces = [
+    ...editorialNeighborhoods.map((place) => ({
+      slug: place.slug,
+      label: place.label,
+      contextOnly: place.main.length === 0,
+    })),
+    ...neighborhoods.filter((hub) => !coveredSlugs.has(hub.slug)).map((hub) => ({
+      slug: hub.slug,
+      label: hub.title,
+      contextOnly: false,
+    })),
+  ].slice(0, 5);
 
   return (
     <Container className="vr2-home">
@@ -220,12 +233,13 @@ export default async function HomePage() {
           </div>
           <p>Volta Redonda vista a partir dos territórios onde as decisões têm consequências.</p>
           <div className="vr2-neighborhoods">
-            {featuredNeighborhoods.length ? featuredNeighborhoods.map((place) => (
-              <Link key={place.id} href={"/territorios/" + place.slug}>{place.title}<span aria-hidden="true">↗</span></Link>
-            )) : coveredNeighborhoods.length ? coveredNeighborhoods.map((place) => (
-              <Link key={place.slug} href={"/territorios/" + place.slug}>{place.label}<span aria-hidden="true">↗</span></Link>
+            {homePlaces.length ? homePlaces.map((place) => (
+              <Link key={place.slug} href={"/territorios/" + place.slug}>
+                {place.label}{place.contextOnly ? " · menção contextual" : ""}
+                <span aria-hidden="true">↗</span>
+              </Link>
             )) : (
-              <Link href="/territorios">Explorar os territórios da cidade <span aria-hidden="true">↗</span></Link>
+              <Link href="/territorios">Explorar bairros e lugares <span aria-hidden="true">↗</span></Link>
             )}
           </div>
           <Link href="/territorios" className="vr2-text-link">Ver todos os bairros ↗</Link>
@@ -246,13 +260,13 @@ export default async function HomePage() {
 
       <section className="vr2-about" aria-label="Sobre o projeto e participação">
         <div>
-          <span className="vr2-eyebrow">NOSSO COMPROMISSO</span>
-          <h2>Noticiar é o começo. Acompanhar é o compromisso.</h2>
-          <p>O VR Abandonada organiza informações de interesse público com contexto, transparência e memória. Para participação coletiva e acompanhamento comunitário, conheça o COMUN — um projeto com finalidade própria.</p>
+          <span className="vr2-eyebrow">VOCÊ TAMBÉM FAZ PARTE DA APURAÇÃO</span>
+          <h2>Tem uma informação que precisa ser investigada?</h2>
+          <p>Envie pistas, relatos ou referências à redação. Todo material passa por verificação antes de qualquer publicação.</p>
         </div>
         <div className="vr2-about__actions">
-          <Link href="/metodo" className="vr2-button vr2-button--accent">Método editorial ↗</Link>
-          <a href="https://comunsocial.online" className="vr2-button vr2-button--quiet" target="_blank" rel="noopener noreferrer">COMUN ↗</a>
+          <Link href="/envie" className="vr2-button vr2-button--accent">Enviar informação ↗</Link>
+          <Link href="/metodo" className="vr2-button vr2-button--quiet">Como apuramos ↗</Link>
         </div>
       </section>
     </Container>
