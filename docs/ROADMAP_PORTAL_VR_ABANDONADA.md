@@ -381,3 +381,23 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Aceite pendente:** finalizar checks do último SHA, confirmar Vercel Preview `READY` para o mesmo commit; inspecionar /, /acervo, /territorios e duas páginas de matéria em Android e desktop, com navegação por links e filtros. Não mesclar até inspeção visual. Os checks da V6 anterior eram verdes, porém não validam commits novos.
 
 **UX seguinte (não incluída nesta PR):** reduzir CSS legado por migração progressiva de tokens, implementar busca contextual por bairro e documentos com proveniência, e medir Web Vitals/contraste reais.
+
+---
+
+## Design System V7 — convergência visual e navegação
+
+**Depende da PR #25 (UX V6)**, baseada no HEAD `8520dcb389e851753483e0e246950a8ed9d4e04a`. Não é alteração de produção nem faz parte do merge automático da V6.
+
+### Entrega planejada nesta branch
+- Criar `app/design-tokens.css` como origem de cor, tipografia, medidas, raios, foco e alvos de toque, com aliases temporários V2/V6 e importação anterior aos estilos editoriais.
+- Extrair `components/editorial-hub-intro.tsx` do cabeçalho de Acervo/Bairros: um componente, navegação por âncora e URLs, H1 exclusivo da página.
+- Migrar estilos V6 e índices editoriais aos tokens e reduzir exagero do título e espaçamento de leitura das matérias sem alterar conteúdo.
+- Corrigir barra móvel para quatro destinos **Início · Últimas · Casos · Buscar** mais Menu. Notícias permanece disponível na URL própria e no menu, mas não compete pela função de atualização cronológica.
+- Ajustar menu e rodapé para evitar duplicação de `Acompanhar` e priorizar o envio de informações à redação.
+- Preservar inteiros os arquivos `content/materias`, o logo, a separação do COMUN e o Acervo privado.
+
+**Critérios de aceite:** `tests/design-system-v7.test.mjs` checa contrato de tokens, contraste AA básico, hierarquia de imports, navegação, introdução compartilhada e integridade dos dois artigos; suíte existente, typecheck, lint, build Next e preview READY do mesmo commit; inspeção visual real permanece necessária.
+
+**Documentação dedicada:** `docs/DESIGN_SYSTEM_EDITORIAL_V7.md`. Não apagar folhas legadas até migrar e revisar cada módulo. Depois desta etapa, migrar cartões editoriais gradualmente, auditar fontes e desempenho com navegador/dispositivo real.
+
+**Sem merge automático:** a V7 deve ser revista isoladamente e integrada depois da V6 aprovada, respeitando o histórico e as verificações de cada commit.
