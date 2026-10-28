@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
-import { getMaterias, materiaKindLabel, publishedDate } from "@/lib/materias";
+import { getMaterias, materiaKind, materiaKindLabel, publishedDate } from "@/lib/materias";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
 
 export const metadata: Metadata = {
@@ -77,6 +77,8 @@ export default async function HomePage() {
   const lead = feed[0] ?? null;
   const latest = feed.slice(lead ? 1 : 0, lead ? 7 : 6);
   const featuredDossiers = dossiers.slice(0, 3);
+  const investigationStories = materias.filter((story) => materiaKind(story) === "investigation").slice(0, 3);
+  const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0;
   const featuredNeighborhoods = neighborhoods.slice(0, 5);
 
   return (
@@ -86,42 +88,34 @@ export default async function HomePage() {
         <span>INFORMAÇÃO · MEMÓRIA · INVESTIGAÇÃO</span>
       </div>
 
-      <div className="vr2-opening">
-        <div className="vr2-opening__title">
-          <span className="vr2-eyebrow">Jornalismo popular independente</span>
+      <header className="vr4-home-intro">
+        <div>
+          <span className="vr2-eyebrow">JORNALISMO INDEPENDENTE · VOLTA REDONDA</span>
           <h1>A cidade não cabe no feed<span>.</span></h1>
-          <p>Notícias, investigações e memória pública de Volta Redonda — com contexto, fontes e compromisso com quem vive a cidade.</p>
-          <div className="vr2-opening__actions">
-            <Link href="/agora" className="vr2-button vr2-button--accent">Últimas notícias <span aria-hidden="true">↗</span></Link>
-            <Link href="/dossies" className="vr2-button vr2-button--quiet">Investigações <span aria-hidden="true">↗</span></Link>
-          </div>
+          <p>Notícias e investigações verificadas, com contexto, fontes e atualizações públicas.</p>
         </div>
-        <div className="vr2-opening__aside" aria-label="Caminhos do portal">
-          <span className="vr2-eyebrow">O QUE VOCÊ ENCONTRA AQUI</span>
-          <Link href="/noticias"><b>01</b><span>Notícias da cidade</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/dossies"><b>02</b><span>Investigações e documentos</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/territorios"><b>03</b><span>Histórias por bairro</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/acervo"><b>04</b><span>Memória e acervo público</span><span aria-hidden="true">↗</span></Link>
-        </div>
-      </div>
+        <nav className="vr4-home-shortcuts" aria-label="Principais editorias">
+          <Link href="/noticias">Notícias <span aria-hidden="true">↗</span></Link>
+          <Link href="/agora">Últimas <span aria-hidden="true">↗</span></Link>
+          <Link href="/dossies">Investigações <span aria-hidden="true">↗</span></Link>
+        </nav>
+      </header>
 
       <section className="vr2-section" aria-labelledby="vr2-latest-heading">
         <div className="vr2-section__heading">
-          <div><span className="vr2-eyebrow">{lead ? "PUBLICAÇÕES VERIFICADAS" : "ACERVO JORNALÍSTICO"}</span><h2 id="vr2-latest-heading">{lead ? "O que está em pauta" : "Notícias e reportagens"}</h2></div>
+          <div><span className="vr2-eyebrow">{lead ? "DESTAQUES DO DIA" : "ACERVO JORNALÍSTICO"}</span><h2 id="vr2-latest-heading">{lead ? "Em destaque" : "Notícias e reportagens"}</h2></div>
           <Link href="/noticias" className="vr2-text-link">Ver notícias <span aria-hidden="true">↗</span></Link>
         </div>
 
         {lead ? (
           <div className="vr2-news-layout">
-            <article className="vr2-lead">
-              <Link href={lead.href} className="vr2-lead__visual" aria-label={"Ler: " + lead.title}>
-                {lead.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
+            <article className={lead.image ? "vr2-lead" : "vr2-lead vr4-lead--text-only"}>
+              {lead.image ? (
+                <Link href={lead.href} className="vr2-lead__visual" aria-label={"Ler: " + lead.title}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={lead.image} alt={lead.imageAlt || lead.title} loading="eager" />
-                ) : (
-                  <div className="vr2-lead__graphic" aria-hidden="true"><span>VR</span><strong>ABANDONADA</strong><small>JORNALISMO INDEPENDENTE</small></div>
-                )}
-              </Link>
+                </Link>
+              ) : null}
               <div className="vr2-lead__content">
                 <div className="vr2-meta"><span>{lead.category}</span><span>{dateLabel(lead.date)}</span></div>
                 <h3><Link href={lead.href}>{lead.title}</Link></h3>
@@ -163,10 +157,22 @@ export default async function HomePage() {
 
       <section className="vr2-section" aria-labelledby="vr2-investigations-heading">
         <div className="vr2-section__heading">
-          <div><span className="vr2-eyebrow">{featuredDossiers.length ? "NÃO DEIXAMOS O ASSUNTO MORRER" : "TEMAS DE COBERTURA"}</span><h2 id="vr2-investigations-heading">{featuredDossiers.length ? "Investigações" : "Assuntos que acompanhamos"}</h2></div>
-          <Link href={featuredDossiers.length ? "/dossies" : "/buscar"} className="vr2-text-link">{featuredDossiers.length ? "Explorar dossiês" : "Pesquisar o acervo"} <span aria-hidden="true">↗</span></Link>
+          <div><span className="vr2-eyebrow">{hasVerifiedInvestigations ? "CASOS EM ACOMPANHAMENTO" : "TEMAS DE COBERTURA"}</span><h2 id="vr2-investigations-heading">{hasVerifiedInvestigations ? "Investigações" : "Assuntos que acompanhamos"}</h2></div>
+          <Link href={hasVerifiedInvestigations ? "/dossies" : "/buscar"} className="vr2-text-link">{hasVerifiedInvestigations ? "Explorar dossiês" : "Pesquisar o acervo"} <span aria-hidden="true">↗</span></Link>
         </div>
-        {featuredDossiers.length ? (
+        {investigationStories.length ? (
+          <div className="vr2-investigations">
+            {investigationStories.map((story, i) => (
+              <article key={story.slug} className="vr2-investigation">
+                <span className="vr2-investigation__number">0{i + 1}</span>
+                <span className="vr2-eyebrow">INVESTIGAÇÃO · {story.section}</span>
+                <h3><Link href={"/materias/" + story.slug}>{story.title}</Link></h3>
+                <p>{story.summary}</p>
+                <Link href={"/materias/" + story.slug} className="vr2-readmore">Acompanhar investigação ↗</Link>
+              </article>
+            ))}
+          </div>
+        ) : featuredDossiers.length ? (
           <div className="vr2-investigations">
             {featuredDossiers.map((item, i) => (
               <article key={item.id} className="vr2-investigation">
