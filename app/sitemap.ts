@@ -13,9 +13,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [articles, pautas, dossiers, places] = await Promise.all([
     getMaterias(), getPublishedEditorialItems(), getPublishedDossiers(), getPublishedPlaceHubs(),
   ]);
-  const routes = ["/", "/agora", "/buscar", "/acompanhar", "/pautas", "/dossies", "/campanhas", "/memoria", "/acervo", "/linha-do-tempo", "/eixos", "/territorios", "/sobre", "/metodo", "/apoie"];
+  const routes = ["/", "/noticias", "/agora", "/buscar", "/acompanhar", "/pautas", "/dossies", "/campanhas", "/memoria", "/acervo", "/linha-do-tempo", "/eixos", "/territorios", "/sobre", "/metodo", "/apoie"];
   if (articles.length) routes.push("/materias");
-  if (getInstagramPosts().length) routes.push("/publicacoes");
+  // O índice antigo /publicacoes redireciona para /noticias; links de posts individuais persistem.
   return [
     ...routes.map((route) => ({
       url: url + (route === "/" ? "" : route),

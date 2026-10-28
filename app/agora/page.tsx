@@ -3,8 +3,7 @@ import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { getRadarPageData } from "@/lib/radar/queries";
-import { getMaterias } from "@/lib/materias";
-import { getInstagramPosts, summaryFor, titleFor } from "@/lib/instagram/posts";
+import { getMaterias, materiaKindLabel } from "@/lib/materias";
 
 export const metadata: Metadata = {
   title: "Últimas notícias e atualizações",
@@ -38,7 +37,6 @@ function showDate(value: string) {
 
 export default async function AgoraPage() {
   const [radar, materias] = await Promise.all([getRadarPageData(), getMaterias()]);
-  const socialPosts = getInstagramPosts();
   const observedHrefs = new Set<string>();
 
   const candidates: LatestEntry[] = [
@@ -47,16 +45,8 @@ export default async function AgoraPage() {
       title: m.title,
       summary: m.summary,
       href: "/materias/" + m.slug,
-      category: m.section,
-      date: m.publishedAt,
-    })),
-    ...socialPosts.map((p) => ({
-      id: "instagram-" + p.id,
-      title: titleFor(p),
-      summary: summaryFor(p),
-      href: "/publicacoes/" + p.id,
-      category: "Publicação do Instagram",
-      date: p.published_at,
+      category: materiaKindLabel(m) + " · " + m.section,
+      date: m.updatedAt || m.publishedAt,
     })),
     ...[
       ...radar.sections.what_changed,
@@ -87,11 +77,11 @@ export default async function AgoraPage() {
     <Container className="vr3-agora">
       <header className="vr3-agora__header">
         <p className="vr2-eyebrow">VR ABANDONADA · INFORMAÇÃO COM CONTEXTO</p>
-        <h1>Últimas publicações</h1>
-        <p>O que foi publicado e atualizado sobre Volta Redonda, reunido em um único lugar.</p>
+        <h1>Últimas notícias e atualizações</h1>
+        <p>Notícias, reportagens e desdobramentos de investigações — com contexto, fontes e endereço permanente.</p>
         <div className="vr3-agora__quick-links">
           <Link href="/dossies">Investigações ↗</Link>
-          <Link href="/publicacoes">Arquivo do Instagram ↗</Link>
+          <Link href="/noticias">Notícias ↗</Link>
           <Link href="/buscar">Buscar ↗</Link>
         </div>
       </header>
@@ -99,7 +89,7 @@ export default async function AgoraPage() {
       <section id="mudou" aria-labelledby="vr3-agora-title" className="vr3-agora__news">
         <div className="vr2-section__heading">
           <div>
-            <span className="vr2-eyebrow">ARQUIVO ORGANIZADO</span>
+            <span className="vr2-eyebrow">JORNALISMO PUBLICADO</span>
             <h2 id="vr3-agora-title">Atualizações</h2>
           </div>
           {entries.length > 0 ? <span className="vr3-agora__count">{entries.length} registro{entries.length === 1 ? "" : "s"}</span> : null}
@@ -115,14 +105,14 @@ export default async function AgoraPage() {
                 </div>
                 <h3><Link href={entry.href}>{entry.title}</Link></h3>
                 {entry.summary ? <p>{entry.summary}</p> : null}
-                <Link className="vr2-readmore" href={entry.href}>Abrir publicação ↗</Link>
+                <Link className="vr2-readmore" href={entry.href}>Ler conteúdo ↗</Link>
               </article>
             ))}
           </div>
         ) : (
           <div className="vr3-agora__empty">
             <strong>As primeiras publicações do novo arquivo estão em preparação.</strong>
-            <p>Nenhuma atualização editorial foi cadastrada nesta área ainda. Nosso perfil do Instagram continua disponível enquanto a integração é concluída.</p>
+            <p>As notícias verificadas e atualizações editoriais aparecerão aqui após publicação. O site funciona independentemente da integração com o Instagram.</p>
             <div className="vr3-agora__quick-links">
               <a href="https://www.instagram.com/vr_abandonada/" target="_blank" rel="noopener noreferrer">Ver Instagram oficial ↗</a>
               <Link href="/buscar">Pesquisar temas ↗</Link>

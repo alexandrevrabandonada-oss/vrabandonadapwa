@@ -18,7 +18,7 @@ export const site = {
     { href: "/", label: "Início" },
     { href: "/agora", label: "Últimas" },
     { href: "/dossies", label: "Investigações" },
-    { href: "/territorios", label: "Bairros" },
+    { href: "/noticias", label: "Notícias" },
     { href: "/buscar", label: "Buscar" },
   ] satisfies SiteLink[],
   mobileNav: [
@@ -32,9 +32,10 @@ export const site = {
       title: "Jornalismo",
       items: [
         { href: "/agora", label: "Últimas" },
-        { href: "/materias", label: "Matérias" },
+        { href: "/noticias", label: "Notícias" },
+        { href: "/materias", label: "Todas as matérias" },
         { href: "/dossies", label: "Investigações" },
-        { href: "/publicacoes", label: "Instagram" },
+
         { href: "/acompanhar", label: "Acompanhar" },
       ],
     },
@@ -67,6 +68,7 @@ export const site = {
   ] satisfies SiteGroup[],
   footerQuickLinks: [
     { href: "/agora", label: "Últimas" },
+    { href: "/noticias", label: "Notícias" },
     { href: "/materias", label: "Matérias" },
     { href: "/dossies", label: "Investigações" },
     { href: "/territorios", label: "Bairros" },

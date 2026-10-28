@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/container";
-import { getMaterias, publishedDate } from "@/lib/materias";
+import { getMaterias, materiaKind, materiaKindLabel, publishedDate } from "@/lib/materias";
 
 export const metadata: Metadata = {
   title: "Matérias e publicações originais",
@@ -10,12 +10,13 @@ export const metadata: Metadata = {
   openGraph: { title: "Matérias | VR Abandonada", description: "Informação que não desaparece no feed.", type: "website", url: "/materias" }
 };
 
-type Props = { searchParams: Promise<{ q?: string; tema?: string }> };
+type Props = { searchParams: Promise<{ q?: string; tema?: string; tipo?: string }> };
 export default async function MateriasPage({ searchParams }: Props) {
-  const { q = "", tema = "" } = await searchParams;
+  const { q = "", tema = "", tipo = "" } = await searchParams;
   const articles = await getMaterias();
   const filtered = articles.filter((a) => (!q || (a.title + " " + a.summary + " " + a.section).toLocaleLowerCase("pt-BR").includes(q.slice(0, 80).toLocaleLowerCase("pt-BR")))
-    && (!tema || a.section.toLocaleLowerCase("pt-BR") === tema.toLocaleLowerCase("pt-BR")));
+    && (!tema || a.section.toLocaleLowerCase("pt-BR") === tema.toLocaleLowerCase("pt-BR"))
+    && (!tipo || materiaKind(a) === tipo));
   const sections = [...new Set(articles.map((a) => a.section))];
   return (
     <Container className="vr-pubs">
@@ -28,7 +29,13 @@ export default async function MateriasPage({ searchParams }: Props) {
         <label htmlFor="busca-materia">Encontre uma matéria</label>
         <div><input id="busca-materia" name="q" type="search" placeholder="Buscar CSN, obra, saúde, trabalhadores…" defaultValue={q} maxLength={80}/><button type="submit">Buscar</button></div>
       </form>
-      <nav className="vr-pubs-topics" aria-label="Filtrar matérias">
+      <nav className="vr-pubs-topics" aria-label="Filtrar por formato jornalístico">
+        <Link href="/materias" aria-current={!tipo ? "page" : undefined}>Todas as matérias</Link>
+        <Link href="/materias?tipo=news" aria-current={tipo === "news" ? "page" : undefined}>Notícias</Link>
+        <Link href="/materias?tipo=investigation" aria-current={tipo === "investigation" ? "page" : undefined}>Investigações</Link>
+        <Link href="/materias?tipo=explainer" aria-current={tipo === "explainer" ? "page" : undefined}>Explicações</Link>
+      </nav>
+      <nav className="vr-pubs-topics" aria-label="Filtrar matérias por tema">
         <Link href="/materias" aria-current={!tema ? "page" : undefined}>Todas</Link>
         {sections.map((s) => <Link key={s} href={"/materias?tema=" + encodeURIComponent(s)} aria-current={tema === s ? "page" : undefined}>{s}</Link>)}
       </nav>
@@ -36,7 +43,7 @@ export default async function MateriasPage({ searchParams }: Props) {
       {filtered.length ? (
         <div className="vr-pubs-grid">
           {filtered.map((a) => <article key={a.slug} className="vr-pub-card">
-            <div className="vr-pub-card__meta">{a.section} · {publishedDate(a.publishedAt)}</div>
+            <div className="vr-pub-card__meta">{materiaKindLabel(a)} · {a.section} · {publishedDate(a.publishedAt)}</div>
             <h3><Link href={"/materias/" + a.slug}>{a.title}</Link></h3>
             <p>{a.summary}</p>
             <Link href={"/materias/" + a.slug} className="vr-pub-card__more">Ler matéria <span aria-hidden="true">↗</span></Link>

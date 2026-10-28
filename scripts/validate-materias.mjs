@@ -17,6 +17,7 @@ export function validateMateria(article, filename = "arquivo.json") {
   if (typeof article.summary !== "string" || article.summary.length < 35 || article.summary.length > 600) problems.push("resumo deve ter 35 a 600 caracteres");
   if (!article.publishedAt || Number.isNaN(Date.parse(article.publishedAt))) problems.push("publishedAt inválido");
   if (article.updatedAt && Number.isNaN(Date.parse(article.updatedAt))) problems.push("updatedAt inválido");
+  if (article.kind !== undefined && !["news", "investigation", "explainer"].includes(article.kind)) problems.push("formato editorial inválido: kind");
   if (article.investigationStatus !== undefined && !["ongoing", "closed"].includes(article.investigationStatus)) problems.push("investigationStatus inválido");
   if (article.updates !== undefined) {
     if (!Array.isArray(article.updates)) problems.push("updates deve ser lista");

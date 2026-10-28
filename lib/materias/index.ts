@@ -20,6 +20,7 @@ export type Materia = {
   cover?: { src: string; alt: string; credit?: string };
   instagramUrl?: string;
   correctionNote?: string;
+  kind?: "news" | "investigation" | "explainer";
   investigationStatus?: "ongoing" | "closed";
   updates?: Array<{ date: string; label: string; text: string }>;
 };
@@ -70,4 +71,14 @@ export function publishedDate(value: string) {
 
 export function abstractOf(materia: Materia) {
   return materia.summary.slice(0, 280);
+}
+
+/** Editorial format, independent of the channel where an item was distributed. */
+export type MateriaKind = "news" | "investigation" | "explainer";
+export function materiaKind(article: Materia): MateriaKind {
+  return article.kind ?? (article.investigationStatus ? "investigation" : "news");
+}
+export function materiaKindLabel(article: Materia): string {
+  const kind = materiaKind(article);
+  return kind === "news" ? "Notícia" : kind === "investigation" ? "Investigação" : "Entenda";
 }

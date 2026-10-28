@@ -2,15 +2,16 @@
 
 import { useMemo, useState } from "react";
 
-type Mode = "investigar" | "redigir" | "revisar";
+type Mode = "noticiar" | "investigar" | "redigir" | "revisar";
 const modeLabels: Record<Mode, string> = {
+  noticiar: "Preparar notícia a partir de post ou relato verificado",
   investigar: "Investigar uma pauta",
   redigir: "Preparar uma matéria",
   revisar: "Revisar para publicação",
 };
 
 export function AgentEditorialComposer() {
-  const [mode, setMode] = useState<Mode>("redigir");
+  const [mode, setMode] = useState<Mode>("noticiar");
   const [subject, setSubject] = useState("");
   const [context, setContext] = useState("");
   const [sources, setSources] = useState("");
@@ -19,7 +20,9 @@ export function AgentEditorialComposer() {
   const [error, setError] = useState("");
 
   const prompt = useMemo(() => {
-    const action = mode === "investigar"
+    const action = mode === "noticiar"
+      ? "Transforme a legenda, post, documento ou relato público em NOTÍCIA para o site, com título factual, lide (quem/o quê/quando/onde), contexto breve, fontes e ressalvas. Classifique kind=news, preserve o link do Instagram se fornecido, sem depender da Meta. Exiba versão revisável para minha aprovação explícita antes de publicar."
+      : mode === "investigar"
       ? "Investigue esta pauta, confira as fontes externas disponíveis, identifique lacunas, contraditório e perguntas verificáveis. Não publique."
       : mode === "redigir"
         ? "Prepare uma matéria jornalística completa e revisável para o VR Abandonada, com título, subtítulo, contexto, fatos verificáveis, incertezas, fontes, SEO e sugestão de capa. Não publique antes de eu aprovar a versão final."

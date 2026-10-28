@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
-import { InstagramHomePanel } from "@/components/instagram-home-panel";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
-import { getMaterias, publishedDate } from "@/lib/materias";
+import { getMaterias, materiaKindLabel, publishedDate } from "@/lib/materias";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
 
 export const metadata: Metadata = {
@@ -58,8 +57,8 @@ export default async function HomePage() {
       href: "/materias/" + article.slug,
       title: article.title,
       summary: article.summary,
-      category: article.section,
-      date: article.publishedAt,
+      category: materiaKindLabel(article) + " · " + article.section,
+      date: article.updatedAt || article.publishedAt,
       image: article.cover?.src,
       imageAlt: article.cover?.alt,
     })),
@@ -99,7 +98,7 @@ export default async function HomePage() {
         </div>
         <div className="vr2-opening__aside" aria-label="Caminhos do portal">
           <span className="vr2-eyebrow">O QUE VOCÊ ENCONTRA AQUI</span>
-          <Link href="/agora"><b>01</b><span>Notícias e atualizações</span><span aria-hidden="true">↗</span></Link>
+          <Link href="/noticias"><b>01</b><span>Notícias da cidade</span><span aria-hidden="true">↗</span></Link>
           <Link href="/dossies"><b>02</b><span>Investigações e documentos</span><span aria-hidden="true">↗</span></Link>
           <Link href="/territorios"><b>03</b><span>Histórias por bairro</span><span aria-hidden="true">↗</span></Link>
           <Link href="/acervo"><b>04</b><span>Memória e acervo público</span><span aria-hidden="true">↗</span></Link>
@@ -109,7 +108,7 @@ export default async function HomePage() {
       <section className="vr2-section" aria-labelledby="vr2-latest-heading">
         <div className="vr2-section__heading">
           <div><span className="vr2-eyebrow">{lead ? "PUBLICAÇÕES VERIFICADAS" : "ACERVO JORNALÍSTICO"}</span><h2 id="vr2-latest-heading">{lead ? "O que está em pauta" : "Notícias e reportagens"}</h2></div>
-          <Link href="/materias" className="vr2-text-link">Ver matérias <span aria-hidden="true">↗</span></Link>
+          <Link href="/noticias" className="vr2-text-link">Ver notícias <span aria-hidden="true">↗</span></Link>
         </div>
 
         {lead ? (
@@ -120,7 +119,7 @@ export default async function HomePage() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={lead.image} alt={lead.imageAlt || lead.title} loading="eager" />
                 ) : (
-                  <div className="vr2-lead__graphic" aria-hidden="true"><span>VR</span><strong>ABANDONADA</strong><small>ARQUIVO JORNALÍSTICO</small></div>
+                  <div className="vr2-lead__graphic" aria-hidden="true"><span>VR</span><strong>ABANDONADA</strong><small>JORNALISMO INDEPENDENTE</small></div>
                 )}
               </Link>
               <div className="vr2-lead__content">
@@ -222,7 +221,6 @@ export default async function HomePage() {
         </section>
       </div>
 
-      <InstagramHomePanel />
 
       <section className="vr2-about" aria-label="Sobre o projeto e participação">
         <div>

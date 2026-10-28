@@ -4,8 +4,7 @@ import { redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { AgentEditorialComposer } from "@/components/agent-editorial-composer";
-import { getMaterias } from "@/lib/materias";
-import { getInstagramPosts } from "@/lib/instagram/posts";
+import { getMaterias, materiaKind } from "@/lib/materias";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 import "./agente.css";
@@ -22,7 +21,7 @@ export default async function AgentEditorialPage() {
   if (error || !user) redirect("/interno/entrar");
 
   const published = await getMaterias();
-  const importedPosts = getInstagramPosts();
+  const publishedNews = published.filter((item) => materiaKind(item) === "news");
 
   return (
     <Container className="agent-hub">
@@ -34,7 +33,7 @@ export default async function AgentEditorialPage() {
 
       <div className="agent-hub__metrics" aria-label="Indicadores do acervo público">
         <article><strong>{published.length}</strong><span>Matérias aprovadas no site</span></article>
-        <article><strong>{importedPosts.length}</strong><span>Posts importados do Instagram</span></article>
+        <article><strong>{publishedNews.length}</strong><span>Notícias publicadas no site</span></article>
         <article><strong>4</strong><span>Etapas do fluxo editorial</span></article>
       </div>
 
@@ -42,7 +41,8 @@ export default async function AgentEditorialPage() {
         <Link href="/interno/capturar">Capturar material ↗</Link>
         <Link href="/interno/editorial">Fila editorial ↗</Link>
         <Link href="/interno/dossies">Dossiês internos ↗</Link>
-        <Link href="/materias">Matérias públicas ↗</Link>
+        <Link href="/noticias">Notícias públicas ↗</Link>
+        <Link href="/materias">Todas as matérias ↗</Link>
       </nav>
 
       <AgentEditorialComposer />

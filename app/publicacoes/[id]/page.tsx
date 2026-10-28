@@ -59,7 +59,7 @@ export default async function PublicacaoPage({ params }: Props) {
   return (
     <Container className="ig-story">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
-      <nav className="ig-breadcrumb" aria-label="Trilha de navegação"><Link href="/">Início</Link><span>/</span><Link href="/publicacoes">Publicações</Link><span>/</span><span>Arquivo</span></nav>
+      <nav className="ig-breadcrumb" aria-label="Trilha de navegação"><Link href="/">Início</Link><span>/</span><Link href="/noticias">Notícias</Link><span>/</span><span>Arquivo</span></nav>
       <header className="ig-story__heading">
         <div className="ig-eyebrow">VR ABANDONADA · {post.media_type === "VIDEO" ? "REEL" : "PUBLICAÇÃO"} · {formattedDate(post)}</div>
         <h1>{title}</h1>
@@ -85,7 +85,7 @@ export default async function PublicacaoPage({ params }: Props) {
             <span>ESPALHE A INFORMAÇÃO</span><h2>Essa história importa?</h2>
             <a className="button" href={wa} target="_blank" rel="noopener noreferrer">Compartilhar no WhatsApp</a>
             <a className="button-secondary" href={post.permalink} target="_blank" rel="noopener noreferrer">Ver post ou vídeo original</a>
-            <Link href="/publicacoes">Explorar outras publicações</Link>
+            <Link href="/noticias">Ler notícias no site</Link>
           </div>
           <div className="ig-action-panel ig-action-panel--comun">
             <span>DO INFORMAÇÃO À PARTICIPAÇÃO</span><h2>Também viu um problema?</h2>

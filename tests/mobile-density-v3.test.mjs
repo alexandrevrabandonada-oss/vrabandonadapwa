@@ -18,7 +18,8 @@ test("Agora lista conteúdos publicados e não exibe radar fictício", () => {
   const source = read("app/agora/page.tsx");
   assert.match(source, /getRadarPageData/);
   assert.match(source, /getMaterias/);
-  assert.match(source, /getInstagramPosts/);
+  assert.doesNotMatch(source, /getInstagramPosts/);
+  assert.match(source, /\/noticias/);
   assert.match(source, /sort\(\(a, b\)/);
   assert.match(source, /As primeiras publicações do novo arquivo estão em preparação/);
   assert.doesNotMatch(source, /<EditorialCover/);

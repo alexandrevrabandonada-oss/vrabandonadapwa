@@ -262,3 +262,15 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Novo padrão opcional para publicações: `investigationStatus: ongoing` e `updates[]` (data/título/resumo), exibidos com indicador de investigação em andamento e histórico público. Atualizações futuras preservam permalink, alteram `updatedAt` e acrescentam eventos.
 - O texto informa expressamente que ainda não houve contato específico com Prefeitura, Grupo VR e Luquip e não sugere resposta recebida. Dados parciais não são apresentados como custo final, nem há imputação de fraude.
 - Na conclusão desta fase verificar CI, preview Vercel, merge, produção READY, página real, sitemap e RSS. Indexação Google exige verificação posterior.
+
+
+## 28/10/2026 — Editorias notícias e investigações, sem dependência Meta
+
+- Nova rota pública `/noticias`: notícias classificadas como `kind=news` com página própria de listagem, pesquisa, estados vazios honestos, fontes e URL editorial. Não publicar conteúdo fictício.
+- Formatos em JSON `kind: news | investigation | explainer`; Rua 33 marcada explicitamente como `investigation`, sem mudar seu conteúdo substantivo ou permalink.
+- `/agora` continua fluxo cronológico de publicações e atualizações, sem promover postagens importadas como notícias verificadas; homepage passa a vincular a editoria Notícias e identifica os formatos das matérias.
+- `/materias` permite filtros por formato; `/publicacoes` (índice legado) redireciona para `/noticias`, preservando URLs antigas de registros individuais `/publicacoes/[id]`.
+- RSS passa a refletir as matérias jornalísticas publicadas em vez de importações sociais brutas; sitemap inclui `/noticias`, NewsArticle JSON-LD aplicado a notícias.
+- Menu do site distingue Notícias, Últimas, Investigações e Acervo. O painel privado mostra quantidade de notícias, e o agente editorial oferece modo de preparar notícias diretamente de uma legenda/post/release/documento, sem chaves da Meta.
+- Nenhuma notícia real nova foi inventada ou importada nesta migração; a editoria pode ficar vazia até a primeira notícia aprovada.
+- Verificar CI, preview, UX móvel e link canônico; deploy só após merge. Na primeira notícia real testar capa, vídeo/Reel (se licenciado), contraditório e rastreio da indexação no Search Console.
