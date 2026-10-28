@@ -10,6 +10,8 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'tests/**'
+      - 'supabase/migrations/**'
+      - '.github/workflows/validate-portal.yml'
   push:
     paths:
       - 'content/materias/**'
@@ -31,5 +33,9 @@ jobs:
         run: npm ci
       - name: Testar formatos e segurança da importação
         run: node --test tests/*.test.mjs
+      - name: Verificar tipos TypeScript
+        run: npm run typecheck
+      - name: Verificar padrões de código
+        run: npm run lint
       - name: Compilar e validar matérias
         run: npm run build
