@@ -31,7 +31,7 @@ test("homepage apresenta notícias reais antes de blocos institucionais", () => 
   assert.match(page, /getPublishedEditorialItems\(\)/);
   assert.match(page, /getPublishedDossiers\(\)/);
   assert.match(page, /getPublishedPlaceHubs\(\)/);
-  assert.match(page, /ACERVO EM CONSTRUÇÃO/);
+  assert.match(page, /PUBLICAÇÕES EM PREPARAÇÃO/);
   assert.ok(page.indexOf("vr2-latest-heading") < page.indexOf("vr2-investigations-heading"));
   assert.ok(page.indexOf("vr2-investigations-heading") < page.indexOf("vr2-neighborhood-heading"));
   assert.doesNotMatch(page, /HomeReturnPanel/);

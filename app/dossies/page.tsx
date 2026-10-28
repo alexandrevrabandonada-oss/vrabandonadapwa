@@ -2,213 +2,102 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
-import { DossierCard } from "@/components/dossier-card";
-import { EditorialCover } from "@/components/editorial-cover";
-import { getPublishedDossierLinks, getPublishedDossierUpdatesByDossierIds, getPublishedDossiers } from "@/lib/dossiers/queries";
+import { getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
-import { getPublishedEditorialItems } from "@/lib/editorial/queries";
-import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
-import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
+import type { InvestigationDossier } from "@/lib/dossiers/types";
 
 export const metadata: Metadata = {
-  title: "Dossiês",
-  description: "Linhas de investigação viva do VR Abandonada.",
+  title: "Investigações e dossiês",
+  description: "Acompanhe dossiês documentados do VR Abandonada: informações, fontes, atualizações e memória de Volta Redonda.",
+  alternates: { canonical: "/dossies" },
   openGraph: {
-    title: "Dossiês | VR Abandonada",
-    description: "Linhas de investigação viva do VR Abandonada.",
     type: "website",
-    images: [getHomeOpenGraphImagePath()],
+    url: "/dossies",
+    title: "Investigações | VR Abandonada",
+    description: "O acompanhamento documental das investigações de interesse público em Volta Redonda.",
   },
 };
 
+const statusGroups = [
+  { key: "in_progress", label: "Em andamento" },
+  { key: "monitoring", label: "Em acompanhamento" },
+  { key: "concluded", label: "Concluídas" },
+  { key: "archived", label: "Arquivo" },
+] as const;
+
+function groupDossiers(dossiers: InvestigationDossier[]) {
+  return statusGroups
+    .map((status) => ({
+      ...status,
+      items: dossiers.filter((dossier) => dossier.status === status.key),
+    }))
+    .filter((group) => group.items.length > 0);
+}
+
 export default async function DossiersPage() {
   const dossiers = await getPublishedDossiers();
-  const dossierIds = dossiers.map((dossier) => dossier.id);
-  const updatesByDossierId = await getPublishedDossierUpdatesByDossierIds(dossierIds);
-  const linksById = await Promise.all(dossiers.map(async (dossier) => [dossier.id, await getPublishedDossierLinks(dossier.id)] as const));
-  const linkCountById = new Map(linksById.map(([id, links]) => [id, links.length]));
-  const featuredDossier = dossiers[0] ?? null;
-  const featuredUpdate = featuredDossier ? updatesByDossierId.get(featuredDossier.id)?.[0] ?? null : null;
-  const editorialItems = await getPublishedEditorialItems();
-  const featuredSeries = getEditorialSeriesCards(editorialItems).slice(0, 3);
-  const grouped = {
-    in_progress: dossiers.filter((dossier) => dossier.status === "in_progress"),
-    monitoring: dossiers.filter((dossier) => dossier.status === "monitoring"),
-    concluded: dossiers.filter((dossier) => dossier.status === "concluded"),
-    archived: dossiers.filter((dossier) => dossier.status === "archived"),
-  };
+  const updates = await getPublishedDossierUpdatesByDossierIds(dossiers.map((dossier) => dossier.id));
+  const groups = groupDossiers(dossiers);
 
   return (
-    <Container className="intro-grid dossier-archive-page">
-      <section className="hero hero--split landing-hero">
-        <div className="hero__copy landing-hero__copy">
-          <p className="eyebrow">dossiês vivos</p>
-          <h1 className="hero__title">Investigações em andamento, monitoramento e arquivo.</h1>
-          <p className="hero__lead">
-            Cada linha reúne prova, contexto, memória e desdobramento. Aqui o leitor entra por um caso e acompanha a investigação em sequência.
-          </p>
-          <div className="home-hero__signals" aria-label="Sinais editoriais">
-            <span className="home-hero__signal">última atualização visível</span>
-            <span className="home-hero__signal">documento + contexto</span>
-            <span className="home-hero__signal">acompanhamento público</span>
-          </div>
-          <div className="hero__actions">
-            <Link href="/envie" className="button">
-              Enviar pista
-            </Link>
-            <Link href="/acervo" className="button-secondary">
-              Abrir acervo
-            </Link>
-          </div>
-        </div>
+    <Container className="vr3-dossiers">
+      <header className="vr3-dossiers__header">
+        <p className="vr2-eyebrow">JORNALISMO INVESTIGATIVO · VOLTA REDONDA</p>
+        <h1>Investigações</h1>
+        <p>Casos acompanhados com documentos, contexto e atualizações. Cada dossiê tem endereço permanente para você voltar ao assunto.</p>
+        <nav aria-label="Caminhos da cobertura" className="vr3-agora__quick-links">
+          <Link href="/materias">Matérias ↗</Link>
+          <Link href="/buscar">Pesquisar temas ↗</Link>
+          <Link href="/metodo">Como apuramos ↗</Link>
+        </nav>
+      </header>
 
-        <EditorialCover
-          title={featuredDossier?.title || "Dossiês"}
-          primaryTag={featuredDossier ? getDossierStatusLabel(featuredDossier.status) : "arquivo vivo"}
-          seriesTitle={featuredUpdate?.title || featuredDossier?.lead_question || "Linha de investigação"}
-          coverImageUrl={featuredDossier?.cover_image_url || "/editorial/covers/arquivo-inicial.svg"}
-          coverVariant={featuredDossier?.featured ? "ember" : "concrete"}
-        />
-      </section>
-
-      {featuredDossier ? (
-        <section className="section home-dossier-section">
-          <div className="grid-2">
-            <div>
-              <p className="eyebrow">investigação em destaque</p>
-              <h2>{featuredDossier.title}</h2>
-            </div>
-            <p className="section__lead">
-              {featuredUpdate ? `Última movimentação: ${featuredUpdate.title}` : featuredDossier.excerpt || featuredDossier.description}
-            </p>
-          </div>
-
-          <div className="grid-2">
-            <DossierCard dossier={featuredDossier} href={`/dossies/${featuredDossier.slug}`} itemCount={linkCountById.get(featuredDossier.id) ?? 0} latestUpdate={featuredUpdate} />
-            <article className="support-box home-callout home-callout--accent">
-              <p className="eyebrow">por que importa</p>
-              <h3>Não é uma página solta.</h3>
-              <p>
-                O dossiê costura o caso, aponta a pergunta central e distribui a leitura entre pauta, memória, acervo, coleção e atualização pública.
-              </p>
-              <div className="stack-actions">
-                <Link href={`/dossies/${featuredDossier.slug}`} className="button">
-                  Abrir dossiê
-                </Link>
-                <Link href="/envie" className="button-secondary">
-                  Enviar pista
-                </Link>
+      {groups.length ? (
+        <div className="vr3-dossiers__groups">
+          {groups.map((group) => (
+            <section key={group.key} aria-labelledby={`vr3-dossiers-${group.key}`} className="vr3-dossiers__section">
+              <div className="vr3-dossiers__section-head">
+                <h2 id={`vr3-dossiers-${group.key}`}>{group.label}</h2>
+                <span>{group.items.length} {group.items.length === 1 ? "dossiê" : "dossiês"}</span>
               </div>
-            </article>
+              <div className="vr3-dossiers__list">
+                {group.items.map((dossier) => {
+                  const update = updates.get(dossier.id)?.[0] ?? null;
+                  return (
+                    <article key={dossier.id} className="vr3-dossiers__item">
+                      <div className="vr2-meta">
+                        <span>{getDossierStatusLabel(dossier.status)}</span>
+                        {dossier.territory_label ? <span>{dossier.territory_label}</span> : null}
+                        {dossier.period_label ? <span>{dossier.period_label}</span> : null}
+                      </div>
+                      <h3><Link href={`/dossies/${dossier.slug}`}>{dossier.title}</Link></h3>
+                      {dossier.lead_question ? <p className="vr3-dossiers__question">{dossier.lead_question}</p> : null}
+                      {dossier.excerpt || dossier.description ? <p>{dossier.excerpt || dossier.description}</p> : null}
+                      {update ? <p className="vr3-dossiers__update"><strong>Última atualização:</strong> {update.title}</p> : null}
+                      <Link href={`/dossies/${dossier.slug}`} className="vr2-readmore">Abrir dossiê ↗</Link>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <section className="vr3-dossiers__empty" aria-labelledby="vr3-dossiers-empty-title">
+          <span className="vr2-eyebrow">DOSSIÊS EM PREPARAÇÃO</span>
+          <h2 id="vr3-dossiers-empty-title">A investigação continua. O arquivo público está sendo organizado.</h2>
+          <p>O portal só apresenta dossiês após revisão e publicação editorial. Você pode acompanhar nossas postagens já divulgadas no Instagram e pesquisar os temas que estamos cobrindo.</p>
+          <div className="vr3-agora__quick-links">
+            <a href="https://www.instagram.com/vr_abandonada/" target="_blank" rel="noopener noreferrer">Acompanhar Instagram ↗</a>
+            <Link href="/buscar">Pesquisar assuntos ↗</Link>
           </div>
         </section>
-      ) : null}
+      )}
 
-      <section className="section dossier-status-section">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">acompanhamento</p>
-            <h2>O estado narrativo de cada investigação.</h2>
-          </div>
-          <p className="section__lead">Em curso, monitoramento, concluído ou arquivado. A leitura pública acompanha o ritmo real do caso.</p>
-        </div>
-
-        <div className="grid-2">
-          <article className="card">
-            <h3>Em curso</h3>
-            <p>{grouped.in_progress.length} dossiê(s) em andamento.</p>
-          </article>
-          <article className="card">
-            <h3>Monitoramento</h3>
-            <p>{grouped.monitoring.length} dossiê(s) em observação contínua.</p>
-          </article>
-          <article className="card">
-            <h3>Concluídos</h3>
-            <p>{grouped.concluded.length} dossiê(s) com leitura fechada.</p>
-          </article>
-          <article className="card">
-            <h3>Arquivados</h3>
-            <p>{grouped.archived.length} dossiê(s) guardados como lastro.</p>
-          </article>
-        </div>
-      </section>
-
-      {featuredSeries.length ? (
-        <section className="section">
-          <div className="grid-2">
-            <div>
-              <p className="eyebrow">séries em evidência</p>
-              <h2>Linhas que atravessam as investigações.</h2>
-            </div>
-            <p className="section__lead">Quando a série aparece junto do dossiê, a investigação deixa de soar isolada e passa a mostrar continuidade.</p>
-          </div>
-
-          <div className="series-grid landing-series-grid">
-            {featuredSeries.map((series) => (
-              <article className="series-card landing-series-card" key={series.slug}>
-                <EditorialCover
-                  title={series.title}
-                  primaryTag="Série"
-                  seriesTitle={series.title}
-                  coverImageUrl={series.coverImageUrl ?? null}
-                  coverVariant={series.coverVariant}
-                />
-                <div className="series-card__body">
-                  <p className="eyebrow">{series.axis}</p>
-                  <h3>{series.title}</h3>
-                  <p>{series.description}</p>
-                  <p className="series-card__count">
-                    {series.items.length} pauta{series.items.length === 1 ? "" : "s"}
-                  </p>
-                  <Link href={`/series/${series.slug}`} className="button-secondary">
-                    Ver série
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      <section className="section">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">Dossiês registrados</p>
-            <h2>Cada linha abaixo mostra o caso e sua última movimentação.</h2>
-          </div>
-          <p className="section__lead">A grade organiza a leitura por status, mas cada peça mantém o vínculo com a atualização mais recente.</p>
-        </div>
-
-        {Object.entries(grouped).map(([status, items]) => (
-          <div className="section" key={status}>
-            <div className="grid-2">
-              <div>
-                <p className="eyebrow">{getDossierStatusLabel(status)}</p>
-                <h3>{status === "in_progress" ? "Em curso" : status === "monitoring" ? "Monitoramento" : status === "concluded" ? "Concluídos" : "Arquivados"}</h3>
-              </div>
-              <p className="section__lead">{items.length} linha(s) nesta faixa editorial.</p>
-            </div>
-            <div className="grid-2">
-              {items.length ? (
-                items.map((dossier) => (
-                  <DossierCard
-                    key={dossier.id}
-                    dossier={dossier}
-                    href={`/dossies/${dossier.slug}`}
-                    itemCount={linkCountById.get(dossier.id) ?? 0}
-                    latestUpdate={updatesByDossierId.get(dossier.id)?.[0] ?? null}
-                  />
-                ))
-              ) : (
-                <div className="support-box">
-                  <h3>Sem dossiês aqui</h3>
-                  <p>Esse estado ainda não recebeu publicação pública.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </section>
+      <aside className="vr3-dossiers__tail">
+        <p><strong>Um caso não termina na primeira denúncia.</strong> Acompanhamos documentos, respostas públicas, correções e desdobramentos.</p>
+        <Link href="/metodo">Conheça nossos critérios ↗</Link>
+      </aside>
     </Container>
   );
 }

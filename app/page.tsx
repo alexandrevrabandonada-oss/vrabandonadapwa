@@ -7,7 +7,6 @@ import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getMaterias, publishedDate } from "@/lib/materias";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
-import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Jornalismo independente em Volta Redonda",
@@ -94,8 +93,8 @@ export default async function HomePage() {
           <h1>A cidade não cabe no feed<span>.</span></h1>
           <p>Notícias, investigações e memória pública de Volta Redonda — com contexto, fontes e compromisso com quem vive a cidade.</p>
           <div className="vr2-opening__actions">
-            <Link href="/agora" className="vr2-button vr2-button--accent">Acompanhar notícias <span aria-hidden="true">↗</span></Link>
-            <Link href="/dossies" className="vr2-button vr2-button--quiet">Ver investigações <span aria-hidden="true">↗</span></Link>
+            <Link href="/agora" className="vr2-button vr2-button--accent">Últimas notícias <span aria-hidden="true">↗</span></Link>
+            <Link href="/dossies" className="vr2-button vr2-button--quiet">Investigações <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
         <div className="vr2-opening__aside" aria-label="Caminhos do portal">
@@ -109,8 +108,8 @@ export default async function HomePage() {
 
       <section className="vr2-section" aria-labelledby="vr2-latest-heading">
         <div className="vr2-section__heading">
-          <div><span className="vr2-eyebrow">PUBLICAÇÕES VERIFICADAS</span><h2 id="vr2-latest-heading">O que está em pauta</h2></div>
-          <Link href="/materias" className="vr2-text-link">Arquivo de matérias <span aria-hidden="true">↗</span></Link>
+          <div><span className="vr2-eyebrow">{lead ? "PUBLICAÇÕES VERIFICADAS" : "ACERVO JORNALÍSTICO"}</span><h2 id="vr2-latest-heading">{lead ? "O que está em pauta" : "Notícias e reportagens"}</h2></div>
+          <Link href="/materias" className="vr2-text-link">Ver matérias <span aria-hidden="true">↗</span></Link>
         </div>
 
         {lead ? (
@@ -149,13 +148,15 @@ export default async function HomePage() {
             </div>
           </div>
         ) : (
-          <div className="vr2-empty-news">
-            <span className="vr2-eyebrow">ACERVO EM CONSTRUÇÃO</span>
-            <h3>Informação pública começa com apuração.</h3>
-            <p>As novas matérias aparecerão aqui quando estiverem verificadas e aprovadas. Enquanto isso, você pode explorar os assuntos, documentos e caminhos de investigação disponíveis no portal.</p>
-            <div className="vr2-opening__actions">
-              <Link href="/agora" className="vr2-button vr2-button--accent">Ver o Agora <span aria-hidden="true">↗</span></Link>
-              <Link href="/buscar" className="vr2-button vr2-button--quiet">Pesquisar o arquivo <span aria-hidden="true">↗</span></Link>
+          <div className="vr2-empty-news" role="status">
+            <div>
+              <span className="vr2-eyebrow">PUBLICAÇÕES EM PREPARAÇÃO</span>
+              <h3>As primeiras reportagens estão em revisão.</h3>
+              <p>Esta área será preenchida somente por conteúdo aprovado. Enquanto isso, o VR Abandonada já publica nas redes sociais.</p>
+            </div>
+            <div className="vr2-empty-news__actions">
+              <a href="https://www.instagram.com/vr_abandonada/" target="_blank" rel="noopener noreferrer" className="vr2-text-link">Acompanhar no Instagram ↗</a>
+              <Link href="/buscar" className="vr2-text-link">Pesquisar temas ↗</Link>
             </div>
           </div>
         )}
@@ -163,8 +164,8 @@ export default async function HomePage() {
 
       <section className="vr2-section" aria-labelledby="vr2-investigations-heading">
         <div className="vr2-section__heading">
-          <div><span className="vr2-eyebrow">NÃO DEIXAMOS O ASSUNTO MORRER</span><h2 id="vr2-investigations-heading">Investigações</h2></div>
-          <Link href="/dossies" className="vr2-text-link">Explorar dossiês <span aria-hidden="true">↗</span></Link>
+          <div><span className="vr2-eyebrow">{featuredDossiers.length ? "NÃO DEIXAMOS O ASSUNTO MORRER" : "TEMAS DE COBERTURA"}</span><h2 id="vr2-investigations-heading">{featuredDossiers.length ? "Investigações" : "Assuntos que acompanhamos"}</h2></div>
+          <Link href={featuredDossiers.length ? "/dossies" : "/buscar"} className="vr2-text-link">{featuredDossiers.length ? "Explorar dossiês" : "Pesquisar o acervo"} <span aria-hidden="true">↗</span></Link>
         </div>
         {featuredDossiers.length ? (
           <div className="vr2-investigations">
@@ -183,10 +184,10 @@ export default async function HomePage() {
             {investigationTopics.slice(0, 3).map((topic) => (
               <article key={topic.number} className="vr2-investigation">
                 <span className="vr2-investigation__number">{topic.number}</span>
-                <span className="vr2-eyebrow">PESQUISAR TEMA</span>
+                <span className="vr2-eyebrow">TEMA DE COBERTURA</span>
                 <h3><Link href={topic.href}>{topic.name}</Link></h3>
                 <p>{topic.label}</p>
-                <Link href={topic.href} className="vr2-readmore">Buscar no acervo ↗</Link>
+                <Link href={topic.href} className="vr2-readmore">Pesquisar tema ↗</Link>
               </article>
             ))}
           </div>
@@ -230,11 +231,10 @@ export default async function HomePage() {
           <p>O VR Abandonada organiza informações de interesse público com contexto, transparência e memória. Para participação coletiva e acompanhamento comunitário, conheça o COMUN — um projeto com finalidade própria.</p>
         </div>
         <div className="vr2-about__actions">
-          <Link href="/metodo" className="vr2-button vr2-button--accent">Nosso método ↗</Link>
-          <a href="https://comunsocial.online" className="vr2-button vr2-button--quiet" target="_blank" rel="noopener noreferrer">Conhecer o COMUN ↗</a>
+          <Link href="/metodo" className="vr2-button vr2-button--accent">Método editorial ↗</Link>
+          <a href="https://comunsocial.online" className="vr2-button vr2-button--quiet" target="_blank" rel="noopener noreferrer">COMUN ↗</a>
         </div>
       </section>
-      <div className="vr2-home__endnote">{site.name.toUpperCase()} · VOLTA REDONDA · INFORMAÇÃO COM CONTEXTO</div>
     </Container>
   );
 }

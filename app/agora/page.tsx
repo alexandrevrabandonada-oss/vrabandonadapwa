@@ -2,298 +2,143 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
-import { EditorialCover } from "@/components/editorial-cover";
-import { RadarItemCard } from "@/components/radar-item-card";
-import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getRadarPageData } from "@/lib/radar/queries";
-import { getRadarSectionIntro, getRadarSectionLabel } from "@/lib/radar/navigation";
-import type { RadarItem } from "@/lib/radar/types";
-import { SaveReadButton } from "@/components/save-read-button";
-import { ReadingTrailPanel } from "@/components/pwa-reading-trail";
+import { getMaterias } from "@/lib/materias";
+import { getInstagramPosts, summaryFor, titleFor } from "@/lib/instagram/posts";
 
 export const metadata: Metadata = {
-  title: "Agora",
-  description: "Pulso editorial vivo do VR Abandonada.",
+  title: "Últimas notícias e atualizações",
+  description: "Acompanhe matérias, atualizações documentadas e publicações do VR Abandonada sobre Volta Redonda.",
+  alternates: { canonical: "/agora" },
   openGraph: {
-    title: "Agora | VR Abandonada",
-    description: "Pulso editorial vivo do VR Abandonada.",
     type: "website",
-    images: [getHomeOpenGraphImagePath()],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Agora | VR Abandonada",
-    description: "Pulso editorial vivo do VR Abandonada.",
-    images: [getHomeOpenGraphImagePath()],
+    url: "/agora",
+    title: "Últimas notícias | VR Abandonada",
+    description: "Atualizações, investigações e notícias documentadas de Volta Redonda.",
   },
 };
 
+type LatestEntry = {
+  id: string;
+  title: string;
+  summary: string;
+  href: string;
+  category: string;
+  date: string;
+};
+
+function showDate(value: string) {
+  const time = Date.parse(value);
+  if (Number.isNaN(time)) return "";
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "medium",
+    timeZone: "America/Sao_Paulo",
+  }).format(new Date(time));
+}
+
 export default async function AgoraPage() {
-  const radar = await getRadarPageData();
-  const homeSignals = Array.from(
-    new Map(
-      [radar.spotlight, radar.sections.what_changed[0], radar.sections.impact[0], radar.sections.in_course[0], radar.sections.hot_fronts[0], radar.sections.archive_present[0], radar.sections.calls[0]]
-        .filter((item): item is RadarItem => Boolean(item))
-        .map((item) => [item.href, item] as const),
-    ).values(),
-  ).slice(0, 3);
-  const spotlight = radar.spotlight;
+  const [radar, materias] = await Promise.all([getRadarPageData(), getMaterias()]);
+  const socialPosts = getInstagramPosts();
+  const observedHrefs = new Set<string>();
+
+  const candidates: LatestEntry[] = [
+    ...materias.map((m) => ({
+      id: "materia-" + m.slug,
+      title: m.title,
+      summary: m.summary,
+      href: "/materias/" + m.slug,
+      category: m.section,
+      date: m.publishedAt,
+    })),
+    ...socialPosts.map((p) => ({
+      id: "instagram-" + p.id,
+      title: titleFor(p),
+      summary: summaryFor(p),
+      href: "/publicacoes/" + p.id,
+      category: "Publicação do Instagram",
+      date: p.published_at,
+    })),
+    ...[
+      ...radar.sections.what_changed,
+      ...radar.sections.in_course,
+      ...radar.sections.impact,
+      ...radar.sections.hot_fronts,
+      ...radar.sections.calls,
+      ...radar.sections.archive_present,
+    ].map((item) => ({
+      id: "radar-" + item.id,
+      title: item.title,
+      summary: item.excerpt || "",
+      href: item.href,
+      category: item.primaryLabel,
+      date: item.sortDate,
+    })),
+  ];
+
+  const entries = candidates
+    .filter((item) => {
+      if (observedHrefs.has(item.href)) return false;
+      observedHrefs.add(item.href);
+      return true;
+    })
+    .sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
 
   return (
-    <Container className="intro-grid radar-page">
-      <section className="hero hero--split radar-hero">
-        <div className="hero__copy">
-          <p className="eyebrow">radar vivo</p>
-          <h1 className="hero__title">Agora no VR Abandonada.</h1>
-          <p className="hero__lead">
-            O radar mostra o que mudou e o que agir agora.
-          </p>
-          <div className="home-hero__signals" aria-label="Sinais editoriais">
-            <span className="home-hero__signal">última atualização</span>
-            <span className="home-hero__signal">casos em andamento</span>
-            <span className="home-hero__signal">retorno recorrente</span>
-          </div>
-                    <div className="hero__actions">
-            <Link href="#mudou" className="button">
-              Ver o que mudou
-            </Link>
-            <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">
-              Mandar pista
-            </Link>
-            <SaveReadButton kind="radar" keyValue="agora" title="Agora no VR Abandonada" summary="Pulso editorial vivo do VR Abandonada." href="/agora" compact />
-            <Link href="/acompanhar" className="button-secondary">
-              Seguir
-            </Link>
-          </div>
+    <Container className="vr3-agora">
+      <header className="vr3-agora__header">
+        <p className="vr2-eyebrow">VR ABANDONADA · INFORMAÇÃO COM CONTEXTO</p>
+        <h1>Últimas publicações</h1>
+        <p>O que foi publicado e atualizado sobre Volta Redonda, reunido em um único lugar.</p>
+        <div className="vr3-agora__quick-links">
+          <Link href="/dossies">Investigações ↗</Link>
+          <Link href="/publicacoes">Arquivo do Instagram ↗</Link>
+          <Link href="/buscar">Buscar ↗</Link>
         </div>
+      </header>
 
-        <EditorialCover
-          title={spotlight?.title || "Radar vivo"}
-          primaryTag={spotlight ? getRadarSectionLabel(spotlight.section) : "pulso editorial"}
-          seriesTitle={spotlight?.primaryLabel || "VR Abandonada"}
-          coverImageUrl={spotlight?.coverImageUrl || "/editorial/covers/arquivo-inicial.svg"}
-          coverVariant={spotlight?.coverVariant || "night"}
-        />
-      </section>
-
-      <section className="section radar-summary-section">
-        <div className="grid-2">
+      <section id="mudou" aria-labelledby="vr3-agora-title" className="vr3-agora__news">
+        <div className="vr2-section__heading">
           <div>
-            <p className="eyebrow">salão de situação editorial</p>
-            <h2>Uma visão rápida do que está quente agora.</h2>
+            <span className="vr2-eyebrow">ARQUIVO ORGANIZADO</span>
+            <h2 id="vr3-agora-title">Atualizações</h2>
           </div>
-          <p className="section__lead">
-            O radar reúne atualização recente, investigação em curso, frentes temáticas, memória e acervo. Ele existe para fazer o retorno ao site valer a pena.
-          </p>
+          {entries.length > 0 ? <span className="vr3-agora__count">{entries.length} registro{entries.length === 1 ? "" : "s"}</span> : null}
         </div>
 
-        <div className="grid-4">
-          <article className="card">
-            <h3>{radar.counts.updates} mudanças</h3>
-            <p>Atualizações e pautas recentes que pedem leitura imediata.</p>
-          </article>
-          <article className="card">
-            <h3>{radar.counts.impact} efeitos</h3>
-            <p>Consequências públicas observadas ou em consolidação.</p>
-          </article>
-          <article className="card">
-            <h3>{radar.counts.dossiers} casos</h3>
-            <p>Dossiês em acompanhamento público.</p>
-          </article>
-          <article className="card">
-            <h3>{radar.counts.hubs} frentes</h3>
-            <p>Eixos temáticos com movimentação recente.</p>
-          </article>
-        </div>
-      </section>
-
-            <ReadingTrailPanel compact />
-
-      <section className="section radar-quick-section">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">em 1 minuto</p>
-            <h2>Mudança, pista ou frente.</h2>
-          </div>
-          <p className="section__lead">A tela responde rápido: o que mudou e onde agir.</p>
-        </div>
-
-        <div className="grid-3">
-          <article className="card card--compact">
-            <h3>Ver o que mudou</h3>
-            <p>Abra direto a parte que responde ao seu retorno.</p>
-            <div className="stack-actions">
-              <Link href="#mudou" className="button-secondary">Abrir</Link>
-            </div>
-          </article>
-          <article className="card card--compact">
-            <h3>Mandar pista</h3>
-            <p>Quando você viu algo agora e quer registrar sem travar a rotina.</p>
-            <div className="stack-actions">
-              <Link href="/envie?modo=rapido&categoria=denuncia&titulo=Vi%20algo%20agora" className="button-secondary">Enviar rápido</Link>
-            </div>
-          </article>
-          <article className="card card--compact">
-            <h3>Seguir uma frente</h3>
-            <p>Escolha um eixo, território, dossiê ou campanha para voltar depois.</p>
-            <div className="stack-actions">
-              <Link href="/acompanhar" className="button-secondary">Acompanhar</Link>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section className="section radar-section" id="mudou">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">{getRadarSectionLabel("what_changed")}</p>
-            <h2>{getRadarSectionIntro("what_changed")}</h2>
-          </div>
-          <p className="section__lead">Atualizações de dossiê e pautas recentes entram primeiro aqui para mostrar o que mexeu no projeto desde a última visita.</p>
-        </div>
-
-        <div className="grid-2">
-          {radar.sections.what_changed.map((item) => (
-            <RadarItemCard key={item.id} item={item} compact />
-          ))}
-        </div>
-      </section>
-
-      <section className="section radar-section" id="impacto">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">{getRadarSectionLabel("impact")}</p>
-            <h2>{getRadarSectionIntro("impact")}</h2>
-          </div>
-          <p className="section__lead">Consequências já observadas, parcialidades e efeitos em consolidação ajudam a entender que investigação não termina no texto publicado.</p>
-        </div>
-
-        <div className="grid-2">
-          {radar.sections.impact.map((item) => (
-            <RadarItemCard key={item.id} item={item} compact />
-          ))}
-        </div>
-      </section>
-
-      {radar.sections.calls.length ? (
-        <section className="section radar-call-section">
-          <div className="grid-2">
-            <div>
-              <p className="eyebrow">{getRadarSectionLabel("calls")}</p>
-              <h2>Chamadas públicas que pedem retorno responsável.</h2>
-            </div>
-            <p className="section__lead">Quando o projeto convoca, é para relato, documento, pista ou checagem que ajude a avançar o caso.</p>
-          </div>
-
-          <div className="grid-2">
-            {radar.sections.calls.slice(0, 2).map((item) => (
-              <RadarItemCard key={item.id} item={item} />
+        {entries.length ? (
+          <div className="vr3-agora__feed">
+            {entries.slice(0, 24).map((entry) => (
+              <article key={entry.id} className="vr3-agora__entry">
+                <div className="vr2-meta">
+                  <span>{entry.category}</span>
+                  {showDate(entry.date) ? <span>{showDate(entry.date)}</span> : null}
+                </div>
+                <h3><Link href={entry.href}>{entry.title}</Link></h3>
+                {entry.summary ? <p>{entry.summary}</p> : null}
+                <Link className="vr2-readmore" href={entry.href}>Abrir publicação ↗</Link>
+              </article>
             ))}
-            <article className="support-box radar-side-box">
-              <p className="eyebrow">envie agora</p>
-              <h3>Tem documento, relato ou pista sobre este caso?</h3>
-              <p>
-                O canal de envio recebe material com cuidado editorial. Se houver risco, descreva o nível de sensibilidade logo no início.
-              </p>
-              <div className="stack-actions">
-                <Link href="/envie" className="button">
-                  Abrir canal de envio
-                </Link>
-                <Link href="/apoie" className="button-secondary">
-                  Apoiar a continuidade
-                </Link>
-              </div>
-            </article>
           </div>
-        </section>
-      ) : null}
-
-      <section className="section radar-section" id="curso">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">{getRadarSectionLabel("in_course")}</p>
-            <h2>{getRadarSectionIntro("in_course")}</h2>
+        ) : (
+          <div className="vr3-agora__empty">
+            <strong>As primeiras publicações do novo arquivo estão em preparação.</strong>
+            <p>Nenhuma atualização editorial foi cadastrada nesta área ainda. Nosso perfil do Instagram continua disponível enquanto a integração é concluída.</p>
+            <div className="vr3-agora__quick-links">
+              <a href="https://www.instagram.com/vr_abandonada/" target="_blank" rel="noopener noreferrer">Ver Instagram oficial ↗</a>
+              <Link href="/buscar">Pesquisar temas ↗</Link>
+            </div>
           </div>
-          <p className="section__lead">Casos em andamento com a última movimentação visível, para o leitor entender o estado narrativo sem cronologia bruta.</p>
-        </div>
-
-        <div className="grid-2">
-          {radar.sections.in_course.map((item) => (
-            <RadarItemCard key={item.id} item={item} />
-          ))}
-        </div>
+        )}
       </section>
 
-      <section className="section radar-section" id="frentes">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">{getRadarSectionLabel("hot_fronts")}</p>
-            <h2>{getRadarSectionIntro("hot_fronts")}</h2>
-          </div>
-          <p className="section__lead">Eixos temáticos com movimento recente atravessando pauta, memória, acervo e dossiê.</p>
+      <aside className="vr3-agora__footer">
+        <div>
+          <span className="vr2-eyebrow">CONTEÚDO PERMANENTE</span>
+          <h2>O assunto não termina no feed.</h2>
+          <p>Nosso objetivo é reunir cada matéria aprovada com documentos e atualizações no mesmo endereço, para que possa ser consultada depois.</p>
         </div>
-
-        <div className="grid-2">
-          {radar.sections.hot_fronts.map((item) => (
-            <RadarItemCard key={item.id} item={item} />
-          ))}
-        </div>
-      </section>
-
-      <section className="section radar-section" id="arquivo">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">{getRadarSectionLabel("archive_present")}</p>
-            <h2>{getRadarSectionIntro("archive_present")}</h2>
-          </div>
-          <p className="section__lead">Memória e acervo entram quando ajudam a ler o presente. O radar não isola documento do caso: ele conecta os dois.</p>
-        </div>
-
-        <div className="grid-2">
-          {radar.sections.archive_present.map((item) => (
-            <RadarItemCard key={item.id} item={item} compact />
-          ))}
-        </div>
-      </section>
-
-      <section className="section radar-follow-section">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">acompanhe</p>
-            <h2>Um retorno ao site precisa contar o que mudou e para onde ir depois.</h2>
-          </div>
-          <p className="section__lead">
-            O radar funciona como superfície de retorno da PWA e como trilha para quem quer seguir a investigação sem perder o fio.
-          </p>
-        </div>
-
-        <div className="grid-3">
-          {homeSignals.map((item) => (
-            <RadarItemCard key={item.id} item={item} compact />
-          ))}
-        </div>
-        <div className="stack-actions">
-          <Link href="/dossies" className="button-secondary">
-            Ver dossiês
-          </Link>
-          <Link href="/eixos" className="button-secondary">
-            Entrar nos eixos
-          </Link>
-          <Link href="/memoria" className="button-secondary">
-            Abrir memória
-          </Link>
-        </div>
-      </section>
+        <Link href="/metodo">Conheça nosso método ↗</Link>
+      </aside>
     </Container>
   );
 }
-
-
-
-
-
-
-
-
-
-
