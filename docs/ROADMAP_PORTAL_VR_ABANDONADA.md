@@ -421,3 +421,23 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Portões da PR:** CI Node, TypeScript, lint, Next build e Vercel Preview no SHA exato; QA visual /dossies, /acervo, /territorios e leitor de reportagens em Android e desktop; conferir links para fontes no Acervo e ausência de overflow. Vercel READY não equivale a UX verificada.
 
 **Próximo:** checar a correspondência explícita entre reportagem Git e dossiê Supabase (ID estável, editorialmente curado), evitando títulos parecidos como critério de união; consolidar componentes de metadados e cartões secundários só após a revisão visual desta PR.
+
+---
+
+## Sprint V7.2 — verificação HTTP independente de Vercel
+
+**Problema:** a Vercel devolve `build-rate-limit` para a PR #27, apesar de o GitHub Actions aprovar TypeScript, lint, testes Node e `next build`. Isso impedia provar que a versão candidata renderiza realmente suas páginas principais. Não assumir que um deploy antigo `READY` corresponde ao HEAD atual.
+
+**Implementado em V7.2, na mesma PR #27 (sem abrir nova PR):**
+- `scripts/smoke-local-portal.mjs` inicia o servidor Next.js de produção compilado, **em loopback**, após a etapa `npm run build`; faz requisições HTTP reais em Início, Últimas, Notícias, Investigações/Casos, Acervo, Bairros, Rua 33, Vila Brasília, `robots.txt` e `sitemap.xml`. Verifica status 200 e conteúdo editorial esperado.
+- Testa a premissa crucial: `/dossies` contém reportagem investigativa publicada no Git mesmo sem dossiê Supabase; `/acervo` expõe o atalho de fontes por slug aprovado.
+- Requisita permalink deliberadamente inexistente e exige HTTP 404. Faz encerramento de processo ao terminar, com timeout e logs curtos; não usa credenciais nem acessa serviços externos.
+- `.github/workflows/validate-portal.yml` executa o smoke após o build. Esta etapa protege regressões reais em HTML sem obrigar o uso da cota Vercel.
+- Corrigidos avisos de compatibilidade CSS relativos a `align-items: end` em três folhas, usando `flex-end`. No menu React, o botão de retorno do foco é capturado na abertura, evitando referência potencialmente variável na limpeza do efeito.
+
+**Evidência do primeiro ciclo (HEAD `6c6cf37a9cd3337f704ff995632429593e8a45e1`):**
+- **113 testes Node aprovados, 0 falhos;** TypeScript, lint e build sucesso; requisições HTTP locais de 10 páginas/rotas com 200 e uma com 404, incluindo verificação de Casos e âncora de Acervo.
+- O build registrou avisos do Autoprefixer sobre `end` e um aviso do ESLint sobre `triggerRef.current`, que motivaram as correções de compatibilidade seguintes.
+- **O teste local não é QA visual**: não confirma breakpoints reais, contraste renderizado, teclado, leitor de tela, carregamento com dados Supabase de produção, rede externa ou preview Vercel. Esses portões permanecem abertos.
+
+**Política de integração:** não mesclar as PRs #25, #26 ou #27 antes de QA visual e de um preview correspondente ao HEAD exato. Reusar o smoke em futuras alterações editoriais sem consumir builds externos desnecessários. Não contornar limites Vercel desabilitando proteções ou expondo variáveis.
