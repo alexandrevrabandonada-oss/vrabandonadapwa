@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
+import { EditorialTerritoryFeed } from "@/components/editorial-navigation";
+import { getPublishedEditorialTerritories, getPublishedEditorialTerritoryBySlug } from "@/lib/territories/editorial";
 import { DeepPageWayfinding } from "@/components/deep-page-wayfinding";
 import { FollowButton } from "@/components/follow-button";
 import { EditorialCover } from "@/components/editorial-cover";
@@ -25,8 +27,8 @@ import { buildPlaceHubTimeline, groupPlaceHubLinksByType, resolvePlaceHubLinks }
 import { getPublishedPlaceHubBySlug, getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
 
 export async function generateStaticParams() {
-  const items = await getPublishedPlaceHubs();
-  return items.map((item) => ({ slug: item.slug }));
+  const [items, fromReporting] = await Promise.all([getPublishedPlaceHubs(), getPublishedEditorialTerritories()]);
+  return [...new Set([...items.map((item) => item.slug), ...fromReporting.map((place) => place.slug)])].map((slug) => ({ slug }));
 }
 
 type PageProps = {
@@ -35,8 +37,11 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const place = await getPublishedPlaceHubBySlug(slug);
+  const [place, editorialPlace] = await Promise.all([getPublishedPlaceHubBySlug(slug), getPublishedEditorialTerritoryBySlug(slug)]);
 
+  if (!place && editorialPlace) {
+    return { title: editorialPlace.label + " — notícias e investigações", description: "Reportagens, notícias e fontes sobre " + editorialPlace.label + ", Volta Redonda.", alternates: { canonical: "/territorios/" + slug }, openGraph: { title: editorialPlace.label + " | VR Abandonada", description: "Cobertura jornalística por bairro, com fontes e contexto.", type: "website", url: "/territorios/" + slug } };
+  }
   if (!place) {
     return {
       title: "Territórios",
@@ -70,10 +75,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function TerritoryDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const placeHub = await getPublishedPlaceHubBySlug(slug);
+  const [placeHub, editorialPlace] = await Promise.all([getPublishedPlaceHubBySlug(slug), getPublishedEditorialTerritoryBySlug(slug)]);
 
   if (!placeHub) {
-    notFound();
+    if (!editorialPlace) notFound();
+    return (
+      <Container className="territory-detail-page">
+        <div className="vr-index" style={{borderLeft:"4px solid #f2c338"}}>
+          <span className="vr-index__eyebrow">POR BAIRRO · VOLTA REDONDA</span>
+          <h1>{editorialPlace.label}</h1>
+          <p>Este é um recorte territorial do jornalismo publicado pelo VR Abandonada. As matérias continuam em suas URLs originais e são conectadas aqui conforme seu vínculo verificado ao bairro.</p>
+          <nav className="vr-index__quick" aria-label="Navegação do bairro"><Link href="/territorios">Todos os bairros</Link><Link href="/acervo">Acervo geral</Link><Link href="/noticias">Notícias</Link></nav>
+        </div>
+        <EditorialTerritoryFeed place={editorialPlace} />
+      </Container>
+    );
   }
 
   const [territories, links, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs] = await Promise.all([
@@ -311,6 +327,7 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
           </Link>
         </div>
       </section>
+      {editorialPlace ? <EditorialTerritoryFeed place={editorialPlace} /> : null}
     </Container>
   );
 }

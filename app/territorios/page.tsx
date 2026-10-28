@@ -31,12 +31,12 @@ export default async function TerritoriesPage() {
         <header className="vr5-empty-page__intro">
           <p className="eyebrow">Por bairro · Volta Redonda</p>
           <h1>A cidade contada a partir dos lugares.</h1>
-          <p>O catálogo territorial está em preparação. Enquanto os bairros recebem páginas próprias, você já pode encontrar notícias, investigações e documentos sobre cada localidade.</p>
+          <p>Os bairros já mencionados em reportagens verificadas ganham páginas de consulta próprias, com links para as matérias originais. Novos lugares entram à medida que publicamos cobertura confirmada.</p>
         </header>
         <section className="vr5-empty-page__panel" aria-label="Como encontrar informações sobre bairros">
           <p className="vr2-eyebrow">COMECE PELO QUE JÁ PUBLICAMOS</p>
-          <h2>Procure uma notícia pelo nome do bairro.</h2>
-          <p>Vila Brasília, Água Limpa e Vila Santa Cecília já aparecem na cobertura jornalística. Novas páginas territoriais serão abertas apenas quando houver informação verificada para sustentá-las.</p>
+          <h2>Explore a cidade também pela busca.</h2>
+          <p>Os registros de bairros diferenciam local principal de menção contextual. Nenhuma ligação entre acontecimentos é presumida só por constarem numa mesma reportagem.</p>
           <div className="vr5-empty-page__links">
             <Link href="/buscar?q=Vila%20Bras%C3%ADlia">Vila Brasília ↗</Link>
             <Link href="/buscar?q=%C3%81gua%20Limpa">Água Limpa ↗</Link>

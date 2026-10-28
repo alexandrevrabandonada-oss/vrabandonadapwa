@@ -65,3 +65,7 @@
 .vr-materia__related>a span{color:#edc534}
 @media(max-width:1000px){.vr-pubs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vr-materia__body-layout{grid-template-columns:1fr}.vr-materia__aside{position:static}}
 @media(max-width:680px){.vr-pubs-grid{grid-template-columns:1fr}.vr-pubs-hero h1{font-size:clamp(2.8rem,14vw,5rem)}.vr-pubs-search>div{flex-direction:column}.vr-pubs-search button{padding:.8rem}.vr-materia__head{padding-left:1rem}.vr-pubs,.vr-materia{padding-block:1rem 3rem}}
+
+/* Territórios vinculados a publicações editoriais verificadas. */
+.vr-materia__places { display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:center;padding:.65rem .8rem;margin:.7rem 0;background:#24231e;border:1px solid #5a4e33;border-radius:7px;font-size:.82rem;line-height:1.5; }
+.vr-materia__places strong {color:#e3c56c;} .vr-materia__places a {color:#f2c338;font-weight:800;} .vr-materia__places a:focus-visible {outline:2px solid #f2c338;outline-offset:3px;}

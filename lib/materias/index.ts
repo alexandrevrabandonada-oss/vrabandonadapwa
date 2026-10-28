@@ -21,6 +21,7 @@ export type Materia = {
   instagramUrl?: string;
   correctionNote?: string;
   kind?: "news" | "investigation" | "explainer";
+  territories?: Array<{ slug: string; label: string; role: "main" | "mentioned" }>;
   investigationStatus?: "ongoing" | "closed";
   updates?: Array<{ date: string; label: string; text: string }>;
 };

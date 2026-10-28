@@ -16,8 +16,8 @@ import {
 } from "@/lib/archive/queries";
 
 export const metadata: Metadata = {
-  title: "Acervo",
-  description: "Arquivo vivo de fontes, anexos e materiais-base do VR Abandonada.",
+  title: "Acervo público de notícias, investigações e documentos",
+  description: "Acervo permanente do VR Abandonada: notícias, investigações, fontes e documentos sobre Volta Redonda.",
   openGraph: {
     title: "Acervo | VR Abandonada",
     description: "Arquivo vivo de fontes, anexos e materiais-base do VR Abandonada.",
@@ -113,12 +113,12 @@ export default async function ArchivePage({ searchParams }: PageProps) {
       <Container className="vr5-empty-page archive-page">
         <header className="vr5-empty-page__intro">
           <p className="eyebrow">Acervo documental</p>
-          <h1>Documentos que dão contexto à notícia.</h1>
+          <h1>Acervo público de Volta Redonda.</h1>
           <p>O catálogo de documentos ainda está sendo organizado para consulta pública. As notícias e investigações já publicadas continuam disponíveis, com as fontes reunidas em cada matéria.</p>
         </header>
         <section className="vr5-empty-page__panel" aria-label="Como consultar a informação já publicada">
           <p className="vr2-eyebrow">CONSULTA DISPONÍVEL AGORA</p>
-          <h2>Comece pelas matérias e pelas fontes.</h2>
+          <h2>Documentos e anexos em organização.</h2>
           <p>O acervo de anexos crescerá à medida que documentos puderem ser publicados com contexto, direitos e proteção das fontes. Nada de registros fictícios para completar a página.</p>
           <div className="vr5-empty-page__links">
             <Link href="/materias">Pesquisar matérias ↗</Link>

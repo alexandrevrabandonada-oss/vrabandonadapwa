@@ -181,5 +181,17 @@
       "text": "Acrescentadas informações atribuídas a comunicado do 28º BPM, divulgado na imprensa em 27/10, sobre ocupação policial por tempo indeterminado e desmentido de boatos de toque de recolher. O comunicado não esclarece a cronologia da resposta inicial nem comprova a ausência de riscos em outros bairros."
     }
   ],
-  "updatedAt": "2026-10-28T10:57:54-03:00"
+  "updatedAt": "2026-10-28T10:57:54-03:00",
+  "territories": [
+    {
+      "slug": "vila-brasilia",
+      "label": "Vila Brasília",
+      "role": "main"
+    },
+    {
+      "slug": "agua-limpa",
+      "label": "Água Limpa",
+      "role": "mentioned"
+    }
+  ]
 }

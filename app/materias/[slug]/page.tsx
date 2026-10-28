@@ -49,6 +49,7 @@ export default async function MateriaPage({ params }: Props) {
     author: { "@type": "Organization", name: story.author },
     publisher: { "@type": "Organization", name: "VR Abandonada", url: getSiteUrl() },
     about: { "@type": "Place", name: "Volta Redonda, Rio de Janeiro, Brasil" },
+    contentLocation: story.territories?.filter((place) => place.role === "main").map((place) => ({ "@type": "Place", name: place.label + ", Volta Redonda, RJ, Brasil" })),
     citation: story.sources.filter((s) => /^https?:\/\//.test(s.url)).map((s) => s.url),
   };
   const shareUrl = "https://wa.me/?text=" + encodeURIComponent(story.title + "\n" + canonical);
@@ -66,6 +67,7 @@ export default async function MateriaPage({ params }: Props) {
         <div className="vr-materia__byline">Por {story.author} · {publishedDate(story.publishedAt)}
           {story.updatedAt && story.updatedAt !== story.publishedAt ? " · Atualizada em " + publishedDateTime(story.updatedAt) : ""}
         </div>
+        {story.territories?.length ? <nav className="vr-materia__places" aria-label="Lugares mencionados nesta matéria"><strong>Por bairro:</strong> {story.territories.map((place) => <Link key={place.slug} href={"/territorios/" + place.slug}>{place.label}{place.role === "mentioned" ? " · menção" : ""} ↗</Link>)}</nav> : null}
         {story.investigationStatus === "ongoing" && <p className="vr-materia__status">● Investigação em acompanhamento · Respostas e documentos serão incorporados nesta mesma página</p>}
         {materiaKind(story) === "news" && story.updatedAt && <p className="vr-materia__status">● Notícia atualizada · Novos fatos e documentos são registrados neste endereço</p>}
       </header>
