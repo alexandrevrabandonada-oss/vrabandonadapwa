@@ -44,6 +44,16 @@
       "label": "INEA — regras e serviço público de atendimento a emergências ambientais (contexto normativo)",
       "url": "https://www.inea.rj.gov.br/emergencias-ambientais/",
       "consultedAt": "2026-10-28"
+    },
+    {
+      "label": "Foco Regional — informação da CSN e confirmação dos Bombeiros sobre ausência de vítimas, 28/10/2026 às 14h22",
+      "url": "https://focoregional.com.br/Noticia/csn-explica-acidente-e-diz-que-nao-houve-feri",
+      "consultedAt": "2026-10-28"
+    },
+    {
+      "label": "O Dia — relatos do estrondo em bairros de Volta Redonda, 28/10/2026 às 16h28",
+      "url": "https://odia.ig.com.br/volta-redonda/2026/10/7317084-explosao-na-csn-assusta-moradores-de-volta-redonda.html",
+      "consultedAt": "2026-10-28"
     }
   ],
   "blocks": [
@@ -81,11 +91,15 @@
     },
     {
       "type": "paragraph",
-      "text": "O SBT News informou que o Instituto Estadual do Ambiente (INEA) foi acionado pela CSN para acompanhar a ocorrência. Até esta checagem, não foi localizado um boletim técnico público que identifique a composição da fumaça, quantifique eventual exposição da população ou apresente conclusão sobre impacto ambiental deste episódio. A existência da nuvem, por si, não permite afirmar quais substâncias estavam presentes ou que houve contaminação comprovada."
+      "text": "O SBT News informou, citando o Instituto Estadual do Ambiente (INEA), que o órgão foi acionado pela CSN para acompanhar a ocorrência. Até esta checagem, não foi localizado um boletim técnico público que identifique a composição da fumaça, quantifique eventual exposição da população ou apresente conclusão sobre impacto ambiental deste episódio. A existência da nuvem, por si, não permite afirmar quais substâncias estavam presentes ou que houve contaminação comprovada."
     },
     {
       "type": "paragraph",
       "text": "Também não há confirmação documental, nesta apuração, de que uma autuação ambiental já tenha sido formalizada pelo INEA em razão deste acidente. A fiscalização e eventuais medidas administrativas precisam ser acompanhadas em comunicados oficiais e documentos."
+    },
+    {
+      "type": "paragraph",
+      "text": "No serviço oficial de Emergências Ambientais, o INEA informa manter equipe de plantão 24 horas e estabelece a comunicação imediata de incidentes ambientais para empreendimentos por ele licenciados ou autorizados, conforme suas licenças. Essa orientação geral não comprova irregularidade neste episódio. Cabe esclarecer quando a comunicação foi recebida, se houve vistoria, quais medições foram realizadas e quando os resultados poderão ser consultados pela população."
     },
     {
       "type": "heading",
@@ -93,7 +107,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Por que havia excesso de umidade na área de descarregamento de material a alta temperatura? Quais rotinas de inspeção, drenagem, isolamento e controle de risco estavam previstas e foram cumpridas? A operação foi interrompida e que critérios foram utilizados para retomá-la? Foram produzidos laudos sobre materiais liberados no ar e possíveis efeitos no entorno? Quando a CSN e os órgãos públicos divulgarão conclusões verificáveis?"
+      "text": "Por que havia excesso de umidade na área de descarregamento de material a alta temperatura? Quais rotinas de inspeção, drenagem, isolamento e controle de risco estavam previstas e foram cumpridas? A operação foi interrompida e que critérios foram utilizados para retomá-la? O INEA realizou vistoria ou medições e há laudos sobre materiais liberados no ar e possíveis efeitos no entorno? Quando a CSN e os órgãos públicos divulgarão conclusões verificáveis?"
     },
     {
       "type": "paragraph",
@@ -102,8 +116,9 @@
   ],
   "territories": [],
   "editorialNotes": {
-    "publicationGate": "Rascunho de redação: não publicar automaticamente. Antes da publicação transferir para content/materias/, fixar publishedAt no horário efetivo, definir status=published e reviewed=true apenas após revisão factual e autorização.",
+    "publicationGate": "Publicação somente após autorização editorial: o arquivo permanece em editorial/drafts com reviewed=false, status=draft, publishedAt=null; o payload público deverá ser criado separadamente em content/materias com data real e revisão explícita, sem incluir editorialNotes.",
     "verificationPending": [
+      "Confirmar no INEA horário de notificação pela CSN, ida de equipe, dados de campo, laudos e eventual procedimento sancionador, sem presumir infração",
       "Solicitar nota/documentos próprios do INEA: vistorias, medições, avaliação sobre ar/água, eventual auto de infração e data da decisão",
       "Solicitar à CSN registros e laudo de causa, controles de umidade, segurança operacional, paralisação/retomada e registros de eventual assistência",
       "Conferir com Bombeiros se foi divulgado relatório formal e números definitivos de atendimento",
@@ -112,6 +127,8 @@
       "Checar localização territorial principal sem inferir bairro apenas a partir da área ampla da UPV"
     ],
     "imageStatus": "Capa real ainda não selecionada: NÃO reutilizar fotos do acidente de 2019 ou imagens de terceiros sem autorização. Priorizar mídia original do VR Abandonada com origem verificada, senão usar opengraph editorial gerado pelo portal.",
-    "riskNotes": "Não afirmar que INEA já autuou CSN; não atribuir composição tóxica à fumaça; não declarar ausência definitiva de impacto ambiental ou que a causa-raiz está definida."
+    "riskNotes": "Não afirmar que INEA já autuou CSN; não atribuir composição tóxica à fumaça; não declarar ausência definitiva de impacto ambiental ou que a causa-raiz está definida.",
+    "territorialCoverage": "Barulho relatado por veículos locais na Vila Mury, Vila Santa Cecília, Retiro, Beira-Rio, Aterrado, Sessenta e Belmonte. São locais de relatos, NÃO locais da explosão nem evidências de impacto ambiental medido. Não criar links públicos para /territorios/ sem validar a existência das páginas correspondentes.",
+    "sourceReview": "Recheque em 28/10/2026: Reuters e Agência Estado coincidem com nota CSN/CBMERJ. Foco Regional publica informação às 14h22; Diário do Vale e O Dia listam bairros com relatos. SBT atribui ao INEA confirmação do acionamento. A página geral do INEA é apenas contexto normativo, não relatório desta ocorrência."
   }
 }
