@@ -72,7 +72,7 @@ test("barra móvel oferece quatro tarefas distintas mais Menu, sem excluir Notí
   assert.doesNotMatch(section, /href: "\/noticias"/);
   assert.match(site, /href: "\/noticias"/);
   assert.match(read("components/mobile-bottom-nav.tsx"), /<SiteMenu variant="mobile"\s*\/>/);
-  assert.match(read("components/mobile-bottom-nav.tsx"), /Investigações em acompanhamento/);
+  assert.match(read("components/mobile-bottom-nav.tsx"), /Casos — investigações em acompanhamento/);
 });
 
 test("mudança de estilo não altera as reportagens já revisadas", () => {
