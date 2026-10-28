@@ -93,7 +93,7 @@ export function EditorialTerritoryFeed({ place }: { place: EditorialTerritoryEnt
                 <div className="vr-index__meta"><span>{group.label} · {materiaKindLabel(article)}</span><time dateTime={article.publishedAt}>{publishedDate(article.publishedAt)}</time></div>
                 <h4><Link href={"/materias/" + article.slug}>{article.title}</Link></h4>
                 <p>{article.summary}</p>
-                <div className="vr-index__foot"><Link href={"/materias/" + article.slug}>Ler e conferir fontes ↗</Link></div>
+                <div className="vr-index__foot"><Link href={"/materias/" + article.slug}>Ler reportagem ↗</Link>{article.sources.some((source) => /^https?:\/\//i.test(source.url)) ? <Link href={"/acervo#fontes-" + article.slug}>Consultar referências ↗</Link> : null}</div>
               </article>
             ))}
           </div>
