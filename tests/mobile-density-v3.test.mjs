@@ -28,7 +28,7 @@ test("Agora lista conteúdos publicados e não exibe radar fictício", () => {
 
 test("CSS mobile limita tamanho do hero e dos cards e não esconde a barra inferior", () => {
   const source = read("app/portal-v2.css");
-  const lastMobile = source.slice(source.lastIndexOf("@media (max-width: 640px)"));
+  const lastMobile = source.slice(source.indexOf("/* Iteração de densidade editorial"));
   assert.match(lastMobile, /vr2-opening__title h1[\s\S]*?font-size:\s*clamp\(2\.05rem,\s*8\.8vw,\s*2\.6rem\)/);
   assert.match(lastMobile, /vr2-investigation[\s\S]*?min-height:\s*0/);
   assert.match(lastMobile, /vr2-empty-news[\s\S]*?min-height:\s*0/);
