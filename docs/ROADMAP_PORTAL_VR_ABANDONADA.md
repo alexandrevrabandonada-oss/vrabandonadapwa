@@ -224,3 +224,13 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 **Implementação:** reformular `/buscar` para pesquisar imediatamente no primeiro viewport, com campo de busca visível, filtros semânticos expandíveis (tipo, território, ator, ordem), sugestões explícitas como termos e lista de resultados públicos sem duplicações de destaque nem trilha de leitura. Vazio honesto com link para Instagram oficial. CSS responsivo em 320–430px, desktop e tablet. Sem tocar em autenticação, Supabase ou arquivos legados.
 
 **Aceite:** CI (Node, TS, lint, build) e Vercel READY; conferir por screenshots no Android real. Não integrar PR #9 por inferência de sucesso de build. Validar ao menos uma consulta com termo que encontra conteúdo e outra sem resultado; filtros não devem mudar os dados públicos sem aprovação editorial. A plataforma ainda depende de alimentar o acervo com matérias aprovadas.
+
+## Sprint editorial Git-first — pós V3 (27/10/2026)
+
+- A PR #9 do redesign mobile foi integrada ao `main` como `a9a7aa6f4147ee67b44dda0232f0cdec90f60c9f`, após aceitação visual via Android, CI verde e prévia READY. Vercel confirmou o deploy de produção READY.
+- Confirmado: `public/data/instagram-posts.json` ainda é `[]`; nenhum Instagram real foi automaticamente incorporado à homepage. Não confundir ausência de itens no sistema com ausência de publicações do veículo.
+- Fluxo de publicação Git-first implementado em branch separada: `scripts/editorial-workflow.mjs` cria rascunhos de posts legítimos, sem publicar; rotina de aprovação verifica checklist factual, fontes, contraditório, privacidade, responsável e data. Emite matéria JSON apenas mediante `--write`; depois depende de revisão/merge na PR.
+- Rascunhos são ignorados no Git por padrão para proteger dados não revisados. Nenhum texto real ou depoimento sigiloso é publicado automaticamente.
+- Matérias aprovadas aproveitam SEO existente: URL canônica, meta description/Open Graph, JSON-LD Article, inclusão no sitemap, busca e homepage. **Indexação efetiva no Google não é garantida pela presença de SEO**; monitorar Search Console quando conectado.
+- Pendente: autenticar conta profissional Meta/Instagram e configurar credenciais seguras e permissões; importar posts reais com autorização; produzir e aprovar a primeira matéria, testar imagem/capa, links, segurança de fontes, indexação e revisão em produção.
+- Este sprint não modifica o Supabase, buckets privados/legados nem os trabalhos de proteção da PR #7.

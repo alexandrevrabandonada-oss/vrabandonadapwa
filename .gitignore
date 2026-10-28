@@ -11,3 +11,6 @@ yarn-error.log*
 pnpm-debug.log*
 *.tsbuildinfo
 .vercel
+
+# Rascunhos de trabalho: podem conter alegações ou dados ainda não aprovados.
+editorial/drafts/*.json

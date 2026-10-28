@@ -2,14 +2,16 @@
   "name": "vr-abandonada",
   "private": true,
   "version": "0.1.0",
-  "description": "Casa digital do VR Abandonada: memória, denúncia e organização popular sobre Volta Redonda.",
+  "description": "Portal jornalístico e acervo público do VR Abandonada",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "prebuild": "node scripts/validate-materias.mjs"
+    "prebuild": "node scripts/validate-materias.mjs",
+    "editorial:prepare": "node scripts/editorial-workflow.mjs prepare",
+    "editorial:release": "node scripts/editorial-workflow.mjs release"
   },
   "dependencies": {
     "@supabase/ssr": "^0.9.0",
