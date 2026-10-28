@@ -57,6 +57,14 @@
     {
       "label": "Diário do Vale — Boletim administrativo da PM transfere Amanda Neves à SSGP; sem motivação da substituição, 28/10/2026",
       "url": "https://diariodovale.com.br/policia/pm-troca-comando-do-28o-batalhao-em-volta-redonda/"
+    },
+    {
+      "label": "O Dia — 28º BPM afirma que ocupação da Vila Brasília segue por tempo indeterminado, 27/10/2026",
+      "url": "https://odia.ig.com.br/volta-redonda/2026/10/7316704-ocupacao-no-vila-brasilia-permanece-por-tempo-indeterminado.html"
+    },
+    {
+      "label": "Diário do Vale — Operação no Complexo da Vila Brasília e desmentido de boatos de toque de recolher, 27/10/2026",
+      "url": "https://diariodovale.com.br/policia/policia-militar-mantem-ocupacao-por-tempo-indeterminado-no-vila-brasilia/"
     }
   ],
   "blocks": [
@@ -83,6 +91,18 @@
     {
       "type": "paragraph",
       "text": "Ainda nesta quarta-feira, o Diário do Vale relatou que a transferência de Amanda Neves Ferreira para a Subsecretaria de Gestão de Pessoas consta em boletim da Polícia Militar. A reportagem destaca que o ato não apresenta a motivação específica da substituição. A confirmação do reforço anunciado e as operações posteriores não esclarecem quando a ameaça inicial foi detectada, quais alertas chegaram às autoridades e como se deu a resposta nas primeiras horas de domingo (25)."
+    },
+    {
+      "type": "heading",
+      "text": "Ocupação por tempo indeterminado e alerta contra boatos"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em comunicado divulgado pelo 28º BPM e reproduzido na terça-feira (27) pelo jornal O Dia e pelo Diário do Vale, a Polícia Militar informou que mantém uma operação de ocupação na Vila Brasília por tempo indeterminado. Segundo as reportagens, o policiamento envolve mais de 40 militares em esquema de revezamento, com apoio de equipes especializadas do Bope e do Batalhão de Ações com Cães (BAC). Esses números descrevem o efetivo anunciado para a operação e não substituem a comprovação das escalas ou dos horários de resposta ao ataque do domingo (25)."
+    },
+    {
+      "type": "paragraph",
+      "text": "A PM também negou, segundo o Diário do Vale, mensagens que circulavam sobre supostos toques de recolher e presença de criminosos armados no complexo. O esclarecimento diz respeito aos boatos então verificados pela corporação: não significa que todos os riscos de segurança em Volta Redonda tenham desaparecido. A orientação é não compartilhar alertas anônimos sem confirmação e acompanhar informações de veículos confiáveis e comunicados oficiais."
     },
     {
       "type": "heading",
@@ -154,7 +174,12 @@
       "date": "2026-10-28T10:10:59-03:00",
       "label": "Reforços e operação do Bope — 28/10",
       "text": "Acrescentadas notas oficiais da Prefeitura sobre quatro viaturas e pelo menos 16 policiais previstos para a cidade, nova operação do Bope no Monte Castelo e informação de boletim administrativo sobre a transferência da ex-comandante. A chegada efetiva dos reforços e a cronologia da resposta à invasão seguem pendentes de comprovação."
+    },
+    {
+      "date": "2026-10-28T10:57:54-03:00",
+      "label": "Esclarecimento sobre ocupação e boatos — 28/10",
+      "text": "Acrescentadas informações atribuídas a comunicado do 28º BPM, divulgado na imprensa em 27/10, sobre ocupação policial por tempo indeterminado e desmentido de boatos de toque de recolher. O comunicado não esclarece a cronologia da resposta inicial nem comprova a ausência de riscos em outros bairros."
     }
   ],
-  "updatedAt": "2026-10-28T10:10:59-03:00"
+  "updatedAt": "2026-10-28T10:57:54-03:00"
 }
