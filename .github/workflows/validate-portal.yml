@@ -13,6 +13,9 @@ on:
       - 'scripts/**'
       - 'package.json'
       - 'package-lock.json'
+      - 'next.config.ts'
+      - 'tsconfig.json'
+      - '.eslintrc*'
       - 'tests/**'
       - '.github/workflows/validate-portal.yml'
   push:

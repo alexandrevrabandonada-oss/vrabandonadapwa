@@ -464,3 +464,15 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Critérios pendentes antes do merge:** CI no HEAD final; capturas corrigidas analisadas por responsável e conferência visual da experiência real; Vercel Preview `READY` para o mesmo SHA; verificação de conteúdo com Supabase público e interação de zoom 200%/leitor de tela. Screenshot de navegador automatizado **não é substituto integral de QA humano**.
 
 **Governança:** PR #25 → #26 → #27 continuam empilhadas e em draft. Corrigir o artefato e evidenciar os resultados; não promover PR antiga nem mesclar produção sem autorização.
+
+---
+
+## Sprint V7.5 — gates de qualidade obrigatórios
+
+**Diagnóstico:** apesar de `npm run typecheck` e `npm run lint` aprovados no CI, `next.config.ts` ainda continha `ignoreBuildErrors: true` e `ignoreDuringBuilds: true`. Uma compilação ou deploy desacoplado do workflow poderia ignorar erros reais. Além disso, mudanças isoladas em `next.config.ts` ou `tsconfig.json` não estavam na lista de arquivos que disparavam o workflow de PR.
+
+**Implementação na mesma PR #27:** removidas as duas dispensas do Next (gates nativos voltam a valer); o workflow observa `next.config.ts`, `tsconfig.json` e `.eslintrc*`; adicionados testes de contrato verificando ausência das dispensas, sequência de CI e observação de mudanças. O ajuste foi agrupado em um commit para reduzir builds desnecessários da Vercel.
+
+**Situação antes da alteração:** PRs #25, #26 e #27 abertas, rascunho e encadeadas; `main` inalterada. No SHA `97efcfaf79447488b77ddcb32d41f593a579e20d`, 119 testes Node, Chromium, 10 varreduras axe sem violações detectadas e 10 testes de reflow aprovados; Vercel sem preview READY para esse SHA e com `build-rate-limit`. QA humano real (leitor de tela, zoom nativo, público Supabase) ainda pendente.
+
+**Critérios desta etapa:** CI obrigatório passar novamente no HEAD da V7.5, incluindo o `next build` agora sem dispensas; não considerar a etapa pronta sem comprovação. Não há alteração de dados jornalísticos, banco, logotipo, COMUN, DNS ou produção.
