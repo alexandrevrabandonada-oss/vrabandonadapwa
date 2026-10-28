@@ -13,6 +13,16 @@ test("homepage evita duplicar investigações já visíveis no feed", () => {
   assert.doesNotMatch(home, /story\.slug !== lead\?\.id/);
 });
 
+test("homepage prioriza bairros com cobertura revisada e participação verificável", () => {
+  const home = read("app/page.tsx");
+  assert.match(home, /const coveredSlugs = new Set/);
+  assert.match(home, /place\.main\.length === 0/);
+  assert.match(home, /homePlaces\.map/);
+  assert.match(home, /menção contextual/);
+  assert.match(home, /href="\/envie"/);
+  assert.match(home, /Todo material passa por verificação/);
+});
+
 test("bairro com hub prioriza cobertura editorial verificada antes de telas de processo", () => {
   const page = read("app/territorios/[slug]/page.tsx");
   const section = page.slice(page.indexOf('<Container className="intro-grid territory-detail-page">'));
