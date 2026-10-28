@@ -104,6 +104,7 @@ export default async function HomePage() {
     .filter((entry, index, entries) => entries.findIndex((other) => other.slug === entry.slug) === index)
     .slice(0, 3);
   const featuredNeighborhoods = neighborhoods.slice(0, 5);
+  const newsHrefs = new Set(feed.slice(0, 6).map((entry) => entry.href));
 
   return (
     <Container className="vr2-home">
@@ -146,7 +147,7 @@ export default async function HomePage() {
                   <div className="vr2-meta"><span>{item.category}</span><span>{dateLabel(item.date)}</span></div>
                   <h3><Link href={item.href}>{item.title}</Link></h3>
                   <p>{item.summary}</p>
-                  <Link href={item.href} aria-label={"Ler: " + item.title}>Ler notícia <span aria-hidden="true">↗</span></Link>
+                  <Link href={item.href} aria-label={"Ler: " + item.title}>Ler publicação <span aria-hidden="true">↗</span></Link>
                 </article>
               )) : (
                 <div className="vr2-news-list__empty">
@@ -185,12 +186,12 @@ export default async function HomePage() {
         {featuredInvestigations.length ? (
           <div className="vr2-investigations">
             {featuredInvestigations.map((item, i) => (
-              <article key={item.id} className="vr2-investigation">
+              <article key={item.id} className={newsHrefs.has(item.href) ? "vr2-investigation vr4-investigation--recap" : "vr2-investigation"}>
                 <span className="vr2-investigation__number">0{i + 1}</span>
                 <span className="vr2-eyebrow">{item.kind} · {item.context}</span>
                 <h3><Link href={item.href}>{item.title}</Link></h3>
-                <p>{item.detail}</p>
-                <Link href={item.href} className="vr2-readmore">Ler investigação ↗</Link>
+                {!newsHrefs.has(item.href) ? <p>{item.detail}</p> : null}
+                <Link href={item.href} className="vr2-readmore">{newsHrefs.has(item.href) ? "Continuar acompanhando" : "Ler investigação"} ↗</Link>
               </article>
             ))}
           </div>
@@ -209,44 +210,30 @@ export default async function HomePage() {
         )}
       </section>
 
-      <div className="vr2-duo">
-        <section className="vr2-section vr2-section--compact" aria-labelledby="vr2-neighborhood-heading">
+
+      {featuredNeighborhoods.length > 0 ? (
+        <section className="vr2-section vr4-home-places" aria-labelledby="vr2-neighborhood-heading">
           <div className="vr2-section__heading">
             <div><span className="vr2-eyebrow">A CIDADE É FEITA DE GENTE</span><h2 id="vr2-neighborhood-heading">Por bairro</h2></div>
+            <Link href="/territorios" className="vr2-text-link">Ver lugares ↗</Link>
           </div>
-          <p>Volta Redonda vista a partir dos territórios onde as decisões têm consequências.</p>
-          <div className="vr2-neighborhoods">
-            {featuredNeighborhoods.length ? featuredNeighborhoods.map((place) => (
-              <Link key={place.id} href={"/territorios/" + place.slug}>{place.title}<span aria-hidden="true">↗</span></Link>
-            )) : (
-              <Link href="/territorios">Explorar os territórios da cidade <span aria-hidden="true">↗</span></Link>
-            )}
+          <div className="vr4-home-places__links">
+            {featuredNeighborhoods.map((place) => (
+              <Link key={place.id} href={"/territorios/" + place.slug}>{place.title} ↗</Link>
+            ))}
           </div>
-          <Link href="/territorios" className="vr2-text-link">Ver todos os bairros ↗</Link>
         </section>
+      ) : null}
 
-        <section className="vr2-section vr2-section--compact vr2-search-box" aria-labelledby="vr2-search-heading">
-          <span className="vr2-eyebrow">UM ARQUIVO QUE NÃO DESAPARECE</span>
-          <h2 id="vr2-search-heading">Procure. Questione. Confira.</h2>
-          <p>Pesquise nomes, contratos, bairros, vídeos e investigações. Um link permanente vale mais que uma publicação perdida no feed.</p>
-          <form action="/buscar" method="get" role="search" className="vr2-search-form">
-            <label htmlFor="vr2-q">Buscar no VR Abandonada</label>
-            <div><input id="vr2-q" type="search" name="q" placeholder="CSN, Rua 33, saúde…" maxLength={100} /><button type="submit" aria-label="Pesquisar no site">Buscar ↗</button></div>
-          </form>
-          <Link href="/acervo" className="vr2-text-link">Conhecer o acervo ↗</Link>
-        </section>
-      </div>
-
-
-      <section className="vr2-about" aria-label="Sobre o projeto e participação">
+      <section className="vr4-home-contribute" aria-labelledby="vr4-contribute-title">
         <div>
-          <span className="vr2-eyebrow">NOSSO COMPROMISSO</span>
-          <h2>Noticiar é o começo. Acompanhar é o compromisso.</h2>
-          <p>O VR Abandonada organiza informações de interesse público com contexto, transparência e memória. Para participação coletiva e acompanhamento comunitário, conheça o COMUN — um projeto com finalidade própria.</p>
+          <span className="vr2-eyebrow">AJUDE A APURAR</span>
+          <h2 id="vr4-contribute-title">Tem uma informação ou documento importante?</h2>
+          <p>Compartilhe uma pista com a redação. A publicação depende de verificação editorial.</p>
         </div>
-        <div className="vr2-about__actions">
-          <Link href="/metodo" className="vr2-button vr2-button--accent">Método editorial ↗</Link>
-          <a href="https://comunsocial.online" className="vr2-button vr2-button--quiet" target="_blank" rel="noopener noreferrer">COMUN ↗</a>
+        <div className="vr4-home-contribute__actions">
+          <Link href="/envie" className="vr2-button vr2-button--accent">Enviar informação ↗</Link>
+          <Link href="/metodo" className="vr2-button vr2-button--quiet">Como apuramos ↗</Link>
         </div>
       </section>
     </Container>
