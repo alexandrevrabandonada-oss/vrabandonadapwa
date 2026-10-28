@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
+import { EditorialTerritoryIndex } from "@/components/editorial-navigation";
+import { getPublishedEditorialTerritories } from "@/lib/territories/editorial";
 import { PlaceHubCard } from "@/components/place-hub-card";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
@@ -24,7 +26,8 @@ export const metadata: Metadata = {
 };
 
 export default async function TerritoriesPage() {
-  const territories = await getPublishedPlaceHubs();
+  const [territories, editorialTerritories] = await Promise.all([getPublishedPlaceHubs(), getPublishedEditorialTerritories()]);
+  const newEditorialPlaces = editorialTerritories.filter((place) => !territories.some((hub) => hub.slug === place.slug));
   if (territories.length === 0) {
     return (
       <Container className="vr5-empty-page territories-page">
@@ -33,6 +36,7 @@ export default async function TerritoriesPage() {
           <h1>A cidade contada a partir dos lugares.</h1>
           <p>Os bairros já mencionados em reportagens verificadas ganham páginas de consulta próprias, com links para as matérias originais. Novos lugares entram à medida que publicamos cobertura confirmada.</p>
         </header>
+        <EditorialTerritoryIndex territories={editorialTerritories} />
         <section className="vr5-empty-page__panel" aria-label="Como encontrar informações sobre bairros">
           <p className="vr2-eyebrow">COMECE PELO QUE JÁ PUBLICAMOS</p>
           <h2>Explore a cidade também pela busca.</h2>
@@ -186,6 +190,7 @@ export default async function TerritoriesPage() {
         </section>
       ) : null}
 
+      <EditorialTerritoryIndex territories={newEditorialPlaces} />
       <section className="section" id="territorios-ativos">
         <div className="grid-2">
           <div>

@@ -30,7 +30,8 @@ test("home não repete matéria em destaque dentro de investigações",()=>{
 test("acervo vazio não é uma tela de estatísticas zeradas",()=>{
  const s=read("app/acervo/page.tsx");
  assert.match(s,/if \(allAssets\.length === 0 && collections\.length === 0\)/);
- assert.match(s,/As notícias e investigações já publicadas/);
+ assert.match(s,/EditorialAcervoIndex/);
+ assert.match(s,/getMaterias/);
  assert.match(s,/href="\/materias"/);
  assert.match(s,/href="\/dossies"/);
  assert.match(s,/Nada de registros fictícios/);
@@ -40,7 +41,8 @@ test("territórios sem cadastros não simulam atlas já preenchido",()=>{
  assert.match(s,/if \(territories\.length === 0\)/);
  assert.match(s,/href="\/noticias"/);
  assert.match(s,/Vila Brasília/);
- assert.match(s,/páginas territoriais serão abertas apenas/);
+ assert.match(s,/EditorialTerritoryIndex/);
+ assert.match(s,/getPublishedEditorialTerritories/);
 });
 test("reportagens e notícias permanecem intactas",()=>{
  const r=JSON.parse(read("content/materias/rua-33-cinco-anos-obra-contratos-custos-volta-redonda.json"));

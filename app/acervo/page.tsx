@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
+import { EditorialAcervoIndex } from "@/components/editorial-navigation";
+import { getMaterias } from "@/lib/materias";
 import { EditorialCover } from "@/components/editorial-cover";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
@@ -80,6 +82,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
   const activePlace = resolvedSearchParams.place ?? "";
   const activeMemory = resolvedSearchParams.memory ?? "";
 
+  const articles = await getMaterias();
   const allAssets = await getPublishedArchiveAssets();
   const collections = await getPublishedArchiveCollections();
   const memoryItems = await getPublishedMemoryItems();
@@ -116,6 +119,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
           <h1>Acervo público de Volta Redonda.</h1>
           <p>O catálogo de documentos ainda está sendo organizado para consulta pública. As notícias e investigações já publicadas continuam disponíveis, com as fontes reunidas em cada matéria.</p>
         </header>
+        <EditorialAcervoIndex articles={articles} />
         <section className="vr5-empty-page__panel" aria-label="Como consultar a informação já publicada">
           <p className="vr2-eyebrow">CONSULTA DISPONÍVEL AGORA</p>
           <h2>Documentos e anexos em organização.</h2>
@@ -174,6 +178,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
         ) : null}
       </section>
 
+      <EditorialAcervoIndex articles={articles} />
       <section className="section archive-collections">
         <div className="grid-2">
           <div>
