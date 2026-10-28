@@ -72,7 +72,8 @@ test("design system oferece toque, foco, responsividade e movimento reduzido", (
   assert.ok(css.includes(":focus-within"));
   assert.ok(css.includes("@media (max-width: 760px)"));
   assert.ok(css.includes("@media (prefers-reduced-motion: reduce)"));
-  assert.ok(css.includes("var(--ds-border)"));
+  assert.ok(css.includes("var(--ds-stroke)"));
+  assert.ok(tokens.includes("--ds-stroke: 1px solid var(--ds-border)"));
   assert.ok(tokens.includes("--ds-surface"));
 });
 
