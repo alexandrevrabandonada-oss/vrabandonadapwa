@@ -508,3 +508,21 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 - Testes `tests/public-catalog-availability-v7.test.mjs` verificam os contratos e as rotas. Nenhuma mudança em migrations, RLS, env, credenciais, domínio ou conteúdo jornalístico.
 
 **Critérios de aceite antes de qualquer merge:** 100% de Node tests, TS, lint, build, smoke HTTP, Chromium, axe/reflow no SHA exato e Preview Vercel correspondente; revisão de legibilidade das mensagens novas. A implementação das tabelas editoriais deve ser um projeto separado e auditado, e não uma aplicação irrefletida do histórico do repositório.
+
+---
+
+## Sprint V8 — projeto de implantação editorial segura no Supabase
+
+**Investigação operacional (28/10/2026):** confirmou-se pelo ambiente de produção da Vercel e pela conexão `vrabandonada site` qual é o projeto Supabase efetivamente usado. Preflight read-only `scripts/sql/portal-editorial-readiness.sql` foi **executado com sucesso no projeto real**, retornando nove tabelas editoriais ausentes: cinco de Casos/Bairros na fase 1 e quatro de Acervo e suas dependências na fase 2. Isso explica a ausência estrutural da camada Supabase nas interfaces, sem invalidar reportagens Git verificadas.
+
+**Entrega V8, SOMENTE código/documentação, na PR #27:**
+1. `scripts/sql/portal-editorial-readiness.sql`: inventário portátil, somente `SELECT`, com presença de tabela, RLS, concessão de `SELECT/INSERT` ao anon e existência de política de leitura. Não consulta nenhuma linha de denunciante/contato.
+2. `docs/PLANO_IMPLANTACAO_EDITORIAL_SUPABASE.md`: plano de dependências e rollout por fases (Casos/Bairros → Acervo), staging isolado, política de permissões mínimas, revisão de dados/direitos, sem seeds demonstrativos, checkpoints de backup/rollback e autorização explícita antes de implantar.
+3. `tests/editorial-db-rollout-v8.test.mjs`: contratos que garantem SQL somente leitura, inventário de nove tabelas e que os bloqueios conhecidos continuem documentados.
+4. **Nenhuma DDL executada**, nenhuma migração aplicada, nenhuma cópia de dados pessoais, nenhum `service_role` exposto ou movido para previews.
+
+**Riscos adicionais verificados no Supabase Security Advisor:** alerta para função administrativa `SECURITY DEFINER` executável por anon/authenticated, objetos descobríveis no GraphQL e proteção de senha vazada desabilitada. A presença de RLS não elimina esses avisos; não revogar `EXECUTE` sem estudar dependências de autorização. O projeto público atual mantém as tabelas de denúncia/captura separadas do esquema editorial proposto.
+
+**Ponto de decisão arquitetural:** os vínculos entre dossiê/bairro/documento e reportagem têm de usar `link_type + link_key` revisados, com permalink de `content/materias/*.json`, sem duplicação de matéria; o Git mantém a publicação jornalística canônica. Resolver no novo schema o descompasso entre os estados de dossiê de `0011` e `0012`; não executar as migrações antigas em cadeia.
+
+**Próximo após CI:** abrir uma PR separada de implantação **no momento em que existir staging e as PRs de UX estiverem integradas**, gerar migrações novas pelo CLI, validar autorização real `anon`/usuário comum/editor e só depois submeter a promoção à produção para aprovação explícita. Nenhuma implantação até então.
