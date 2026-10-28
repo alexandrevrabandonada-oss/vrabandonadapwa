@@ -5,6 +5,7 @@ import type { Materia } from "@/lib/materias";
 /** Rotas de leitura que seguem a única URL canônica de cada reportagem. */
 export function StoryContextNav({ story }: { story: Materia }) {
   const hasUpdates = Boolean(story.updates?.length);
+  const hasPublicReferences = story.sources.some((source) => /^https?:\/\//i.test(source.url));
 
   return (
     <section className="vr6-story-nav" aria-label="Navegue nesta apuração">
@@ -16,7 +17,7 @@ export function StoryContextNav({ story }: { story: Materia }) {
         <a href="#texto-da-materia">Ler matéria</a>
         {hasUpdates ? <a href="#atualizacoes-da-materia">Atualizações ({story.updates?.length})</a> : null}
         <a href="#fontes-da-materia">Fontes ({story.sources.length})</a>
-        <Link href={"/acervo#fontes-" + story.slug}>No acervo ↗</Link>
+        {hasPublicReferences ? <Link href={"/acervo#fontes-" + story.slug}>No acervo ↗</Link> : null}
       </nav>
       {story.territories?.length ? (
         <div className="vr6-story-nav__places">
