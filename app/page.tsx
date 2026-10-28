@@ -7,7 +7,6 @@ import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getMaterias, publishedDate } from "@/lib/materias";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
-import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Jornalismo independente em Volta Redonda",
@@ -236,7 +235,6 @@ export default async function HomePage() {
           <a href="https://comunsocial.online" className="vr2-button vr2-button--quiet" target="_blank" rel="noopener noreferrer">COMUN ↗</a>
         </div>
       </section>
-      <div className="vr2-home__endnote">{site.name.toUpperCase()} · VOLTA REDONDA · INFORMAÇÃO COM CONTEXTO</div>
     </Container>
   );
 }

@@ -204,3 +204,12 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Nenhuma mudança no banco Supabase, permissão de arquivos, secrets ou PR #7.
 
 **Critérios antes de merge:** testes, types, lint, build, Vercel READY; comparação visual 320, 360, 390, 430 px e desktop; verificar overflow, zoom, menu, busca, tela vazia e fluxo com conteúdo real. Sem navegador autenticado nesta sessão, não declarar validação visual real.
+
+
+### Revisão visual real da PR #9 — screenshots Android do proprietário
+- Screenshots enviados do **preview**, abrangendo homepage, rodapé, rota /agora e rota /dossies. A homepage ficou substancialmente mais compacta e legível; o Agora passou a usar listagem e estado vazio honesto. **O bloqueador remanescente era /dossies:** hero original em caixa alta de ~13vw, largura superior ao viewport e texto cortado.
+- Correção nesta mesma PR: rota /dossies substituída por cabeçalho pequeno, agrupamento somente de dossiês efetivamente publicados e links úteis; estados sem conteúdo não exibem números vazios nem capas artificiais. Rota antiga e slugs dos documentos preservados.
+- Aplicada folha de estilos própria para dossiês com título móvel <= 2,35rem, itens compactos, quebra de linhas robusta e sem dependência do hero global. Ajustes no rodapé: remove texto sobre tecnologias internas, reduz espaço vertical e elimina assinatura duplicada da homepage.
+- O botão circular preto com símbolo compatível com a Vercel Toolbar aparece apenas na captura do preview. Sem prova de que seja um componente do portal; não tentar ocultá-lo por CSS do site. Confirmar ao inspecionar o domínio público.
+- Testes adicionados para evitar regressão do hero de dossiês, presença de estados vazios honestos e informações públicas corretas no rodapé.
+- **Publicação:** não integrar a PR apenas porque o build ficou READY. Checar CI, prévia real e nova captura de /dossies num celular antes do merge. PR #7 e arquivos legados permanecem intocados.

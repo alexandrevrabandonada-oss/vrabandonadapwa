@@ -10,8 +10,8 @@ export function SiteFooter() {
         <div className="site-footer__brand">
           <p className="eyebrow">VR Abandonada</p>
           <p>
-            Casa digital para memória, denúncia e organização popular sobre
-            Volta Redonda.
+            Jornalismo independente sobre Volta Redonda: notícias, investigações
+            e memória pública.
           </p>
         </div>
 
@@ -24,8 +24,7 @@ export function SiteFooter() {
         </nav>
 
         <p className="site-footer__note">
-          Projeto em base inicial. Estrutura preparada para Vercel, PWA e
-          Supabase.
+          Publicações com contexto, correções e compromisso com as fontes.
         </p>
       </Container>
     </footer>
