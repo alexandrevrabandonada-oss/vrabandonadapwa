@@ -7,7 +7,7 @@ import { EditorialTerritoryIndex } from "@/components/editorial-navigation";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedEditorialTerritories } from "@/lib/territories/editorial";
 import { getPlaceHubStatusLabel } from "@/lib/territories/navigation";
-import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
+import { getPublishedPlaceHubLinks, getPublicPlaceCatalogState } from "@/lib/territories/queries";
 
 export const metadata: Metadata = {
   title: "Bairros e lugares",
@@ -22,10 +22,11 @@ export const metadata: Metadata = {
 };
 
 export default async function TerritoriesPage() {
-  const [territories, editorialTerritories] = await Promise.all([
-    getPublishedPlaceHubs(),
+  const [placeCatalog, editorialTerritories] = await Promise.all([
+    getPublicPlaceCatalogState(),
     getPublishedEditorialTerritories(),
   ]);
+  const { hubs: territories, availability: placeAvailability } = placeCatalog;
   const hubSlugs = new Set(territories.map((hub) => hub.slug));
   // Não duplicar o bairro que já possui hub próprio: o detalhamento do hub
   // incorpora as matérias editoriais do mesmo lugar.
@@ -54,6 +55,13 @@ export default async function TerritoriesPage() {
 
       <EditorialTerritoryIndex territories={newEditorialPlaces} />
 
+      {placeAvailability !== "available" ? (
+        <section className="vr6-empty-note" role="status" aria-label="Disponibilidade dos lugares documentados">
+          <strong>{placeAvailability === "unavailable" ? "Catálogo de lugares temporariamente indisponível." : "Catálogo de lugares não conectado neste ambiente."}</strong>
+          <p>Não foi possível confirmar as páginas territoriais do banco. Isso não significa que não existam bairros documentados. A cobertura das reportagens verificadas permanece acessível acima.</p>
+        </section>
+      ) : null}
+
       {territories.length > 0 ? (
         <section className="vr6-hub__section" id="lugares-documentados" aria-labelledby="vr6-hubs-title">
           <p className="vr6-eyebrow">PÁGINAS TERRITORIAIS PUBLICADAS</p>
@@ -74,7 +82,7 @@ export default async function TerritoriesPage() {
         </section>
       ) : null}
 
-      {territories.length === 0 && editorialTerritories.length === 0 ? (
+      {territories.length === 0 && editorialTerritories.length === 0 && placeAvailability === "available" ? (
         <div className="vr6-empty-note">
           As páginas de bairros estão em preparação. Pesquise pelo nome de um lugar ou acompanhe as <Link href="/noticias">notícias</Link>.
         </div>
