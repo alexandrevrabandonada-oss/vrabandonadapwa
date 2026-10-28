@@ -198,3 +198,37 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 **Verificação após aplicação:** RLS está ativa nas duas tabelas; `anon` não tem SELECT, INSERT, UPDATE ou TRUNCATE na allowlist, e no intake tem apenas INSERT; as três políticas esperadas estão presentes. A função ainda reconhece o administrador existente. Uma consulta com papel `anon` à tabela de capturas retornou zero linhas visíveis. Uma inserção sintética com papel `anon` teve sucesso em transação revertida, sem registro persistente. O Security Advisor deixou de apresentar os dois erros de RLS desativada. O teste local de permissões passou; o envio pelo navegador e a sessão editorial reais ainda não foram testados de ponta a ponta. Permanecem avisos da função SECURITY DEFINER e do GraphQL: https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable
 
 **TRUNCATE em capturas:** após autorização, a migração `20261028003847_restrict_capture_truncate.sql` revogou esse privilégio de `PUBLIC`, `anon` e `authenticated` em `universal_captures`. A versão corresponde ao registro da migração no Supabase. A verificação em produção confirmou que os dois papéis não têm TRUNCATE, que `authenticated` continua com SELECT sujeito à RLS e que as quatro capturas permanecem; `anon` vê zero linhas. Em PostgreSQL isolado, ambos receberam erro ao tentar TRUNCATE e o administrador de teste manteve acesso de leitura. Nenhum TRUNCATE foi executado na produção. A sessão administrativa real ainda exige teste de ponta a ponta.
+
+
+### Inventário de metadados do `archive-assets` — 27/10/2026
+
+**Fonte:** leitura SQL direta, exclusivamente de metadados, no projeto de produção `ghehhhztsukhshdhotmu`. Nenhum arquivo foi aberto, baixado, renderizado ou redistribuído; nenhum objeto, permissão ou URL foi modificado.
+
+- `archive-assets` está marcado `public=true`: **4 objetos, 266.347 bytes totais**. `universal_captures` também consta público, mas sem objetos.
+- Inventário pseudonimizado, ordenado pela data de criação, sem nomes completos, títulos, URLs de acesso ou conteúdo:
+
+| Item | Formato de metadados | Bytes | Criado em UTC | Referências em capturas | Estado da captura | Classificação provisória |
+| --- | --- | ---: | --- | ---: | --- | --- |
+| 1 | image/jpeg | 188.719 | 22/03/2026 04:36 | 1 | inbox | Interno; conteúdo/sensibilidade não verificados |
+| 2 | image/jpeg | 12.654 | 22/03/2026 04:37 | 1 | inbox | Interno; conteúdo/sensibilidade não verificados |
+| 3 | image/jpeg | 12.654 | 22/03/2026 04:45 | 1 | inbox | Interno; conteúdo/sensibilidade não verificados |
+| 4 | application/pdf | 52.320 | 22/03/2026 04:47 | 1 | inbox | Interno; conteúdo/sensibilidade não verificados |
+
+**Reconciliação:** as quatro referências `universal_captures.file_url` correspondem, por caminho do objeto, individualmente aos quatro objetos; não foi necessário expor nomes/URLs nem ler `raw_text` das capturas. Todos os registros associados permanecem `status='inbox'`. Não há tabela `archive_assets` neste esquema de produção.
+
+**Limites:**
+- Ser `inbox` indica falta de aprovação/publicação editorial, **não prova** que o arquivo contenha dados sensíveis, nem que não esteja vinculado a alguma página em outro sistema.
+- Dois JPEGs têm o mesmo tamanho, mas não há comprovação de que seu conteúdo seja idêntico.
+- A consulta não testa sessões administrativas reais, resposta HTTP dos objetos, cache/CDN ou a existência de cópias fora do bucket.
+- Um bucket público permite acesso por URL direta sem RLS de leitura; a proteção das linhas de `universal_captures` não torna os arquivos privados.
+
+**Decisão de contenção:** manter o bloqueio de novos uploads e **não alterar ainda** `public`, objetos, caminhos, registros ou links. Tratar os quatro como **originais internos não revisados** até classificação de conteúdo com acesso controlado, confirmação de direitos/uso editorial e inventário de consumidores das URLs.
+
+**Próxima sequência segura:**
+1. Rever uso dos quatro arquivos num ambiente autenticado e privativo, com acesso mínimo necessário e sem expor dados de fontes em logs ou PR.
+2. Rastrear referências públicas, inclusive links diretos, código, compartilhamentos e CDN, e preparar plano de corte com rollback.
+3. Criar e validar **novo** bucket privado com autorização testada e links temporários; nunca alterar objetos de Storage diretamente por SQL.
+4. Copiar com verificação de integridade, trocar referências, revalidar acessos anônimo e autorizado, e somente então decidir sobre remover cópias públicas ou alterar o bucket legado.
+5. Registrar aprovação específica antes de modificar disponibilidade de objetos existentes.
+
+**Critério de aceite da classificação:** cada item ganha uma decisão registrada pelo responsável editorial: `público intencional`, `interno sem restrição especial`, `sensível/confidencial` ou `descarte após retenção`, com justificativa, autor, data e destino. Nenhum item é promovido a público pelo simples fato de já possuir URL pública.
