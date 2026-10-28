@@ -441,3 +441,26 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 - **O teste local não é QA visual**: não confirma breakpoints reais, contraste renderizado, teclado, leitor de tela, carregamento com dados Supabase de produção, rede externa ou preview Vercel. Esses portões permanecem abertos.
 
 **Política de integração:** não mesclar as PRs #25, #26 ou #27 antes de QA visual e de um preview correspondente ao HEAD exato. Reusar o smoke em futuras alterações editoriais sem consumir builds externos desnecessários. Não contornar limites Vercel desabilitando proteções ou expondo variáveis.
+
+---
+
+## Sprint V7.3 — QA visual Chromium e correções fundamentadas
+
+**Objetivo:** remover o bloqueio de ausência de inspeção visual de fato, não confundir `next build` com experiência coerente. Navegador Chromium local executado pelo GitHub Actions contra o **mesmo HEAD** do Next compilado, sem tocar em produção ou depender de autenticação Vercel.
+
+**Implementação:**
+- `scripts/audit-local-ux.mjs`: usa Chromium/Playwright pinado no CI e navegador móvel em **320/360/390/430 px**, além de desktop **1440 px**. Percorre Início, Casos, Acervo, Bairros, reportagem Rua 33 e notícia Vila Brasília; captura PNGs públicos de página completa e um `summary.json` com erros/medidas; não guarda cookies, envs privados nem dados autenticados.
+- Mede `documentElement.scrollWidth <= clientWidth + 2`, confere colunas centralizadas de Acervo/Bairros, presença da Rua 33 em Casos, metadados do cartão sem CSS de rota externa, e evidências no Acervo.
+- No celular, testa clique na barra inferior, abertura/fechamento do menu com Escape, retorno de foco ao botão original, e link de reportagem para `/acervo#fontes-<slug>` com expansão automática.
+- `.github/workflows/validate-portal.yml` instala Playwright isoladamente no runner, após Node tests, lint, TypeScript, build e smoke HTTP, e disponibiliza PNGs/JSON como artefato `vr-abandonada-qa-visual` por 7 dias, inclusive em falha. Não publica screenshots na web ou em produção.
+
+**Achados reais da primeira captura Chromium (HEAD `7f7765292792217a6ceefa5fe88cd5b2798f8e25`):**
+- Em Acervo e Bairros, **6 px de overflow horizontal** tanto em 360 como em 390 px. Demais quatro rotas nesses tamanhos, e seis rotas desktop, sem overflow. Barra móvel, Escape/foco e fontes por hash passaram.
+- **Causa localizada:** regra móvel `.vr6-hub__jump { margin-right: -.4rem }` em `app/experience-v6.css`, neutralizada; trilho continua rolável internamente.
+- **Erro de aparência no cartão Casos:** `EditorialStoryCard` utilizava `.vr-index__meta` de folha CSS importada somente por `EditorialNavigation` em Acervo/Bairros. Em `/dossies`, a data ficava colada à categoria. O CSS V7 passa a definir layout `flex`, espaçamento, tipografia e padding próprios.
+- **Inconsistência de desktop:** `.vr6-hub { width:100% }` anulava a largura central herdada de `.container`, deixando Acervo/Bairros sem o mesmo alinhamento que outras páginas. Removida a sobrescrita. Teste agora exige margens laterais simétricas.
+- **Artefato histórico da primeira rodada:** https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/40737949329/artifacts/12837404954 ; é evidência do problema, **não da versão corrigida**.
+
+**Critérios pendentes antes do merge:** CI no HEAD final; capturas corrigidas analisadas por responsável e conferência visual da experiência real; Vercel Preview `READY` para o mesmo SHA; verificação de conteúdo com Supabase público e interação de zoom 200%/leitor de tela. Screenshot de navegador automatizado **não é substituto integral de QA humano**.
+
+**Governança:** PR #25 → #26 → #27 continuam empilhadas e em draft. Corrigir o artefato e evidenciar os resultados; não promover PR antiga nem mesclar produção sem autorização.
