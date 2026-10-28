@@ -9,6 +9,7 @@ on:
       - 'public/data/instagram-posts.json'
       - 'public/instagram-media/**'
       - '.github/workflows/import-instagram.yml'
+      - '.github/workflows/audit-publication.yml'
       - 'scripts/**'
       - 'package.json'
       - 'package-lock.json'

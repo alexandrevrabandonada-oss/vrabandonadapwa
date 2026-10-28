@@ -12,7 +12,8 @@
     "prebuild": "node scripts/validate-instagram.mjs && node scripts/validate-materias.mjs",
     "editorial:prepare": "node scripts/editorial-workflow.mjs prepare",
     "editorial:release": "node scripts/editorial-workflow.mjs release",
-    "instagram:validate": "node scripts/validate-instagram.mjs"
+    "instagram:validate": "node scripts/validate-instagram.mjs",
+    "ops:audit": "node scripts/audit-public-site.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.9.0",

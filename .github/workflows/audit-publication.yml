@@ -1,0 +1,48 @@
+name: Vigiar publicação e SEO do portal
+on:
+  schedule:
+    - cron: '17 12 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: write
+concurrency:
+  group: publication-audit
+  cancel-in-progress: false
+jobs:
+  audit:
+    if: github.repository == 'alexandrevrabandonada-oss/vrabandonadapwa'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Auditar páginas públicas e SEO técnico
+        id: audit
+        run: |
+          if node scripts/audit-public-site.mjs > audit-result.txt 2>&1; then
+            echo 'failed=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'failed=true' >> "$GITHUB_OUTPUT"
+          fi
+          cat audit-result.txt
+      - name: Abrir alerta se a auditoria falhar; encerrar alerta quando recuperar
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AUDIT_FAILED: ${{ steps.audit.outputs.failed }}
+        run: |
+          title="[Radar tecnico] Falha na publicacao do VR Abandonada"
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 100 --json number,title --jq ".[] | select(.title == \"$title\") | .number" | head -n 1)
+          if [ "$AUDIT_FAILED" = "true" ]; then
+            if [ -z "$existing" ]; then
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body-file audit-result.txt
+            else
+              echo "Alerta ja aberto (#$existing). Evitando notificacoes duplicadas."
+            fi
+          elif [ -n "$existing" ]; then
+            gh issue close "$existing" --repo "$GITHUB_REPOSITORY" --comment "Nova auditoria publica passou. Detalhes no log do GitHub Actions."
+          else
+            echo "Portal verificado; nenhum alerta aberto."
+          fi
