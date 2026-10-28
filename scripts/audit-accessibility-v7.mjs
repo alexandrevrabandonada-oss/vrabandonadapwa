@@ -60,6 +60,7 @@ async function audit() {
         viewport: {width:profile.width,height:profile.height},
         isMobile: profile.isMobile,
         hasTouch: profile.isMobile,
+        bypassCSP: true,
         locale:"pt-BR", reducedMotion:"reduce",
       });
       const page = await context.newPage();
