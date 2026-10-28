@@ -344,3 +344,24 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 - Páginas editoriais derivadas de bairros em `/territorios/[slug]` coexistem com os hubs existentes do Supabase. Nenhum bairro vazio é inventado.
 - `/acervo` passa a mostrar matérias reais mesmo sem anexos publicados; `/buscar`, homepage, artigo e sitemap participam da mesma taxonomia.
 - Documento canônico da arquitetura: `docs/ARQUITETURA_ACERVO_TERRITORIOS.md`. Verificar CI e produção separadamente. Nesta sprint não escrever no Supabase, não alterar Storage, nem importar conteúdos privados.
+
+---
+
+## UX V6 — jornada contextual integrada (28/10/2026)
+
+**Diagnóstico sobre a main corrente, não a PR #17 antiga:** a main já introduziu jornalismo Git-first e bairros derivados por `territories: [{slug,label,role}]`, com distinção `main`/ `mentioned`. A proposta V6 parte desse estado e **não copia a PR #17 desatualizada**.
+
+**Promessa de produto mantida:** uma publicação original, múltiplas maneiras de encontrá-la e checar as evidências. Acervo e Bairros são índices do próprio conteúdo jornalístico, não microssites.
+
+**Implementação em PR separada `ux-v6-jornadas-contextuais-20261028`, pendente de merge:**
+- Em `/materias/[slug]`: guia contextual visível para texto, histórico se houver, fontes e registro no Acervo; vínculos territoriais explicitam `foco da matéria` versus `citado`; links internos só apontam para URL existente; outras matérias são recomendações de leitura, **não relações causais**.
+- Em `/acervo`: uma única composição visual em qualquer situação (com/sem registros no Supabase). Primeiro matérias publicadas, depois referências externas aprovadas agrupadas por reportagem e fechadas progressivamente, depois arquivos públicos e coleções. Links externos levam à origem, **não** constituem cópia ou garantia de disponibilidade. Preservar filtros `type,year,place,memory` e URLs de itens/coleções.
+- Em `/territorios`: intro editorial compacta, índice dos bairros efetivamente vinculados nas matérias, hubs publicados complementares, sem duplicar slugs. Nenhum novo bairro criado por texto livre ou menção não verificada.
+- De `/territorios/[slug]` para o Acervo: consulta das fontes das reportagens vinculadas diretamente ao local, com link de volta à matéria original.
+- CSS V6 escopado e acessível, com foco visível, áreas tocáveis e respeito à redução de movimento.
+
+**Não executar nesta PR:** migração Supabase, supressão de dados ou rotas existentes, troca do logo original fornecido por um desenho regenerado, novas fotografias de fatos, mudanças em texto editorial, publicação sem revisão, automações de denúncias ou integração COMUN.
+
+**Aceite objetivo:** testes Node/testes editoriais, typecheck, lint, build Next.js no SHA exato da PR; preview Vercel READY; revisão visual mobile 320/360/390/430 e desktop; conferir navegação por fragmentos, filtro de memória, links de fontes externos, teclado, 200% zoom, menu e leitor de voz. Não confundir preview READY com teste E2E nem validação por usuário real.
+
+**Próximo P1:** ligar documentos públicos hospedados a um identificador de apuração validado, sem importação automática, e consolidar taxonomia de território/editoria/caso no índice de busca; migrar gradualmente CSS V2–V6 para tokens sem alterar identidade aprovada.
