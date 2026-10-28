@@ -32,8 +32,10 @@ test("as ações da homepage nunca substituem o texto visível por outro rótulo
  assert.match(s,/Ler notícia: /);
  assert.doesNotMatch(s,/aria-label="Pesquisar no site"/);
 });
-test("a verificação de aumento de texto exige ampliação efetiva",()=>{
+test("o teste de reflow verifica espaço de zoom equivalente sem afirmar zoom nativo",()=>{
  const s=read("scripts/audit-accessibility-v7.mjs");
- assert.match(s,/setProperty\("font-size", \(parseFloat\(original\)\*2\) \+ "px", "important"\)/);
- assert.match(s,/larger|não foi realmente ampliada/);
+ assert.match(s,/factor:2,width:640/);
+ assert.match(s,/factor:4,width:320/);
+ assert.match(s,/dimensions.scroll > dimensions.viewport \+ 2/);
+ assert.match(s,/não mede zoom nativo/);
 });
