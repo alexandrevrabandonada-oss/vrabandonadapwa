@@ -5,8 +5,15 @@ const read=(p)=>readFileSync(p,"utf8");
 
 test("a marca preserva nome acessível com o texto visível e a função",()=>{
  const s=read("components/site-header.tsx");
- assert.match(s,/aria-label="VR ABANDONADA VOLTA REDONDA RJ — página inicial"/);
+ assert.match(s,/<Link href="\\/" className="vr2-brand">/);
+ assert.match(s,/<span className="vr2-brand__mark">VR<\\/span>/);
+ assert.doesNotMatch(s,/aria-label="VR ABANDONADA/);
  assert.match(s,/VOLTA REDONDA · RJ/);
+});
+test("Explorar e Menu compartilham nome acessível e texto visível",()=>{
+ const s=read("components/site-menu.tsx");
+ assert.match(s,/Explorar — abrir menu principal/);
+ assert.match(s,/Menu — abrir menu principal/);
 });
 test("a ação Ouvir inclui o texto visível no nome acessível",()=>{
  const s=read("components/reading-assistant-trigger.tsx");
