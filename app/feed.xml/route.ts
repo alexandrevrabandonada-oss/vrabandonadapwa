@@ -1,4 +1,3 @@
-import { getInstagramPosts, titleFor, summaryFor } from "@/lib/instagram/posts";
 import { getMaterias } from "@/lib/materias";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -9,19 +8,13 @@ const xmlEscape = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, 
 export async function GET() {
   const host = getSiteUrl();
   const articles = await getMaterias();
-  const imported = getInstagramPosts().map((p) => ({
-    title: titleFor(p),
-    url: host + "/publicacoes/" + p.id,
-    summary: summaryFor(p),
-    date: p.published_at,
-  }));
   const originals = articles.map((a) => ({
     title: a.title,
     url: host + "/materias/" + a.slug,
     summary: a.summary,
     date: a.publishedAt,
   }));
-  const items = [...originals, ...imported].sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+  const items = originals.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
     .slice(0, 60).map((item) => [
       "<item>",
       "<title>" + xmlEscape(item.title) + "</title>",

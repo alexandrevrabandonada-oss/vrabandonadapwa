@@ -146,5 +146,6 @@
       "label": "Publicação inicial",
       "text": "Primeira versão publicada com contratos, aditivos, cronologia e rastreamento parcial dos pagamentos. O total final e documentos ainda não fornecidos permanecem em apuração."
     }
-  ]
+  ],
+  "kind": "investigation"
 }

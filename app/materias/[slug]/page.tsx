@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
-import { getMateria, getMaterias, publishedDate } from "@/lib/materias";
+import { getMateria, getMaterias, materiaKind, materiaKindLabel, publishedDate } from "@/lib/materias";
 import { getSiteUrl } from "@/lib/site-url";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -37,7 +37,7 @@ export default async function MateriaPage({ params }: Props) {
   const canonical = getSiteUrl() + "/materias/" + slug;
   const schema = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": materiaKind(story) === "news" ? "NewsArticle" : "Article",
     headline: story.title,
     description: story.summary,
     inLanguage: "pt-BR",
@@ -57,10 +57,10 @@ export default async function MateriaPage({ params }: Props) {
     <Container className="vr-materia">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
       <nav className="vr-materia__breadcrumbs" aria-label="Navegação">
-        <Link href="/">Início</Link><span>/</span><Link href="/materias">Matérias</Link><span>/</span><span>{story.section}</span>
+        <Link href="/">Início</Link><span>/</span><Link href={materiaKind(story) === "news" ? "/noticias" : "/materias"}>{materiaKind(story) === "news" ? "Notícias" : "Matérias"}</Link><span>/</span><span>{story.section}</span>
       </nav>
       <header className="vr-materia__head">
-        <div className="vr-pubs-eyebrow">{story.section} / VR ABANDONADA</div>
+        <div className="vr-pubs-eyebrow">{materiaKindLabel(story)} · {story.section} / VR ABANDONADA</div>
         <h1>{story.title}</h1>
         <p className="vr-materia__dek">{story.subtitle}</p>
         <div className="vr-materia__byline">Por {story.author} · {publishedDate(story.publishedAt)}

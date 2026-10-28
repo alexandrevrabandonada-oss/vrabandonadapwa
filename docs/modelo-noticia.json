@@ -1,0 +1,30 @@
+{
+  "_aviso": "MODELO DE RASCUNHO — NÃO É NOTÍCIA REAL; não colocar em content/materias sem apuração e aprovação.",
+  "slug": "exemplo-noticia-local-substituir",
+  "kind": "news",
+  "status": "draft",
+  "reviewed": false,
+  "publishedAt": null,
+  "title": "Título factual de uma notícia — substituir",
+  "subtitle": "Linha fina com contexto, horário ou localidade — substituir",
+  "summary": "Resumo factual com o acontecimento, quando e onde ocorreu e quais fontes foram confirmadas; substituir integralmente.",
+  "section": "Cidade",
+  "author": "VR Abandonada",
+  "sources": [
+    {
+      "label": "Fonte oficial a conferir",
+      "url": "https://example.org/"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Lide: o fato principal, local, data, fontes verificadas e limites da apuração."
+    },
+    {
+      "type": "paragraph",
+      "text": "Contexto e desdobramentos, se houver."
+    }
+  ],
+  "instagramUrl": "https://www.instagram.com/p/EXEMPLO/"
+}

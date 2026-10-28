@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
-import { InstagramHomePanel } from "@/components/instagram-home-panel";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getMaterias, publishedDate } from "@/lib/materias";
@@ -222,7 +221,6 @@ export default async function HomePage() {
         </section>
       </div>
 
-      <InstagramHomePanel />
 
       <section className="vr2-about" aria-label="Sobre o projeto e participação">
         <div>

@@ -8,8 +8,8 @@ export function InstagramHomePanel() {
   return (
     <section className="section ig-homepanel" aria-labelledby="ig-home-heading">
       <div className="ig-homepanel__header">
-        <div><p className="eyebrow">PUBLICAÇÕES · DIRETO DO INSTAGRAM</p><h2 id="ig-home-heading">O que a cidade está discutindo</h2></div>
-        <Link href="/publicacoes">Ver todas as publicações ↗</Link>
+        <div><p className="eyebrow">POSTAGENS ORIGINAIS · REDES SOCIAIS</p><h2 id="ig-home-heading">O que a cidade está discutindo</h2></div>
+        <Link href="/noticias">Ver notícias no site ↗</Link>
       </div>
       <div className="ig-cards">{posts.map((post, i) => <InstagramPublicationCard key={post.id} post={post} priority={i === 0} />)}</div>
     </section>

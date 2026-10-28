@@ -34,7 +34,7 @@ export function prepareInstagramDraft(post) {
     /^\/instagram-media\/[a-zA-Z0-9_-]+\.jpg$/.test(post.local_image)
     ? { src: post.local_image, alt: "Capa da publicação original no Instagram" } : undefined;
   return {
-    slug, status: "draft", reviewed: false, title,
+    slug, status: "draft", reviewed: false, title, kind: "news",
     subtitle: "Revisar o subtítulo e acrescentar o contexto jornalístico.",
     summary: caption.replace(/\s+/g, " ").slice(0, 360),
     section: "Cidade", author: "VR Abandonada", instagramUrl: post.permalink,
@@ -70,6 +70,7 @@ export function reviewedPublication(draft) {
   }
   const publication = {
     slug: draft.slug, title: draft.title, subtitle: draft.subtitle,
+    kind: ["news", "investigation", "explainer"].includes(draft.kind) ? draft.kind : "news",
     summary: draft.summary, section: draft.section, author: draft.author,
     status: "published", reviewed: true,
     publishedAt: new Date(review.approvedAt).toISOString(),

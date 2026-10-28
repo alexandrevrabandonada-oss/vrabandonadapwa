@@ -59,3 +59,8 @@ O conteúdo de demonstração só pode aparecer em desenvolvimento local com `VR
 ## Agente Editorial e publicações sem Meta
 
 Use o painel interno /interno/agente para organizar uma pauta e copiar o comando para o ChatGPT conectado ao GitHub. Só após revisar e aprovar a versão final é permitido mesclar a PR com a reportagem. Consulte docs/OPERACAO_AGENTE_EDITORIAL.md. O monitor GitHub Actions verifica disponibilidade e SEO básico diariamente, sem provar indexação no Google.
+
+
+## Publicação de notícias (28/10/2026)
+
+As notícias usam o mesmo pipeline Git-first, com `kind: "news"`. O texto do Instagram é ponto de partida, não publicação automática: o agente revisa, classifica, registra as fontes e preserva `instagramUrl` opcional. Após aprovação da versão exata, a matéria aparece no índice `/noticias`, no fluxo `/agora`, na homepage, em `/materias`, sitemap e feed.xml. Investigações usam `kind: "investigation"` e podem manter histórico vivo com `updates`. A antiga `/publicacoes` redireciona a Notícias. Não é necessária conta Meta. Consulte `docs/OPERACAO_NOTICIAS_EDITORIAL.md`.

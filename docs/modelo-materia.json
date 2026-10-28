@@ -1,8 +1,8 @@
 {
   "slug": "assunto-especifico-volta-redonda",
-  "title": "Título verificável com contexto de Volta Redonda",
+  "title": "EXEMPLO DE MODELO — substituir antes de publicar",
   "subtitle": "Uma frase de apoio explicando o fato mais relevante.",
-  "summary": "Um resumo suficiente para o leitor compreender o assunto, com o contexto da investigação, e que também aparecerá nas buscas do Google.",
+  "summary": "MODELO TÉCNICO: este arquivo de exemplo não é uma notícia e não pode ser enviado para produção sem confirmação e apuração.",
   "section": "Cidade",
   "publishedAt": "2026-10-27T19:00:00-03:00",
   "author": "VR Abandonada",
@@ -27,5 +27,6 @@
       "type": "paragraph",
       "text": "Não confunda alegações, fatos comprovados e questões em aberto."
     }
-  ]
+  ],
+  "kind": "news"
 }

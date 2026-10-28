@@ -18,7 +18,7 @@ export const site = {
     { href: "/", label: "Início" },
     { href: "/agora", label: "Últimas" },
     { href: "/dossies", label: "Investigações" },
-    { href: "/territorios", label: "Bairros" },
+    { href: "/noticias", label: "Notícias" },
     { href: "/buscar", label: "Buscar" },
   ] satisfies SiteLink[],
   mobileNav: [

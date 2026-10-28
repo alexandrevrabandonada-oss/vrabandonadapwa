@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { getRadarPageData } from "@/lib/radar/queries";
 import { getMaterias } from "@/lib/materias";
-import { getInstagramPosts, summaryFor, titleFor } from "@/lib/instagram/posts";
 
 export const metadata: Metadata = {
   title: "Últimas notícias e atualizações",
@@ -38,7 +37,6 @@ function showDate(value: string) {
 
 export default async function AgoraPage() {
   const [radar, materias] = await Promise.all([getRadarPageData(), getMaterias()]);
-  const socialPosts = getInstagramPosts();
   const observedHrefs = new Set<string>();
 
   const candidates: LatestEntry[] = [
@@ -49,14 +47,6 @@ export default async function AgoraPage() {
       href: "/materias/" + m.slug,
       category: m.section,
       date: m.publishedAt,
-    })),
-    ...socialPosts.map((p) => ({
-      id: "instagram-" + p.id,
-      title: titleFor(p),
-      summary: summaryFor(p),
-      href: "/publicacoes/" + p.id,
-      category: "Publicação do Instagram",
-      date: p.published_at,
     })),
     ...[
       ...radar.sections.what_changed,
