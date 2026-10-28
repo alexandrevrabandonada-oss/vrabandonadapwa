@@ -18,6 +18,7 @@ import "./portal-v2.css";
 import "./editorial-v4.css";
 import "./portal-mobile-v5.css";
 import "./experience-v6.css";
+import "./editorial-cards-v7.css";
 
 const siteUrl = getSiteUrl();
 
