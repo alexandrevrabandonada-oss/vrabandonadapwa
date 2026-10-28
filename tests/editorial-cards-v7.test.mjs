@@ -16,7 +16,7 @@ test("a rota Casos exibe investigações publicadas sem depender da existência 
   assert.ok(page.includes("Reportagens investigativas"));
   assert.ok(page.includes('contextLabel={article.investigationStatus === "ongoing"'));
   assert.ok(navigation.includes('{ href: "/dossies", label: "Casos" }'));
-  assert.ok(page.includes('getPublishedDossiers()'));
+  assert.ok(page.includes('getPublicDossierCatalogState()'));
   assert.ok(page.includes("groups.map((group)"));
 });
 
