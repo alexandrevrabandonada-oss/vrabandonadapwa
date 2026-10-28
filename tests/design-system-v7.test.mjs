@@ -7,7 +7,7 @@ const tokens = read("app/design-tokens.css");
 const site = read("lib/site.ts");
 
 function luminance(hex) {
-  const parts = hex.match(/[a-f\\d]{2}/gi).map((x) => parseInt(x, 16) / 255);
+  const parts = hex.match(/[a-f\d]{2}/gi).map((x) => parseInt(x, 16) / 255);
   return parts.reduce((n, x, i) => n + (x <= .04045 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4) * [.2126,.7152,.0722][i], 0);
 }
 function contrast(a, b) {
@@ -16,9 +16,10 @@ function contrast(a, b) {
   return (light + .05) / (dark + .05);
 }
 function color(name) {
-  const m = tokens.match(new RegExp(name + ":\\s*(#[0-9a-fA-F]{6})"));
-  assert.ok(m, name + " missing from token file");
-  return m[1];
+  const line = tokens.split("\n").find((entry) => entry.trim().startsWith(name + ":"));
+  const color = line?.match(/#[0-9a-fA-F]{6}/);
+  assert.ok(color, name + " missing from token file");
+  return color[0];
 }
 
 test("base cromática tem contraste AA de texto e ações", () => {
@@ -42,7 +43,7 @@ test("tokens são carregados antes de todos os sistemas visuais específicos", (
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
   for (const path of ["app/experience-v6.css", "app/portal-v2.css", "components/editorial-navigation.css", "app/materias.css"]) {
-    assert.match(read(path), /var\\(--ds-/);
+    assert.match(read(path), /var\(--ds-/);
   }
   assert.match(tokens, /prefers-reduced-motion/);
   assert.match(tokens, /:focus-visible/);
@@ -56,21 +57,21 @@ test("Acervo e Bairros usam uma única estrutura de cabeçalho responsiva e aces
     assert.doesNotMatch(page, /<header className="vr6-hub__head">/);
     assert.match(page, /navigationLabel=/);
   }
-  assert.match(component, /<h1>\\{title\\}<\\/h1>/);
-  assert.match(component, /aria-label=\\{navigationLabel\\}/);
-  assert.match(component, /item\\.href\\.startsWith\\("#"\\)/);
-  assert.match(component, /<Link href=\\{item\\.href\\}/);
+  assert.match(component, /<h1>\{title\}<\/h1>/);
+  assert.match(component, /aria-label=\{navigationLabel\}/);
+  assert.match(component, /item\.href\.startsWith\("#"\)/);
+  assert.match(component, /<Link href=\{item\.href\}/);
 });
 
 test("barra móvel oferece quatro tarefas distintas mais Menu, sem excluir Notícias", () => {
-  const match = site.match(/mobileNav:\\s*\\[([\\s\\S]*?)\\]\\s*satisfies SiteLink\\[\\]/);
+  const match = site.match(/mobileNav:\s*\[([\s\S]*?)\]\s*satisfies SiteLink\[\]/);
   assert.ok(match);
   const section = match[1];
-  assert.equal((section.match(/\\{\\s*href:/g) ?? []).length, 4);
+  assert.equal((section.match(/\{\s*href:/g) ?? []).length, 4);
   for (const route of ['"/"', '"/agora"', '"/dossies"', '"/buscar"']) assert.ok(section.includes("href: " + route));
-  assert.doesNotMatch(section, /href: "\\/noticias"/);
-  assert.match(site, /href: "\\/noticias"/);
-  assert.match(read("components/mobile-bottom-nav.tsx"), /<SiteMenu variant="mobile"\\s*\\/>/);
+  assert.doesNotMatch(section, /href: "\/noticias"/);
+  assert.match(site, /href: "\/noticias"/);
+  assert.match(read("components/mobile-bottom-nav.tsx"), /<SiteMenu variant="mobile"\s*\/>/);
   assert.match(read("components/mobile-bottom-nav.tsx"), /Investigações em acompanhamento/);
 });
 
