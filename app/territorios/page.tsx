@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
+import { EditorialHubIntro } from "@/components/editorial-hub-intro";
 import { EditorialTerritoryIndex } from "@/components/editorial-navigation";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedEditorialTerritories } from "@/lib/territories/editorial";
@@ -38,17 +39,18 @@ export default async function TerritoriesPage() {
 
   return (
     <Container className="vr6-hub territories-page">
-      <header className="vr6-hub__head">
-        <p className="vr6-eyebrow">VOLTA REDONDA · JORNALISMO POR BAIRRO</p>
-        <h1>A cidade, lugar por lugar.</h1>
-        <p>Parta de um bairro e encontre a cobertura relacionada. Um local citado não é necessariamente o local principal do acontecimento.</p>
-        <nav className="vr6-hub__jump" aria-label="Explorar bairros">
-          {newEditorialPlaces.length > 0 ? <a href="#index-bairros-titulo">Bairros nas reportagens</a> : null}
-          {territories.length ? <a href="#lugares-documentados">Lugares documentados</a> : null}
-          <Link href="/buscar">Pesquisar a cidade ↗</Link>
-          <Link href="/noticias">Notícias ↗</Link>
-        </nav>
-      </header>
+      <EditorialHubIntro
+        kicker="VOLTA REDONDA · JORNALISMO POR BAIRRO"
+        title="A cidade, lugar por lugar."
+        description="Parta de um bairro e encontre a cobertura relacionada. Um local citado não é necessariamente o local principal do acontecimento."
+        navigationLabel="Explorar bairros"
+        links={[
+          ...(newEditorialPlaces.length > 0 ? [{ href: "#index-bairros-titulo", label: "Bairros nas reportagens" }] : []),
+          ...(territories.length > 0 ? [{ href: "#lugares-documentados", label: "Lugares documentados" }] : []),
+          { href: "/buscar", label: "Pesquisar a cidade ↗" },
+          { href: "/noticias", label: "Notícias ↗" },
+        ]}
+      />
 
       <EditorialTerritoryIndex territories={newEditorialPlaces} />
 
