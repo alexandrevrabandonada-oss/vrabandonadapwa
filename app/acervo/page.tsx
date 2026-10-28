@@ -14,7 +14,7 @@ import { getMaterias } from "@/lib/materias";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getArchiveAssetTypeLabel, getArchiveFilterOptions } from "@/lib/archive/navigation";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
-import { getPublishedArchiveAssets, getPublishedArchiveFilteredAssets } from "@/lib/archive/queries";
+import { filterPublishedArchiveAssets, getPublicArchiveCatalogState } from "@/lib/archive/queries";
 
 export const metadata: Metadata = {
   title: "Acervo de reportagens, documentos e fontes",
@@ -50,14 +50,15 @@ export default async function ArchivePage({ searchParams }: PageProps) {
   const activePlace = incoming.place ?? "";
   const activeMemory = incoming.memory ?? "";
   const hasFilters = Boolean(activeType || activeYear || activePlace || activeMemory);
-  const [articles, allAssets, collections, memoryItems, editorialItems] = await Promise.all([
+  const [articles, archiveCatalog, collections, memoryItems, editorialItems] = await Promise.all([
     getMaterias(),
-    getPublishedArchiveAssets(),
+    getPublicArchiveCatalogState(),
     getPublishedArchiveCollections(),
     getPublishedMemoryItems(),
     getPublishedEditorialItems(),
   ]);
-  const selectedAssets = await getPublishedArchiveFilteredAssets({
+  const { assets: allAssets, availability: archiveAvailability } = archiveCatalog;
+  const selectedAssets = filterPublishedArchiveAssets(allAssets, {
     assetType: activeType || undefined,
     year: activeYear,
     place: activePlace || undefined,
@@ -90,6 +91,13 @@ export default async function ArchivePage({ searchParams }: PageProps) {
       <EditorialAcervoIndex articles={articles} />
       <RevealSourceFromHash />
       <EditorialSourceIndex articles={articles} />
+
+      {archiveAvailability !== "available" ? (
+        <section className="vr6-empty-note" role="status" aria-label="Disponibilidade dos documentos">
+          <strong>{archiveAvailability === "unavailable" ? "Catálogo documental temporariamente indisponível." : "Catálogo documental não conectado neste ambiente."}</strong>
+          <p>Não foi possível confirmar os documentos publicados. Isso não significa que o acervo esteja vazio. As reportagens verificadas e suas fontes continuam disponíveis acima.</p>
+        </section>
+      ) : null}
 
       <section className="vr6-hub__section" id="documentos" aria-labelledby="vr6-documents-title">
         <p className="vr6-eyebrow">DOCUMENTAÇÃO PUBLICADA</p>
@@ -153,7 +161,11 @@ export default async function ArchivePage({ searchParams }: PageProps) {
           </div>
         ) : (
           <div className="vr6-empty-note">
-            {hasFilters ? "Nenhum documento corresponde aos filtros. Limpe os filtros e tente novamente." : "Documentos e anexos em organização. Nada de registros fictícios: consulte as reportagens e as fontes públicas acima."}
+            {archiveAvailability !== "available"
+              ? "A consulta documental está indisponível. Consulte as reportagens e fontes públicas acima."
+              : hasFilters
+                ? "Nenhum documento corresponde aos filtros. Limpe os filtros e tente novamente."
+                : "Documentos e anexos em organização. Nada de registros fictícios: consulte as reportagens e as fontes públicas acima."}
           </div>
         )}
       </section>
