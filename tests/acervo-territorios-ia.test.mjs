@@ -38,7 +38,7 @@ test("Acervo é índice de publicações com documentos complementares",()=>{
   assert.match(page,/archive_assets|allAssets/);
   assert.match(page,/Documentos e anexos em organização/);
   assert.match(page,/EditorialSourceIndex articles=\{articles\}/);
-  assert.match(page,/getPublishedArchiveFilteredAssets/);
+  assert.match(page,/filterPublishedArchiveAssets/);
 });
 test("Bairros não são inferidos do corpo por regex e expõem origem verificável",()=>{
   const helper=read("lib/territories/editorial.ts");
