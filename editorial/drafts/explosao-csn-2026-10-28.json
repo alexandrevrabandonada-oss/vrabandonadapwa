@@ -2,8 +2,8 @@
   "slug": "explosao-csn-ferro-gusa-umidade-volta-redonda-28-outubro-2026",
   "kind": "news",
   "title": "Explosão na CSN provoca fumaça em Volta Redonda; bombeiros não encontram vítimas e causas seguem sob apuração",
-  "subtitle": "Reação durante descarregamento de ferro-gusa na Usina Presidente Vargas gerou estrondo e fumaça visível fora da unidade. O INEA foi acionado; composição da fumaça e eventuais impactos ainda não estão esclarecidos.",
-  "summary": "Ocorrência por volta de 13h30 desta quarta-feira (28) envolveu descarregamento de gusa de um carro-torpedo no Kisch Pit. A CSN aponta contato do material quente com umidade; bombeiros não encontraram vítimas nem chamas remanescentes. A apuração sobre causas e impactos continua.",
+  "subtitle": "Reação no Kisch Pit da Usina Presidente Vargas assustou moradores. Bombeiros não encontraram vítimas; Polícia Civil anunciou investigação e perícia, ainda sem resultado público conhecido.",
+  "summary": "Uma forte reação durante descarregamento de gusa provocou estrondo e fumaça na CSN. Bombeiros não encontraram vítimas, a empresa aponta contato do material quente com umidade e a Polícia Civil informou que investiga a ocorrência.",
   "section": "Trabalho e meio ambiente",
   "author": "VR Abandonada",
   "status": "draft",
@@ -54,6 +54,11 @@
       "label": "O Dia — relatos do estrondo em bairros de Volta Redonda, 28/10/2026 às 16h28",
       "url": "https://odia.ig.com.br/volta-redonda/2026/10/7317084-explosao-na-csn-assusta-moradores-de-volta-redonda.html",
       "consultedAt": "2026-10-28"
+    },
+    {
+      "label": "Agência CNN Brasil via Sim Notícias — Polícia Civil investiga e informa perícia planejada após rescaldo, 28/10/2026, 18h45",
+      "url": "https://simnoticias.com.br/cnn-brasil/policia-investiga-explosao-apos-reacao-quimica-na-csn-em-volta-redonda-rj/",
+      "consultedAt": "2026-10-28"
     }
   ],
   "blocks": [
@@ -76,6 +81,14 @@
     {
       "type": "paragraph",
       "text": "A explicação comunicada pela empresa descreve o mecanismo imediato da reação, mas a própria CSN diz que as causas do acidente continuam sendo apuradas. Ainda não foi divulgado um relatório técnico conclusivo que esclareça as condições operacionais do poço e os controles existentes para impedir o contato de gusa quente com umidade."
+    },
+    {
+      "type": "heading",
+      "text": "Polícia Civil investiga e prevê perícia"
+    },
+    {
+      "type": "paragraph",
+      "text": "A Polícia Civil do Rio de Janeiro informou, segundo reportagem da Agência CNN Brasil republicada pelo Sim Notícias na noite desta quarta-feira, que investiga a ocorrência. A polícia disse que a perícia seria realizada no local depois do encerramento do rescaldo do Corpo de Bombeiros. Até esta revisão, não há confirmação pública de que a perícia tenha sido concluída nem laudo disponível. A abertura da investigação não constitui, por si só, indicação de crime ou responsabilização de pessoas."
     },
     {
       "type": "heading",
@@ -107,7 +120,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Por que havia excesso de umidade na área de descarregamento de material a alta temperatura? Quais rotinas de inspeção, drenagem, isolamento e controle de risco estavam previstas e foram cumpridas? A operação foi interrompida e que critérios foram utilizados para retomá-la? O INEA realizou vistoria ou medições e há laudos sobre materiais liberados no ar e possíveis efeitos no entorno? Quando a CSN e os órgãos públicos divulgarão conclusões verificáveis?"
+      "text": "Por que havia excesso de umidade na área de descarregamento de material a alta temperatura? Quais rotinas de inspeção, drenagem, isolamento e controle de risco estavam previstas e foram cumpridas? A operação foi interrompida e que critérios foram utilizados para retomá-la? O INEA realizou vistoria ou medições e há laudos sobre materiais liberados no ar e possíveis efeitos no entorno? A perícia policial já ocorreu e, se ocorreu, qual resultado pode ser publicado? Quando a CSN e os órgãos públicos divulgarão conclusões verificáveis?"
     },
     {
       "type": "paragraph",
@@ -118,6 +131,7 @@
   "editorialNotes": {
     "publicationGate": "Publicação somente após autorização editorial: o arquivo permanece em editorial/drafts com reviewed=false, status=draft, publishedAt=null; o payload público deverá ser criado separadamente em content/materias com data real e revisão explícita, sem incluir editorialNotes.",
     "verificationPending": [
+      "Confirmar com a Polícia Civil número de procedimento, ocorrência, realização da perícia e laudo; não afirmar que houve perícia concluída, crime ou responsabilidade.",
       "Confirmar no INEA horário de notificação pela CSN, ida de equipe, dados de campo, laudos e eventual procedimento sancionador, sem presumir infração",
       "Solicitar nota/documentos próprios do INEA: vistorias, medições, avaliação sobre ar/água, eventual auto de infração e data da decisão",
       "Solicitar à CSN registros e laudo de causa, controles de umidade, segurança operacional, paralisação/retomada e registros de eventual assistência",
@@ -126,9 +140,9 @@
       "Checar se houve novos registros sobre feridos, impactos ou sanções antes de concluir manchete e data",
       "Checar localização territorial principal sem inferir bairro apenas a partir da área ampla da UPV"
     ],
-    "imageStatus": "Capa real ainda não selecionada: NÃO reutilizar fotos do acidente de 2019 ou imagens de terceiros sem autorização. Priorizar mídia original do VR Abandonada com origem verificada, senão usar opengraph editorial gerado pelo portal.",
+    "imageStatus": "Capa da ocorrência de 28/10/2026 ainda não foi recuperada como arquivo original controlado pelo projeto. Busca por imagens retornou fotos de incêndios de fevereiro/outubro de 2023 e novembro de 2024: NÃO USAR. Não reproduzir foto creditada ao VR Abandonada na Folha antes de recuperar arquivo original. Enquanto isso, usar OpenGraph editorial tipográfico do portal.",
     "riskNotes": "Não afirmar que INEA já autuou CSN; não atribuir composição tóxica à fumaça; não declarar ausência definitiva de impacto ambiental ou que a causa-raiz está definida.",
     "territorialCoverage": "Barulho relatado por veículos locais na Vila Mury, Vila Santa Cecília, Retiro, Beira-Rio, Aterrado, Sessenta e Belmonte. São locais de relatos, NÃO locais da explosão nem evidências de impacto ambiental medido. Não criar links públicos para /territorios/ sem validar a existência das páginas correspondentes.",
-    "sourceReview": "Recheque em 28/10/2026: Reuters e Agência Estado coincidem com nota CSN/CBMERJ. Foco Regional publica informação às 14h22; Diário do Vale e O Dia listam bairros com relatos. SBT atribui ao INEA confirmação do acionamento. A página geral do INEA é apenas contexto normativo, não relatório desta ocorrência."
+    "sourceReview": "Recheque em 28/10/2026: Reuters e Agência Estado coincidem com nota CSN/CBMERJ. Foco Regional publica informação às 14h22; Diário do Vale e O Dia listam bairros com relatos. SBT atribui ao INEA confirmação do acionamento. A página geral do INEA é apenas contexto normativo, não relatório desta ocorrência. Atualização às 18h45: Agência CNN Brasil, via Sim Notícias, relata investigação e perícia prevista após rescaldo, sem laudo confirmado."
   }
 }

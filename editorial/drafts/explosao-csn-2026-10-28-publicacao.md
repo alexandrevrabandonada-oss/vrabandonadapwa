@@ -16,7 +16,7 @@ A CSN afirma que o contato do material quente com excesso de umidade no solo pro
 
 O INEA foi acionado para acompanhar a ocorrência, segundo o SBT News. Mas ainda faltam respostas documentadas: por que havia umidade no local? Quais protocolos de prevenção estavam previstos e foram cumpridos? Qual a composição da fumaça que foi vista fora da usina?
 
-**Sem feridos, segundo os Bombeiros. Sem respostas conclusivas sobre prevenção e impactos.**
+**Sem vítimas na vistoria dos Bombeiros. A Polícia Civil informou que investiga a ocorrência e prevê perícia após o rescaldo.**
 
 O VR Abandonada seguirá acompanhando e publicará atualizações com fontes e documentos.
 
@@ -55,3 +55,8 @@ O VR Abandonada seguirá acompanhando e publicará atualizações com fontes e d
 **INEA:** Em qual horário o órgão foi acionado e por qual canal? Equipe compareceu à usina? Há relatório de atendimento, análise do ar, levantamento de material liberado e avaliação de riscos ao entorno? Foi instaurado procedimento de fiscalização ou auto de infração? Se houver, qual o número, data e base técnica, respeitados os prazos do processo?
 
 **CBMERJ:** Há número de ocorrência, relatório de atendimento e confirmação de horário? Quais áreas foram vistoriadas e o que foi constatado? Houve recomendação ou interdição? O registro de ausência de vítimas cobre apenas o local no momento da vistoria?
+
+## Atualização policial — 28/10/2026, 18h45
+- Agência CNN Brasil (republicação Sim Notícias): https://simnoticias.com.br/cnn-brasil/policia-investiga-explosao-apos-reacao-quimica-na-csn-em-volta-redonda-rj/
+- Polícia Civil informou investigação e perícia prevista após rescaldo. Não há laudo público confirmado nesta checagem. Não afirmar crime, culpa ou perícia concluída.
+- Imagens encontradas em buscadores incluem incêndios de 2023 e 2024, inadmissíveis como capa da notícia atual. Preferir original verificado ou card tipográfico do portal.
