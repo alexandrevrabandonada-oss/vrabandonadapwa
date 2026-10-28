@@ -24,7 +24,7 @@ test("home não repete matéria em destaque dentro de investigações",()=>{
  const s=read("app/page.tsx");
  assert.match(s,/story\.slug !== lead\?\.id/);
  assert.match(s,/investigationLead/);
- assert.match(s,/Investigação em destaque nesta edição/);
+ assert.match(s,/Investigação em acompanhamento/);
  assert.match(s,/item\.category\.startsWith\("Investigação"\)/);
 });
 test("acervo vazio não é uma tela de estatísticas zeradas",()=>{
