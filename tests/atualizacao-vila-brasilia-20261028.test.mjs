@@ -11,7 +11,9 @@ test("notícia original mantém URL, data inicial e registro de atualização",(
  assert.equal(article.publishedAt,"2026-10-28T00:37:26-03:00");
  assert.equal(article.updates[0].label,"Publicação inicial");
  assert.ok(Date.parse(article.updatedAt)>Date.parse(article.publishedAt));
- assert.equal(article.updates.length,2);
+ assert.ok(article.updates.length>=2, "investigação viva não deve eliminar entradas anteriores");
+ assert.equal(article.updates[1].label,"Reforços e operação do Bope — 28/10");
+ assert.ok(article.updates.every((entry,i,arr)=>i===0 || Date.parse(entry.date)>=Date.parse(arr[i-1].date)), "atualizações devem permanecer cronológicas");
  assert.deepEqual(validateMateria(article,slug+".json"),[]);
 });
 test("reforços anunciados não são apresentados como efetivamente chegados",()=>{
