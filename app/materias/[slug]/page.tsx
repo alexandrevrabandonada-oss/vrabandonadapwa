@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
-import { getMateria, getMaterias, materiaKind, materiaKindLabel, publishedDate } from "@/lib/materias";
+import { getMateria, getMaterias, materiaKind, materiaKindLabel, publishedDate, publishedDateTime } from "@/lib/materias";
 import { getSiteUrl } from "@/lib/site-url";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -46,7 +46,7 @@ export default async function MateriaPage({ params }: Props) {
     mainEntityOfPage: canonical,
     url: canonical,
     image: [getSiteUrl() + (story.cover?.src || "/materias/" + slug + "/opengraph-image")],
-    author: { "@type": "Person", name: story.author },
+    author: { "@type": "Organization", name: story.author },
     publisher: { "@type": "Organization", name: "VR Abandonada", url: getSiteUrl() },
     about: { "@type": "Place", name: "Volta Redonda, Rio de Janeiro, Brasil" },
     citation: story.sources.filter((s) => /^https?:\/\//.test(s.url)).map((s) => s.url),
@@ -64,9 +64,10 @@ export default async function MateriaPage({ params }: Props) {
         <h1>{story.title}</h1>
         <p className="vr-materia__dek">{story.subtitle}</p>
         <div className="vr-materia__byline">Por {story.author} · {publishedDate(story.publishedAt)}
-          {story.updatedAt && story.updatedAt !== story.publishedAt ? " · Atualizada em " + publishedDate(story.updatedAt) : ""}
+          {story.updatedAt && story.updatedAt !== story.publishedAt ? " · Atualizada em " + publishedDateTime(story.updatedAt) : ""}
         </div>
         {story.investigationStatus === "ongoing" && <p className="vr-materia__status">● Investigação em acompanhamento · Respostas e documentos serão incorporados nesta mesma página</p>}
+        {materiaKind(story) === "news" && story.updatedAt && <p className="vr-materia__status">● Notícia atualizada · Novos fatos e documentos são registrados neste endereço</p>}
       </header>
       {story.cover && (
         <figure className="vr-materia__cover">
@@ -85,10 +86,10 @@ export default async function MateriaPage({ params }: Props) {
             return <p key={idx}>{block.text}</p>;
           })}
           {story.updates && story.updates.length > 0 && (
-            <section className="vr-materia__timeline" aria-label="Histórico de atualizações da investigação">
-              <h2>Histórico desta investigação</h2>
+            <section className="vr-materia__timeline" aria-label="Histórico de atualizações da publicação">
+              <h2>{materiaKind(story) === "news" ? "Atualizações desta notícia" : "Histórico desta investigação"}</h2>
               <ol>{story.updates.map((entry, index) => <li key={index}>
-                <time dateTime={entry.date}>{publishedDate(entry.date)}</time>
+                <time dateTime={entry.date}>{publishedDateTime(entry.date)}</time>
                 <strong>{entry.label}</strong><p>{entry.text}</p>
               </li>)}</ol>
             </section>

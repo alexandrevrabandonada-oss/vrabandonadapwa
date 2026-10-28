@@ -274,3 +274,11 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Menu do site distingue Notícias, Últimas, Investigações e Acervo. O painel privado mostra quantidade de notícias, e o agente editorial oferece modo de preparar notícias diretamente de uma legenda/post/release/documento, sem chaves da Meta.
 - Nenhuma notícia real nova foi inventada ou importada nesta migração; a editoria pode ficar vazia até a primeira notícia aprovada.
 - Verificar CI, preview, UX móvel e link canônico; deploy só após merge. Na primeira notícia real testar capa, vídeo/Reel (se licenciado), contraditório e rastreio da indexação no Search Console.
+
+
+## 28/10/2026 — Notícia viva: atualização visível na editoria e RSS
+- Depois da primeira notícia do 28º BPM e sua segunda versão com boletins oficiais de 28/10, detectou-se que `/noticias` mostrava somente a data original e ordenava apenas por `publishedAt`; a linha do tempo dizia "investigação" mesmo em notícias. O RSS também ordenava exclusivamente pelo instante de publicação original.
+- Corrigir sem alterar conteúdos, datas ou slugs: listagem de notícias ordena por `updatedAt || publishedAt`, preserva a data inicial e mostra "Atualizada em" com horário de Brasília; página de matéria mostra "Notícia atualizada" e a linha do tempo passa a chamar "Atualizações desta notícia"; investigações mantêm texto próprio.
+- RSS preserva `pubDate` original e agrega `dc:date` com o último instante modificado, priorizando itens atualizados no XML. `NewsArticle`/Open Graph/sitemap já utilizavam dataModified.
+- Fontes dos boletins de 28/10 conferidas independentemente em comunicados Prefeitura nº 12814/12815 e Diário do Vale; quatro viaturas e >=16 agentes permanecem como REFORÇOS ANUNCIADOS, não chegada verificada. Não criar nova matéria nem republicar a notícia, somente melhorar a representação de atualização.
+- Pendências: HTTP público indisponível a este ambiente por DNS, portanto Search Console/indexação e renderização real no celular não confirmados. Verificar CI e preview antes de merge, depois deploy produção READY.

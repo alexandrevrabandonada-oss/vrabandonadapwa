@@ -82,3 +82,10 @@ export function materiaKindLabel(article: Materia): string {
   const kind = materiaKind(article);
   return kind === "news" ? "Notícia" : kind === "investigation" ? "Investigação" : "Entenda";
 }
+
+/** Date and clock time in the publication's local timezone for transparent updates. */
+export function publishedDateTime(value: string) {
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "long", timeStyle: "short", timeZone: "America/Sao_Paulo"
+  }).format(new Date(value));
+}
