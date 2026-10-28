@@ -1,0 +1,94 @@
+/*
+ * VR Abandonada V7.1 — superfície editorial única.
+ * Um mesmo contrato visual para reportagens, bairros, coleções, dossiês
+ * e documentos, sem nivelar seus significados nem apagar mídias reais.
+ */
+.vr7-editorial-card {
+  min-width: 0;
+  border: var(--ds-stroke);
+  border-radius: var(--ds-radius-card);
+  background: var(--ds-surface);
+  color: var(--ds-text);
+  overflow-wrap: anywhere;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+.vr7-editorial-card:focus-within {
+  border-color: var(--ds-focus);
+  box-shadow: var(--ds-shadow-focus);
+}
+@media (hover: hover) and (pointer: fine) {
+  .vr7-editorial-card:hover {
+    border-color: var(--ds-border-strong);
+    background-color: var(--ds-surface-raised);
+  }
+}
+.vr7-editorial-card :is(h3,h4) {
+  text-wrap: balance;
+  letter-spacing: -.035em;
+  line-height: 1.2;
+}
+.vr7-editorial-card :is(h3,h4) a {
+  color: var(--ds-text);
+  text-decoration: none;
+}
+.vr7-editorial-card :is(h3,h4) a:hover {
+  color: var(--ds-accent-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.vr7-editorial-card :is(p, .vr7-editorial-card__meta) {
+  max-width: var(--ds-text-measure);
+}
+.vr7-editorial-card__meta { gap: var(--ds-space-2) var(--ds-space-4); }
+.vr7-editorial-card__meta time { font-variant-numeric: tabular-nums; }
+.vr7-editorial-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2) var(--ds-space-3);
+  margin-top: auto;
+}
+.vr7-editorial-card__actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ds-tap-target);
+  padding: .42rem .38rem;
+  font-weight: 800;
+  color: var(--ds-accent);
+}
+.vr7-editorial-card__actions a:first-child { color: var(--ds-accent-hover); }
+.vr7-editorial-card .archive-card__action,
+.vr7-editorial-card .dossier-card__body > a.button-secondary,
+.vr7-editorial-card .theme-hub-card__body > a.button-secondary,
+.vr7-editorial-card .archive-collection-card__body > a.button-secondary {
+  min-height: var(--ds-tap-target);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.vr7-editorial-card .archive-card__body,
+.vr7-editorial-card .dossier-card__body,
+.vr7-editorial-card .theme-hub-card__body,
+.vr7-editorial-card .archive-collection-card__body {
+  min-width: 0;
+}
+.vr7-editorial-card .archive-card__media:empty { display: none; }
+.vr3-dossiers__section > .vr3-dossiers__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: var(--ds-space-3);
+}
+.vr3-dossiers__section > .vr3-dossiers__list .vr-index__item {
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .vr3-dossiers__section > .vr3-dossiers__list {
+    grid-template-columns: minmax(0,1fr);
+  }
+  .vr7-editorial-card__actions a {
+    min-height: var(--ds-tap-target);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vr7-editorial-card { transition: none; }
+}
