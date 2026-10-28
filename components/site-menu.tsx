@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { PwaInstallButton } from "@/components/pwa-install-button";
@@ -21,6 +21,8 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
   const pathname = usePathname();
   const panelId = useId();
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setOpen(false);
@@ -28,15 +30,45 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
 
   useEffect(() => {
     if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    document.body.style.overflow = "hidden";
+    const dialog = dialogRef.current;
+    dialog?.querySelector<HTMLButtonElement>(".site-menu__close")?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab" || !dialog) return;
+      const focusables = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter((element) => element.getClientRects().length > 0);
+      if (!focusables.length) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+      if (previouslyFocused?.isConnected) previouslyFocused.focus();
+      else triggerRef.current?.focus();
+    };
   }, [open]);
 
   const triggerClassName = useMemo(() => {
@@ -49,6 +81,7 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
     <>
       <button
         type="button"
+        ref={triggerRef}
         className={triggerClassName}
         aria-expanded={open}
         aria-controls={panelId}
@@ -63,6 +96,8 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
         <div className="site-menu__overlay" role="presentation" onClick={() => setOpen(false)}>
           <aside
             id={panelId}
+            ref={dialogRef}
+            tabIndex={-1}
             className="site-menu"
             role="dialog"
             aria-modal="true"

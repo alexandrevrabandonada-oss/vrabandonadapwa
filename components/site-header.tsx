@@ -34,6 +34,9 @@ export function SiteHeader() {
         </nav>
 
         <div className="site-header__tools vr2-header__tools">
+          <Link href="/buscar" className="vr4-header-search" aria-label="Buscar no VR Abandonada">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 5 5"/></svg>
+          </Link>
           <ReadingAssistantTrigger className="vr2-header__listen" />
           <SiteMenu variant="header" />
         </div>

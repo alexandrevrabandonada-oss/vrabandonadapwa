@@ -1,0 +1,98 @@
+/* Editorial V4 — padronização da home e navegação, sem alterar dados públicos.
+   Carregado depois do legado para evitar nova sequência de overrides dispersos. */
+:root {
+  --vr4-page: #111214;
+  --vr4-panel: #1d1e1e;
+  --vr4-gold: #f2c338;
+  --vr4-ink: #eeeae2;
+  --vr4-border: #49463e;
+  --vr4-muted: #c9c4ba;
+  --vr4-focus: #ffda63;
+}
+.vr4-home-intro {
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:1rem 2.5rem; padding:clamp(1rem,2.5vw,1.65rem) 0 clamp(.95rem,2vw,1.5rem);
+  border-bottom:1px solid var(--vr4-border); margin-bottom:clamp(1.25rem,2.8vw,2rem);
+}
+.vr4-home-intro>div {min-width:0}
+.vr4-home-intro h1 {
+  font-size:clamp(1.8rem,4vw,3rem);
+  line-height:1.06; margin:.38rem 0 .35rem; font-weight:950;
+  letter-spacing:-.06em; text-transform:none; overflow-wrap:break-word;
+}
+.vr4-home-intro h1 span {color:var(--vr4-gold)}
+.vr4-home-intro p {font-size:clamp(.83rem,1.3vw,.99rem);line-height:1.48;color:var(--vr4-muted);margin:0;max-width:57ch}
+.vr4-home-shortcuts {display:flex;flex-wrap:wrap;gap:.4rem;min-width:0;align-items:center;justify-content:flex-end}
+.vr4-home-shortcuts a {
+  display:inline-flex;align-items:center;justify-content:center;gap:.2rem;
+  min-height:42px;padding:.55rem .7rem;border-radius:6px;border:1px solid var(--vr4-border);
+  color:var(--vr4-ink);font-size:.8rem;font-weight:850;white-space:nowrap;
+}
+.vr4-home-shortcuts a:first-child {border-color:var(--vr4-gold);color:var(--vr4-gold);background:#2c281c}
+.vr4-home-shortcuts a:hover, .vr4-home-shortcuts a:focus-visible {border-color:var(--vr4-focus);color:var(--vr4-focus)}
+.vr4-home-intro + .vr2-section {margin-bottom:clamp(1.7rem,4vw,3rem)}
+.vr4-home-intro + .vr2-section .vr2-section__heading {margin-bottom:.8rem;padding-bottom:.7rem}
+.vr4-home-intro + .vr2-section .vr2-section__heading h2 {font-size:clamp(1.65rem,3vw,2.6rem);text-transform:none;letter-spacing:-.047em}
+.vr4-lead--text-only {display:block;background:linear-gradient(135deg,#22211d,#1b1c1c 60%);border-left:4px solid var(--vr4-gold)}
+.vr4-lead--text-only .vr2-lead__content {min-height:100%;padding:clamp(1.1rem,3vw,2.2rem)}
+.vr4-lead--text-only h3 {font-size:clamp(1.65rem,3.2vw,2.65rem);line-height:1.14;letter-spacing:-.05em;text-wrap:pretty}
+.vr4-lead--text-only p {max-width:62ch}
+.vr2-lead__graphic {display:none} /* no pseudo-capa de logo: notícia sem foto continua texto. */
+.vr2-lead__visual img {object-fit:cover}
+/* Cabeçalho: busca sempre a um toque no celular, sem um segundo menu no topo. */
+.vr4-header-search {display:none;align-items:center;justify-content:center;width:40px;height:42px;flex:none;border:1px solid #484741;border-radius:7px;color:var(--vr4-ink)}
+.vr4-header-search svg {width:19px;height:19px}
+.vr4-header-search:hover,.vr4-header-search:focus-visible {border-color:var(--vr4-gold);color:var(--vr4-gold)}
+.vr2-bottom-nav__link[aria-current="page"] {font-weight:900}
+.vr2-bottom-nav__link:focus-visible {outline:2px solid var(--vr4-focus);outline-offset:-2px}
+.site-menu__overlay {overscroll-behavior:contain}
+.site-menu {overscroll-behavior:contain}
+.site-menu__link[aria-current="page"] {color:var(--vr4-gold);font-weight:900}
+.vr-materia__head h1 {text-wrap:balance}
+.vr-materia__body p,.vr-materia__body li {hyphens:auto;overflow-wrap:break-word}
+@media(max-width:920px) {
+  .vr4-header-search {display:inline-flex}
+  .vr4-home-intro {align-items:flex-start;flex-direction:column}
+  .vr4-home-shortcuts {justify-content:flex-start}
+}
+@media(max-width:640px) {
+  html {scroll-padding-top:4.1rem}
+  .vr2-header .site-menu__trigger {display:none}
+  .vr2-header__inner {min-height:56px;padding-block:.42rem}
+  .vr2-header__tools {gap:.35rem}
+  .vr2-header__listen {padding:.5rem .7rem;min-height:41px}
+  .vr4-header-search {width:41px;height:41px}
+  .vr4-home-intro {padding:.75rem 0 1rem;margin-bottom:1.05rem;gap:.78rem}
+  .vr4-home-intro h1 {font-size:clamp(1.6rem,7.1vw,2.12rem);line-height:1.12;letter-spacing:-.05em;margin:.25rem 0 .35rem}
+  .vr4-home-intro p {font-size:.81rem;line-height:1.43}
+  .vr4-home-intro .vr2-eyebrow {font-size:.62rem;letter-spacing:.085em}
+  .vr4-home-shortcuts {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:.35rem}
+  .vr4-home-shortcuts a {font-size:.73rem;min-height:41px;padding:.45rem .25rem;white-space:normal;text-align:center}
+  .vr4-home-intro + .vr2-section .vr2-section__heading h2 {font-size:1.5rem}
+  .vr4-home-intro + .vr2-section {margin-bottom:1.8rem}
+  .vr2-news-layout {gap:.7rem}
+  .vr4-lead--text-only .vr2-lead__content {padding:1.05rem}
+  .vr4-lead--text-only h3 {font-size:clamp(1.35rem,5.8vw,1.8rem);line-height:1.15;letter-spacing:-.045em}
+  .vr4-lead--text-only .vr2-lead__content p {font-size:.88rem;line-height:1.5}
+  .vr2-lead__visual {aspect-ratio:16/10}
+  .vr2-lead__content {gap:.62rem}
+  .vr2-bottom-nav__link,.vr2-bottom-nav .site-menu__trigger--mobile {height:56px;min-height:56px;font-size:clamp(.64rem,2.8vw,.76rem);gap:.15rem}
+  .vr2-bottom-nav__link svg {width:21px;height:21px}
+  .mobile-bottom-nav.vr2-bottom-nav {padding:.35rem .18rem calc(.3rem + env(safe-area-inset-bottom))}
+  .vr-materia__head {padding-left:.85rem;margin-bottom:1.3rem;border-left-width:4px}
+  .vr-materia__breadcrumbs {margin-bottom:1.2rem;line-height:1.5}
+  .vr-materia__head h1 {font-size:clamp(1.75rem,7.6vw,2.28rem);line-height:1.13;text-transform:none;letter-spacing:-.048em;margin:.55rem 0 .7rem;overflow-wrap:break-word}
+  .vr-materia__dek {font-size:1rem;line-height:1.45}
+  .vr-materia__body p {font-size:1rem;line-height:1.73}
+  .vr-materia__body h2 {font-size:1.42rem;line-height:1.22;text-transform:none;letter-spacing:-.025em}
+  .vr-materia__body .vr-materia__lead {font-size:1.06rem;line-height:1.56}
+  .site-footer {padding-bottom:calc(5rem + env(safe-area-inset-bottom))}
+  .site-menu__overlay {z-index:60}
+  .site-menu {max-height:calc(100dvh - 1rem)}
+}
+@media(max-width:370px) {
+  .vr2-brand__name strong{font-size:.8rem}
+  .vr2-brand__name small{font-size:.5rem;letter-spacing:.04em}
+  .vr4-home-shortcuts a{font-size:.68rem}
+}
+@media(prefers-reduced-motion:reduce){.vr4-home-shortcuts a{transition:none}}
