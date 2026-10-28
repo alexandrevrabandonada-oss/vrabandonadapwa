@@ -22,7 +22,7 @@ test("menu fixo limita cinco colunas e páginas não extrapolam largura",()=>{
 });
 test("home não repete matéria em destaque dentro de investigações",()=>{
  const s=read("app/page.tsx");
- assert.match(s,/story\.slug !== lead\?\.id/);
+ assert.match(s,/visibleFeedIds\.has/);
  assert.match(s,/investigationLead/);
  assert.match(s,/Investigação em acompanhamento/);
  assert.match(s,/item\.category\.startsWith\("Investigação"\)/);
