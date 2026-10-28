@@ -44,6 +44,7 @@ export function AgentEditorialComposer() {
       "1. Separar comprovado, relatado, hipótese e pergunta em aberto. Não inventar declarações, provas ou imagens.",
       "2. Conferir links e datas; incluir a resposta dos envolvidos quando disponível, ou registrar a tentativa/pendência.",
       "3. Quando o pedido for publicável, preparar uma versão que possa ir a content/materias/<slug>.json; usar o modelo já existente, sem conteúdo fictício.",
+      "3A. Registrar bairros verificados no campo territories: [{slug,label,role: main|mentioned}]. Nunca deduzir localidades por regex ou transformar relatos não confirmados em páginas de bairro; menção não comprova relação entre episódios.",
       "4. Só após minha aprovação textual explícita, usar o conector GitHub para abrir/atualizar a PR, validar CI/preview e integrar, observando as permissões.",
       "5. Confirmar Vercel READY e URL canônica; checar SEO, sitemap e feed quando acessíveis; nunca afirmar indexação no Google sem prova.",
       "6. Não alterar banco Supabase, buckets, credenciais nem a PR #7; não depender de tokens da Meta.",

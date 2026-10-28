@@ -18,6 +18,21 @@ export function validateMateria(article, filename = "arquivo.json") {
   if (!article.publishedAt || Number.isNaN(Date.parse(article.publishedAt))) problems.push("publishedAt inválido");
   if (article.updatedAt && Number.isNaN(Date.parse(article.updatedAt))) problems.push("updatedAt inválido");
   if (article.kind !== undefined && !["news", "investigation", "explainer"].includes(article.kind)) problems.push("formato editorial inválido: kind");
+  if (article.territories !== undefined) {
+    if (!Array.isArray(article.territories)) problems.push("territories deve ser lista");
+    else {
+      const used = new Set();
+      for (const entry of article.territories) {
+        if (!entry || typeof entry.slug !== "string" || !slugPattern.test(entry.slug) ||
+            typeof entry.label !== "string" || entry.label.trim().length < 3 ||
+            !["main","mentioned"].includes(entry.role)) problems.push("território editorial inválido");
+        if (entry && typeof entry.slug === "string") {
+          if (used.has(entry.slug)) problems.push("território editorial duplicado");
+          used.add(entry.slug);
+        }
+      }
+    }
+  }
   if (article.investigationStatus !== undefined && !["ongoing", "closed"].includes(article.investigationStatus)) problems.push("investigationStatus inválido");
   if (article.updates !== undefined) {
     if (!Array.isArray(article.updates)) problems.push("updates deve ser lista");

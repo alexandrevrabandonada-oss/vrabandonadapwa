@@ -42,8 +42,8 @@ export const site = {
     {
       title: "Cidade e arquivo",
       items: [
-        { href: "/territorios", label: "Bairros e lugares" },
-        { href: "/acervo", label: "Acervo" },
+        { href: "/territorios", label: "Por bairro" },
+        { href: "/acervo", label: "Acervo público" },
         { href: "/memoria", label: "Memória" },
         { href: "/linha-do-tempo", label: "Linha do tempo" },
         { href: "/buscar", label: "Pesquisar" },

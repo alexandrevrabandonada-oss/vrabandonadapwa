@@ -335,3 +335,12 @@ Problemas observados nas capturas: cabeçalho com marca, busca e Ouvir ocupando 
 5. Testes regressivos para UI, conteúdo e classificação editorial, sem inserir publicações fictícias.
 
 Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação não prova visual mobile. Sem alteração no banco, RLS, domínio, conteúdo investigativo ou arquivos privados.
+
+
+## Sprint 28/10/2026 — Acervo + bairros derivados das matérias
+
+- Revisão de arquitetura: Acervo = índice editorial com camadas documentais; Bairros = índice de recorte territorial com vínculos explícitos por matéria, sem duplicação nem COMUN.
+- Novo `territories[]` com papéis `main` e `mentioned` em matérias Git-first; cobertura inicial de Vila Santa Cecília, Vila Brasília e Água Limpa, distinguindo a menção contextual da notícia de segurança.
+- Páginas editoriais derivadas de bairros em `/territorios/[slug]` coexistem com os hubs existentes do Supabase. Nenhum bairro vazio é inventado.
+- `/acervo` passa a mostrar matérias reais mesmo sem anexos publicados; `/buscar`, homepage, artigo e sitemap participam da mesma taxonomia.
+- Documento canônico da arquitetura: `docs/ARQUITETURA_ACERVO_TERRITORIOS.md`. Verificar CI e produção separadamente. Nesta sprint não escrever no Supabase, não alterar Storage, nem importar conteúdos privados.

@@ -64,3 +64,8 @@ Use o painel interno /interno/agente para organizar uma pauta e copiar o comando
 ## Publicação de notícias (28/10/2026)
 
 As notícias usam o mesmo pipeline Git-first, com `kind: "news"`. O texto do Instagram é ponto de partida, não publicação automática: o agente revisa, classifica, registra as fontes e preserva `instagramUrl` opcional. Após aprovação da versão exata, a matéria aparece no índice `/noticias`, no fluxo `/agora`, na homepage, em `/materias`, sitemap e feed.xml. Investigações usam `kind: "investigation"` e podem manter histórico vivo com `updates`. A antiga `/publicacoes` redireciona a Notícias. Não é necessária conta Meta. Consulte `docs/OPERACAO_NOTICIAS_EDITORIAL.md`.
+
+
+## Vínculos territoriais e acervo (28/10/2026)
+
+Cada matéria publicada pode incluir `territories` com `slug`, `label`, `role=main|mentioned`. A mesma notícia aparece em `/noticias`, `/acervo`, `/materias`, `/buscar`, página territorial e feed sem se duplicar. Escolher manualmente os bairros confirmados; não extrair nomes do texto automaticamente. A camada documental é separada e só admite materiais públicos com direitos e proveniência. Manual: `docs/ARQUITETURA_ACERVO_TERRITORIOS.md`.

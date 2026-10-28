@@ -6,6 +6,7 @@ import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getMaterias, materiaKind, materiaKindLabel, publishedDate } from "@/lib/materias";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
+import { getPublishedEditorialTerritories } from "@/lib/territories/editorial";
 
 export const metadata: Metadata = {
   title: "Jornalismo independente em Volta Redonda",
@@ -43,11 +44,12 @@ const investigationTopics = [
 ];
 
 export default async function HomePage() {
-  const [materias, editorial, dossiers, neighborhoods] = await Promise.all([
+  const [materias, editorial, dossiers, neighborhoods, editorialNeighborhoods] = await Promise.all([
     getMaterias(),
     getPublishedEditorialItems(),
     getPublishedDossiers(),
     getPublishedPlaceHubs(),
+    getPublishedEditorialTerritories(),
   ]);
 
   // Apenas registros publicados: nunca inserir demonstrações ou rascunhos.
@@ -82,6 +84,7 @@ export default async function HomePage() {
   const investigationLead = materias.find((story) => materiaKind(story) === "investigation" && "materia-" + story.slug === lead?.id) ?? null;
   const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0 || investigationLead !== null;
   const featuredNeighborhoods = neighborhoods.slice(0, 5);
+  const coveredNeighborhoods = editorialNeighborhoods.filter((place) => !featuredNeighborhoods.some((hub) => hub.slug === place.slug)).slice(0, 5);
 
   return (
     <Container className="vr2-home">
@@ -216,6 +219,8 @@ export default async function HomePage() {
           <div className="vr2-neighborhoods">
             {featuredNeighborhoods.length ? featuredNeighborhoods.map((place) => (
               <Link key={place.id} href={"/territorios/" + place.slug}>{place.title}<span aria-hidden="true">↗</span></Link>
+            )) : coveredNeighborhoods.length ? coveredNeighborhoods.map((place) => (
+              <Link key={place.slug} href={"/territorios/" + place.slug}>{place.label}<span aria-hidden="true">↗</span></Link>
             )) : (
               <Link href="/territorios">Explorar os territórios da cidade <span aria-hidden="true">↗</span></Link>
             )}

@@ -8,7 +8,7 @@ import { getActorHubActorTypeLabel, getActorHubStatusLabel } from "@/lib/actors/
 import { getPublishedCampaigns } from "@/lib/campaigns/queries";
 import { getCampaignStatusLabel, getCampaignTypeLabel } from "@/lib/campaigns/navigation";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
-import { getMaterias } from "@/lib/materias";
+import { getMaterias, materiaKindLabel } from "@/lib/materias";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getPublishedEditorialEditions } from "@/lib/editions/queries";
 import { getEditionStatusLabel, getEditionTypeLabel } from "@/lib/editions/navigation";
@@ -604,13 +604,13 @@ export const getPublicSearchIndex = cache(async () => {
       title: item.title,
       excerpt: item.summary,
       href: `/materias/${item.slug}`,
-      kindLabel: "Matéria",
-      labels: uniqueLabels([item.section]),
-      territoryLabel: "Volta Redonda",
+      kindLabel: materiaKindLabel(item),
+      labels: uniqueLabels([item.section, ...(item.territories ?? []).map((place) => place.label)]),
+      territoryLabel: item.territories?.find((place) => place.role === "main")?.label ?? "Volta Redonda",
       actorLabel: null,
       updatedAt: item.updatedAt || item.publishedAt,
       featured: false,
-      searchTextParts: [item.subtitle, ...item.blocks.map((block) => block.text)],
+      searchTextParts: [item.subtitle, ...(item.territories ?? []).map((place) => place.label), ...item.blocks.map((block) => block.text)],
     }));
   }
 
