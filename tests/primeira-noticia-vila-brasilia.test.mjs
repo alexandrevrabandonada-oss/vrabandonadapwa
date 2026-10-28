@@ -25,7 +25,7 @@ test("preserva distinção entre fatos confirmados, relatos e críticas",()=>{
   assert.match(full,/não foram confirmados independentemente/i);
   assert.match(full,/não comprova que a mudança tenha sido motivada/i);
   assert.match(full,/não havia sido encaminhada.*solicitação específica/i);
-  assert.match(full,/quando.*informações.*disponíveis antes da invasão/i);
+  assert.match(full,/informações já estavam disponíveis antes da invasão/i);
   assert.match(full,/proteção de vidas/i);
 });
 test("horário do site e notícias separadas de investigações",()=>{
