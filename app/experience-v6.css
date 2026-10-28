@@ -9,7 +9,7 @@
 }
 .vr6-section { padding: clamp(1rem,2.5vw,1.6rem) 0; }
 .vr6-eyebrow { color: var(--vr6-yellow); font-size: .72rem; font-weight: 850; letter-spacing: .09em; margin: 0 0 .4rem; }
-.vr6-section__head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; padding: 0 0 .8rem; border-bottom: 1px solid var(--vr6-border); margin-bottom: .9rem; }
+.vr6-section__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding: 0 0 .8rem; border-bottom: 1px solid var(--vr6-border); margin-bottom: .9rem; }
 .vr6-section__head h2 { font-size: var(--ds-step-h2); line-height: 1.13; letter-spacing: -.05em; margin: 0 0 .38rem; }
 .vr6-section__head p:not(.vr6-eyebrow) { font-size: .9rem; line-height: 1.5; color: var(--vr6-muted); margin: 0; max-width: 65ch; }
 .vr6-count { font-size: .76rem; color: var(--vr6-muted); white-space: nowrap; }
