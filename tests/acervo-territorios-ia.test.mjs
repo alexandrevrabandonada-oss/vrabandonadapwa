@@ -60,3 +60,11 @@ test("Acervo, Bairros e COMUN permanecem distintos",()=>{
   assert.match(doc,/não competir com o COMUN|Não competir com o COMUN/i);
   assert.match(doc,/Não extrair bairros automaticamente/);
 });
+
+test("fluxo Git-first preserva bairros revisados, sem inferência automática",()=>{
+  const script=read("scripts/editorial-workflow.mjs");
+  const agent=read("components/agent-editorial-composer.tsx");
+  assert.match(script,/draft\.territories/);
+  assert.match(agent,/role: main\|mentioned/);
+  assert.deepEqual(JSON.parse(read("docs/modelo-noticia.json")).territories,[]);
+});

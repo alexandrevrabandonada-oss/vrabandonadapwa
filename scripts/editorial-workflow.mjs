@@ -75,6 +75,7 @@ export function reviewedPublication(draft) {
     status: "published", reviewed: true,
     publishedAt: new Date(review.approvedAt).toISOString(),
     sources: draft.sources, blocks: draft.blocks,
+    ...(draft.territories !== undefined ? { territories: draft.territories } : {}),
     ...(draft.instagramUrl ? { instagramUrl: draft.instagramUrl } : {}),
     ...(draft.cover ? { cover: draft.cover } : {}),
     ...(draft.correctionNote ? { correctionNote: draft.correctionNote } : {}),
