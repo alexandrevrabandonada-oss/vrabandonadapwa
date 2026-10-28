@@ -39,7 +39,31 @@
 .vr7-editorial-card :is(p, .vr7-editorial-card__meta) {
   max-width: var(--ds-text-measure);
 }
-.vr7-editorial-card__meta { gap: var(--ds-space-2) var(--ds-space-4); }
+/* Estilos próprios: o mesmo cartão funciona em Casos sem depender do CSS do Acervo. */
+.vr7-editorial-card.vr-index__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+  padding: clamp(.85rem, 2vw, 1.15rem);
+}
+.vr7-editorial-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ds-space-2) var(--ds-space-4);
+  color: var(--ds-text-secondary);
+  font-size: var(--ds-step-xs);
+  font-weight: 750;
+  line-height: 1.4;
+}
+.vr7-editorial-card__meta > span { color: var(--ds-accent); }
+.vr7-editorial-card__title { margin: 0; font-size: var(--ds-step-h3); }
+.vr7-editorial-card.vr-index__item > p {
+  margin: 0;
+  line-height: var(--ds-leading-body);
+  color: var(--ds-text-secondary);
+}
 .vr7-editorial-card__meta time { font-variant-numeric: tabular-nums; }
 .vr7-editorial-card__actions {
   display: flex;
