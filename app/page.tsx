@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Container } from "@/components/container";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
-import { getMaterias, materiaKindLabel, publishedDate } from "@/lib/materias";
+import { getMaterias, materiaKind, materiaKindLabel, publishedDate } from "@/lib/materias";
 import { getPublishedPlaceHubs } from "@/lib/territories/queries";
 
 export const metadata: Metadata = {
@@ -76,7 +76,33 @@ export default async function HomePage() {
 
   const lead = feed[0] ?? null;
   const latest = feed.slice(lead ? 1 : 0, lead ? 7 : 6);
-  const featuredDossiers = dossiers.slice(0, 3);
+  // Uma reportagem investigativa aprovada também precisa ser encontrável em Investigações.
+  // Mantemos a distinção entre reportagem publicada no Git e dossiê estruturado no banco.
+  const featuredInvestigations = [
+    ...materias.filter((article) => materiaKind(article) === "investigation").map((article) => ({
+      id: "materia-" + article.slug,
+      slug: article.slug,
+      title: article.title,
+      href: "/materias/" + article.slug,
+      detail: article.summary,
+      context: article.section,
+      kind: article.investigationStatus === "ongoing" ? "Reportagem em acompanhamento" : "Reportagem investigativa",
+      date: article.updatedAt || article.publishedAt,
+    })),
+    ...dossiers.map((dossier) => ({
+      id: "dossie-" + dossier.id,
+      slug: dossier.slug,
+      title: dossier.title,
+      href: "/dossies/" + dossier.slug,
+      detail: dossier.excerpt || dossier.description || dossier.lead_question || "",
+      context: dossier.territory_label || "Volta Redonda",
+      kind: "Dossiê",
+      date: dossier.updated_at || dossier.created_at,
+    })),
+  ]
+    .sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0))
+    .filter((entry, index, entries) => entries.findIndex((other) => other.slug === entry.slug) === index)
+    .slice(0, 3);
   const featuredNeighborhoods = neighborhoods.slice(0, 5);
 
   return (
@@ -86,42 +112,27 @@ export default async function HomePage() {
         <span>INFORMAÇÃO · MEMÓRIA · INVESTIGAÇÃO</span>
       </div>
 
-      <div className="vr2-opening">
-        <div className="vr2-opening__title">
-          <span className="vr2-eyebrow">Jornalismo popular independente</span>
-          <h1>A cidade não cabe no feed<span>.</span></h1>
-          <p>Notícias, investigações e memória pública de Volta Redonda — com contexto, fontes e compromisso com quem vive a cidade.</p>
-          <div className="vr2-opening__actions">
-            <Link href="/agora" className="vr2-button vr2-button--accent">Últimas notícias <span aria-hidden="true">↗</span></Link>
-            <Link href="/dossies" className="vr2-button vr2-button--quiet">Investigações <span aria-hidden="true">↗</span></Link>
-          </div>
-        </div>
-        <div className="vr2-opening__aside" aria-label="Caminhos do portal">
-          <span className="vr2-eyebrow">O QUE VOCÊ ENCONTRA AQUI</span>
-          <Link href="/noticias"><b>01</b><span>Notícias da cidade</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/dossies"><b>02</b><span>Investigações e documentos</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/territorios"><b>03</b><span>Histórias por bairro</span><span aria-hidden="true">↗</span></Link>
-          <Link href="/acervo"><b>04</b><span>Memória e acervo público</span><span aria-hidden="true">↗</span></Link>
-        </div>
-      </div>
+      <header className="vr4-home-intro">
+        <span className="vr2-eyebrow">Jornalismo popular independente</span>
+        <h1>A cidade não cabe no feed<span>.</span></h1>
+        <p>Notícias, investigações e memória pública de Volta Redonda — com contexto e fontes.</p>
+      </header>
 
       <section className="vr2-section" aria-labelledby="vr2-latest-heading">
         <div className="vr2-section__heading">
-          <div><span className="vr2-eyebrow">{lead ? "PUBLICAÇÕES VERIFICADAS" : "ACERVO JORNALÍSTICO"}</span><h2 id="vr2-latest-heading">{lead ? "O que está em pauta" : "Notícias e reportagens"}</h2></div>
-          <Link href="/noticias" className="vr2-text-link">Ver notícias <span aria-hidden="true">↗</span></Link>
+          <div><span className="vr2-eyebrow">{lead ? "PUBLICAÇÕES VERIFICADAS" : "ACERVO JORNALÍSTICO"}</span><h2 id="vr2-latest-heading">{lead ? "Destaques da cidade" : "Notícias e reportagens"}</h2></div>
+          <Link href="/agora" className="vr2-text-link">Ver últimas <span aria-hidden="true">↗</span></Link>
         </div>
 
         {lead ? (
           <div className="vr2-news-layout">
-            <article className="vr2-lead">
-              <Link href={lead.href} className="vr2-lead__visual" aria-label={"Ler: " + lead.title}>
-                {lead.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
+            <article className={lead.image ? "vr2-lead" : "vr2-lead vr2-lead--text-only"}>
+              {lead.image ? (
+                <Link href={lead.href} className="vr2-lead__visual" aria-label={"Ler: " + lead.title}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={lead.image} alt={lead.imageAlt || lead.title} loading="eager" />
-                ) : (
-                  <div className="vr2-lead__graphic" aria-hidden="true"><span>VR</span><strong>ABANDONADA</strong><small>JORNALISMO INDEPENDENTE</small></div>
-                )}
-              </Link>
+                </Link>
+              ) : null}
               <div className="vr2-lead__content">
                 <div className="vr2-meta"><span>{lead.category}</span><span>{dateLabel(lead.date)}</span></div>
                 <h3><Link href={lead.href}>{lead.title}</Link></h3>
@@ -163,18 +174,23 @@ export default async function HomePage() {
 
       <section className="vr2-section" aria-labelledby="vr2-investigations-heading">
         <div className="vr2-section__heading">
-          <div><span className="vr2-eyebrow">{featuredDossiers.length ? "NÃO DEIXAMOS O ASSUNTO MORRER" : "TEMAS DE COBERTURA"}</span><h2 id="vr2-investigations-heading">{featuredDossiers.length ? "Investigações" : "Assuntos que acompanhamos"}</h2></div>
-          <Link href={featuredDossiers.length ? "/dossies" : "/buscar"} className="vr2-text-link">{featuredDossiers.length ? "Explorar dossiês" : "Pesquisar o acervo"} <span aria-hidden="true">↗</span></Link>
+          <div>
+            <span className="vr2-eyebrow">{featuredInvestigations.length ? "NÃO DEIXAMOS O ASSUNTO MORRER" : "TEMAS DE COBERTURA"}</span>
+            <h2 id="vr2-investigations-heading">{featuredInvestigations.length ? "Investigações" : "Assuntos que acompanhamos"}</h2>
+          </div>
+          <Link href={featuredInvestigations.length ? "/dossies" : "/buscar"} className="vr2-text-link">
+            {featuredInvestigations.length ? "Ver investigações" : "Pesquisar temas"} <span aria-hidden="true">↗</span>
+          </Link>
         </div>
-        {featuredDossiers.length ? (
+        {featuredInvestigations.length ? (
           <div className="vr2-investigations">
-            {featuredDossiers.map((item, i) => (
+            {featuredInvestigations.map((item, i) => (
               <article key={item.id} className="vr2-investigation">
                 <span className="vr2-investigation__number">0{i + 1}</span>
-                <span className="vr2-eyebrow">{item.territory_label || "Volta Redonda"} · {item.period_label || "Arquivo"}</span>
-                <h3><Link href={"/dossies/" + item.slug}>{item.title}</Link></h3>
-                <p>{item.excerpt || item.description}</p>
-                <Link href={"/dossies/" + item.slug} className="vr2-readmore">Abrir investigação ↗</Link>
+                <span className="vr2-eyebrow">{item.kind} · {item.context}</span>
+                <h3><Link href={item.href}>{item.title}</Link></h3>
+                <p>{item.detail}</p>
+                <Link href={item.href} className="vr2-readmore">Ler investigação ↗</Link>
               </article>
             ))}
           </div>
