@@ -365,3 +365,19 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Aceite objetivo:** testes Node/testes editoriais, typecheck, lint, build Next.js no SHA exato da PR; preview Vercel READY; revisão visual mobile 320/360/390/430 e desktop; conferir navegação por fragmentos, filtro de memória, links de fontes externos, teclado, 200% zoom, menu e leitor de voz. Não confundir preview READY com teste E2E nem validação por usuário real.
 
 **Próximo P1:** ligar documentos públicos hospedados a um identificador de apuração validado, sem importação automática, e consolidar taxonomia de território/editoria/caso no índice de busca; migrar gradualmente CSS V2–V6 para tokens sem alterar identidade aprovada.
+
+### Sprint V6.1 — percurso completo, homepage e âncoras
+
+**Evidência:** contexto da aba de Preview V6 aberta no navegador pelo usuário confirma que a Home ainda apresentava a reportagem Rua 33 como chamada de Últimas e repetia título/resumo em Investigações. O teste de navegação foi leitura de DOM/links da aba, **não inspeção visual de viewport nem E2E**.
+
+**Correções na PR #25, sem mexer no JSON jornalístico nem em produção:**
+- `app/page.tsx`: lista de IDs das matérias efetivamente visíveis na primeira área editorial; o mesmo permalink não reaparece como cartão integral em Investigações. Quando o caso também está visível em Últimas, há um único atalho compacto para histórico e fontes. Corrigida a comparação antiga que misturava slug puro com identificador `materia-...`.
+- Home prioriza bairros com vínculos territoriais presentes em matéria aprovada; hubs válidos entram sem duplicação; bairros somente citados exibem explicitamente `menção contextual`.
+- A chamada institucional longa de rodapé da Home foi convertida em uma ação concreta para enviar informações à redação, com regra de verificação editorial e link ao método.
+- `app/territorios/[slug]`: quando existe um hub territorial e cobertura editorial do mesmo bairro, a seção de notícias verificadas aparece **antes** dos extensos painéis descritivos e operacionais.
+- `components/reveal-source-from-hash.tsx`: ao chegar de uma matéria via `/acervo#fontes-<slug>`, o respectivo `details` abre automaticamente, de modo que a fonte realmente fique acessível. É usado somente para slugs conhecidos e preserva controle manual do leitor. Sem necessidade de consulta a dados privados.
+- Testes de regressão ajustados para exigir deduplicação, priorização dos bairros, ação de participação, ordem do conteúdo territorial e abertura de fonte por hash.
+
+**Aceite pendente:** finalizar checks do último SHA, confirmar Vercel Preview `READY` para o mesmo commit; inspecionar /, /acervo, /territorios e duas páginas de matéria em Android e desktop, com navegação por links e filtros. Não mesclar até inspeção visual. Os checks da V6 anterior eram verdes, porém não validam commits novos.
+
+**UX seguinte (não incluída nesta PR):** reduzir CSS legado por migração progressiva de tokens, implementar busca contextual por bairro e documentos com proveniência, e medir Web Vitals/contraste reais.
