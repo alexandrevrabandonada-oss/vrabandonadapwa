@@ -42,3 +42,5 @@ jobs:
         run: npm run lint
       - name: Compilar e validar matérias
         run: npm run build
+      - name: Verificar renderização HTTP local (sem Vercel)
+        run: node scripts/smoke-local-portal.mjs
