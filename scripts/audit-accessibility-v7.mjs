@@ -94,12 +94,13 @@ async function audit() {
             const widths = await page.evaluate(() => {
               const root=document.documentElement;
               const original=getComputedStyle(root).fontSize;
-              root.style.fontSize = (parseFloat(original)*2) + "px";
+              root.style.setProperty("font-size", (parseFloat(original)*2) + "px", "important");
               const width=root.clientWidth;
               const content=root.scrollWidth;
               return {original,computed:getComputedStyle(root).fontSize,viewport:width,content};
             });
             report.textResize.push({label,...widths});
+            if (parseFloat(widths.computed) < parseFloat(widths.original)*1.99) fail(label+":text-200", "A fonte raiz não foi realmente ampliada para 200%: " + JSON.stringify(widths));
             console.log("TEXT-200:",label,JSON.stringify(widths));
             if(widths.content>widths.viewport+2) {
               await page.screenshot({path:join(OUT,"text-200-"+profile.name+"-"+entry.key+".png"),fullPage:true,animations:"disabled"});
