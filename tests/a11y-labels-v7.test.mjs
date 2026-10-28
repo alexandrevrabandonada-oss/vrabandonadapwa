@@ -37,5 +37,5 @@ test("o teste de reflow verifica espaço de zoom equivalente sem afirmar zoom na
  assert.match(s,/factor:2,width:640/);
  assert.match(s,/factor:4,width:320/);
  assert.match(s,/dimensions.scroll > dimensions.viewport \+ 2/);
- assert.match(s,/não mede zoom nativo/);
+ assert.match(s,/NÃO mede zoom nativo/);
 });
