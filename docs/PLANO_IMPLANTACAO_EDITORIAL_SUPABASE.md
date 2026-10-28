@@ -26,6 +26,14 @@ A consulta read-only versionada em `scripts/sql/portal-editorial-readiness.sql` 
 
 O diagnóstico do banco de produção também registrou apenas `intake_submissions`, `admin_email_allowlist` e `universal_captures` em `public`; as três têm RLS habilitada. Isso não significa que todas as políticas são seguras: o advisor sinalizou função `SECURITY DEFINER` publicamente executável, exposição de objetos no GraphQL e configuração de proteção de senhas. Essas recomendações exigem análise própria, especialmente porque remover `EXECUTE` da função administrativa pode quebrar políticas existentes. **Não alterar a função ou as políticas de intake sem teste e rollback.**
 
+## Dependência adicional descoberta no resolvedor de links
+
+**Bloqueio de integração real:** no código atual, `getDossierLinkHref('editorial', slug)` e `getPlaceHubLinkHref('editorial', slug)` apontam para `/pautas/<slug>`, não para `/materias/<slug>`. Os tipos `dossierLinkTypes` e `placeHubLinkTypes` não incluem `materia`; os CHECKs legados de `link_type` tampouco. Portanto, criar as nove tabelas **não** conectaria por si só reportagens Git aos dossiês/hubs estruturados.
+
+**Contrato da fase de código antes do rollout:** adicionar um tipo explícito `materia` (ou `git_article`) com `link_key` igual ao slug aprovado, alterar os resolvedores para `/materias/<slug>`, verificar a existência da matéria **publicada e revisada** via `getMateria/getMaterias`, atualizar os seletores editoriais e incluir o novo valor no CHECK do novo esquema. Não reutilizar `editorial` porque aponta ao acervo legado de pautas do Supabase. Links órfãos ou para rascunhos devem ser recusados, não convertidos em links genéricos. As relações são curadas e não inferidas automaticamente por bairro, título ou evento.
+
+Até cumprir isso, as páginas `/dossies` e `/territorios` continuam exibindo reportagens Git **separadamente dos vínculos estruturados**. Não apresentar o hub futuro como relação já implementada.
+
 ## Portões para a implantação — ordem obrigatória
 
 ### 0. Preparação e isolamento
