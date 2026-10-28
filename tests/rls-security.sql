@@ -9,6 +9,8 @@ do $$ begin
   exception when insufficient_privilege then null; end;
   begin truncate public.intake_submissions; raise exception 'anon truncated submissions';
   exception when insufficient_privilege then null; end;
+  begin truncate public.universal_captures; raise exception 'anon truncated captures';
+  exception when insufficient_privilege then null; end;
   insert into public.intake_submissions(category,title,details,status) values ('pauta','teste','conteudo ficticio','new');
   begin insert into public.intake_submissions(category,title,details,status) values ('pauta','teste','x','published'); raise exception 'invalid status accepted';
   exception when insufficient_privilege then null; end;
@@ -25,6 +27,8 @@ do $$ declare n integer; begin
   get diagnostics n = row_count;
   if n <> 0 then raise exception 'non-admin updated submissions'; end if;
   begin insert into public.admin_email_allowlist(email) values ('other@example.invalid'); raise exception 'authenticated wrote allowlist';
+  exception when insufficient_privilege then null; end;
+  begin truncate public.universal_captures; raise exception 'authenticated truncated captures';
   exception when insufficient_privilege then null; end;
 end $$;
 select set_config('request.jwt.claims', '{"email":"admin@example.invalid"}', false);
