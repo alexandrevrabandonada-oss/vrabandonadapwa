@@ -3,7 +3,7 @@
   "kind": "news",
   "title": "Em meio à onda de violência, comando do 28º BPM é trocado após invasão da Vila Brasília",
   "subtitle": "Amanda Neves Ferreira deixou o comando do batalhão em 27 de outubro. Décio Keiji Takamine foi anunciado como substituto, enquanto Volta Redonda cobra respostas sobre a prevenção e a reação policial.",
-  "summary": "O comando do 28º BPM, em Volta Redonda, mudou na terça-feira (27), dois dias após a invasão armada da Vila Brasília. Outro homicídio foi registrado na Água Limpa. A troca de comandante não teve sua motivação oficial esclarecida, e permanecem perguntas sobre a cronologia da resposta policial.",
+  "summary": "Após a troca de comando do 28º BPM, a Prefeitura anunciou reforço de quatro viaturas e pelo menos 16 policiais em Volta Redonda nesta quarta-feira (28). O município também divulgou operação do Bope no Monte Castelo. Ainda faltam explicações sobre a cronologia da resposta à invasão da Vila Brasília.",
   "section": "Segurança pública",
   "author": "VR Abandonada",
   "status": "published",
@@ -45,6 +45,18 @@
     {
       "label": "Prefeitura de Volta Redonda — Prisão de suspeito de envolvimento no ataque, 26/10/2026",
       "url": "https://www.voltaredonda.rj.gov.br/comunicacao/noticias/25-secom/12806-opera%C3%A7%C3%A3o-da-pol%C3%ADcia-civil-e-do-bac-prende-suspeito-de-envolvimento-na-invas%C3%A3o-da-vila-bras%C3%ADlia%2C-em-volta-redonda/"
+    },
+    {
+      "label": "Prefeitura de Volta Redonda — Novo comandante do 28º BPM e reforço anunciado de quatro viaturas e pelo menos 16 PMs, 28/10/2026",
+      "url": "https://www.voltaredonda.rj.gov.br/comunicacao/noticias/25-secom/12815-prefeitura-de-volta-redonda-garante-novos-refor%C3%A7os-vindos-da-capital-para-ampliar-seguran%C3%A7a-na-cidade/"
+    },
+    {
+      "label": "Prefeitura de Volta Redonda — Nota sobre operação do Bope e apreensão no Monte Castelo na madrugada de 28/10/2026",
+      "url": "https://www.voltaredonda.rj.gov.br/comunicacao/noticias/25-secom/12814-bope-interv%C3%A9m-em-confronto-entre-fac%C3%A7%C3%B5es-no-monte-castelo-e-apreende-fuzil-em-volta-redonda/"
+    },
+    {
+      "label": "Diário do Vale — Boletim administrativo da PM transfere Amanda Neves à SSGP; sem motivação da substituição, 28/10/2026",
+      "url": "https://diariodovale.com.br/policia/pm-troca-comando-do-28o-batalhao-em-volta-redonda/"
     }
   ],
   "blocks": [
@@ -55,6 +67,22 @@
     {
       "type": "paragraph",
       "text": "A troca ocorre dois dias depois da invasão armada da Vila Brasília, na madrugada de domingo (25), que deixou moradores sob forte tensão, provocou mortes e levou ao incêndio de veículos, inclusive um ônibus. A proximidade entre os acontecimentos exige explicações, mas não comprova que a mudança tenha sido motivada por erros na operação. Até o fechamento desta notícia, não havia sido localizada uma justificativa administrativa formal publicada para a exoneração."
+    },
+    {
+      "type": "heading",
+      "text": "Atualização — quarta-feira, 28 de outubro: novos reforços anunciados"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em comunicado divulgado nesta quarta-feira (28), a Prefeitura de Volta Redonda informou que o tenente-coronel Décio Keiji Takamine assumiria nesta data o comando do 28º BPM. Também anunciou a previsão de incorporação, no mesmo dia, de mais quatro viaturas e pelo menos 16 policiais militares vindos da capital, além da chegada futura de motocicletas. Segundo o município, os reforços buscariam manter a ocupação do Complexo da Vila Brasília e ampliar o patrulhamento de outros bairros. O anúncio não comprova, por si, que todos esses recursos já tenham chegado ou entrado em serviço."
+    },
+    {
+      "type": "paragraph",
+      "text": "A Prefeitura também noticiou que, na madrugada de quarta-feira (28), equipes do Bope tiveram um confronto na comunidade do Monte Castelo, após informações sobre possível invasão de criminosos. Segundo o balanço municipal, os policiais apreenderam um fuzil calibre 7,62, 14 munições e um rádio transmissor, sem registro de feridos no local. Esse episódio oficialmente comunicado é posterior aos relatos sobre disparos na noite de terça-feira; não é correto presumir que se tratem do mesmo evento."
+    },
+    {
+      "type": "paragraph",
+      "text": "Ainda nesta quarta-feira, o Diário do Vale relatou que a transferência de Amanda Neves Ferreira para a Subsecretaria de Gestão de Pessoas consta em boletim da Polícia Militar. A reportagem destaca que o ato não apresenta a motivação específica da substituição. A confirmação do reforço anunciado e as operações posteriores não esclarecem quando a ameaça inicial foi detectada, quais alertas chegaram às autoridades e como se deu a resposta nas primeiras horas de domingo (25)."
     },
     {
       "type": "heading",
@@ -121,6 +149,12 @@
       "date": "2026-10-28T00:37:26-03:00",
       "label": "Publicação inicial",
       "text": "Primeira versão com troca de comando noticiada em 27/10, homicídio confirmado na Água Limpa e perguntas sobre a resposta à invasão. Relatos noturnos em outros bairros permanecem não confirmados nesta apuração."
+    },
+    {
+      "date": "2026-10-28T10:10:59-03:00",
+      "label": "Reforços e operação do Bope — 28/10",
+      "text": "Acrescentadas notas oficiais da Prefeitura sobre quatro viaturas e pelo menos 16 policiais previstos para a cidade, nova operação do Bope no Monte Castelo e informação de boletim administrativo sobre a transferência da ex-comandante. A chegada efetiva dos reforços e a cronologia da resposta à invasão seguem pendentes de comprovação."
     }
-  ]
+  ],
+  "updatedAt": "2026-10-28T10:10:59-03:00"
 }
