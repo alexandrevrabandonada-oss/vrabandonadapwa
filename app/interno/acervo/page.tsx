@@ -30,6 +30,9 @@ function isVisibilityFilter(value: string | undefined): value is VisibilityFilte
 }
 
 export default async function InternalArchivePage({ searchParams }: PageProps) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return <Container><section className="section"><h1>Área interna indisponível</h1><p>Este ambiente não tem conexão editorial configurada.</p></section></Container>;
+  }
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },

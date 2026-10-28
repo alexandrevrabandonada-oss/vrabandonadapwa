@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getUniversalInboxItems } from "@/lib/captura/queries";
 import { UniversalCaptureComposer } from "@/components/universal-capture-composer";
 import { UniversalCaptureInboxItem } from "@/components/universal-capture-inbox-item";
+import { authorizePrivateDocuments } from "@/lib/media/private-server";
 
 export const metadata: Metadata = {
   title: "Captura & Inbox",
@@ -23,6 +25,9 @@ function firstParam(value: string | string[] | undefined) {
 }
 
 export default async function CapturarPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return <Container><section className="section"><h1>Área interna indisponível</h1><p>Este ambiente não tem conexão editorial configurada.</p></section></Container>;
+  }
   const resolvedSearchParams = (await searchParams) ?? {};
   const feedbackStatus = firstParam(resolvedSearchParams.status) || null;
   const feedbackMessage = firstParam(resolvedSearchParams.message) || null;
@@ -38,6 +43,11 @@ export default async function CapturarPage({ searchParams }: { searchParams?: Pr
   }
 
   const inboxItems = await getUniversalInboxItems();
+  const privateContext = await authorizePrivateDocuments().catch(() => null);
+  const privateResult = privateContext && inboxItems.length
+    ? await privateContext.service.from("private_editorial_documents").select("id,capture_id").in("capture_id", inboxItems.map((item) => item.id))
+    : null;
+  const privateDocuments = privateResult?.error ? [] : privateResult?.data ?? [];
 
   return (
     <Container className="internal-page internal-page--operator">
@@ -46,6 +56,14 @@ export default async function CapturarPage({ searchParams }: { searchParams?: Pr
         <h1 className="hero__title">Captura Universal.</h1>
         <p className="hero__lead">Jogue o material aqui primeiro. Decida para onde vai depois.</p>
       </section>
+
+      {privateContext ? (
+        <section className="section" style={{ marginTop: "1rem" }}>
+          <Link className="button-secondary" href="/interno/armazenamento">
+            Conferir integridade dos documentos privados
+          </Link>
+        </section>
+      ) : null}
 
       <section className="section internal-panel" style={{ marginTop: "1rem" }}>
         <UniversalCaptureComposer message={feedbackItemId ? null : feedbackMessage} status={feedbackItemId ? null : feedbackStatus} />
@@ -70,6 +88,8 @@ export default async function CapturarPage({ searchParams }: { searchParams?: Pr
               <UniversalCaptureInboxItem
                 key={item.id}
                 item={item}
+                privateDocumentsEnabled={Boolean(privateContext && !privateResult?.error)}
+                privateDocuments={privateDocuments.filter((doc) => doc.capture_id === item.id)}
                 active={feedbackItemId === item.id}
                 feedbackMessage={feedbackMessage}
                 feedbackStatus={feedbackStatus}

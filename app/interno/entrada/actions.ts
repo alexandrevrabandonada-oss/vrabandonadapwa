@@ -9,6 +9,7 @@ import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
 import { editorialEntryTypes, type EditorialEntryStatus, type EditorialEntryTarget, type EditorialEntryType } from "@/lib/entrada/types";
 import { removeArchiveAsset, uploadArchiveAsset } from "@/lib/media/archive";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isAdminEmailAllowed } from "@/lib/admin";
 
 export type EntryActionState = {
   ok: boolean;
@@ -98,7 +99,7 @@ async function ensureAdmin() {
     error,
   } = await supabase.auth.getUser();
 
-  if (error || !user) {
+  if (error || !user?.email || !(await isAdminEmailAllowed(user.email))) {
     return { supabase, user: null, authError: true as const };
   }
 
@@ -252,7 +253,7 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
   if ((entryType === "document" || entryType === "image") && !currentId && !file) {
     return {
       ok: false,
-      message: "Envie o arquivo para guardar essa entrada.",
+      message: "O envio de arquivos está suspenso até a validação do armazenamento privado.",
     };
   }
 
@@ -288,7 +289,7 @@ export async function saveEditorialEntryAction(_: EntryActionState, formData: Fo
     console.error("Failed to upload editorial entry asset", uploadError);
     return {
       ok: false,
-      message: "Não foi possível enviar o arquivo agora. Tente novamente.",
+      message: "Envio de anexos temporariamente suspenso para proteger as fontes.",
     };
   }
 
