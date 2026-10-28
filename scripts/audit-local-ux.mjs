@@ -96,9 +96,18 @@ async function run() {
           console.log("CAPTURE:", label, JSON.stringify(dimensions));
           assert.ok(dimensions.doc <= dimensions.viewport + 2,
             "Rolagem horizontal detectada: " + JSON.stringify(dimensions));
+          if (item.label === "acervo" || item.label === "bairros") {
+            const hub = await page.locator(".vr6-hub").boundingBox();
+            assert.ok(hub, "Contêiner editorial ausente");
+            const rightGutter = profile.width - (hub.x + hub.width);
+            assert.ok(hub.x >= 3 && Math.abs(hub.x - rightGutter) <= 3,
+              "Contêiner fora do eixo editorial central: " + JSON.stringify({ x: hub.x, rightGutter, width: hub.width }));
+          }
           if (item.label === "casos") {
             assert.ok(await page.locator('a[href="/materias/' + RUA + '"]').count() > 0,
               "A reportagem da Rua 33 não aparece em Casos");
+            const meta = await page.locator(".vr7-editorial-card__meta").first().evaluate((el) => getComputedStyle(el).display);
+            assert.equal(meta, "flex", "Metadados do cartão devem ter layout próprio em Casos");
           }
           if (item.label === "acervo") {
             assert.ok(await page.locator('details#fontes-' + RUA).count() > 0,
