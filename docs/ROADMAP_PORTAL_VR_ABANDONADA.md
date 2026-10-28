@@ -380,3 +380,18 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - [ ] Nenhuma alteração de DNS, domínio, banco ou produção por consequência desta auditoria documental.
 
 **Decisão recomendada:** melhorar profundamente o que já existe em vez de aumentar a quantidade de módulos. Um fluxo editorial, uma busca, notícias de verdade, casos acompanhados e fontes verificáveis: essas são as cinco obrigações do produto.
+
+## Registro de execução — Sprint A da convergência V4 (28/10/2026)
+
+**PR de implementação separada:** https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/17 (draft; sem merge em produção).
+
+**Implementado em branch de revisão, sem editar o conteúdo jornalístico:**
+- Homepage com introdução curta e notícia sem imagem autoral exibida em texto, retirando a capa de marca 16:9 que ocupava a primeira dobra.
+- Vitrine de investigações passa a integrar matérias Git de tipo `investigation` e dossiês Supabase, preservando URLs e identificando as duas modalidades.
+- `/dossies` exibe reportagens investigativas publicadas mesmo quando ainda não há um dossiê estruturado no Supabase; a ausência de dossiês não equivale à ausência de reportagem.
+- Menu público agrupado por leitura, cidade/documentos/memória, biblioteca pessoal e formas de colaboração; rotas antigas preservadas.
+- Teste de regressão em `tests/product-convergence-v4.test.mjs`.
+
+**Verificado até o registro:** commits no GitHub; testes Node, checagem de tipos e lint passaram no job CI da PR #17. **Pendente de comprovação:** fim do build Next.js, deploy preview READY, inspeção visual no Android e verificações HTTP/SEO. Sem merge nem alteração da produção. Manter este status corrigível quando os checks terminarem.
+
+**Próxima etapa depois da aceitação visual:** estrutura canônica de vínculo publicação ↔ caso ↔ documento; eliminar duplicação entre `editorial_items` e `content/materias` sem migração destrutiva e sem criar registros sintéticos.
