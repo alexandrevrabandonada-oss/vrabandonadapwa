@@ -44,3 +44,17 @@ jobs:
         run: npm run build
       - name: Verificar renderização HTTP local (sem Vercel)
         run: node scripts/smoke-local-portal.mjs
+      - name: Instalar Playwright isolado para revisão Chromium
+        run: |
+          npm install --no-save --no-package-lock --ignore-scripts playwright@1.64.1
+          npx playwright install chromium --with-deps
+      - name: Auditar jornadas e capturar telas públicas no Chromium
+        run: node scripts/audit-local-ux.mjs
+      - name: Publicar capturas para revisão de UX
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vr-abandonada-qa-visual
+          path: artifacts/qa-v7-visual/
+          if-no-files-found: warn
+          retention-days: 7
