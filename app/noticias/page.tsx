@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
-import { getMaterias, materiaKind, publishedDate } from "@/lib/materias";
+import { getMaterias, materiaKind, publishedDate, publishedDateTime } from "@/lib/materias";
 
 import "./noticias.css";
 
@@ -23,7 +23,8 @@ export default async function NoticiasPage({ searchParams }: Props) {
   const { q = "" } = await searchParams;
   const term = q.trim().slice(0, 90);
   const all = await getMaterias();
-  const news = all.filter((article) => materiaKind(article) === "news");
+  const news = all.filter((article) => materiaKind(article) === "news")
+    .sort((a, b) => Date.parse(b.updatedAt || b.publishedAt) - Date.parse(a.updatedAt || a.publishedAt));
   const filtered = term
     ? news.filter((article) =>
         [article.title, article.summary, article.section, ...article.blocks.map((block) => block.text)]
@@ -64,7 +65,8 @@ export default async function NoticiasPage({ searchParams }: Props) {
           <div className="vr-news__list">
             {filtered.map((item, index) => (
               <article className={"vr-news__item" + (index === 0 ? " vr-news__item--lead" : "")} key={item.slug}>
-                <div className="vr-news__item-meta"><span>NOTÍCIA · {item.section}</span><time dateTime={item.publishedAt}>{publishedDate(item.publishedAt)}</time></div>
+                <div className="vr-news__item-meta"><span>NOTÍCIA · {item.section}</span><time dateTime={item.publishedAt}>Publicada em {publishedDate(item.publishedAt)}</time>
+                  {item.updatedAt && item.updatedAt !== item.publishedAt && <time className="vr-news__updated" dateTime={item.updatedAt}>Atualizada em {publishedDateTime(item.updatedAt)}</time>}</div>
                 <h3><Link href={"/materias/" + item.slug}>{item.title}</Link></h3>
                 <p>{item.summary}</p>
                 <Link className="vr-news__read" href={"/materias/" + item.slug}>Ler notícia ↗</Link>

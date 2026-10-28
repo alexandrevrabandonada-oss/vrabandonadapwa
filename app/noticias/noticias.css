@@ -35,3 +35,7 @@
 .vr-news__footer p{color:#ccc7bf;line-height:1.55;font-size:.9rem}
 .vr-news__footer a{color:#f2c338;font-size:.85rem;font-weight:800}
 @media(max-width:700px){.vr-news{gap:1.3rem;padding-block:.65rem 3rem}.vr-news__list{grid-template-columns:1fr}.vr-news__header{padding:1rem}.vr-news__header h1{font-size:2.65rem}.vr-news__search>div{gap:.35rem}.vr-news__search button{padding:.7rem .85rem}.vr-news__section-head{align-items:flex-start}.vr-news__section-head h2{font-size:1.48rem}.vr-news__count{font-size:.7rem}}
+
+/* A atualização aparece sem apagar a data original da notícia. */
+.vr-news__updated{color:#f2c338;font-weight:840;white-space:normal}
+@media(max-width:700px){.vr-news__item-meta{gap:.3rem .65rem}.vr-news__updated{flex-basis:100%}}

@@ -13,8 +13,9 @@ export async function GET() {
     url: host + "/materias/" + a.slug,
     summary: a.summary,
     date: a.publishedAt,
+    lastModified: a.updatedAt || a.publishedAt,
   }));
-  const items = originals.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+  const items = originals.sort((a, b) => Date.parse(b.lastModified) - Date.parse(a.lastModified))
     .slice(0, 60).map((item) => [
       "<item>",
       "<title>" + xmlEscape(item.title) + "</title>",
@@ -22,9 +23,10 @@ export async function GET() {
       '<guid isPermaLink="true">' + xmlEscape(item.url) + "</guid>",
       "<description>" + xmlEscape(item.summary) + "</description>",
       "<pubDate>" + new Date(item.date).toUTCString() + "</pubDate>",
+      "<dc:date>" + new Date(item.lastModified).toISOString() + "</dc:date>",
       "</item>"
     ].join("")).join("");
-  const body = '<?xml version="1.0" encoding="UTF-8"?>' + '<rss version="2.0"><channel>' +
+  const body = '<?xml version="1.0" encoding="UTF-8"?>' + '<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel>' +
     "<title>VR Abandonada — Publicações</title><link>" + xmlEscape(host) + "</link>" +
     "<language>pt-BR</language><description>Comunicação pública e memória de Volta Redonda</description>" +
     items + "</channel></rss>";
