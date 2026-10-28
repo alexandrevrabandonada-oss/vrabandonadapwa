@@ -7,7 +7,8 @@ const read = (path) => readFileSync(path, "utf8");
 test("Investigações não utiliza hero gigante ou categorias vazias", () => {
   const page = read("app/dossies/page.tsx");
   assert.match(page, /<h1>Investigações<\/h1>/);
-  assert.match(page, /getPublishedDossiers\(\)/);
+  assert.match(page, /getPublicDossierCatalogState\(\)/);
+  assert.match(page, /availability !== "available"/);
   assert.match(page, /getPublishedDossierUpdatesByDossierIds/);
   assert.match(page, /\.filter\(\(group\) => group\.items\.length > 0\)/);
   assert.match(page, /DOSSIÊS EM PREPARAÇÃO/);
