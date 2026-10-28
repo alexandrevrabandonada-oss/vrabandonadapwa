@@ -13,7 +13,7 @@ export const site = {
   description:
     "Publicações, investigações e comunicação popular sobre Volta Redonda.",
   shortDescription:
-    "Notícias, Reels e memória popular de Volta Redonda.",
+    "Notícias, investigações e memória de Volta Redonda.",
   primaryNav: [
     { href: "/", label: "Início" },
     { href: "/agora", label: "Últimas" },
@@ -66,11 +66,10 @@ export const site = {
   ] satisfies SiteGroup[],
   footerQuickLinks: [
     { href: "/agora", label: "Últimas" },
-    { href: "/noticias", label: "Notícias" },
-    { href: "/materias", label: "Matérias" },
     { href: "/dossies", label: "Investigações" },
     { href: "/territorios", label: "Bairros" },
-    { href: "/acervo", label: "Acervo" },
+    { href: "/acervo", label: "Documentos" },
+    { href: "/participe", label: "Participar" },
     { href: "/metodo", label: "Método" },
   ] satisfies SiteLink[],
   hero: {
