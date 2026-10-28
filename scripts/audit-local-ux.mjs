@@ -24,8 +24,10 @@ const pages = [
   { label: "reportagem-vila-brasilia", path: "/materias/" + VILA },
 ];
 const profiles = [
+  { label: "android-320", width: 320, height: 720, mobile: true },
   { label: "android-360", width: 360, height: 780, mobile: true },
   { label: "android-390", width: 390, height: 844, mobile: true },
+  { label: "android-430", width: 430, height: 932, mobile: true },
   { label: "desktop-1440", width: 1440, height: 900, mobile: false },
 ];
 const failures = [];
