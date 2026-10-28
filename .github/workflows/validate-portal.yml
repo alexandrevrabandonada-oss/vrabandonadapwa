@@ -10,6 +10,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'tests/**'
+      - '.github/workflows/validate-portal.yml'
   push:
     paths:
       - 'content/materias/**'
@@ -31,5 +32,9 @@ jobs:
         run: node --test tests/*.test.mjs
       - name: Instalar dependências
         run: npm ci
+      - name: Verificar TypeScript
+        run: npm run typecheck
+      - name: Verificar lint
+        run: npm run lint
       - name: Compilar e validar matérias
         run: npm run build
