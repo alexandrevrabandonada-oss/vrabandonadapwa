@@ -164,6 +164,12 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
         />
       </section>
 
+      {editorialPlace ? (
+        <div className="vr6-territory-coverage">
+          <EditorialTerritoryFeed place={editorialPlace} />
+        </div>
+      ) : null}
+
       <section className="section editorial-article">
         <div className="editorial-article__meta">
           <p className="eyebrow">o que está em jogo</p>
@@ -327,7 +333,7 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
           </Link>
         </div>
       </section>
-      {editorialPlace ? <EditorialTerritoryFeed place={editorialPlace} /> : null}
+
     </Container>
   );
 }
