@@ -63,26 +63,39 @@ function filterPublicAssets(
   });
 }
 
-export async function getPublishedArchiveAssets() {
+/** Uma consulta de documentos indisponível não é o mesmo que uma lista vazia. */
+export type PublicArchiveCatalogState = {
+  assets: ArchiveAsset[];
+  availability: "available" | "not_configured" | "unavailable";
+};
+
+export async function getPublicArchiveCatalogState(): Promise<PublicArchiveCatalogState> {
   const supabase = createSupabasePublicClient();
-
-  if (!supabase) {
-    return getArchiveFallbackItems();
+  if (!supabase) return { assets: getArchiveFallbackItems(), availability: "not_configured" };
+  try {
+    const { data, error } = await supabase
+      .from("archive_assets")
+      .select(publicFields)
+      .eq("public_visibility", true)
+      .order("featured", { ascending: false })
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+    if (error || !data) return { assets: getArchiveFallbackItems(), availability: "unavailable" };
+    return { assets: sortArchiveAssets(data as ArchiveAsset[]), availability: "available" };
+  } catch {
+    return { assets: getArchiveFallbackItems(), availability: "unavailable" };
   }
+}
 
-  const { data, error } = await supabase
-    .from("archive_assets")
-    .select(publicFields)
-    .eq("public_visibility", true)
-    .order("featured", { ascending: false })
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
+export function filterPublishedArchiveAssets(
+  assets: ArchiveAsset[],
+  filter: { assetType?: string; memoryItemId?: string; editorialItemId?: string; collectionSlug?: string; place?: string; year?: number | null },
+) {
+  return sortArchiveAssets(filterPublicAssets(assets, filter));
+}
 
-  if (error || !data || data.length === 0) {
-    return getArchiveFallbackItems();
-  }
-
-  return sortArchiveAssets(data as ArchiveAsset[]);
+export async function getPublishedArchiveAssets() {
+  return (await getPublicArchiveCatalogState()).assets;
 }
 
 export async function getPublishedArchiveAssetById(id: string) {
