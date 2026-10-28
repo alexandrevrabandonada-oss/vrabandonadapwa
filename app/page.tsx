@@ -80,8 +80,11 @@ export default async function HomePage() {
   const latest = feed.slice(lead ? 1 : 0, lead ? 7 : 6);
   const featuredDossiers = dossiers.slice(0, 3);
   const investigationPool = materias.filter((story) => materiaKind(story) === "investigation");
-  const investigationStories = investigationPool.filter((story) => "materia-" + story.slug !== lead?.id).slice(0, 3);
-  const investigationLead = materias.find((story) => materiaKind(story) === "investigation" && "materia-" + story.slug === lead?.id) ?? null;
+  // O leitor não deve encontrar a mesma manchete duas vezes na página inicial.
+  // O bloco Investigações só repete um caso como atalho compacto, sem novo cartão editorial.
+  const visibleFeedIds = new Set([lead, ...latest.slice(0, 4)].filter((entry): entry is FeedEntry => Boolean(entry)).map((entry) => entry.id));
+  const investigationStories = investigationPool.filter((story) => !visibleFeedIds.has("materia-" + story.slug)).slice(0, 3);
+  const investigationLead = investigationPool.find((story) => visibleFeedIds.has("materia-" + story.slug)) ?? null;
   const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0 || investigationLead !== null;
   const featuredNeighborhoods = neighborhoods.slice(0, 5);
   const coveredNeighborhoods = editorialNeighborhoods.filter((place) => !featuredNeighborhoods.some((hub) => hub.slug === place.slug)).slice(0, 5);
@@ -191,9 +194,9 @@ export default async function HomePage() {
           </div>
         ) : investigationLead ? (
           <div className="vr5-only-lead-note">
-            <strong>Investigação em destaque nesta edição</strong>
-            <p>O caso principal já aparece no topo. Acompanhe o histórico e as próximas respostas no mesmo endereço, sem repetir a matéria nesta página.</p>
-            <Link href={"/materias/" + investigationLead.slug}>Acompanhar este caso ↗</Link>
+            <strong>Investigação em acompanhamento</strong>
+            <p>A reportagem já está entre as publicações acima. Consulte as fontes e os próximos desdobramentos no mesmo endereço.</p>
+            <Link href={"/materias/" + investigationLead.slug}>Ver histórico e fontes ↗</Link>
           </div>
         ) : (
           <div className="vr2-investigations">
