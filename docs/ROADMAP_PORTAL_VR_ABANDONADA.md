@@ -256,3 +256,5 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Testes de unidade para divergências, paginação, falta de autorização, falhas de consulta e limite de capacidade foram adicionados. **Atenção:** passam a integrar os testes do CI, mas o funcionamento com Storage real e sessão administrativa legítima continua pendente.
 - Não ativar o endpoint privado em produção até a migração privada ser aplicada e aprovada e existir `SUPABASE_SERVICE_ROLE_KEY` apenas no servidor, com isolamento adequado.
 - Os quatro objetos preexistentes no bucket público `archive-assets` não integram essa reconciliação. Sua classificação editorial, migração e eventual retirada seguem pendentes.
+
+- Interface administrativa `/interno/armazenamento` acrescentada para apresentar contagens agregadas e divergências, com `robots:noindex`, renderização dinâmica e acesso negado sem sessão administrativa autorizada. Não retorna nomes ou caminhos. Link aparece na Captura Universal apenas quando o contexto privado autorizado está disponível. Esta interface depende da mesma flag e não torna o sistema privado ativo em produção.

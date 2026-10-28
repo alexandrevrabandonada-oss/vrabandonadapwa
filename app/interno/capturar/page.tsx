@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -55,6 +56,14 @@ export default async function CapturarPage({ searchParams }: { searchParams?: Pr
         <h1 className="hero__title">Captura Universal.</h1>
         <p className="hero__lead">Jogue o material aqui primeiro. Decida para onde vai depois.</p>
       </section>
+
+      {privateContext ? (
+        <section className="section" style={{ marginTop: "1rem" }}>
+          <Link className="button-secondary" href="/interno/armazenamento">
+            Conferir integridade dos documentos privados
+          </Link>
+        </section>
+      ) : null}
 
       <section className="section internal-panel" style={{ marginTop: "1rem" }}>
         <UniversalCaptureComposer message={feedbackItemId ? null : feedbackMessage} status={feedbackItemId ? null : feedbackStatus} />
