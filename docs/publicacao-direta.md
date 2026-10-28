@@ -54,3 +54,8 @@
 ## Política de confiança (Sprint 0)
 
 O conteúdo de demonstração só pode aparecer em desenvolvimento local com `VR_ENABLE_DEMO_FIXTURES=true`. Não deve aparecer no build de preview/produção. `/buscar` passa a incluir matérias reais do pipeline GitHub. A Captura Universal exige confirmação explícita e autorização editorial no servidor para publicação rápida; nenhum formulário público publica automaticamente.
+
+
+## Agente Editorial e publicações sem Meta
+
+Use o painel interno /interno/agente para organizar uma pauta e copiar o comando para o ChatGPT conectado ao GitHub. Só após revisar e aprovar a versão final é permitido mesclar a PR com a reportagem. Consulte docs/OPERACAO_AGENTE_EDITORIAL.md. O monitor GitHub Actions verifica disponibilidade e SEO básico diariamente, sem provar indexação no Google.

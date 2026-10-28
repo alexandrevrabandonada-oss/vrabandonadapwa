@@ -244,3 +244,12 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - GitHub Actions pode precisar de autorização para gerar PR no Settings do repositório. PRs geradas com `GITHUB_TOKEN` não disparam CI automaticamente: exigir checagem manual e Ready for review antes do merge.
 - Importador de postagens ainda não foi exercitado com uma credencial Meta verdadeira; `public/data/instagram-posts.json` continua vazio. A automação é preparada, **não conectada nem executada com posts reais**.
 - Não modifica Supabase, buckets ou PR #7; não integra dados de denúncia não publicados ou de fontes privadas.
+
+
+## Sprint Agente Editorial sem Meta — 27/10/2026
+
+- Arquitetura escolhida: publicação pelo ChatGPT conectado ao GitHub, com revisão de fontes e aprovação expressa do texto final antes de mesclar na main; Vercel distribui o site.
+- Novo painel interno /interno/agente com autenticação existente, contador de matérias e importações, área de preparação de pauta e comando editorial copiado localmente. Não é um LLM hospedado nem envia texto automaticamente.
+- Vigia técnico no GitHub Actions: 09h17 BRT diariamente, com acionamento manual; testa homepage, robots, sitemap, feed e amostra de matérias, criando e encerrando Issue deduplicada em caso de falha/recuperação. Não comprova indexação Google.
+- Testes, documentação operacional e atalho no cockpit. Esta PR não publica nenhuma matéria, não modifica Supabase nem PR #7 e não exige token Meta.
+- Pendente: CI, preview, teste real do login/admin no celular e aprovação editorial da primeira reportagem efetiva.
