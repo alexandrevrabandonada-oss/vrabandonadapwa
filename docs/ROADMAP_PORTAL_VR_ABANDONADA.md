@@ -395,3 +395,22 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 **Verificado após conclusão dos checks:** commits e arquivos de PR no GitHub; workflow CI `validate` com testes Node, TypeScript, lint e build Next.js concluído com sucesso; deploy preview Vercel `dpl_7iauBHfMQrekzkejjq24SWtjNZtN` status `READY` para o commit `1f66933986ce630c898cc24f2fca8d73e2be04f5` (prévia: `https://vrabandonadapwa-j5kulbl0u-alexandrevrabandonada-oss-projects.vercel.app`). **Pendente de comprovação:** renderização/fluxos visuais no Android e desktop e verificações HTTP/SEO; `READY` não substitui inspeção humana. Sem merge nem alteração da produção.
 
 **Próxima etapa depois da aceitação visual:** estrutura canônica de vínculo publicação ↔ caso ↔ documento; eliminar duplicação entre `editorial_items` e `content/materias` sem migração destrutiva e sem criar registros sintéticos.
+
+## Validação visual da prévia V4 e Sprint B — 28/10/2026
+
+**Evidência de uso real:** screenshots Android da Vercel preview encaminhadas pelo proprietário: topo da home com texto direto; matéria da Vila Brasília; Rua 33 repetida como atualização e investigação com resumo inteiro; página Territórios com título e "como entrar" gigantes; Acervo com manifesto de coleções antes dos materiais; rodapé com muitos links e painel institucional longo. Foi fornecida arte circular da marca VR Abandonada; **não reproduzir nem substituir** o arquivo original sem integração fiel do asset.
+
+**Diagnóstico crítico:** a primeira passada tornou a homepage mais jornalística, mas não eliminou as telas que apresentam o próprio produto em vez de resolver a tarefa do leitor. Índices vazios amplificam esse problema. O ícone circular flutuante visto nas capturas de preview pode ser toolbar da Vercel e não deve ser removido por CSS sem comprovação. A barra inferior necessita rótulos que digam destino, não processo; `Investigar` é ambíguo.
+
+**Implementação iterativa na PR #17 (não publicada no site):**
+- Home: não repetir o resumo completo da mesma reportagem investigativa se já estiver nas últimas; mostrar blocos compactos. Não renderizar a seção “Por bairro” enquanto não houver bairro público de verdade; retirar a caixa longa de autoexplicação e incluir link simples de envio à redação com orientação de verificação.
+- `/territorios`: transformar em “Bairros e lugares”, com pesquisa universal logo no início e lista real de lugares publicados; zero registros vira aviso sucinto e um caminho para notícias, não uma vitrine vazia.
+- `/acervo`: transformar em “Documentos e fontes”, com materiais publicados e filtros progressivos antes de coleções; preservar filtros de tipo, ano, lugar **e memória**. Exibir as fontes HTTP(S) efetivamente citadas em matérias aprovadas, com rótulo de **referência externa**, ligação à matéria e sem dizer que o arquivo foi hospedado pelo projeto. Limitar a listagem sem prometer todos os documentos.
+- Sistema visual: folha CSS escopada `app/product-v4.css`, hierarquia typográfica mais contida, cartões compactos, busca acessível e layout móvel de uma coluna.
+- Navegação: bottom tab `Casos` com mesma rota `/dossies`; footer reduzido aos destinos essenciais, outras seções preservadas no menu.
+
+**O que não foi feito:** integrações com Meta, Supabase, Vercel produção, alterações no editorial ou autoria, captura de dados privados, geração de nova logomarca, remoção de rotas antigas, migração de dados.
+
+**Critérios exigidos na PR #17:** testes Node + TypeScript + lint + build aprovados; preview do commit final READY; conferência visual real no Android de 320 a 430px, inclusive zoom; prova de acesso e resultado por /buscar; material de /acervo separado de links externos; URLs antigas intactas. **GitHub CI e Vercel READY não atestam usabilidade, indexação nem proteção de denúncias.**
+
+**Fase seguinte condicionada à validação da PR #17:** páginas internas de leitura, links cruzados notícia-caso-documento, origem única das publicações e acesso a referências verificáveis em 1–2 interações. A marca fornecida deve ser integrada exatamente, em formato adequado, sem recriar sua arte ou torná-la ilegível em 40px.
