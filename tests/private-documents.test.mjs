@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { runInNewContext } from "node:vm";
 import ts from "typescript";
 
@@ -26,7 +27,7 @@ test("valida tamanho, extensão, MIME e assinatura do arquivo", () => {
 
 function makeAction(context) {
   return load("app/interno/capturar/private-actions.ts", {
-    "node:crypto": { randomUUID: () => "11111111-1111-4111-8111-111111111111" },
+    "node:crypto": { createHash, randomUUID: () => "11111111-1111-4111-8111-111111111111" },
     "next/cache": { revalidatePath() {} },
     "@/lib/media/private-server": { authorizePrivateDocuments: async () => context, PRIVATE_BUCKET: "editorial-private" },
     "@/lib/media/private-validation": validation,

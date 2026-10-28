@@ -1,8 +1,15 @@
 \set ON_ERROR_STOP on
 set role service_role;
 insert into storage.objects(bucket_id,name) values ('editorial-private','synthetic.pdf');
-insert into public.private_editorial_documents(id,capture_id,object_path,mime_type,byte_size,origin,purpose,created_by)
-values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','synthetic.pdf','application/pdf',8,'captura','revisão','cccccccc-cccc-4ccc-8ccc-cccccccccccc');
+insert into public.private_editorial_documents(id,capture_id,object_path,mime_type,byte_size,sha256,origin,purpose,created_by)
+values ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','synthetic.pdf','application/pdf',8,repeat('a',64),'captura','revisão','cccccccc-cccc-4ccc-8ccc-cccccccccccc');
+do $$ begin
+  begin
+    insert into public.private_editorial_documents(id,capture_id,object_path,mime_type,byte_size,sha256,origin,purpose,created_by)
+    values ('dddddddd-dddd-4ddd-8ddd-dddddddddddd','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','duplicate.pdf','application/pdf',8,repeat('a',64),'captura','revisão','cccccccc-cccc-4ccc-8ccc-cccccccccccc');
+    raise exception 'duplicate content accepted';
+  exception when unique_violation then null; end;
+end $$;
 reset role;
 do $$ begin
   if (select public from storage.buckets where id='editorial-private') then raise exception 'bucket is public'; end if;

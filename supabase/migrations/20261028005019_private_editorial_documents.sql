@@ -15,10 +15,12 @@ create table public.private_editorial_documents (
   object_path text not null unique,
   mime_type text not null,
   byte_size integer not null check (byte_size > 0 and byte_size <= 921600),
+  sha256 text not null check (sha256 ~ '^[0-9a-f]{64}$'),
   origin text not null check (origin in ('captura', 'apuração', 'acervo')),
   purpose text not null check (purpose in ('revisão', 'referência', 'investigação')),
   created_by uuid not null,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  unique (capture_id, sha256)
 );
 alter table public.private_editorial_documents enable row level security;
 revoke all on public.private_editorial_documents from public, anon, authenticated;
