@@ -159,15 +159,13 @@ export default async function ArchivePage({ searchParams }: PageProps) {
               />
             ))}
           </div>
-        ) : (
+        ) : archiveAvailability === "available" ? (
           <div className="vr6-empty-note">
-            {archiveAvailability !== "available"
-              ? "A consulta documental está indisponível. Consulte as reportagens e fontes públicas acima."
-              : hasFilters
-                ? "Nenhum documento corresponde aos filtros. Limpe os filtros e tente novamente."
-                : "Documentos e anexos em organização. Nada de registros fictícios: consulte as reportagens e as fontes públicas acima."}
+            {hasFilters
+              ? "Nenhum documento corresponde aos filtros. Limpe os filtros e tente novamente."
+              : "Documentos e anexos em organização. Nada de registros fictícios: consulte as reportagens e as fontes públicas acima."}
           </div>
-        )}
+        ) : null}
       </section>
 
       {collections.length > 0 ? (
