@@ -167,3 +167,24 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 **Primeira matéria em produção editorial:** PR #6 traz rascunho da auditoria da Rua 33 (2021–2026), apoiada pelo dossiê-mestre existente no Google Drive e fontes municipais/imprensa. Arquivo em `editorial-drafts` com `status:draft` e `reviewed:false`, fora do acervo indexável, aguardando contraditório, checagem final e aprovação do usuário. **Não foi publicada na homepage.**
 
 **Próximos blocos:** 1) confirmar deploy e testes cliente HTTP/HTTPS; 2) identificar projeto Supabase realmente usado pela Vercel e inventariar arquivos públicos legados; 3) criar armazenamento privado e migração responsável, sem expor fontes; 4) unificar publisher Git + editorial/Supabase; 5) revisar e publicar a Rua 33 com URL permanente; 6) ativar Search Console e monitorar indexação.
+
+
+## Sprint visual V2 — reestruturação mobile-first (27/10/2026)
+
+**Origem:** captura real do site em dispositivo Android fornecida pelo proprietário. Diagnóstico visual: painel de leitura por voz ocupa grande parte do viewport; menu inferior cai numa segunda linha; baixa hierarquia de notícia e excesso de apresentação institucional.
+
+**Código proposto em branch independente do Sprint 0 / PR #7:**
+- Homepage mais enxuta com manchete editorial introdutória, últimas **publicações efetivamente publicadas**, investigações, bairros, busca e vínculo contextual com COMUN. Nunca sintetizar matérias fictícias quando o banco/acervo está vazio.
+- Nova barra mobile com **quatro destinos + botão Menu** em cinco colunas, ícones compactos e labels legíveis. Ajustes de área segura do Android/iOS, sem barra dupla.
+- Leitor de voz acionado apenas por ação explícita: sem salvar/reabrir painel por localStorage, sem rolagem automática na montagem, botão Fechar que interrompe a narração; janela compacta limitada à altura móvel.
+- Cabeçalho tipográfico responsivo, paleta grafite/amarelo, contrastes definidos, tipografia editorial e blocos de notícias com leitura clara.
+- Navegação simplificada em Últimas / Investigações / Bairros / Buscar; seções antigas continuam acessíveis via menu e URLs estáveis.
+- Sem mudanças no Supabase, capturas, buckets, direitos de publicação, domínio ou APIs sensíveis.
+
+**Aceite e verificação:**
+1. Build Next.js + TypeScript + lint + testes Node.
+2. Conferir prévia da PR; comparar mobile 360, 390 e 430 px e desktop.
+3. Validar abertura/fechamento de áudio, ausência de auto-abertura após recarregar e ausência de scroll involuntário.
+4. Garantir que o menu inferior permaneça uma linha com cinco ações em 360–430 px.
+5. Validar conteúdo publicado real, foco por teclado, contraste, zoom de texto e ausência de overflow.
+6. Somente integrar em produção depois da inspeção visual e de fluxos reais; não confundir READY com aceitação de UX.

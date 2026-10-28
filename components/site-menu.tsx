@@ -55,7 +55,8 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
         aria-label="Abrir menu principal"
         onClick={() => setOpen(true)}
       >
-        Menu
+        {variant === "mobile" ? <span className="vr2-menu-icon" aria-hidden="true">☰</span> : null}
+        <span>{variant === "mobile" ? "Menu" : "Explorar"}</span>
       </button>
 
       {open ? (
