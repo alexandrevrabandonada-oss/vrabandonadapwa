@@ -5,8 +5,8 @@ const read=(p)=>readFileSync(p,"utf8");
 
 test("a marca preserva nome acessível com o texto visível e a função",()=>{
  const s=read("components/site-header.tsx");
- assert.match(s,/<Link href="\\/" className="vr2-brand">/);
- assert.match(s,/<span className="vr2-brand__mark">VR<\\/span>/);
+ assert.ok(s.includes('<Link href="/" className="vr2-brand">'));
+ assert.ok(s.includes('<span className="vr2-brand__mark">VR</span>'));
  assert.doesNotMatch(s,/aria-label="VR ABANDONADA/);
  assert.match(s,/VOLTA REDONDA · RJ/);
 });
