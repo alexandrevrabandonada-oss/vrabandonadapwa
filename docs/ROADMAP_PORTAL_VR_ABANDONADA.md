@@ -488,3 +488,23 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Limitação de verificação externa:** conexões Supabase listadas não permitiram identificar com segurança o projeto do banco deste portal; nenhuma base de terceiros/adjacente foi consultada, nenhuma migração ou política RLS foi modificada. O código do repositório contém políticas e seeds históricos, que não constituem evidência de estado atual do banco. Validar o Supabase real continua pendente até identificar projeto e credenciais de escopo público.
 
 **Validação exigida:** TypeScript, lint, build bloqueantes; Node tests com novo contrato de status; smoke HTTP de Casos em ambiente sem configuração; Chromium e axe; prévia Vercel para HEAD exato. Não mesclar #25/#26/#27 sem QA visual remoto e revisão de fontes.
+
+---
+
+## Sprint V7.7 — auditoria do Supabase de produção e catálogos honestos
+
+**Diagnóstico confirmado em 28/10/2026 por leitura somente leitura de ambientes conectados:**
+- O projeto Vercel `vrabandonadapwa` disponibiliza `NEXT_PUBLIC_SUPABASE_URL`, uma chave pública Supabase e `SUPABASE_SERVICE_ROLE_KEY` **apenas para `production`**, sem configuração equivalente para `preview`. Os valores secretos não foram exibidos ou replicados.
+- A URL pública da produção identifica inequivocamente o projeto Supabase `ghehhhztsukhshdhotmu`, acessível pela conexão "vrabandonada site", embora o nome administrativo do projeto seja genérico.
+- Consulta direta a `information_schema.tables`: em `public` existem somente `intake_submissions`, `admin_email_allowlist` e `universal_captures`, todos com RLS habilitado. Estão **ausentes** `archive_assets`, `archive_collections`, `place_hubs`, `investigation_dossiers`, `editorial_items` e demais tabelas da camada editorial esperada pelo código.
+- Histórico `supabase_migrations.schema_migrations`: apenas `20261028003300 secure_intake_and_admin_allowlist` e `20261028003847 restrict_capture_truncate`. Os scripts editoriais `supabase/migrations/0003…0033` do Git NÃO devem ser tratados como implantados na produção. Ausência constatada não implica permissão para aplicar migrations.
+- **Risco de uma implantação cega:** migrações históricas contêm dados demonstrativos (seeds) e algumas políticas `to authenticated using (true)` sem segregação granular. Exigir revisão de RLS, plano de backup, migrações mínimas sem conteúdo demonstrativo, teste em staging e rollback antes de tocar produção. Recebimento de denúncias e identidade de autores/fonte são dados sensíveis; não fazer consultas a essas tabelas neste fluxo.
+
+**Correções de produto incluídas na PR #27:**
+- `getPublicArchiveCatalogState()` e `getPublicPlaceCatalogState()`: retorno com `available`, `not_configured`, `unavailable`; preservam os métodos anteriores que retornam arrays para compatibilidade.
+- Acervo apresenta aviso discreto de indisponibilidade sem afirmar que não existem documentos; conserva reportagens Git e fontes verificadas. Os filtros operam sobre o mesmo conjunto obtido da primeira consulta, evitando o acesso duplicado a `archive_assets`.
+- Bairros mantém o índice territorial extraído das reportagens aprovadas e não confunde ausência de hubs no banco com ausência factual de cobertura.
+- Estados vazios de "em preparação" somente quando a consulta tiver sido realmente bem-sucedida; sem criar material inventado.
+- Testes `tests/public-catalog-availability-v7.test.mjs` verificam os contratos e as rotas. Nenhuma mudança em migrations, RLS, env, credenciais, domínio ou conteúdo jornalístico.
+
+**Critérios de aceite antes de qualquer merge:** 100% de Node tests, TS, lint, build, smoke HTTP, Chromium, axe/reflow no SHA exato e Preview Vercel correspondente; revisão de legibilidade das mensagens novas. A implementação das tabelas editoriais deve ser um projeto separado e auditado, e não uma aplicação irrefletida do histórico do repositório.
