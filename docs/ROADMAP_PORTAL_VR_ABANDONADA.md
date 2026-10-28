@@ -253,3 +253,12 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Vigia técnico no GitHub Actions: 09h17 BRT diariamente, com acionamento manual; testa homepage, robots, sitemap, feed e amostra de matérias, criando e encerrando Issue deduplicada em caso de falha/recuperação. Não comprova indexação Google.
 - Testes, documentação operacional e atalho no cockpit. Esta PR não publica nenhuma matéria, não modifica Supabase nem PR #7 e não exige token Meta.
 - Pendente: CI, preview, teste real do login/admin no celular e aprovação editorial da primeira reportagem efetiva.
+
+
+## Publicação inaugural como investigação viva — 28/10/2026
+
+- Usuário autorizou explicitamente o texto inaugural da Rua 33, mesmo com o contraditório ainda pendente; futuras respostas deverão ser incorporadas à mesma matéria.
+- PR #13 passa de rascunho técnico para a primeira publicação autorizada em `content/materias/rua-33-cinco-anos-obra-contratos-custos-volta-redonda.json` com status reviewed/published e data local de 28/10/2026.
+- Novo padrão opcional para publicações: `investigationStatus: ongoing` e `updates[]` (data/título/resumo), exibidos com indicador de investigação em andamento e histórico público. Atualizações futuras preservam permalink, alteram `updatedAt` e acrescentam eventos.
+- O texto informa expressamente que ainda não houve contato específico com Prefeitura, Grupo VR e Luquip e não sugere resposta recebida. Dados parciais não são apresentados como custo final, nem há imputação de fraude.
+- Na conclusão desta fase verificar CI, preview Vercel, merge, produção READY, página real, sitemap e RSS. Indexação Google exige verificação posterior.

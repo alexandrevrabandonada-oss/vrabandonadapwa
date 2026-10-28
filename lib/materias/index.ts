@@ -20,6 +20,8 @@ export type Materia = {
   cover?: { src: string; alt: string; credit?: string };
   instagramUrl?: string;
   correctionNote?: string;
+  investigationStatus?: "ongoing" | "closed";
+  updates?: Array<{ date: string; label: string; text: string }>;
 };
 
 function isPublicMateria(data: unknown, slug: string): data is Materia {

@@ -845,3 +845,14 @@ body::before { opacity: .12; }
   .vr3-search__empty { padding: .9rem; }
   .vr3-search__empty p { font-size: .81rem; }
 }
+
+/* Investigação viva: status visível e histórico de versões para leitoras e leitores. */
+.vr-materia__status { display: inline-flex; align-items: center; gap: .4rem; max-width: 55ch; margin: .75rem 0 0; padding: .58rem .75rem; background: #28241b; border: 1px solid #715b23; border-radius: 5px; color: #f6cb51; font-size: .79rem; font-weight: 760; line-height: 1.4; }
+.vr-materia__timeline { border: 1px solid #584e3a; background: #1e1d1a; border-radius: 8px; padding: clamp(.95rem, 2vw, 1.4rem); margin: 2rem 0; }
+.vr-materia__timeline h2 { font-size: clamp(1.2rem, 2.7vw, 1.7rem); line-height: 1.12; margin: 0 0 1rem; }
+.vr-materia__timeline ol { padding: 0; margin: 0; list-style: none; display: grid; gap: .95rem; }
+.vr-materia__timeline li { display: grid; gap: .35rem; border-left: 3px solid #e2ac2f; padding-left: .85rem; }
+.vr-materia__timeline time { font-size: .75rem; color: #dac379; font-weight: 780; }
+.vr-materia__timeline strong { font-size: .98rem; color: #f2eee5; }
+.vr-materia__timeline p { margin: 0; color: #d0cac0; font-size: .86rem; line-height: 1.55; }
+@media(max-width:640px) { .vr-materia__status { font-size: .73rem; } .vr-materia__timeline { margin: 1.25rem 0; } }
