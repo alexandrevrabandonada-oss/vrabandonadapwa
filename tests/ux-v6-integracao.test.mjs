@@ -23,7 +23,7 @@ test("Acervo mantém publicação canônica, referências externas e filtros", (
   const source = read("components/editorial-source-index.tsx");
   assert.match(page, /EditorialAcervoIndex articles=\{articles\}/);
   assert.match(page, /EditorialSourceIndex articles=\{articles\}/);
-  assert.match(page, /getPublishedArchiveFilteredAssets/);
+  assert.match(page, /filterPublishedArchiveAssets/);
   assert.match(page, /memoryItemId: activeMemory/);
   assert.match(page, /collectionHref=/);
   assert.match(source, /Fonte externa/);
