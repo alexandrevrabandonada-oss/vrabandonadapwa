@@ -69,6 +69,9 @@ test("design system oferece toque, foco, responsividade e movimento reduzido", (
   const tokens = read("app/design-tokens.css");
   assert.ok(layout.indexOf('import "./experience-v6.css";') < layout.indexOf('import "./editorial-cards-v7.css";'));
   assert.ok(css.includes("var(--ds-tap-target)"));
+  assert.match(css, /\.vr7-editorial-card\.vr-index__item\s*\{/);
+  assert.match(css, /\.vr7-editorial-card__meta\s*\{\s*display:\s*flex;/);
+  assert.match(css, /\.vr7-editorial-card__title\s*\{/);
   assert.ok(css.includes(":focus-within"));
   assert.ok(css.includes("@media (max-width: 760px)"));
   assert.ok(css.includes("@media (prefers-reduced-motion: reduce)"));
