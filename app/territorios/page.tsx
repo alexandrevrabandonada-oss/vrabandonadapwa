@@ -60,7 +60,7 @@ export default async function TerritoriesPage() {
           <h2 id="vr6-hubs-title">Lugares documentados</h2>
           <div className="vr6-hub__grid">
             {orderedHubs.map((hub) => (
-              <article className="vr6-territory-card" key={hub.id}>
+              <article className="vr6-territory-card vr7-editorial-card" key={hub.id}>
                 <div className="vr6-territory-card__meta">
                   <span>{getPlaceHubStatusLabel(hub.status)}</span>
                   <span>{linkCount.get(hub.id) ?? 0} {(linkCount.get(hub.id) ?? 0) === 1 ? "material" : "materiais"} vinculados</span>
