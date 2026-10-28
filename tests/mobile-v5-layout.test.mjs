@@ -35,12 +35,15 @@ test("acervo vazio não é uma tela de estatísticas zeradas",()=>{
  assert.match(s,/href="\/materias"/);
  assert.match(s,/href="\/dossies"/);
  assert.match(s,/Nada de registros fictícios/);
+ assert.match(s,/EditorialSourceIndex articles=\\{articles\\}/);
+ assert.match(s,/memoryItemId: activeMemory/);
 });
 test("territórios sem cadastros não simulam atlas já preenchido",()=>{
  const s=read("app/territorios/page.tsx");
  assert.match(s,/if \(territories\.length === 0\)/);
  assert.match(s,/href="\/noticias"/);
  assert.match(s,/Vila Brasília/);
+ assert.match(s,/newEditorialPlaces/);
  assert.match(s,/EditorialTerritoryIndex/);
  assert.match(s,/getPublishedEditorialTerritories/);
 });
