@@ -3,7 +3,7 @@
   "kind": "news",
   "title": "Em meio à onda de violência, comando do 28º BPM é trocado após invasão da Vila Brasília",
   "subtitle": "Amanda Neves Ferreira deixou o comando do batalhão em 27 de outubro. Décio Keiji Takamine foi anunciado como substituto, enquanto Volta Redonda cobra respostas sobre a prevenção e a reação policial.",
-  "summary": "Após a troca de comando do 28º BPM, a Prefeitura anunciou reforço de quatro viaturas e pelo menos 16 policiais em Volta Redonda nesta quarta-feira (28). O município também divulgou operação do Bope no Monte Castelo. Ainda faltam explicações sobre a cronologia da resposta à invasão da Vila Brasília.",
+  "summary": "Depois da troca do comando do 28º BPM, a Prefeitura de Volta Redonda informou nesta quarta-feira (28) que a Corregedoria da PM investiga suspeita de facilitação da invasão da Vila Brasília por policiais. Seis agentes de duas viaturas foram transferidos, sem comprovação de culpa. Reforços, operação do Bope e a cronologia da resposta também estão sob acompanhamento.",
   "section": "Segurança pública",
   "author": "VR Abandonada",
   "status": "published",
@@ -65,6 +65,14 @@
     {
       "label": "Diário do Vale — Operação no Complexo da Vila Brasília e desmentido de boatos de toque de recolher, 27/10/2026",
       "url": "https://diariodovale.com.br/policia/policia-militar-mantem-ocupacao-por-tempo-indeterminado-no-vila-brasilia/"
+    },
+    {
+      "label": "Prefeitura de Volta Redonda — Nota oficial de 28/10/2026 sobre investigação da Corregedoria da PM e transferência de seis policiais",
+      "url": "https://www.voltaredonda.rj.gov.br/comunicacao/noticias/25-secom/12817-nota-oficial-5/"
+    },
+    {
+      "label": "Foco Regional — Reportagem de 28/10/2026 sobre a apuração de possível envolvimento de policiais; não confirma as suspeitas",
+      "url": "https://focoregional.com.br/Noticia/vr-cobra-rigor-na-apuracao-de-possivel-envolv"
     }
   ],
   "blocks": [
@@ -103,6 +111,22 @@
     {
       "type": "paragraph",
       "text": "A PM também negou, segundo o Diário do Vale, mensagens que circulavam sobre supostos toques de recolher e presença de criminosos armados no complexo. O esclarecimento diz respeito aos boatos então verificados pela corporação: não significa que todos os riscos de segurança em Volta Redonda tenham desaparecido. A orientação é não compartilhar alertas anônimos sem confirmação e acompanhar informações de veículos confiáveis e comunicados oficiais."
+    },
+    {
+      "type": "heading",
+      "text": "Nova apuração em 28/10: Corregedoria investiga possível facilitação por policiais"
+    },
+    {
+      "type": "paragraph",
+      "text": "Em nota divulgada nesta quarta-feira (28), a Prefeitura de Volta Redonda informou que acompanha uma investigação da Corregedoria da Polícia Militar, conduzida por meio da 5ª Delegacia de Polícia Judiciária Militar (DPJM), sobre a suspeita de que policiais possam ter facilitado a invasão criminosa da Vila Brasília, no domingo (25). O município afirma ter colocado imagens do monitoramento municipal à disposição dos investigadores. A apuração também envolve imagens de câmeras corporais e a atuação de agentes que estavam de serviço."
+    },
+    {
+      "type": "paragraph",
+      "text": "Segundo a nota municipal, seis policiais que integravam duas viaturas sob investigação foram transferidos; a Prefeitura também mencionou mudanças no comando do 28º BPM e na companhia local. A transferência de servidores e a existência de investigação não comprovam envolvimento criminoso, omissão dolosa ou responsabilidade individual. O objeto preciso dos procedimentos, as evidências e eventuais conclusões ainda precisam ser divulgados pelos órgãos competentes, respeitado o devido processo legal."
+    },
+    {
+      "type": "paragraph",
+      "text": "A existência dessa apuração torna mais urgente esclarecer quais viaturas estavam em operação, que informações chegaram aos comandos e quando, e de que forma registros de câmeras municipais e corporais foram preservados e analisados. A nota não demonstra, por si só, que a substituição da ex-comandante tenha sido causada pela investigação ou que todos os problemas da resposta policial estejam esclarecidos."
     },
     {
       "type": "heading",
@@ -152,7 +176,9 @@
         "Em que horários foram identificados os primeiros sinais da invasão, comunicados os comandos e solicitados ou autorizados os reforços?",
         "Quais recursos operacionais estavam disponíveis antes da chegada das equipes especializadas, e que medidas foram tomadas para proteger os moradores?",
         "Quando o Ciosp, a Semop e a PRF obtiveram as imagens e os dados relativos aos veículos e suspeitos?",
-        "Quais medidas de prevenção, inteligência e proteção comunitária serão adotadas para evitar novos ataques?"
+        "Quais medidas de prevenção, inteligência e proteção comunitária serão adotadas para evitar novos ataques?",
+        "Qual o objeto e o estágio formal da apuração da 5ª DPJM envolvendo as duas viaturas e seis policiais transferidos, resguardando a presunção de inocência dos investigados?",
+        "Quais horários de acionamento e registros de despacho, câmeras corporais e monitoramento municipal poderão fundamentar uma cronologia pública da resposta à invasão, sem divulgar informações operacionais sensíveis?"
       ]
     },
     {
@@ -179,9 +205,14 @@
       "date": "2026-10-28T10:57:54-03:00",
       "label": "Esclarecimento sobre ocupação e boatos — 28/10",
       "text": "Acrescentadas informações atribuídas a comunicado do 28º BPM, divulgado na imprensa em 27/10, sobre ocupação policial por tempo indeterminado e desmentido de boatos de toque de recolher. O comunicado não esclarece a cronologia da resposta inicial nem comprova a ausência de riscos em outros bairros."
+    },
+    {
+      "date": "2026-10-28T11:59:06-03:00",
+      "label": "Corregedoria apura suspeita envolvendo policiais — 28/10",
+      "text": "Prefeitura informa investigação da 5ª DPJM sobre possível facilitação da invasão por policiais. Segundo o município, seis agentes de duas viaturas foram transferidos. A divulgação não estabelece culpa dos investigados nem comprova motivo da troca do comando do 28º BPM."
     }
   ],
-  "updatedAt": "2026-10-28T10:57:54-03:00",
+  "updatedAt": "2026-10-28T11:59:06-03:00",
   "territories": [
     {
       "slug": "vila-brasilia",
