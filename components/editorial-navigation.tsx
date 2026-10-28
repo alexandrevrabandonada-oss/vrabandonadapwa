@@ -51,7 +51,7 @@ export function EditorialTerritoryIndex({ territories }: { territories: Editoria
       </div>
       <div className="vr-index__territories">
         {territories.map((place) => (
-          <Link key={place.slug} href={"/territorios/" + place.slug} className="vr-index__territory">
+          <Link key={place.slug} href={"/territorios/" + place.slug} className="vr-index__territory vr7-editorial-card">
             <span className="vr-index__eyebrow">COBERTURA LOCAL</span>
             <strong>{place.label}</strong>
             <span>{place.main.length} {place.main.length === 1 ? "matéria principal" : "matérias principais"} · {place.mentioned.length} {place.mentioned.length === 1 ? "menção contextual" : "menções contextuais"}</span>
