@@ -62,6 +62,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
     memoryItemId: activeMemory || undefined,
   });
   const options = getArchiveFilterOptions(allAssets);
+  const hasCitedSources = articles.some((article) => article.sources.some((source) => /^https?:\/\//i.test(source.url)));
   const memoryById = new Map(memoryItems.map((item) => [item.id, item]));
   const editorialById = new Map(editorialItems.map((item) => [item.id, item]));
   const collectionBySlug = new Map(collections.map((item) => [item.slug, item]));
@@ -77,7 +78,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
         <p>Reportagens, documentos e fontes conectados à cobertura da cidade. Uma publicação, um endereço permanente.</p>
         <nav className="vr6-hub__jump" aria-label="Ir para uma parte do acervo">
           <a href="#index-acervo-titulo">Reportagens</a>
-          <a href="#fontes-reportagens">Fontes citadas</a>
+          {hasCitedSources ? <a href="#fontes-reportagens">Fontes citadas</a> : null}
           <a href="#documentos">Documentos</a>
           <Link href="/territorios">Por bairro ↗</Link>
         </nav>
