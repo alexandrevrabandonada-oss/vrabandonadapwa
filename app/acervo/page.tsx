@@ -106,6 +106,30 @@ export default async function ArchivePage({ searchParams }: PageProps) {
     count: allAssets.filter((asset) => asset.asset_type === type).length,
   }));
 
+  // Não transformar uma base documental vazia em muitas telas de métricas "0".
+  // O arquivo continua acessível e ganha os detalhes quando houver itens públicos.
+  if (allAssets.length === 0 && collections.length === 0) {
+    return (
+      <Container className="vr5-empty-page archive-page">
+        <header className="vr5-empty-page__intro">
+          <p className="eyebrow">Acervo documental</p>
+          <h1>Documentos que dão contexto à notícia.</h1>
+          <p>O catálogo de documentos ainda está sendo organizado para consulta pública. As notícias e investigações já publicadas continuam disponíveis, com as fontes reunidas em cada matéria.</p>
+        </header>
+        <section className="vr5-empty-page__panel" aria-label="Como consultar a informação já publicada">
+          <p className="vr2-eyebrow">CONSULTA DISPONÍVEL AGORA</p>
+          <h2>Comece pelas matérias e pelas fontes.</h2>
+          <p>O acervo de anexos crescerá à medida que documentos puderem ser publicados com contexto, direitos e proteção das fontes. Nada de registros fictícios para completar a página.</p>
+          <div className="vr5-empty-page__links">
+            <Link href="/materias">Pesquisar matérias ↗</Link>
+            <Link href="/dossies">Investigações e documentos ↗</Link>
+            <Link href="/buscar">Buscar tema ou bairro ↗</Link>
+          </div>
+        </section>
+      </Container>
+    );
+  }
+
   return (
     <Container className="intro-grid archive-page">
       <section className="hero hero--split archive-hero">

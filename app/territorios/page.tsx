@@ -25,6 +25,29 @@ export const metadata: Metadata = {
 
 export default async function TerritoriesPage() {
   const territories = await getPublishedPlaceHubs();
+  if (territories.length === 0) {
+    return (
+      <Container className="vr5-empty-page territories-page">
+        <header className="vr5-empty-page__intro">
+          <p className="eyebrow">Por bairro · Volta Redonda</p>
+          <h1>A cidade contada a partir dos lugares.</h1>
+          <p>O catálogo territorial está em preparação. Enquanto os bairros recebem páginas próprias, você já pode encontrar notícias, investigações e documentos sobre cada localidade.</p>
+        </header>
+        <section className="vr5-empty-page__panel" aria-label="Como encontrar informações sobre bairros">
+          <p className="vr2-eyebrow">COMECE PELO QUE JÁ PUBLICAMOS</p>
+          <h2>Procure uma notícia pelo nome do bairro.</h2>
+          <p>Vila Brasília, Água Limpa e Vila Santa Cecília já aparecem na cobertura jornalística. Novas páginas territoriais serão abertas apenas quando houver informação verificada para sustentá-las.</p>
+          <div className="vr5-empty-page__links">
+            <Link href="/buscar?q=Vila%20Bras%C3%ADlia">Vila Brasília ↗</Link>
+            <Link href="/buscar?q=%C3%81gua%20Limpa">Água Limpa ↗</Link>
+            <Link href="/buscar?q=Rua%2033">Vila Santa Cecília ↗</Link>
+            <Link href="/noticias">Todas as notícias ↗</Link>
+          </div>
+        </section>
+      </Container>
+    );
+  }
+
   const featuredPlace = territories.find((place) => place.featured && place.status === "active") ?? territories.find((place) => place.status === "active") ?? territories[0] ?? null;
   const activeTerritories = territories.filter((place) => place.status === "active");
   const monitoringTerritories = territories.filter((place) => place.status === "monitoring");

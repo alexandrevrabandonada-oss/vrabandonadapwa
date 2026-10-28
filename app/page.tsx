@@ -77,8 +77,10 @@ export default async function HomePage() {
   const lead = feed[0] ?? null;
   const latest = feed.slice(lead ? 1 : 0, lead ? 7 : 6);
   const featuredDossiers = dossiers.slice(0, 3);
-  const investigationStories = materias.filter((story) => materiaKind(story) === "investigation").slice(0, 3);
-  const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0;
+  const investigationPool = materias.filter((story) => materiaKind(story) === "investigation");
+  const investigationStories = investigationPool.filter((story) => "materia-" + story.slug !== lead?.id).slice(0, 3);
+  const investigationLead = materias.find((story) => materiaKind(story) === "investigation" && "materia-" + story.slug === lead?.id) ?? null;
+  const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0 || investigationLead !== null;
   const featuredNeighborhoods = neighborhoods.slice(0, 5);
 
   return (
@@ -129,7 +131,7 @@ export default async function HomePage() {
                   <div className="vr2-meta"><span>{item.category}</span><span>{dateLabel(item.date)}</span></div>
                   <h3><Link href={item.href}>{item.title}</Link></h3>
                   <p>{item.summary}</p>
-                  <Link href={item.href} aria-label={"Ler: " + item.title}>Ler notícia <span aria-hidden="true">↗</span></Link>
+                  <Link href={item.href} aria-label={"Ler: " + item.title}>{item.category.startsWith("Investigação") ? "Ler investigação" : "Ler notícia"} <span aria-hidden="true">↗</span></Link>
                 </article>
               )) : (
                 <div className="vr2-news-list__empty">
@@ -183,6 +185,12 @@ export default async function HomePage() {
                 <Link href={"/dossies/" + item.slug} className="vr2-readmore">Abrir investigação ↗</Link>
               </article>
             ))}
+          </div>
+        ) : investigationLead ? (
+          <div className="vr5-only-lead-note">
+            <strong>Investigação em destaque nesta edição</strong>
+            <p>O caso principal já aparece no topo. Acompanhe o histórico e as próximas respostas no mesmo endereço, sem repetir a matéria nesta página.</p>
+            <Link href={"/materias/" + investigationLead.slug}>Acompanhar este caso ↗</Link>
           </div>
         ) : (
           <div className="vr2-investigations">
