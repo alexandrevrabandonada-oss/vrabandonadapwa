@@ -13,7 +13,7 @@ export const site = {
   description:
     "Publicações, investigações e comunicação popular sobre Volta Redonda.",
   shortDescription:
-    "Notícias, Reels e memória popular de Volta Redonda.",
+    "Notícias, investigações e memória pública de Volta Redonda.",
   primaryNav: [
     { href: "/", label: "Início" },
     { href: "/agora", label: "Últimas" },
