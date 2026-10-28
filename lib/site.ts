@@ -24,7 +24,7 @@ export const site = {
   mobileNav: [
     { href: "/", label: "Início" },
     { href: "/agora", label: "Últimas" },
-    { href: "/dossies", label: "Investigar" },
+    { href: "/dossies", label: "Casos" },
     { href: "/buscar", label: "Buscar" },
   ] satisfies SiteLink[],
   menuGroups: [
