@@ -6,6 +6,7 @@ import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getMaterias } from "@/lib/materias";
 import { getArchiveAssetTypeLabel, getArchiveFilterOptions } from "@/lib/archive/navigation";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
+import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedArchiveAssets, getPublishedArchiveFilteredAssets } from "@/lib/archive/queries";
 
 export const metadata: Metadata = {
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams?: Promise<{ type?: string; year?: string; place?: string }>;
+  searchParams?: Promise<{ type?: string; year?: string; place?: string; memory?: string }>;
 };
 
 function buildFilterHref(params: URLSearchParams, changes: Record<string, string | null>) {
@@ -40,23 +41,28 @@ export default async function ArchivePage({ searchParams }: PageProps) {
   if (params.type) current.set("type", params.type);
   if (params.year) current.set("year", params.year);
   if (params.place) current.set("place", params.place);
+  if (params.memory) current.set("memory", params.memory);
 
   const activeYear = params.year && /^\d{4}$/.test(params.year) ? Number(params.year) : null;
   const activeType = params.type ?? "";
   const activePlace = params.place ?? "";
-  const filtered = Boolean(activeType || activeYear || activePlace);
+  const activeMemory = params.memory ?? "";
+  const filtered = Boolean(activeType || activeYear || activePlace || activeMemory);
 
-  const [assets, collections, materias] = await Promise.all([
+  const [assets, collections, materias, memoryItems] = await Promise.all([
     getPublishedArchiveAssets(),
     getPublishedArchiveCollections(),
     getMaterias(),
+    getPublishedMemoryItems(),
   ]);
   const selected = await getPublishedArchiveFilteredAssets({
     assetType: activeType || undefined,
     year: activeYear,
     place: activePlace || undefined,
+    memoryItemId: activeMemory || undefined,
   });
   const options = getArchiveFilterOptions(assets);
+  const memoryById = new Map(memoryItems.map((item) => [item.id, item]));
   const sourceMap = new Map<string, { label: string; url: string; articleTitle: string; articleHref: string; consultedAt?: string }>();
 
   // A fonte externa já citada numa matéria aprovada não é confundida com um arquivo hospedado.
@@ -119,6 +125,16 @@ export default async function ArchivePage({ searchParams }: PageProps) {
               {options.places.slice(0, 12).map((place) => (
                 <Link key={place} aria-current={activePlace === place ? "true" : undefined} href={buildFilterHref(current, { place })}>{place}</Link>
               ))}
+            </div>
+            <div className="vr4-filter-row">
+              <span>Memória</span>
+              <Link aria-current={!activeMemory ? "true" : undefined} href={buildFilterHref(current, { memory: null })}>Todas</Link>
+              {options.memoryIds.slice(0, 12).map((memoryId) => {
+                const item = memoryById.get(memoryId);
+                return item ? (
+                  <Link key={memoryId} aria-current={activeMemory === memoryId ? "true" : undefined} href={buildFilterHref(current, { memory: memoryId })}>{item.title}</Link>
+                ) : null;
+              })}
             </div>
             {filtered ? <Link className="vr4-filters__reset" href="/acervo">Limpar filtros ↗</Link> : null}
           </details>
