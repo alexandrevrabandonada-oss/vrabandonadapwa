@@ -89,7 +89,7 @@ export default async function DossiersPage() {
                 {group.items.map((dossier) => {
                   const update = updates.get(dossier.id)?.[0] ?? null;
                   return (
-                    <article key={dossier.id} className="vr3-dossiers__item">
+                    <article key={dossier.id} className="vr3-dossiers__item vr7-editorial-card">
                       <div className="vr2-meta">
                         <span>{getDossierStatusLabel(dossier.status)}</span>
                         {dossier.territory_label ? <span>{dossier.territory_label}</span> : null}
