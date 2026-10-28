@@ -392,6 +392,6 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Menu público agrupado por leitura, cidade/documentos/memória, biblioteca pessoal e formas de colaboração; rotas antigas preservadas.
 - Teste de regressão em `tests/product-convergence-v4.test.mjs`.
 
-**Verificado até o registro:** commits no GitHub; testes Node, checagem de tipos e lint passaram no job CI da PR #17. **Pendente de comprovação:** fim do build Next.js, deploy preview READY, inspeção visual no Android e verificações HTTP/SEO. Sem merge nem alteração da produção. Manter este status corrigível quando os checks terminarem.
+**Verificado após conclusão dos checks:** commits e arquivos de PR no GitHub; workflow CI `validate` com testes Node, TypeScript, lint e build Next.js concluído com sucesso; deploy preview Vercel `dpl_7iauBHfMQrekzkejjq24SWtjNZtN` status `READY` para o commit `1f66933986ce630c898cc24f2fca8d73e2be04f5` (prévia: `https://vrabandonadapwa-j5kulbl0u-alexandrevrabandonada-oss-projects.vercel.app`). **Pendente de comprovação:** renderização/fluxos visuais no Android e desktop e verificações HTTP/SEO; `READY` não substitui inspeção humana. Sem merge nem alteração da produção.
 
 **Próxima etapa depois da aceitação visual:** estrutura canônica de vínculo publicação ↔ caso ↔ documento; eliminar duplicação entre `editorial_items` e `content/materias` sem migração destrutiva e sem criar registros sintéticos.
