@@ -29,18 +29,18 @@ test("home não repete matéria em destaque dentro de investigações",()=>{
 });
 test("acervo vazio não é uma tela de estatísticas zeradas",()=>{
  const s=read("app/acervo/page.tsx");
- assert.match(s,/if \(allAssets\.length === 0 && collections\.length === 0\)/);
+ assert.match(s,/allAssets\.length > 0/);
  assert.match(s,/EditorialAcervoIndex/);
  assert.match(s,/getMaterias/);
  assert.match(s,/href="\/materias"/);
  assert.match(s,/href="\/dossies"/);
  assert.match(s,/Nada de registros fictícios/);
- assert.match(s,/EditorialSourceIndex articles=\\{articles\\}/);
+ assert.match(s,/EditorialSourceIndex articles=\{articles\}/);
  assert.match(s,/memoryItemId: activeMemory/);
 });
 test("territórios sem cadastros não simulam atlas já preenchido",()=>{
  const s=read("app/territorios/page.tsx");
- assert.match(s,/if \(territories\.length === 0\)/);
+ assert.match(s,/territories\.length === 0 && editorialTerritories\.length === 0/);
  assert.match(s,/href="\/noticias"/);
  assert.match(s,/Vila Brasília/);
  assert.match(s,/newEditorialPlaces/);
