@@ -150,7 +150,7 @@ export default async function HomePage() {
                   <div className="vr2-meta"><span>{item.category}</span><span>{dateLabel(item.date)}</span></div>
                   <h3><Link href={item.href}>{item.title}</Link></h3>
                   <p>{item.summary}</p>
-                  <Link href={item.href} aria-label={"Ler: " + item.title}>{item.category.startsWith("Investigação") ? "Ler investigação" : "Ler notícia"} <span aria-hidden="true">↗</span></Link>
+                  <Link href={item.href} aria-label={(item.category.startsWith("Investigação") ? "Ler investigação: " : "Ler notícia: ") + item.title}>{item.category.startsWith("Investigação") ? "Ler investigação" : "Ler notícia"} <span aria-hidden="true">↗</span></Link>
                 </article>
               )) : (
                 <div className="vr2-news-list__empty">
@@ -251,7 +251,7 @@ export default async function HomePage() {
           <p>Pesquise nomes, contratos, bairros, vídeos e investigações. Um link permanente vale mais que uma publicação perdida no feed.</p>
           <form action="/buscar" method="get" role="search" className="vr2-search-form">
             <label htmlFor="vr2-q">Buscar no VR Abandonada</label>
-            <div><input id="vr2-q" type="search" name="q" placeholder="CSN, Rua 33, saúde…" maxLength={100} /><button type="submit" aria-label="Pesquisar no site">Buscar ↗</button></div>
+            <div><input id="vr2-q" type="search" name="q" placeholder="CSN, Rua 33, saúde…" maxLength={100} /><button type="submit" aria-label="Buscar no site">Buscar ↗</button></div>
           </form>
           <Link href="/acervo" className="vr2-text-link">Conhecer o acervo ↗</Link>
         </section>
