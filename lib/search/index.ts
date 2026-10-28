@@ -481,7 +481,8 @@ function buildPublicEntries(
     );
   }
 
-  for (const series of getEditorialSeriesCards(editorialItems)) {
+  // Séries de catálogo são apenas taxonomia; não são publicações sem pautas aprovadas.
+  for (const series of getEditorialSeriesCards(editorialItems).filter((series) => series.items.length > 0)) {
     entries.push(
       makeEntry({
         contentType: "serie",

@@ -213,3 +213,14 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - O botão circular preto com símbolo compatível com a Vercel Toolbar aparece apenas na captura do preview. Sem prova de que seja um componente do portal; não tentar ocultá-lo por CSS do site. Confirmar ao inspecionar o domínio público.
 - Testes adicionados para evitar regressão do hero de dossiês, presença de estados vazios honestos e informações públicas corretas no rodapé.
 - **Publicação:** não integrar a PR apenas porque o build ficou READY. Checar CI, prévia real e nova captura de /dossies num celular antes do merge. PR #7 e arquivos legados permanecem intocados.
+
+
+### Revisão UI V3.2 — busca no preview Android
+
+**Evidência:** nova rodada de imagens enviadas pelo usuário no preview, mostrando que /dossies está sem o hero cortado e que /buscar ainda exige rolagem extensa por capa gigante, tutorial, histórico de leitura, filtros empilhados, sugestões, resultados e um segundo destaque repetido.
+
+**Achado de integridade editorial:** `getEditorialSeriesCards(editorialItems)` retornava 4 séries do catálogo mesmo com `items.length === 0`, que apareciam como "4 resultados encontrados". Uma série temática sem pauta aprovada não deve ser apresentada como publicação encontrada no índice. Corrigir o construtor do índice público para incluir apenas séries com itens publicados. Não remover a taxonomia de temas nem alterar os dados de origem.
+
+**Implementação:** reformular `/buscar` para pesquisar imediatamente no primeiro viewport, com campo de busca visível, filtros semânticos expandíveis (tipo, território, ator, ordem), sugestões explícitas como termos e lista de resultados públicos sem duplicações de destaque nem trilha de leitura. Vazio honesto com link para Instagram oficial. CSS responsivo em 320–430px, desktop e tablet. Sem tocar em autenticação, Supabase ou arquivos legados.
+
+**Aceite:** CI (Node, TS, lint, build) e Vercel READY; conferir por screenshots no Android real. Não integrar PR #9 por inferência de sucesso de build. Validar ao menos uma consulta com termo que encontra conteúdo e outra sem resultado; filtros não devem mudar os dados públicos sem aprovação editorial. A plataforma ainda depende de alimentar o acervo com matérias aprovadas.

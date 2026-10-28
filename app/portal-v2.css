@@ -736,3 +736,112 @@ body::before { opacity: .12; }
   .site-footer__quicklink { padding: .35rem .65rem; font-size: .73rem; }
   .site-footer__note { font-size: .71rem; }
 }
+
+
+/* V3.2 — busca editorial. Primeiro a consulta, depois filtros e resultados. */
+.vr3-search {
+  max-width: 1050px; display: grid; gap: 1.25rem;
+  padding-block: clamp(.75rem, 2vw, 1.4rem) 2rem; min-width: 0;
+}
+.vr3-search__intro { display: grid; gap: .4rem; padding-bottom: .7rem; }
+.vr3-search__intro h1 {
+  margin: 0; font-size: clamp(2.1rem, 4.7vw, 3.55rem);
+  font-weight: 950; letter-spacing: -.052em; line-height: 1.08;
+}
+.vr3-search__intro p { margin: 0; font-size: .96rem; color: #cfcac1; line-height: 1.45; max-width: 62ch; }
+.vr3-search__search {
+  border: 1px solid #504a3d; border-radius: 8px;
+  background: #1c1d1e; padding: clamp(.95rem, 2vw, 1.35rem);
+}
+.vr3-search__search>form>label {
+  display: block; margin-bottom: .53rem; font-size: .77rem;
+  font-weight: 850; letter-spacing: .035em; color: #f1ebdf;
+}
+.vr3-search__input-row { display: flex; min-width: 0; border: 1px solid #706858; border-radius: 7px; overflow: hidden; background: #101112; }
+.vr3-search__input-row:focus-within { border-color: var(--vr2-yellow); box-shadow: 0 0 0 2px rgba(242,195,56,.15); }
+.vr3-search__input-row input {
+  width: 100%; min-width: 0; flex: 1; outline: none; border: 0;
+  color: #fff; background: transparent; padding: .8rem .85rem;
+  font-family: inherit; font-size: 1rem;
+}
+.vr3-search__input-row button {
+  flex: none; min-height: 46px; padding: .7rem 1rem;
+  border: none; background: var(--vr2-yellow); color: #131312;
+  font-weight: 900; cursor: pointer; font-family: inherit; font-size: .88rem;
+}
+.vr3-search__filters { margin-top: .9rem; border-top: 1px solid #45413b; padding-top: .7rem; }
+.vr3-search__filters summary { cursor: pointer; color: var(--vr2-yellow); font-size: .84rem; font-weight: 850; width: fit-content; }
+.vr3-search__fields { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .7rem; margin: .9rem 0 .7rem; }
+.vr3-search__fields label { display: grid; gap: .38rem; font-size: .74rem; color: #d0ccc4; font-weight: 700; min-width: 0; }
+.vr3-search__fields select {
+  width: 100%; min-width: 0; min-height: 42px; padding: .5rem .6rem;
+  border: 1px solid #555047; border-radius: 6px;
+  color: #f1ede5; background: #282829; font-size: .84rem; font-family: inherit;
+}
+.vr3-search__filter-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+.vr3-search__filter-actions button {
+  background: #3a3427; color: #f9dd79; border: 1px solid #76663c;
+  border-radius: 6px; padding: .55rem .8rem; font-weight: 800; cursor: pointer;
+}
+.vr3-search__filter-actions a { color: #d2cdc5; font-size: .78rem; text-decoration: underline; text-underline-offset: 3px; }
+.vr3-search__suggestions { margin-top: .8rem; display: grid; gap: .4rem; }
+.vr3-search__suggestions>span { font-size: .68rem; letter-spacing: .075em; color: #bdb8ae; font-weight: 800; text-transform: uppercase; }
+.vr3-search__suggestions>div { display: flex; flex-wrap: wrap; gap: .4rem; }
+.vr3-search__suggestions a {
+  display: inline-flex; align-items: center; border: 1px solid #5a5346;
+  padding: .35rem .6rem; background: #292721; color: #f3e8cf;
+  border-radius: 5px; font-size: .76rem; font-weight: 750; overflow-wrap: anywhere;
+}
+.vr3-search__results { min-width: 0; }
+.vr3-search__results-title {
+  display: flex; align-items: end; justify-content: space-between;
+  gap: .8rem; border-bottom: 1px solid #48443d;
+  padding-bottom: .65rem; margin-bottom: .8rem;
+}
+.vr3-search__results-title .vr2-eyebrow { font-size: .67rem; letter-spacing: .1em; }
+.vr3-search__results-title h2 {
+  font-size: clamp(1.45rem, 2.8vw, 2.15rem); line-height: 1.12;
+  letter-spacing: -.045em; margin: .25rem 0 0;
+}
+.vr3-search__results-title>a { font-size: .79rem; font-weight: 800; color: var(--vr2-yellow); white-space: nowrap; }
+.vr3-search__list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .6rem; }
+.vr3-search__item {
+  min-width: 0; display: flex; flex-direction: column; gap: .55rem;
+  border: 1px solid #444039; padding: 1rem; background: #1b1c1d; border-radius: 7px;
+}
+.vr3-search__item h3 { margin: 0; font-size: 1.32rem; line-height: 1.17; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.vr3-search__item p { margin: 0; font-size: .85rem; line-height: 1.44; color: #c9c5bd; overflow-wrap: anywhere; }
+.vr3-search__item>a { padding-top: .4rem; margin-top: auto; }
+.vr3-search__empty {
+  border-left: 3px solid var(--vr2-yellow); background: #1c1d1e;
+  border-radius: 0 6px 6px 0; padding: 1.05rem; max-width: 850px;
+}
+.vr3-search__empty h3 { margin: 0; font-size: clamp(1.05rem, 2vw, 1.35rem); line-height: 1.22; }
+.vr3-search__empty p { margin: .55rem 0; color: #cbc7bf; font-size: .87rem; line-height: 1.45; }
+.vr3-search__empty-links { display: flex; gap: .6rem 1rem; flex-wrap: wrap; margin-top: .65rem; }
+.vr3-search__empty-links a { color: var(--vr2-yellow); font-size: .81rem; font-weight: 850; }
+@media (max-width: 760px) {
+  .vr3-search__fields { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 640px) {
+  .vr3-search { gap: .9rem; padding-block: .7rem 1rem; }
+  .vr3-search__intro h1 { font-size: clamp(1.8rem, 7.7vw, 2.3rem); }
+  .vr3-search__intro p { font-size: .83rem; }
+  .vr3-search__intro .vr2-eyebrow { font-size: .58rem; letter-spacing: .085em; }
+  .vr3-search__search { padding: .85rem; }
+  .vr3-search__search>form>label { font-size: .73rem; }
+  .vr3-search__input-row input { padding: .7rem .65rem; font-size: .91rem; }
+  .vr3-search__input-row button { min-height: 44px; padding: .55rem .7rem; font-size: .78rem; }
+  .vr3-search__input-row button span { display: none; }
+  .vr3-search__fields { grid-template-columns: 1fr; gap: .55rem; }
+  .vr3-search__fields select { min-height: 41px; }
+  .vr3-search__suggestions>div { gap: .33rem; }
+  .vr3-search__results-title h2 { font-size: 1.44rem; }
+  .vr3-search__results-title .vr2-eyebrow { font-size: .57rem; }
+  .vr3-search__list { grid-template-columns: 1fr; gap: .55rem; }
+  .vr3-search__item { padding: .85rem; gap: .43rem; }
+  .vr3-search__item h3 { font-size: 1.13rem; }
+  .vr3-search__item p { font-size: .82rem; }
+  .vr3-search__empty { padding: .9rem; }
+  .vr3-search__empty p { font-size: .81rem; }
+}
