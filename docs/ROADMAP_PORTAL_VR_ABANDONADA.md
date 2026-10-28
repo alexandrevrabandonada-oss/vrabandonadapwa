@@ -188,3 +188,19 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 4. Garantir que o menu inferior permaneça uma linha com cinco ações em 360–430 px.
 5. Validar conteúdo publicado real, foco por teclado, contraste, zoom de texto e ausência de overflow.
 6. Somente integrar em produção depois da inspeção visual e de fluxos reais; não confundir READY com aceitação de UX.
+
+## Passada UI/UX V3 — densidade editorial Android
+
+**Origem e evidência:** capturas reais do portal em Android após o lançamento V2. A barra inferior ficou numa única linha, mas a homepage ainda apresentou hero excessivamente alto, estado vazio grande, cartões de temas superdimensionados, aviso institucional amarelo dominante e textos cortados à direita. A página Últimas repetia um hero genérico em vez de mostrar publicações.
+
+**Diagnóstico de conteúdo:** public/data/instagram-posts.json contém zero posts importados no commit auditado, e a camada content/materias ainda não fornece notícias aprovadas. Não inserir exemplos para fingir movimento. O Instagram oficial segue acessível externamente; o conteúdo só integra o portal quando importado de forma fiel e autorizada.
+
+**Implementação na PR separada de Storage:**
+- CSS mobile-first refinado para hero, títulos, estados vazios, cards e CTAs entre 320 e 640 px sem bloquear zoom.
+- Sem matérias publicadas, apresentar aviso compacto com link ao Instagram oficial e busca; diferenciar temas de cobertura de dossiês realmente publicados.
+- Rota /agora simplificada para reunir matérias aprovadas, publicações importadas e dados públicos do Radar, deduplicados e ordenados por data; sem hero genérico. Preservar /agora#mudou.
+- Quadro institucional passa a ser discreto no celular, mantendo referência contextual ao COMUN.
+- Cache PWA versionado para v3; nenhuma navegação é armazenada no runtime cache e rotas internas/autenticação são ignoradas pelo service worker.
+- Nenhuma mudança no banco Supabase, permissão de arquivos, secrets ou PR #7.
+
+**Critérios antes de merge:** testes, types, lint, build, Vercel READY; comparação visual 320, 360, 390, 430 px e desktop; verificar overflow, zoom, menu, busca, tela vazia e fluxo com conteúdo real. Sem navegador autenticado nesta sessão, não declarar validação visual real.

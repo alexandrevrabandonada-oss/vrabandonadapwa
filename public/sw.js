@@ -1,5 +1,5 @@
-const CACHE_VERSION = "vr-abandonada-pwa-v2";
-const RUNTIME_CACHE = "vr-abandonada-runtime-v2";
+const CACHE_VERSION = "vr-abandonada-pwa-v3";
+const RUNTIME_CACHE = "vr-abandonada-runtime-v3";
 const PRECACHE_URLS = [
   "/",
   "/agora",
@@ -49,11 +49,15 @@ async function cacheFirst(request) {
   return response;
 }
 
-async function networkFirst(request) {
+async function networkFirst(request, store = true) {
   try {
     const response = await fetch(request);
-    const cache = await caches.open(RUNTIME_CACHE);
-    cache.put(request, response.clone());
+    // Não reutilizar HTML de uma sessão anterior nem guardar respostas privadas.
+    const policy = response.headers.get("Cache-Control") || "";
+    if (store && response.ok && !/(private|no-store|no-cache)/i.test(policy) && !response.headers.has("set-cookie")) {
+      const cache = await caches.open(RUNTIME_CACHE);
+      await cache.put(request, response.clone());
+    }
     return response;
   } catch {
     const cached = await caches.match(request);
@@ -78,12 +82,13 @@ self.addEventListener("fetch", (event) => {
   }
 
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) {
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/interno") || url.pathname.startsWith("/auth")) {
     return;
   }
 
   if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request));
+    // Sempre buscar HTML atualizado. Offline usa somente o shell pré-cacheado.
+    event.respondWith(networkFirst(request, false));
     return;
   }
 
