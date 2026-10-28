@@ -6,6 +6,7 @@ import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
 import { EditorialAcervoIndex } from "@/components/editorial-navigation";
 import { EditorialSourceIndex } from "@/components/editorial-source-index";
+import { RevealSourceFromHash } from "@/components/reveal-source-from-hash";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getMaterias } from "@/lib/materias";
@@ -85,6 +86,7 @@ export default async function ArchivePage({ searchParams }: PageProps) {
       </header>
 
       <EditorialAcervoIndex articles={articles} />
+      <RevealSourceFromHash />
       <EditorialSourceIndex articles={articles} />
 
       <section className="vr6-hub__section" id="documentos" aria-labelledby="vr6-documents-title">
