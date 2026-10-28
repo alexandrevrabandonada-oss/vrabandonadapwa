@@ -11,6 +11,7 @@ import { site } from "@/lib/site";
 import { getSiteUrl } from "@/lib/site-url";
 
 import "./globals.css";
+import "./design-tokens.css";
 import "./instagram.css";
 import "./materias.css";
 import "./portal-v2.css";
