@@ -43,7 +43,7 @@ export default async function TerritoriesPage() {
         <h1>A cidade, lugar por lugar.</h1>
         <p>Parta de um bairro e encontre a cobertura relacionada. Um local citado não é necessariamente o local principal do acontecimento.</p>
         <nav className="vr6-hub__jump" aria-label="Explorar bairros">
-          <a href="#index-bairros-titulo">Bairros nas reportagens</a>
+          {newEditorialPlaces.length > 0 ? <a href="#index-bairros-titulo">Bairros nas reportagens</a> : null}
           {territories.length ? <a href="#lugares-documentados">Lugares documentados</a> : null}
           <Link href="/buscar">Pesquisar a cidade ↗</Link>
           <Link href="/noticias">Notícias ↗</Link>
