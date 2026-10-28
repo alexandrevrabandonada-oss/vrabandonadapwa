@@ -1,11 +1,14 @@
 import type { UniversalCapture } from "@/lib/captura/queries";
 import { publishCaptureAction, sendToEnrichmentAction } from "@/lib/captura/actions";
+import { PrivateCaptureDocuments } from "@/components/private-capture-documents";
 
 type Props = {
   item: UniversalCapture;
   feedbackMessage?: string | null;
   feedbackStatus?: string | null;
   active?: boolean;
+  privateDocuments?: { id: string }[];
+  privateDocumentsEnabled?: boolean;
 };
 
 function formatSafeDate(value: string | null | undefined) {
@@ -21,7 +24,7 @@ function formatSafeDate(value: string | null | undefined) {
   return date.toLocaleDateString("pt-BR");
 }
 
-export function UniversalCaptureInboxItem({ item, feedbackMessage, feedbackStatus, active }: Props) {
+export function UniversalCaptureInboxItem({ item, feedbackMessage, feedbackStatus, active, privateDocuments = [], privateDocumentsEnabled = false }: Props) {
   const showFeedback = Boolean(active && feedbackMessage);
   const feedbackTone = feedbackStatus === "error" ? "var(--alert, #991b1b)" : "var(--success, #166534)";
   const feedbackBg = feedbackStatus === "error" ? "var(--alert-bg, #fee2e2)" : "var(--success-bg, #dcfce7)";
@@ -56,6 +59,8 @@ export function UniversalCaptureInboxItem({ item, feedbackMessage, feedbackStatu
           </a>
         </div>
       ) : null}
+
+      {privateDocumentsEnabled ? <PrivateCaptureDocuments captureId={item.id} documents={privateDocuments} /> : null}
 
       {showFeedback ? (
         <div
