@@ -1,7 +1,7 @@
 /**
  * Auditoria automatizada de acessibilidade da experiência pública.
  * Não afirma conformidade WCAG: busca falhas detectáveis por axe e reflow
- * sob ampliação de texto de 200% nas telas centrais do produto.
+ * sob larguras equivalentes a zoom 200%/400% no desktop (reflow).
  */
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -27,7 +27,7 @@ const profiles = [
   { name: "desktop-1280", width: 1280, height: 900, isMobile: false },
 ];
 const tags = ["wcag2a","wcag2aa","wcag21a","wcag21aa","wcag22aa"];
-const report = { commit: process.env.GITHUB_SHA ?? "local", scans: [], textResize: [], errors: [] };
+const report = { commit: process.env.GITHUB_SHA ?? "local", scans: [], reflow: [], errors: [] };
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 function fail(context, message) {
   report.errors.push({ context, message: String(message) });
@@ -60,7 +60,6 @@ async function audit() {
         viewport: {width:profile.width,height:profile.height},
         isMobile: profile.isMobile,
         hasTouch: profile.isMobile,
-        bypassCSP: true,
         locale:"pt-BR", reducedMotion:"reduce",
       });
       const page = await context.newPage();
@@ -85,35 +84,39 @@ async function audit() {
             if (relevant.length) fail(label, relevant.map(v=>v.id + "(" + v.impact + ":" + v.nodes.length + ")").join(", "));
           } catch(err) { fail(label,err instanceof Error?err.message:String(err)); }
         }
-        // 200% de aumento no tamanho base do texto: teste de estresse de
-        // reflow, não simulação certificada do zoom de navegador/OS.
-        for (const entry of PAGES) {
-          const label = profile.name + ":" + entry.key;
-          try {
-            await page.goto(BASE + entry.url, {waitUntil:"domcontentloaded",timeout:30000});
-            await page.locator("main#conteudo").waitFor({state:"visible",timeout:12000});
-            const widths = await page.evaluate(() => {
-              const root=document.documentElement;
-              const original=getComputedStyle(root).fontSize;
-              root.style.setProperty("font-size", (parseFloat(original)*2) + "px", "important");
-              const width=root.clientWidth;
-              const content=root.scrollWidth;
-              return {original,computed:getComputedStyle(root).fontSize,viewport:width,content};
-            });
-            report.textResize.push({label,...widths});
-            if (parseFloat(widths.computed) < parseFloat(widths.original)*1.99) fail(label+":text-200", "A fonte raiz não foi realmente ampliada para 200%: " + JSON.stringify(widths));
-            console.log("TEXT-200:",label,JSON.stringify(widths));
-            if(widths.content>widths.viewport+2) {
-              await page.screenshot({path:join(OUT,"text-200-"+profile.name+"-"+entry.key+".png"),fullPage:true,animations:"disabled"});
-              fail(label+":text-200","Reflow ampliado extrapola " + (widths.content-widths.viewport) + "px");
+        // O Chrome não oferece ajuste confiável de fonte via DOM quando
+        // o site possui estilos persistentes. Reflow por viewport estreita
+        // é equivalente à largura disponível em zoom 200% e 400% de 1280px,
+        // mas NÃO mede zoom nativo nem aumento de fonte.
+        if (!profile.isMobile) {
+          for (const zoom of [{factor:2,width:640},{factor:4,width:320}]) {
+            await page.setViewportSize({width:zoom.width,height:900});
+            for (const entry of PAGES) {
+              const label = profile.name + ":" + entry.key + ":reflow-" + zoom.factor + "x";
+              try {
+                await page.goto(BASE + entry.url,{waitUntil:"domcontentloaded",timeout:30000});
+                await page.locator("main#conteudo").waitFor({state:"visible",timeout:12000});
+                const dimensions = await page.evaluate(() => ({
+                  viewport:document.documentElement.clientWidth,
+                  scroll:document.documentElement.scrollWidth,
+                  mainVisible:!!document.querySelector("main#conteudo"),
+                }));
+                report.reflow.push({label,...dimensions});
+                console.log("REFLOW:",label,JSON.stringify(dimensions));
+                if (dimensions.scroll > dimensions.viewport + 2) {
+                  await page.screenshot({path:join(OUT,"reflow-"+zoom.factor+"x-"+entry.key+".png"),fullPage:true,animations:"disabled"});
+                  fail(label,"Overflow horizontal de "+(dimensions.scroll-dimensions.viewport)+"px");
+                }
+                if (!dimensions.mainVisible) fail(label,"Conteúdo principal ausente");
+              } catch(err){fail(label,err instanceof Error?err.message:String(err));}
             }
-          } catch(err){fail(label+":text-200",err instanceof Error?err.message:String(err));}
+          }
         }
       } finally { await context.close(); }
     }
   } finally {
     await writeFile(join(OUT,"report.json"),JSON.stringify({
-      ...report,limitations:"Auditoria axe em Chromium local; não substitui revisão manual, dispositivo físico ou leitor de tela. Aumento da fonte raiz não equivale exatamente ao zoom do navegador.",
+      ...report,limitations:"Auditoria axe em Chromium local; reflow por viewport 640/320 equivalente ao espaço de 200/400% zoom em desktop de 1280px, mas não verifica zoom nativo, preferências de tamanho de fonte, dispositivo físico ou leitor de tela.",
     },null,2));
     if(browser)await browser.close();
     if(server.exitCode===null){
@@ -123,6 +126,6 @@ async function audit() {
     }
   }
   if(report.errors.length)throw new Error(report.errors.length+" falhas de acessibilidade/reflow; detalhes no report.json");
-  console.log("SUCESSO: acessibilidade automatizada e estresse de fonte 200% sem falhas graves detectadas.");
+  console.log("SUCESSO: auditoria axe e reflow de largura equivalente a zoom 200/400% sem falhas graves detectadas.");
 }
 audit().catch(err=>{console.error("Falha no QA acessível:",err instanceof Error?err.message:String(err));process.exitCode=1;});
