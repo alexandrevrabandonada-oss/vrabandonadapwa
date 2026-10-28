@@ -3,234 +3,87 @@ import Link from "next/link";
 
 import { Container } from "@/components/container";
 import { EditorialTerritoryIndex } from "@/components/editorial-navigation";
-import { getPublishedEditorialTerritories } from "@/lib/territories/editorial";
-import { PlaceHubCard } from "@/components/place-hub-card";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
+import { getPublishedEditorialTerritories } from "@/lib/territories/editorial";
+import { getPlaceHubStatusLabel } from "@/lib/territories/navigation";
 import { getPublishedPlaceHubLinks, getPublishedPlaceHubs } from "@/lib/territories/queries";
 
 export const metadata: Metadata = {
-  title: "Territórios",
-  description: "Atlas vivo de bairros, lugares e pontos críticos de Volta Redonda.",
+  title: "Bairros e lugares",
+  description: "Notícias, reportagens e documentos organizados pelos bairros citados e investigados em Volta Redonda.",
+  alternates: { canonical: "/territorios" },
   openGraph: {
-    title: "Territórios | VR Abandonada",
-    description: "Atlas vivo de bairros, lugares e pontos críticos de Volta Redonda.",
     type: "website",
-    images: [getHomeOpenGraphImagePath()],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Territórios | VR Abandonada",
-    description: "Atlas vivo de bairros, lugares e pontos críticos de Volta Redonda.",
+    title: "Bairros e lugares | VR Abandonada",
+    description: "Consulte o jornalismo publicado por bairro de Volta Redonda, sem presumir ligações entre episódios.",
     images: [getHomeOpenGraphImagePath()],
   },
 };
 
 export default async function TerritoriesPage() {
-  const [territories, editorialTerritories] = await Promise.all([getPublishedPlaceHubs(), getPublishedEditorialTerritories()]);
-  const newEditorialPlaces = editorialTerritories.filter((place) => !territories.some((hub) => hub.slug === place.slug));
-  if (territories.length === 0) {
-    return (
-      <Container className="vr5-empty-page territories-page">
-        <header className="vr5-empty-page__intro">
-          <p className="eyebrow">Por bairro · Volta Redonda</p>
-          <h1>A cidade contada a partir dos lugares.</h1>
-          <p>Os bairros já mencionados em reportagens verificadas ganham páginas de consulta próprias, com links para as matérias originais. Novos lugares entram à medida que publicamos cobertura confirmada.</p>
-        </header>
-        <EditorialTerritoryIndex territories={editorialTerritories} />
-        <section className="vr5-empty-page__panel" aria-label="Como encontrar informações sobre bairros">
-          <p className="vr2-eyebrow">COMECE PELO QUE JÁ PUBLICAMOS</p>
-          <h2>Explore a cidade também pela busca.</h2>
-          <p>Os registros de bairros diferenciam local principal de menção contextual. Nenhuma ligação entre acontecimentos é presumida só por constarem numa mesma reportagem.</p>
-          <div className="vr5-empty-page__links">
-            <Link href="/buscar?q=Vila%20Bras%C3%ADlia">Vila Brasília ↗</Link>
-            <Link href="/buscar?q=%C3%81gua%20Limpa">Água Limpa ↗</Link>
-            <Link href="/buscar?q=Rua%2033">Vila Santa Cecília ↗</Link>
-            <Link href="/noticias">Todas as notícias ↗</Link>
-          </div>
-        </section>
-      </Container>
-    );
-  }
-
-  const featuredPlace = territories.find((place) => place.featured && place.status === "active") ?? territories.find((place) => place.status === "active") ?? territories[0] ?? null;
-  const activeTerritories = territories.filter((place) => place.status === "active");
-  const monitoringTerritories = territories.filter((place) => place.status === "monitoring");
-  const archiveTerritories = territories.filter((place) => place.status === "archive");
-  const linkPairs = await Promise.all(territories.map(async (place) => [place.id, await getPublishedPlaceHubLinks(place.id)] as const));
-  const linksById = new Map(linkPairs.map(([id, links]) => [id, links]));
-  const featuredLinks = featuredPlace ? linksById.get(featuredPlace.id) ?? [] : [];
+  const [territories, editorialTerritories] = await Promise.all([
+    getPublishedPlaceHubs(),
+    getPublishedEditorialTerritories(),
+  ]);
+  const hubSlugs = new Set(territories.map((hub) => hub.slug));
+  // Não duplicar o bairro que já possui hub próprio: o detalhamento do hub
+  // incorpora as matérias editoriais do mesmo lugar.
+  const newEditorialPlaces = editorialTerritories.filter((place) => !hubSlugs.has(place.slug));
+  const countPairs = await Promise.all(territories.map(async (hub) => [hub.id, (await getPublishedPlaceHubLinks(hub.id)).length] as const));
+  const linkCount = new Map(countPairs);
+  const orderedHubs = [...territories].sort((a, b) =>
+    Number(Boolean(b.featured)) - Number(Boolean(a.featured)) ||
+    a.title.localeCompare(b.title, "pt-BR"),
+  );
 
   return (
-    <Container className="intro-grid territories-page">
-      <section className="hero hero--split territories-hero">
-        <div className="hero__copy">
-          <p className="eyebrow">atlas vivo</p>
-          <h1 className="hero__title">Volta Redonda por lugares concretos.</h1>
-          <p className="hero__lead">
-            Bairros, equipamentos, marcos urbanos e pontos críticos organizam o arquivo vivo por território. A cidade entra aqui como espaço vivido, não como mapa burocrático.
-          </p>
-          <div className="home-hero__signals" aria-label="Sinais editoriais">
-            <span className="home-hero__signal">bairro e conflito</span>
-            <span className="home-hero__signal">memória situada</span>
-            <span className="home-hero__signal">documento e endereço</span>
-          </div>
-          <div className="hero__actions">
-            <Link href="#territorios-ativos" className="button">
-              Ver lugares
-            </Link>
-            <Link href="/eixos" className="button-secondary">
-              Abrir eixos
-            </Link>
-          </div>
-        </div>
+    <Container className="vr6-hub territories-page">
+      <header className="vr6-hub__head">
+        <p className="vr6-eyebrow">VOLTA REDONDA · JORNALISMO POR BAIRRO</p>
+        <h1>A cidade, lugar por lugar.</h1>
+        <p>Parta de um bairro e encontre a cobertura relacionada. Um local citado não é necessariamente o local principal do acontecimento.</p>
+        <nav className="vr6-hub__jump" aria-label="Explorar bairros">
+          <a href="#index-bairros-titulo">Bairros nas reportagens</a>
+          {territories.length ? <a href="#lugares-documentados">Lugares documentados</a> : null}
+          <Link href="/buscar">Pesquisar a cidade ↗</Link>
+          <Link href="/noticias">Notícias ↗</Link>
+        </nav>
+      </header>
 
-        <article className="support-box home-callout home-callout--accent">
-          <p className="eyebrow">como entrar</p>
-          <h2>Comece pelo lugar e desça para a pauta, a memória e o impacto.</h2>
-          <p>
-            O território condensa o arquivo vivo da cidade em um ponto concreto. Ele ajuda a localizar casos, documentos e disputas em bairros e marcos urbanos reais.
-          </p>
-          <div className="stack-actions">
-            <Link href="/memoria" className="button-secondary">
-              Entrar na memória
-            </Link>
-            <Link href="/acervo" className="button-secondary">
-              Abrir acervo
-            </Link>
-          </div>
-        </article>
-      </section>
+      <EditorialTerritoryIndex territories={newEditorialPlaces} />
 
-      <section className="section">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">o que são os territórios</p>
-            <h2>Um atlas vivo de lugares que condensam o conflito da cidade.</h2>
-          </div>
-          <p className="section__lead">
-            Cada lugar atravessa pauta, memória, acervo, dossiê, campanha e impacto. Em vez de uma lista seca de bairros, o site entrega um mapa editorial de permanências e disputas.
-          </p>
-        </div>
-
-        <div className="grid-3">
-          {[
-            {
-              title: "Bairro e memória",
-              text: "Lugares onde a vida cotidiana preserva marcas do trabalho e da organização popular.",
-            },
-            {
-              title: "Equipamento e pressão",
-              text: "Hospitais, terminais e espaços públicos onde a cidade mostra suas fricções.",
-            },
-            {
-              title: "Ponto crítico e arquivo",
-              text: "Marcos urbanos que ajudam a ler o que mudou, o que segue em disputa e o que foi apagado.",
-            },
-          ].map((item) => (
-            <article className="card" key={item.title}>
-              <h3>{item.title}</h3>
-              <p>{item.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="grid-2">
-          <article className="card">
-            <h3>{territories.length}</h3>
-            <p>Lugares públicos cadastrados como entrada editorial.</p>
-          </article>
-          <article className="card">
-            <h3>{activeTerritories.length}</h3>
-            <p>Territórios ativos em circulação pública.</p>
-          </article>
-          <article className="card">
-            <h3>{monitoringTerritories.length}</h3>
-            <p>Lugares acompanhados como frente viva.</p>
-          </article>
-          <article className="card">
-            <h3>{archiveTerritories.length}</h3>
-            <p>Territórios em arquivo como lastro histórico.</p>
-          </article>
-        </div>
-      </section>
-
-      {featuredPlace ? (
-        <section className="section home-territory-section">
-          <div className="grid-2">
-            <div>
-              <p className="eyebrow">território em destaque</p>
-              <h2>{featuredPlace.title}</h2>
-            </div>
-            <p className="section__lead">{featuredPlace.lead_question || featuredPlace.excerpt || featuredPlace.description}</p>
-          </div>
-
-          <div className="grid-2">
-            <PlaceHubCard placeHub={featuredPlace} href={`/territorios/${featuredPlace.slug}`} itemCount={featuredLinks.length} />
-            <article className="support-box home-callout home-callout--accent">
-              <p className="eyebrow">por que importa</p>
-              <h3>O lugar reúne o mapa de uma disputa concreta.</h3>
-              <p>
-                Aqui memória, acervo e impacto deixam de ser abstração e passam a ter endereço, bairro e trajetória editorial.
-              </p>
-              <div className="stack-actions">
-                <Link href={`/territorios/${featuredPlace.slug}`} className="button">
-                  Abrir território
-                </Link>
-                <Link href="/impacto" className="button-secondary">
-                  Ver impactos
-                </Link>
-                <Link href="/campanhas" className="button-secondary">
-                  Ver campanhas
-                </Link>
-              </div>
-            </article>
+      {territories.length > 0 ? (
+        <section className="vr6-hub__section" id="lugares-documentados" aria-labelledby="vr6-hubs-title">
+          <p className="vr6-eyebrow">PÁGINAS TERRITORIAIS PUBLICADAS</p>
+          <h2 id="vr6-hubs-title">Lugares documentados</h2>
+          <div className="vr6-hub__grid">
+            {orderedHubs.map((hub) => (
+              <article className="vr6-territory-card" key={hub.id}>
+                <div className="vr6-territory-card__meta">
+                  <span>{getPlaceHubStatusLabel(hub.status)}</span>
+                  <span>{linkCount.get(hub.id) ?? 0} {(linkCount.get(hub.id) ?? 0) === 1 ? "material" : "materiais"} vinculados</span>
+                </div>
+                <h3><Link href={"/territorios/" + hub.slug}>{hub.title}</Link></h3>
+                <p>{hub.excerpt || hub.description || hub.lead_question}</p>
+                <Link className="vr6-territory-card__link" href={"/territorios/" + hub.slug}>Explorar este lugar ↗</Link>
+              </article>
+            ))}
           </div>
         </section>
       ) : null}
 
-      <EditorialTerritoryIndex territories={newEditorialPlaces} />
-      <section className="section" id="territorios-ativos">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">lugares em circulação</p>
-            <h2>Ativos, em monitoramento e arquivo.</h2>
-          </div>
-          <p className="section__lead">A leitura por status ajuda a ver o que está em curso e o que funciona como base territorial do arquivo vivo.</p>
+      {territories.length === 0 && editorialTerritories.length === 0 ? (
+        <div className="vr6-empty-note">
+          As páginas de bairros estão em preparação. Pesquise pelo nome de um lugar ou acompanhe as <Link href="/noticias">notícias</Link>.
         </div>
+      ) : null}
 
-        <div className="grid-2">
-          {[...activeTerritories.slice(1), ...monitoringTerritories, ...archiveTerritories].map((placeHub) => (
-            <PlaceHubCard key={placeHub.id} placeHub={placeHub} href={`/territorios/${placeHub.slug}`} itemCount={linksById.get(placeHub.id)?.length ?? 0} compact />
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="grid-2">
-          <div>
-            <p className="eyebrow">acompanhar</p>
-            <h2>O território também aponta para leitura, envio e consequência.</h2>
-          </div>
-          <p className="section__lead">Quando o lugar importar para o caso, a navegação leva para pauta, memória, acervo, campanha ou impacto sem perder o endereço.</p>
-        </div>
-
-        <div className="stack-actions">
-          <Link href="/dossies" className="button-secondary">
-            Abrir dossiês
-          </Link>
-          <Link href="/memoria" className="button-secondary">
-            Ver memória
-          </Link>
-          <Link href="/acervo" className="button-secondary">
-            Ver acervo
-          </Link>
-          <Link href="/participe" className="button-secondary">
-            Participar
-          </Link>
-        </div>
-      </section>
+      <nav className="vr6-hub__end-links" aria-label="Outros caminhos de leitura">
+        <Link href="/noticias">Notícias ↗</Link>
+        <Link href="/dossies">Investigações ↗</Link>
+        <Link href="/acervo">Documentos e fontes ↗</Link>
+        <Link href="/buscar?q=Vila%20Bras%C3%ADlia">Buscar Vila Brasília ↗</Link>
+      </nav>
     </Container>
   );
 }
