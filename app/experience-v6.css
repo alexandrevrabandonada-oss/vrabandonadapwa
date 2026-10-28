@@ -66,7 +66,7 @@
  .vr6-section__head { align-items: start; }
  .vr6-hub__head { padding: .6rem 0 .95rem; }
  .vr6-hub__head h1 { font-size: var(--ds-step-h1); }
- .vr6-hub__jump { margin-right: -.4rem; }
+ .vr6-hub__jump { margin-right: 0; max-width: 100%; }
  .vr6-story-nav__links a { flex: 1 1 auto; justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) {
