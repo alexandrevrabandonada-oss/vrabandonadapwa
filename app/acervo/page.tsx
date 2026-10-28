@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArchiveAssetCard } from "@/components/archive-asset-card";
 import { ArchiveCollectionCard } from "@/components/archive-collection-card";
 import { Container } from "@/components/container";
+import { EditorialHubIntro } from "@/components/editorial-hub-intro";
 import { EditorialAcervoIndex } from "@/components/editorial-navigation";
 import { EditorialSourceIndex } from "@/components/editorial-source-index";
 import { RevealSourceFromHash } from "@/components/reveal-source-from-hash";
@@ -73,17 +74,18 @@ export default async function ArchivePage({ searchParams }: PageProps) {
 
   return (
     <Container className="vr6-hub archive-page">
-      <header className="vr6-hub__head">
-        <p className="vr6-eyebrow">ACERVO PÚBLICO · VR ABANDONADA</p>
-        <h1>Um arquivo para consultar, conferir e voltar.</h1>
-        <p>Reportagens, documentos e fontes conectados à cobertura da cidade. Uma publicação, um endereço permanente.</p>
-        <nav className="vr6-hub__jump" aria-label="Ir para uma parte do acervo">
-          <a href="#index-acervo-titulo">Reportagens</a>
-          {hasCitedSources ? <a href="#fontes-reportagens">Fontes citadas</a> : null}
-          <a href="#documentos">Documentos</a>
-          <Link href="/territorios">Por bairro ↗</Link>
-        </nav>
-      </header>
+      <EditorialHubIntro
+        kicker="ACERVO PÚBLICO · VR ABANDONADA"
+        title="Um arquivo para consultar, conferir e voltar."
+        description="Reportagens, documentos e fontes conectados à cobertura da cidade. Uma publicação, um endereço permanente."
+        navigationLabel="Ir para uma parte do acervo"
+        links={[
+          { href: "#index-acervo-titulo", label: "Reportagens" },
+          ...(hasCitedSources ? [{ href: "#fontes-reportagens", label: "Fontes citadas" }] : []),
+          { href: "#documentos", label: "Documentos" },
+          { href: "/territorios", label: "Por bairro ↗" },
+        ]}
+      />
 
       <EditorialAcervoIndex articles={articles} />
       <RevealSourceFromHash />
