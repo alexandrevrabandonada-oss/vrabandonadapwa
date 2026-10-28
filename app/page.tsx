@@ -77,7 +77,8 @@ export default async function HomePage() {
   const lead = feed[0] ?? null;
   const latest = feed.slice(lead ? 1 : 0, lead ? 7 : 6);
   const featuredDossiers = dossiers.slice(0, 3);
-  const investigationStories = materias.filter((story) => materiaKind(story) === "investigation" && "materia-" + story.slug !== lead?.id).slice(0, 3);
+  const investigationPool = materias.filter((story) => materiaKind(story) === "investigation");
+  const investigationStories = investigationPool.filter((story) => "materia-" + story.slug !== lead?.id).slice(0, 3);
   const investigationLead = materias.find((story) => materiaKind(story) === "investigation" && "materia-" + story.slug === lead?.id) ?? null;
   const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0 || investigationLead !== null;
   const featuredNeighborhoods = neighborhoods.slice(0, 5);
