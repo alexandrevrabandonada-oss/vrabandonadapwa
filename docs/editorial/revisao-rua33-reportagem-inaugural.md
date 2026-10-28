@@ -1,6 +1,6 @@
 # Rua 33 — Revisão da reportagem inaugural
 
-**Status: RASCUNHO NÃO PUBLICADO; APROVAÇÃO EDITORIAL PENDENTE.**
+**Status: PUBLICAÇÃO EXPRESSAMENTE AUTORIZADA PELO RESPONSÁVEL EDITORIAL EM 28/10/2026.** Rascunho anterior mantido como registro de revisão; conteúdo público novo em `content/materias/<slug>.json`.
 
 ## Título candidato
 
@@ -51,4 +51,9 @@ Perguntas à Luquip:
 
 ## Operação
 
-A branch e a PR com este pacote contêm **apenas rascunho técnico**. Não há arquivo em `content/materias/`, portanto a prévia não cria uma página de reportagem não aprovada. Nenhum pedido de informação ou mensagem às partes foi enviado nesta etapa.
+O usuário autorizou expressamente a publicação do artigo e a atualização futura com respostas em 28/10/2026. A PR foi convertida em proposta de publicação com arquivo público aprovado em `content/materias/`, registro `investigationStatus=ongoing` e uma primeira entrada em `updates`. Nenhum pedido de informação ou mensagem às partes foi enviado nesta etapa. O contraditório continua pendente, com essa circunstância expressamente declarada no texto. Publicação efetiva depende de CI/merge/deploy.
+
+
+## Marco editorial — autorização de 28/10/2026
+
+O usuário declarou: "Já autorizo a publicação, depois com as respostas atualizamos. As investigações serão vivas". Assim, o artigo foi colocado no fluxo de publicação, sem omitir que a Prefeitura, o Grupo VR e a Luquip ainda não receberam pedidos específicos desta reportagem. Versão pública exclui os campos internos de revisão e inclui histórico de atualizações visível. Futuras respostas e novos documentos devem atualizar **o mesmo arquivo e a mesma URL**, com `updatedAt`, descrição datada em `updates` e `correctionNote` para correções materiais.

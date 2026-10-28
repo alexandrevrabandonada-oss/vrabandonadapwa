@@ -17,6 +17,13 @@ export function validateMateria(article, filename = "arquivo.json") {
   if (typeof article.summary !== "string" || article.summary.length < 35 || article.summary.length > 600) problems.push("resumo deve ter 35 a 600 caracteres");
   if (!article.publishedAt || Number.isNaN(Date.parse(article.publishedAt))) problems.push("publishedAt inválido");
   if (article.updatedAt && Number.isNaN(Date.parse(article.updatedAt))) problems.push("updatedAt inválido");
+  if (article.investigationStatus !== undefined && !["ongoing", "closed"].includes(article.investigationStatus)) problems.push("investigationStatus inválido");
+  if (article.updates !== undefined) {
+    if (!Array.isArray(article.updates)) problems.push("updates deve ser lista");
+    else if (article.updates.some((entry) => !entry || Number.isNaN(Date.parse(entry.date)) ||
+      typeof entry.label !== "string" || entry.label.trim().length < 3 ||
+      typeof entry.text !== "string" || entry.text.trim().length < 15)) problems.push("histórico de atualizações inválido");
+  }
   if (!Array.isArray(article.blocks) || article.blocks.length === 0) problems.push("texto deve conter ao menos um bloco");
   else for (let i = 0; i < article.blocks.length; i++) {
     const b = article.blocks[i];

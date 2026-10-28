@@ -66,6 +66,7 @@ export default async function MateriaPage({ params }: Props) {
         <div className="vr-materia__byline">Por {story.author} · {publishedDate(story.publishedAt)}
           {story.updatedAt && story.updatedAt !== story.publishedAt ? " · Atualizada em " + publishedDate(story.updatedAt) : ""}
         </div>
+        {story.investigationStatus === "ongoing" && <p className="vr-materia__status">● Investigação em acompanhamento · Respostas e documentos serão incorporados nesta mesma página</p>}
       </header>
       {story.cover && (
         <figure className="vr-materia__cover">
@@ -83,6 +84,15 @@ export default async function MateriaPage({ params }: Props) {
             if (block.type === "list") return <ul key={idx}>{(block.items || []).map((item, n) => <li key={n}>{item}</li>)}</ul>;
             return <p key={idx}>{block.text}</p>;
           })}
+          {story.updates && story.updates.length > 0 && (
+            <section className="vr-materia__timeline" aria-label="Histórico de atualizações da investigação">
+              <h2>Histórico desta investigação</h2>
+              <ol>{story.updates.map((entry, index) => <li key={index}>
+                <time dateTime={entry.date}>{publishedDate(entry.date)}</time>
+                <strong>{entry.label}</strong><p>{entry.text}</p>
+              </li>)}</ol>
+            </section>
+          )}
           {story.correctionNote && (
             <section className="vr-materia__correction" aria-label="Correção ou atualização">
               <h2>Nota de atualização e correção</h2><p>{story.correctionNote}</p>
