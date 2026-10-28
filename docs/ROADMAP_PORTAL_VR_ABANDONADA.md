@@ -274,3 +274,109 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Menu do site distingue Notícias, Últimas, Investigações e Acervo. O painel privado mostra quantidade de notícias, e o agente editorial oferece modo de preparar notícias diretamente de uma legenda/post/release/documento, sem chaves da Meta.
 - Nenhuma notícia real nova foi inventada ou importada nesta migração; a editoria pode ficar vazia até a primeira notícia aprovada.
 - Verificar CI, preview, UX móvel e link canônico; deploy só após merge. Na primeira notícia real testar capa, vídeo/Reel (se licenciado), contraditório e rastreio da indexação no Search Console.
+
+---
+
+# Auditoria integrada de produto V4 — 28/10/2026 (proposta para revisão)
+
+**Natureza:** diagnóstico de informação, experiência móvel, modelo de conteúdo e convergência da operação. Fonte: seis capturas Android fornecidas pelo proprietário e leitura das rotas, componentes, bibliotecas e protocolo editorial na branch principal. Esta análise **não** executou Lighthouse, navegação HTTPS de ponta a ponta, teste autenticado ou leitura da base Supabase de produção. Mudanças de código e publicação não fazem parte desta proposta.
+
+## Decisão fundamental: um produto, quatro trabalhos jornalísticos
+
+**Promessa pública:** VR Abandonada é um veículo de jornalismo popular investigativo de Volta Redonda que **noticia, explica, investiga e acompanha**, preservando as evidências e o histórico de suas matérias. O Instagram distribui. O site documenta. O COMUN tem papel distinto de organização e participação comunitária.
+
+**Jornada prioritária**: 1) descobrir um fato; 2) entender contexto; 3) conferir fonte; 4) acompanhar a evolução; 5) compartilhar ou enviar informação à redação. O leitor não precisa conhecer termos internos como hub, eixo, padrão, intake ou edição.
+
+**Princípios**: prova antes de ornamentação; notícia real antes de manifesto de produto; busca universal; URL estável; cronologia verificável; boa experiência Android; somente material aprovado como público; dados pessoais e fontes sensíveis nunca no repositório ou indexador.
+
+## Inventário com decisão por superfície pública
+
+| Superfície/rota | Papel atual no código | Destino de produto proposto |
+| --- | --- | --- |
+| `/` | Página de abertura, últimas, temas, dossiers, bairros | **Homepage editorial**: notícia principal com foto contextual (se licenciada), 3–5 últimas, casos ativos, por bairro, participação e método discretos |
+| `/agora` | Feed de matérias Git + itens do Radar Supabase | **Últimas**: único fluxo de acontecimentos e atualizações datadas, com tipo e filtro; não listar a mesma história duas vezes |
+| `/noticias` | Recorte `kind=news` de matérias Git | **Notícias**: filtro/index especializado, útil para SEO; não precisa disputar o papel da página Últimas |
+| `/materias`, `/materias/[slug]` | Lista e permalinks editoriais Git | **Reportagens publicadas**: formato canônico de notícia, investigação e explicação; manter permalinks existentes |
+| `/pautas`, `/pautas/[slug]` | `editorial_items` Supabase publicados, com template diferente | **Agenda/linhas editoriais** somente se houver distinção clara; não manter um segundo CMS público de reportagens |
+| `/dossies`, `/dossies/[slug]` | Objeto de investigação em banco e suas atualizações | **Casos em acompanhamento**: página-mãe que liga reportagens, cronologia, fontes, responsáveis, perguntas e respostas; não duplicar corpo de reportagem |
+| `/acervo`, `/acervo/[id]` | Documentos e coleções, interface longa | **Biblioteca de evidências**: documento com origem, data, contexto, direitos e ligação a matéria/caso; filtros compactos após acesso direto aos resultados |
+| `/memoria` | Narrativas e coleções de memória | **Memória**: porta temática dentro de Acervo, preservando URLs históricas |
+| `/territorios` | Hubs de lugares e bairros | **Bairros e lugares**: agrupamento editorial de notícias, casos, documentos e marcos, sem relatos sensíveis em mapa |
+| `/atores`, `/eixos`, `/padroes` | Hubs complexos de atores, temas e padrões | **Filtros e páginas de contexto de pesquisa**, não três editorias concorrentes na navegação principal |
+| `/linha-do-tempo` | Índice cronológico transversal | **Ferramenta contextual** e cronologia dentro de casos; preservável como exploração avançada |
+| `/campanhas`, `/impacto` | Dois sistemas quase homônimos de focos/chamados públicos | **Convergir conceito e interface** após inventariar dados; ocultar duplicação de menus sem apagar URLs ou dados existentes |
+| `/edicoes` | Sínteses e cadernos curados | **Seleção editorial/boletim** de distribuição, prioridade posterior; não competir com Últimas |
+| `/comecar`, `/participe` | Rotas de orientação e colaboração | Uma única porta pública **Participe**, com ações claras: enviar pista, colaborar, apoiar |
+| `/envie` | Intake público | **Envie uma informação à redação**; revisar consentimento, segurança, moderação e resposta, distinguindo do COMUN |
+| `/acompanhar`, `/salvos` | Frentes seguidas e leituras em localStorage | Agrupar em **Minhas leituras**, opcional; não prometer alertas, contas, sync ou notificações inexistentes |
+| `/publicacoes`, `/publicacoes/[id]` | Índice legado redireciona; permalinks do Instagram persistem | Manter redirecionamento e permalinks existentes, etiquetando reprodução social, sem classificá-la automaticamente como notícia |
+| `/metodo`, `/sobre`, `/apoie` | Institucional/transparência | Localizar no menu secundário e rodapé, com transparência editorial acessível em toda matéria |
+| `/buscar` | Índice transversal + filtros | **Busca única** indexando notícia, investigação, documento, bairro e memória, com tipos legíveis e contagens reais |
+| `/interno/**` | Ferramentas numerosas para captura, edição, mídia, hubs e módulos | **Operação privada simplificada**, organizada por fluxo de trabalho, não por coleção técnica |
+
+**Observação sobre prints:** a captura de Últimas às 00h19 mostra 1 registro; uma imagem posterior, às 00h44, já mostra a notícia do 28º BPM em destaque. Esses horários distintos não demonstram, por si, falha de sincronização. A janela flutuante lateral nas imagens não foi atribuída ao portal sem prova.
+
+## Arquitetura de navegação V4
+
+- **Barra móvel fixa com cinco destinos:** Início, Últimas, Investigações, Buscar e Menu. Trocar o rótulo “Investigar” por “Investigações”, mantendo a rota `/dossies`.
+- **Menu secundário:** Bairros e lugares; Acervo e memória; Participe/Envie informação; Minhas leituras; Sobre/Método/Apoie. Notícias pode permanecer como filtro visível de Últimas e rota indexável própria.
+- **Busca** contém tudo publicamente indexável; **Acervo** contém os documentos originais. Não exibir busca de documentos como substituta do fluxo de notícias.
+- **Leitura contextual:** de notícia para caso, documento, bairro e próximas atualizações, e de volta para o conteúdo de origem. Link explícito “Acompanhar este caso” sempre que houver caso verdadeiro.
+- **Homepage em celular, na ordem:** marca pequena > manchete atual > últimas 3–5 > investigações em andamento > por bairro/tema > documentos > participação > método. Sem títulos genéricos e publicidade interna entre o leitor e a notícia.
+
+## Modelo de domínio consolidado e integridade editorial
+
+**Entidades básicas**, em vez de novas páginas por impulso:
+
+1. **Publicação:** notícia, reportagem investigativa, explicação ou memória; slug permanente, título, resumo, autoria verdadeira, publicação/atualização, editoria, bairro/tema, fontes, imagem/licença, estado de revisão, histórico de correções.
+2. **Caso (dossiê):** pergunta central, status de acompanhamento, resumo em linguagem comum, peças publicadas, eventos, documentos, responsáveis, respostas oficiais, pendências. Uma matéria pode integrar vários temas, mas deve ter vínculo explícito com o caso principal.
+3. **Documento/evidência:** origem, URL/arquivo público, data e data de consulta, direitos, extrato referenciado e relações. Não expor documentos sigilosos de fonte.
+4. **Evento/atualização:** data factual separada da data de publicação, texto, fonte e vínculo a um caso ou matéria.
+5. **Facetas:** bairro, tema, empresa/órgão e série como classificação; não necessariamente CMS e homepage próprios.
+6. **Distribuição:** Instagram, RSS, WhatsApp e cards derivam da publicação aprovada; não são novas fontes de verdade.
+
+**Decisão de transição:** manter `content/materias/*.json` como fonte canônica das **novas matérias** por enquanto, dado o pipeline de PR/revisão já funcional; adotar adaptadores de leitura para que o material Supabase apareça sem duplicação e mapear a eventual migração a um único CMS editorial. Não fazer duas gravações manuais independentes. Não sobrescrever, redirecionar nem fundir permalinks históricos sem tabela de migração e testes.
+
+**Fluxo interno simplificado:** Receber → Classificar risco → Apurar e registrar evidências → Redigir → Checar fatos/contraditório/privacidade → Aprovar versão exata → PR/testes/preview → Publicar → Verificar URL/SEO/feed → Atualizar/corrigir no mesmo permalink.
+
+## Problemas objetivamente identificados
+
+- **P0 — Coexistência de sistemas editoriais:** `getMaterias` lê JSON no Git, `getPublishedEditorialItems` lê `editorial_items` no Supabase, o Radar usa a segunda fonte; a home une parte delas. Isso cria custos de reconciliação, tipos, busca, atualização e ligação entre casos.
+- **P0 — Caso e reportagem não são a mesma entidade:** `kind=investigation` em uma matéria não gera automaticamente um registro correspondente em `/dossies`. O usuário encontra rotas que parecem prometer a mesma coisa, mas apresentam conjuntos distintos.
+- **P1 — Duplicação semântica:** `/campanhas` e `/impacto` compartilham estrutura e termos como focos/chamados. `/noticias`, `/agora`, `/materias` e `/pautas` precisam de papéis públicos hierarquizados.
+- **P1 — Homepage sem fotografia vinculada à manchete:** na ausência de `cover` o bloco principal gera uma capa VR genérica grande. As duas matérias inaugurais devem preservar precisão e direitos autorais, mas o sistema necessita capa documental/jornalística específica por matéria, inclusive opção de mapa/gráfico/documento original.
+- **P1 — Densidade móvel:** prints mostram capas e cards altos, cabeçalho persistente e navegação fixa consumindo área; reduzir espaços, títulos e comprimento de resumos nas listagens, sem reduzir legibilidade do artigo integral. Avaliar mobile 320, 360, 390 e 430 px com dispositivo real.
+- **P1 — Complexidade de Acervo:** páginas extensas e explicações de taxonomia antes dos materiais; inverter a ordem para busca, coleção, resultados e filtros progressivos.
+- **P1 — Duplicação de funções pessoais:** Salvos, Acompanhar e trilha de leitura armazenados em localStorage, sem sincronização de conta. Valorizar “continuar leitura” sem prometer notificações ou preservação entre dispositivos.
+- **P1 — Build permissivo:** `next.config.ts` ignora erros TypeScript e ESLint durante build. Reabilitar gates quando a base estiver corrigida; READY isolado não comprova qualidade.
+- **P1 — UX de áudio:** o leitor por voz é função real via SpeechSynthesis do navegador; avaliar mover de destaque persistente “Ouvir” do cabeçalho para ação contextual da reportagem, preservando acessibilidade fácil por menu.
+- **P2 — Métricas e SEO ainda sem validação externa:** sitemap, RSS, JSON-LD existem; relevância, indexação e Web Vitals exigem Search Console, análise em navegador e dados reais.
+- **P0 de segurança, sujeito a teste:** protocolo de recebimento/armazenamento de pistas, consentimento, uploads privados, RLS, privilégio editorial e log de correções; não considerar auditado apenas pela presença de código ou documentação.
+
+## Backlog de convergência com critérios de aceite
+
+**Sprint A — Arquitetura editorial e publicação (P0).** Registro único de tipos, slugs e relações; definir fonte canônica, publicar matéria real uma vez e comprovar que aparece em Início, Últimas, Notícias quando aplicável, Matérias, Busca, RSS e Sitemap. Dossiê só aparece se publicado como caso. Sem material demonstrativo em produção.
+
+**Sprint B — Navegação e homepage (P1).** Menu com cinco destinos, hierarquia de páginas reduzida, homepage puxada por acontecimento real, cards mobile curtos, texto editorial legível. Critério: leitor chega a uma notícia atual em 1 toque, vê investigação em até 2 e encontra fonte na página sem ambiguidade.
+
+**Sprint C — Caso vivo e evidência (P1).** Associar Rua 33 e Vila Brasília (quando o caso tiver dossiê verificado) a linhas de tempo, documentos e matéria; cada novidade registra o que mudou, quando, qual fonte e a resposta das partes. URL mantida e log de correção explícito.
+
+**Sprint D — Busca e Acervo (P1).** Índice transversal sem itens repetidos, facetas rotuladas, resultados reais em primeiro plano, documentos com proveniência e ligação contextual. Testes para termo com resultado, sem resultado, filtros e permalinks antigos.
+
+**Sprint E — Operação segura e métricas (P1/P2).** Formulário sensível auditado e teste E2E de revisão; etapas internas reduzidas; performance, acessibilidade, offline, links, Search Console, métricas de compartilhamento e retorno. CI deve distinguir validação estática, integração, visual e HTTP produção.
+
+**Não fazer agora:** criar novas áreas públicas, gamificação, push sem consentimento/infraestrutura, integração Meta como bloqueio, mapa granular de denúncias, fundir dados do COMUN ao jornal, substituir matérias aprovadas por textos sintéticos, migrar todo o banco de uma vez.
+
+## Checklist de teste antes de declarar auditoria integral concluída
+
+- [ ] HTTPS e HTML real de home, Últimas, Notícias, Matérias, Dossiês, Busca, Acervo e 2 permalinks, de fora da Vercel;
+- [ ] Mobile Android real 320–430 px: sem overflow, com zoom 200%, teclado, touch targets, altura do header e barra inferior;
+- [ ] Zero dados demonstrativos, duplicações ou conteúdos privados na busca, RSS e sitemap;
+- [ ] Texto e links de fontes em todas as matérias reais; imagem/licença; revisão; data de fato vs. data de publicação; contraditório;
+- [ ] Audio com e sem SpeechSynthesis, foco de teclado, leitor de tela, contraste e reduced motion;
+- [ ] Envio seguro de pista e anexos, anti-spam e acesso só por editor autorizado;
+- [ ] Teste do fluxo ChatGPT → PR → aprovação → deploy → produção → atualização e correção;
+- [ ] Search Console, Web Vitals, logs de erro, rastreio de cliques sem coleta indevida de dados;
+- [ ] Nenhuma alteração de DNS, domínio, banco ou produção por consequência desta auditoria documental.
+
+**Decisão recomendada:** melhorar profundamente o que já existe em vez de aumentar a quantidade de módulos. Um fluxo editorial, uma busca, notícias de verdade, casos acompanhados e fontes verificáveis: essas são as cinco obrigações do produto.
