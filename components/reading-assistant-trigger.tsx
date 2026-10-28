@@ -10,7 +10,7 @@ export function ReadingAssistantTrigger({ className = "button-secondary" }: { cl
       type="button"
       className={className}
       onClick={openAssistant}
-      aria-label="Abrir leitura assistida e modo baixa visão"
+      aria-label="Ouvir — abrir leitura assistida e modo baixa visão"
     >
       Ouvir
     </button>
