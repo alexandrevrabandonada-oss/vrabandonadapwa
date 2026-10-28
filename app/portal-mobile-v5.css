@@ -1,0 +1,64 @@
+/* VR Abandonada — passada de polimento mobile 28/10/2026.
+   Carregado depois de editorial-v4: uma única fonte das novas correções,
+   sem desativar navegação, leitura ou componentes legados. */
+.vr5-empty-page { padding-block: clamp(1.15rem,3vw,2.2rem) 4rem; min-width: 0; }
+.vr5-empty-page__intro { border-bottom: 1px solid #4b473e; padding-bottom: 1.1rem; max-width: 850px; }
+.vr5-empty-page__intro h1 { font-size: clamp(2rem,5.3vw,3.35rem); font-weight: 950; letter-spacing: -.055em; line-height: 1.08; margin: .5rem 0; overflow-wrap: anywhere; text-transform: none; }
+.vr5-empty-page__intro>p { color: #cbc5b9; font-size: clamp(.96rem,2vw,1.1rem); line-height: 1.55; margin: .4rem 0 .8rem; }
+.vr5-empty-page__panel { display: grid; gap: .85rem; padding: clamp(1rem,2.6vw,1.55rem); margin-top: 1.2rem; background: #1d1e1e; border: 1px solid #48443c; border-left: 4px solid #f2c338; border-radius: 8px; max-width: 850px; }
+.vr5-empty-page__panel h2 { margin: 0; font-size: clamp(1.3rem,3vw,1.75rem); line-height: 1.16; }
+.vr5-empty-page__panel p { color: #c9c5bc; margin: 0; font-size: .92rem; line-height: 1.5; max-width: 64ch; }
+.vr5-empty-page__links { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem .7rem; }
+.vr5-empty-page__links a { display: inline-flex; align-items: center; min-height: 42px; padding: .65rem .8rem; border: 1px solid #665a43; color: #f2c338; border-radius: 6px; font-size: .86rem; font-weight: 840; }
+.vr5-empty-page__links a:first-child { background: #f2c338; color: #151513; border-color: #f2c338; }
+.vr5-empty-page__links a:focus-visible { outline: 2px solid #ffdc73; outline-offset: 2px; }
+.vr5-only-lead-note { display: flex; flex-direction: column; gap: .45rem; border-left: 3px solid #f2c338; background: #1c1d1e; border-radius: 5px; padding: .9rem 1rem; }
+.vr5-only-lead-note p { color: #c9c5bb; margin: 0; font-size: .88rem; line-height: 1.5; }
+.vr5-only-lead-note a { align-self: flex-start; color: #f2c338; font-size: .85rem; font-weight: 830; }
+@media(max-width:640px) {
+  html { scroll-padding-top: 4rem; }
+  /* Impede a grade do cabeçalho de jogar busca/Ouvir para uma segunda linha. */
+  .site-header.vr2-header .site-header__inner.vr2-header__inner {
+    display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center;
+    gap: .35rem; min-height: 56px; padding-block: .3rem; flex-wrap: nowrap;
+  }
+  .site-header.vr2-header .vr2-brand { min-width:0; gap:.38rem; overflow:hidden; }
+  .site-header.vr2-header .vr2-brand__mark { flex: none; width: 34px; height: 34px; }
+  .site-header.vr2-header .vr2-brand__name { min-width:0; overflow:hidden; }
+  .site-header.vr2-header .vr2-brand__name strong { font-size: .78rem; letter-spacing:-.035em; line-height: 1.14; }
+  .site-header.vr2-header .vr2-brand__name small { font-size: .47rem; letter-spacing: .03em; }
+  .site-header.vr2-header .site-header__tools.vr2-header__tools {
+    display: flex; align-items:center; justify-content:flex-end;
+    flex-flow: row nowrap; margin:0; padding:0; width:auto; min-width:0;
+    max-width:none; gap:.35rem;
+  }
+  .site-header.vr2-header .vr4-header-search { display: inline-flex; flex:none; width:37px;height:38px; }
+  .site-header.vr2-header .vr2-header__listen { display:inline-flex; flex:none; min-height:38px; padding:.45rem .55rem; font-size:.75rem; }
+  .site-header.vr2-header .site-menu__trigger { display:none; }
+  .mobile-bottom-nav.vr2-bottom-nav {
+    width:100%; max-width:100%; grid-template-columns:repeat(5,minmax(0,1fr));
+    overflow:clip; padding-inline:max(.18rem,env(safe-area-inset-left)) max(.18rem,env(safe-area-inset-right));
+  }
+  .vr2-bottom-nav__link,.vr2-bottom-nav .site-menu__trigger--mobile { min-width:0; max-width:100%; white-space:normal; text-align:center; }
+  .site-main, .archive-page, .territories-page, .intro-grid { min-width:0; max-width:100%; }
+  .archive-page .hero--split,.territories-page .hero--split { grid-template-columns:minmax(0,1fr); }
+  .archive-page .hero__copy,.territories-page .hero__copy { min-width:0; }
+  .archive-page .hero__title,.territories-page .hero__title {
+    max-width:100%; font-size:clamp(1.75rem,8vw,2.5rem); line-height:1.13;
+    text-transform:none; letter-spacing:-.05em; overflow-wrap:anywhere;
+  }
+  .archive-page .hero__lead,.territories-page .hero__lead { font-size:.94rem; line-height:1.5; }
+  .archive-page .hero,.territories-page .hero { padding:1rem; gap:1.1rem; }
+  .archive-page .home-hero__signals,.territories-page .home-hero__signals { gap:.35rem; }
+  .vr5-empty-page { padding-block:.8rem 2rem; }
+  .vr5-empty-page__intro h1 { font-size:clamp(1.85rem,8.5vw,2.25rem); letter-spacing:-.05em; }
+  .vr5-empty-page__panel { padding:1rem; }
+  .vr5-empty-page__links { display:grid; grid-template-columns:minmax(0,1fr); }
+  .vr5-empty-page__links a { justify-content:center; text-align:center; }
+}
+@media(max-width:365px) {
+  .site-header.vr2-header .vr2-brand__name small { display:none; }
+  .site-header.vr2-header .vr2-brand__name strong { font-size:.73rem; }
+  .site-header.vr2-header .vr4-header-search { width:35px; height:37px; }
+  .site-header.vr2-header .vr2-header__listen { padding-inline:.45rem; font-size:.72rem; }
+}

@@ -322,3 +322,16 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 **P2:** avaliar painel editorial próprio para publicação assistida, com prévia no mesmo layout, validação de fontes e agendamento, sem duplicar COMUN ou criar fluxo automático sem aprovação.
 
 **Aceite para merge:** GitHub CI verde incluindo TypeScript, lint, build e testes, Vercel Preview READY; inspecionar alterações e conferir que matérias reais, SEO e PR #7 não sofrem mudanças. **O aceite visual em smartphone físico continua pendente**, mesmo com o deploy de código aprovado.
+
+
+## Iteração mobile V5 — 28/10/2026 (capturas Android reais)
+
+Problemas observados nas capturas: cabeçalho com marca, busca e Ouvir ocupando espaço excessivo; barra móvel no limite da largura; repetição da investigação Rua 33 na home; Acervo sem itens exibindo estatísticas zeradas e muitas seções; Territórios sem cadastro exibindo longa introdução. A editoria Notícias já exibe uma notícia real; não alterar conteúdo nem inventar páginas.
+
+1. Novo app/portal-mobile-v5.css importado por último. No mobile, header em grid (marca + ações), sem quebra para segunda linha; barra inferior com cinco colunas e elementos sem largura mínima; títulos dos heróis de Acervo/Territórios com escala legível.
+2. Homepage elimina repetição da investigação que já ocupa o destaque; quando não há outros casos, oferece chamada curta. CTA distingue notícia versus investigação.
+3. Acervo sem documentos/coleções passa a orientar o leitor às fontes nas matérias, pesquisa e investigações; catálogo já preenchido permanece inalterado.
+4. Territórios sem registros públicos usa busca por bairros presentes nas matérias; se houver registros, conserva o atlas.
+5. Testes regressivos para UI, conteúdo e classificação editorial, sem inserir publicações fictícias.
+
+Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação não prova visual mobile. Sem alteração no banco, RLS, domínio, conteúdo investigativo ou arquivos privados.
