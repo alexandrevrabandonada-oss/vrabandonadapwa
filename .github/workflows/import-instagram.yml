@@ -1,38 +1,74 @@
-name: Importar publicações do Instagram
+name: Importar Instagram para revisão editorial
 on:
   schedule:
-    - cron: "17 */4 * * *"
+    - cron: '17 */4 * * *'
   workflow_dispatch:
 permissions:
   contents: write
+  pull-requests: write
 concurrency:
-  group: instagram-import-vr-abandonada
+  group: instagram-review-vr-abandonada
   cancel-in-progress: false
 jobs:
-  import:
+  importar:
+    if: github.repository == 'alexandrevrabandonada-oss/vrabandonadapwa'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
-      - name: Sincronizar postagens públicas
+          node-version: '22'
+      - name: Conferir presença de conexão Meta
+        id: meta
+        env:
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+        run: |
+          if [ -n "$INSTAGRAM_ACCESS_TOKEN" ]; then
+            echo 'available=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'available=false' >> "$GITHUB_OUTPUT"
+            echo '::notice::Instagram não conectado: importação ignorada sem mudar o acervo.'
+          fi
+      - name: Buscar postagens públicas pela API Meta
+        if: steps.meta.outputs.available == 'true'
         env:
           INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
           INSTAGRAM_USER_ID: ${{ vars.INSTAGRAM_USER_ID }}
           INSTAGRAM_GRAPH_HOST: ${{ vars.INSTAGRAM_GRAPH_HOST }}
           INSTAGRAM_GRAPH_VERSION: ${{ vars.INSTAGRAM_GRAPH_VERSION }}
         run: node scripts/import-instagram.mjs
-      - name: Salvar arquivo, se alterado
+      - name: Validar índice antes de abrir PR
+        if: steps.meta.outputs.available == 'true'
         run: |
-          git config user.name "vr-abandonada-bot"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add public/data/instagram-posts.json
-          if test -d public/instagram-media; then git add public/instagram-media/; fi
-          if ! git diff --cached --quiet; then
-            git commit -m "chore: atualizar acervo público do Instagram"
-            git push
-          else
-            echo "Sem novas publicações."
-          fi
+          node scripts/validate-instagram.mjs
+          node --test tests/instagram-import.test.mjs tests/instagram-validation.test.mjs
+      - name: Criar PR de revisão do acervo (nunca push direto para main)
+        if: steps.meta.outputs.available == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: automation/instagram-import
+          commit-message: 'chore(instagram): atualizar posts originais para revisão'
+          add-paths: |
+            public/data/instagram-posts.json
+            public/instagram-media/
+          title: '[REVISAR] Novas publicações importadas do Instagram'
+          draft: always-true
+          delete-branch: false
+          body: |
+            ## Importação automatizada (revisão obrigatória)
+            Esta PR contém legendas e capas originalmente publicadas no Instagram pela conta configurada.
+            **Não são reportagens novas nem dossiês verificados.**
+
+            - Conferir conta de origem, legendas, imagens e datas.
+            - Remover conteúdo sensível, duplicado ou indevido.
+            - Confirmar permissões de uso de imagens e o contexto de republicação.
+            - Examinar alterações no JSON e arquivos de mídia.
+            - Somente após revisão, aprovar a PR. Nunca ativar auto-merge neste fluxo.
+
+            Este processo **não escreve diretamente na main** e não modifica Supabase.

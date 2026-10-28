@@ -234,3 +234,13 @@ A prioridade **não** é construir mais 20 páginas. É fazer uma pessoa abrir o
 - Matérias aprovadas aproveitam SEO existente: URL canônica, meta description/Open Graph, JSON-LD Article, inclusão no sitemap, busca e homepage. **Indexação efetiva no Google não é garantida pela presença de SEO**; monitorar Search Console quando conectado.
 - Pendente: autenticar conta profissional Meta/Instagram e configurar credenciais seguras e permissões; importar posts reais com autorização; produzir e aprovar a primeira matéria, testar imagem/capa, links, segurança de fontes, indexação e revisão em produção.
 - Este sprint não modifica o Supabase, buckets privados/legados nem os trabalhos de proteção da PR #7.
+
+## Sprint automatização Instagram segura — 27/10/2026
+
+- Corrigido desenho do job em `.github/workflows/import-instagram.yml`: substituído `git push` direto à main por PR de revisão em modo rascunho, preservando janela de quatro horas e disparo manual.
+- Runner só importa quando `INSTAGRAM_ACCESS_TOKEN` está configurado como secret no GitHub. Sem credencial, não altera posts existentes.
+- Uma PR automatizada só deve entrar na main depois da conferência das legendas, imagens, direitos e dados sensíveis. Dados do Instagram público não são reportagens jornalísticas automaticamente verificadas.
+- Criada validação do índice antes de build e PR, cobrindo ID, duplicação, legendas, data, permalink, tipo de mídia e caminho de capa. Download endurecido contra mídia não JPEG, arquivo inválido e redirects externos.
+- GitHub Actions pode precisar de autorização para gerar PR no Settings do repositório. PRs geradas com `GITHUB_TOKEN` não disparam CI automaticamente: exigir checagem manual e Ready for review antes do merge.
+- Importador de postagens ainda não foi exercitado com uma credencial Meta verdadeira; `public/data/instagram-posts.json` continua vazio. A automação é preparada, **não conectada nem executada com posts reais**.
+- Não modifica Supabase, buckets ou PR #7; não integra dados de denúncia não publicados ou de fontes privadas.
