@@ -13,6 +13,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 import "./instagram.css";
 import "./materias.css";
+import "./portal-v2.css";
 
 const siteUrl = getSiteUrl();
 
