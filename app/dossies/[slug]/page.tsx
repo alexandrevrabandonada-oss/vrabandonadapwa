@@ -25,6 +25,7 @@ import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesBySlug, getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
+import { getMaterias } from "@/lib/materias/index";
 
 export async function generateStaticParams() {
   const dossiers = await getPublishedDossiers();
@@ -75,12 +76,14 @@ export default async function DossierDetailPage({ params }: PageProps) {
   const links = await getPublishedDossierLinks(dossier.id);
   const updates = await getPublishedDossierUpdates(dossier.id);
   const editorialItems = await getPublishedEditorialItems();
+  const materias = await getMaterias();
   const memoryItems = await getPublishedMemoryItems();
   const archiveAssets = await getPublishedArchiveAssets();
   const archiveCollections = await getPublishedArchiveCollections();
   const seriesCards = getEditorialSeriesCards(editorialItems);
   const resolvedLinks = resolveDossierLinks(links, {
     editorialItems,
+    materias,
     memoryItems,
     archiveAssets,
     archiveCollections,
@@ -302,6 +305,17 @@ export default async function DossierDetailPage({ params }: PageProps) {
 
             <div className="grid-2">
               {items.map((link) => {
+                if (link.link_type === "materia") {
+                  return (
+                    <article className="support-box" key={link.id}>
+                      <p className="eyebrow">Reportagem verificada · {getDossierLinkRoleLabel(link.link_role)}</p>
+                      <h3>{link.title}</h3>
+                      <p>{link.timeline_note || link.excerpt}</p>
+                      <Link href={link.href} className="button-secondary">Ler reportagem</Link>
+                    </article>
+                  );
+                }
+
                 if (link.link_type === "editorial") {
                   const item = editorialBySlug.get(link.link_key);
                   return item ? <EditorialCard key={link.id} item={item} href={link.href} compact /> : null;
