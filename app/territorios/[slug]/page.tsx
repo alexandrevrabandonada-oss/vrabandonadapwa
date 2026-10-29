@@ -18,6 +18,7 @@ import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
+import { getMaterias } from "@/lib/materias/index";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedCampaigns } from "@/lib/campaigns/queries";
 import { getPublishedImpacts } from "@/lib/impact/queries";
@@ -92,10 +93,11 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
     );
   }
 
-  const [territories, links, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs] = await Promise.all([
+  const [territories, links, editorialItems, materias, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs] = await Promise.all([
     getPublishedPlaceHubs(),
     getPublishedPlaceHubLinks(placeHub.id),
     getPublishedEditorialItems(),
+    getMaterias(),
     getPublishedMemoryItems(),
     getPublishedArchiveAssets(),
     getPublishedArchiveCollections(),
@@ -105,7 +107,7 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
     getPublishedThemeHubs(),
   ]);
 
-  const resolvedLinks = resolvePlaceHubLinks(links, { editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
+  const resolvedLinks = resolvePlaceHubLinks(links, { editorialItems, materias, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
   const timelineEntries = buildPlaceHubTimeline(resolvedLinks);
 
   const linksByType = groupPlaceHubLinksByType(resolvedLinks);
@@ -206,6 +208,21 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
 
         <PlaceHubTimeline entries={timelineEntries} />
       </section>
+
+      {linksByType.materia?.length ? (
+        <section className="section">
+          <div className="grid-2">
+            <div>
+              <p className="eyebrow">reportagens ligadas ao lugar</p>
+              <h2>Leituras verificadas e ligadas editorialmente.</h2>
+            </div>
+            <p className="section__lead">Cada vínculo é curado e leva à reportagem publicada em seu endereço permanente.</p>
+          </div>
+          <div className="grid-3">
+            {linksByType.materia.map((link) => <PlaceHubLinkCard key={link.id} link={link} compact />)}
+          </div>
+        </section>
+      ) : null}
 
       {linksByType.editorial?.length ? (
         <section className="section">

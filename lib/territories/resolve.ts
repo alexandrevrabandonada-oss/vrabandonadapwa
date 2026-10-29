@@ -3,6 +3,7 @@ import type {
   ArchiveCollection,
 } from "@/lib/archive/types";
 import type { EditorialItem } from "@/lib/editorial/types";
+import type { Materia } from "@/lib/materias/index";
 import type { MemoryItem } from "@/lib/memory/types";
 import type { InvestigationDossier } from "@/lib/dossiers/types";
 import type { PublicCampaign } from "@/lib/campaigns/types";
@@ -18,6 +19,7 @@ export type PlaceHubLinkOption = {
 
 export type PlaceHubResolutionContext = {
   editorialItems: EditorialItem[];
+  materias?: Materia[];
   memoryItems: MemoryItem[];
   archiveAssets: ArchiveAsset[];
   archiveCollections: ArchiveCollection[];
@@ -70,6 +72,9 @@ function pageOptions() {
 
 export function buildPlaceHubLinkOptions(context: PlaceHubResolutionContext) {
   const editorialOptions = context.editorialItems.map((item) => ({ value: `editorial:${item.slug}`, label: `Pauta · ${item.title}` }));
+  const materiaOptions = (context.materias ?? [])
+    .filter((item) => item.status === "published" && item.reviewed === true)
+    .map((item) => ({ value: `materia:${item.slug}`, label: `Reportagem · ${item.title}` }));
   const dossierOptions = context.dossiers.map((item) => ({ value: `dossier:${item.slug}`, label: `Dossiê · ${item.title}` }));
   const memoryOptions = context.memoryItems.map((item) => ({ value: `memory:${item.slug}`, label: `Memória · ${item.title}` }));
   const archiveOptions = context.archiveAssets.map((item) => ({ value: `archive:${item.id}`, label: `Acervo · ${item.title}` }));
@@ -80,6 +85,7 @@ export function buildPlaceHubLinkOptions(context: PlaceHubResolutionContext) {
 
   return [
     ...editorialOptions,
+    ...materiaOptions,
     ...dossierOptions,
     ...memoryOptions,
     ...archiveOptions,
@@ -94,6 +100,15 @@ export function buildPlaceHubLinkOptions(context: PlaceHubResolutionContext) {
 function resolveTitleAndExcerpt(type: string, key: string, context: PlaceHubResolutionContext) {
   let title = key;
   let excerpt: string | null = null;
+
+  if (type === "materia") {
+    const item = (context.materias ?? []).find((entry) =>
+      entry.slug === key && entry.status === "published" && entry.reviewed === true);
+    if (item) {
+      title = item.title;
+      excerpt = item.summary;
+    }
+  }
 
   if (type === "editorial") {
     const item = context.editorialItems.find((entry) => entry.slug === key);
@@ -173,6 +188,13 @@ export function resolvePlaceHubLinks(links: PlaceHubLink[], context: PlaceHubRes
     .map((link) => {
       const parsed = parsePlaceHubLinkRef(getPlaceHubLinkRef(link.link_type, link.link_key));
       if (!parsed) {
+        return null;
+      }
+
+      // Links manuais para reportagens exigem comprovação no catálogo Git.
+      if (parsed.type === "materia" &&
+          !(context.materias ?? []).some((item) =>
+            item.slug === parsed.key && item.status === "published" && item.reviewed === true)) {
         return null;
       }
 

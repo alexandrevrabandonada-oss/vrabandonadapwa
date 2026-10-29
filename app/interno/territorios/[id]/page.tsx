@@ -14,6 +14,7 @@ import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
+import { getMaterias } from "@/lib/materias/index";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
 import { getPublishedCampaigns } from "@/lib/campaigns/queries";
 import { getPublishedImpacts } from "@/lib/impact/queries";
@@ -50,10 +51,11 @@ export default async function InternalTerritoryDetailPage({ params }: PageProps)
     notFound();
   }
 
-  const [territories, links, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs] = await Promise.all([
+  const [territories, links, editorialItems, materias, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs] = await Promise.all([
     getInternalPlaceHubs({ status: "all" }),
     getInternalPlaceHubLinks(placeHub.id),
     getPublishedEditorialItems(),
+    getMaterias(),
     getPublishedMemoryItems(),
     getPublishedArchiveAssets(),
     getPublishedArchiveCollections(),
@@ -63,10 +65,10 @@ export default async function InternalTerritoryDetailPage({ params }: PageProps)
     getPublishedThemeHubs(),
   ]);
 
-  const resolvedLinks = resolvePlaceHubLinks(links, { editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
+  const resolvedLinks = resolvePlaceHubLinks(links, { editorialItems, materias, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
   const timelineEntries = buildPlaceHubTimeline(resolvedLinks);
   const leadLink = resolvedLinks.find((link) => link.link_role === "lead") ?? resolvedLinks[0] ?? null;
-  const options = buildPlaceHubLinkOptions({ editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
+  const options = buildPlaceHubLinkOptions({ editorialItems, materias, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
   const relatedPlaces = territories.filter((item) => item.id !== placeHub.id && (item.parent_place_slug === placeHub.parent_place_slug || item.place_type === placeHub.place_type || item.territory_label === placeHub.territory_label)).slice(0, 3);
 
   return (

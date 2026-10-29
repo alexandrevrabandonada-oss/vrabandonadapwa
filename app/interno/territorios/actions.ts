@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { getInternalPlaceHubById } from "@/lib/territories/queries";
 import { parsePlaceHubLinkRef } from "@/lib/territories/navigation";
+import { getMateria } from "@/lib/materias/index";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type PlaceHubActionState = {
@@ -177,6 +178,9 @@ export async function savePlaceHubLinkAction(_: PlaceHubActionState, formData: F
   const parsed = parsePlaceHubLinkRef(linkRef);
   if (!parsed) {
     return { ok: false, message: "Escolha uma peça relacionada válida." };
+  }
+  if (parsed.type === "materia" && !(await getMateria(parsed.key))) {
+    return { ok: false, message: "A reportagem não está publicada e revisada no Git." };
   }
 
   const payload = {

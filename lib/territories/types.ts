@@ -16,7 +16,7 @@ export const placeHubPlaceTypes = [
 ] as const;
 export type PlaceHubPlaceType = (typeof placeHubPlaceTypes)[number];
 
-export const placeHubLinkTypes = ["editorial", "memory", "archive", "collection", "dossier", "campaign", "impact", "hub", "page", "external"] as const;
+export const placeHubLinkTypes = ["editorial", "materia", "memory", "archive", "collection", "dossier", "campaign", "impact", "hub", "page", "external"] as const;
 export type PlaceHubLinkType = (typeof placeHubLinkTypes)[number];
 
 export const placeHubLinkRoles = ["lead", "evidence", "context", "followup", "archive"] as const;

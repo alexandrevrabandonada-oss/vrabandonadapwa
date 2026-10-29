@@ -1,4 +1,5 @@
 import type { ArchiveAsset } from "@/lib/archive/types";
+import type { Materia } from "@/lib/materias/index";
 import type { EditorialItem, EditorialSeries } from "@/lib/editorial/types";
 import type { MemoryItem } from "@/lib/memory/types";
 import type { ArchiveCollection } from "@/lib/archive/types";
@@ -12,6 +13,8 @@ export type DossierLinkOption = {
 
 export type DossierResolutionContext = {
   editorialItems: EditorialItem[];
+  /** Apenas matérias já aprovadas, oriundas do Git; nunca inferir vínculos. */
+  materias?: Materia[];
   memoryItems: MemoryItem[];
   archiveAssets: ArchiveAsset[];
   archiveCollections: ArchiveCollection[];
@@ -45,12 +48,15 @@ function sortResolvedLinks(items: DossierResolvedLink[]) {
 
 export function buildDossierLinkOptions(context: DossierResolutionContext) {
   const editorialOptions = context.editorialItems.map((item) => ({ value: `editorial:${item.slug}`, label: `Pauta · ${item.title}` }));
+  const materiaOptions = (context.materias ?? [])
+    .filter((item) => item.status === "published" && item.reviewed === true)
+    .map((item) => ({ value: `materia:${item.slug}`, label: `Reportagem · ${item.title}` }));
   const memoryOptions = context.memoryItems.map((item) => ({ value: `memory:${item.slug}`, label: `Memória · ${item.title}` }));
   const archiveOptions = context.archiveAssets.map((item) => ({ value: `archive:${item.id}`, label: `Acervo · ${item.title}` }));
   const collectionOptions = context.archiveCollections.map((item) => ({ value: `collection:${item.slug}`, label: `Coleção · ${item.title}` }));
   const seriesOptions = context.seriesCards.map((item) => ({ value: `series:${item.slug}`, label: `Série · ${item.title}` }));
 
-  return [...editorialOptions, ...memoryOptions, ...archiveOptions, ...collectionOptions, ...seriesOptions].sort((a, b) => a.label.localeCompare(b.label));
+  return [...editorialOptions, ...materiaOptions, ...memoryOptions, ...archiveOptions, ...collectionOptions, ...seriesOptions].sort((a, b) => a.label.localeCompare(b.label));
 }
 
 export function resolveDossierLinks(links: InvestigationDossierLink[], context: DossierResolutionContext) {
@@ -61,9 +67,22 @@ export function resolveDossierLinks(links: InvestigationDossierLink[], context: 
         return null;
       }
 
+      // Um vínculo explícito a uma matéria só é publicável se o Git confirmar
+      // que ela está publicada e revisada. Não mostrar slug órfão ou rascunho.
+      const materia = parsed.type === "materia"
+        ? (context.materias ?? []).find((item) =>
+            item.slug === parsed.key && item.status === "published" && item.reviewed === true)
+        : null;
+      if (parsed.type === "materia" && !materia) return null;
+
       let title = link.link_key;
       let excerpt: string | null = null;
       const href = getDossierLinkHref(parsed.type, parsed.key);
+
+      if (materia) {
+        title = materia.title;
+        excerpt = materia.summary;
+      }
 
       if (parsed.type === "editorial") {
         const item = context.editorialItems.find((entry) => entry.slug === parsed.key);

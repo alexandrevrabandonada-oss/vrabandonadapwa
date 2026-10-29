@@ -34,6 +34,12 @@ O diagnóstico do banco de produção também registrou apenas `intake_submissio
 
 Até cumprir isso, as páginas `/dossies` e `/territorios` continuam exibindo reportagens Git **separadamente dos vínculos estruturados**. Não apresentar o hub futuro como relação já implementada.
 
+### Implementação do contrato `materia` — V9 (somente aplicação)
+
+A V9 introduz o tipo **`materia`**, distinto de `editorial` (pauta Supabase legada), nos tipos, menus, seletores e resolvedores de Casos/Bairros. O servidor lê exclusivamente `getMaterias()`/`getMateria()` do diretório Git de publicações aprovadas. Apenas matéria `status=published` e `reviewed=true` gera opção ou link `/materias/<slug>`; slugs inexistentes/não revisados são recusados no formulário e omitidos na página pública. Nenhum conteúdo é duplicado no banco, e relações continuam explícitas, criadas por curadoria; a classificação territorial original de cada matéria permanece separada do vínculo manual para um caso.
+
+**Portão ainda fechado:** os CHECKs antigos dos campos `link_type` em `investigation_dossier_links` e `place_hub_links` **não admitem `materia`**. A V9 não inclui DDL e o banco de produção não tem essas tabelas. No staging, o esquema mínimo novo deve aceitar `materia` somente nessas duas tabelas. Nunca gravar um vínculo no banco atual antes desse contrato existir. Para as matérias já aprovadas, não criar vínculos retroativos automáticos apenas por coincidência de termos. O percurso inverso reportagem → dossiê depende de uma consulta de vínculos publicados (e de RLS verificada em staging); **não é considerado pronto pela V9**.
+
 ## Portões para a implantação — ordem obrigatória
 
 ### 0. Preparação e isolamento
