@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getInternalDossierById } from "@/lib/dossiers/queries";
 import { parseDossierLinkRef } from "@/lib/dossiers/navigation";
+import { getMateria } from "@/lib/materias/index";
 
 export type DossierActionState = {
   ok: boolean;
@@ -156,6 +157,9 @@ export async function addInvestigationDossierLinkAction(_: DossierActionState, f
   const parsed = parseDossierLinkRef(linkRef);
   if (!parsed) {
     return { ok: false, message: "Escolha uma peça relacionada válida." };
+  }
+  if (parsed.type === "materia" && !(await getMateria(parsed.key))) {
+    return { ok: false, message: "A reportagem não está publicada e revisada no Git." };
   }
 
   const { error } = await supabase.from("investigation_dossier_links").insert({

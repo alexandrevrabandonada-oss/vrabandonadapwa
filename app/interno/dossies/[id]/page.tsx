@@ -13,6 +13,7 @@ import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
 import { getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
+import { getMaterias } from "@/lib/materias/index";
 import { buildDossierLinkOptions, buildDossierTimeline, resolveDossierLinks } from "@/lib/dossiers/resolve";
 import { getDossierLinkRoleLabel, getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import { getInternalDossierById, getInternalDossierLinks, getInternalDossierUpdates } from "@/lib/dossiers/queries";
@@ -49,12 +50,13 @@ export default async function InternalDossierDetailPage({ params }: PageProps) {
   const updates = await getInternalDossierUpdates(dossier.id);
   const latestUpdate = getDossierLatestUpdate(updates);
   const editorialItems = await getPublishedEditorialItems();
+  const materias = await getMaterias();
   const memoryItems = await getPublishedMemoryItems();
   const archiveAssets = await getPublishedArchiveAssets();
   const archiveCollections = await getPublishedArchiveCollections();
   const seriesCards = getEditorialSeriesCards(editorialItems);
-  const options = buildDossierLinkOptions({ editorialItems, memoryItems, archiveAssets, archiveCollections, seriesCards });
-  const resolvedLinks = resolveDossierLinks(links, { editorialItems, memoryItems, archiveAssets, archiveCollections, seriesCards });
+  const options = buildDossierLinkOptions({ editorialItems, materias, memoryItems, archiveAssets, archiveCollections, seriesCards });
+  const resolvedLinks = resolveDossierLinks(links, { editorialItems, materias, memoryItems, archiveAssets, archiveCollections, seriesCards });
   const timelineEntries = buildDossierTimeline(resolvedLinks);
   const leadLink = resolvedLinks.find((link) => link.link_role === "lead") ?? resolvedLinks[0] ?? null;
 
