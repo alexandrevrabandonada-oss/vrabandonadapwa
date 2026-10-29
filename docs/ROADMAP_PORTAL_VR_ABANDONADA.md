@@ -526,3 +526,18 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Ponto de decisão arquitetural:** os vínculos entre dossiê/bairro/documento e reportagem têm de usar `link_type + link_key` revisados, com permalink de `content/materias/*.json`, sem duplicação de matéria; o Git mantém a publicação jornalística canônica. Resolver no novo schema o descompasso entre os estados de dossiê de `0011` e `0012`; não executar as migrações antigas em cadeia.
 
 **Próximo após CI:** abrir uma PR separada de implantação **no momento em que existir staging e as PRs de UX estiverem integradas**, gerar migrações novas pelo CLI, validar autorização real `anon`/usuário comum/editor e só depois submeter a promoção à produção para aprovação explícita. Nenhuma implantação até então.
+
+---
+
+## Sprint V9 — vínculos explícitos Git entre reportagem, dossiê e bairro
+
+**Implementação em PR filha da #27, exclusivamente código + testes.** A auditoria V8 comprovou que `editorial:<slug>` aponta para `/pautas/<slug>` (registro Supabase antigo), e não para a reportagem canônica `/materias/<slug>`. A V9 cria o tipo de vínculo `materia:<slug>`, sem migrar o corpo das reportagens, sem deduções pelo texto ou pelo bairro e sem trocar a semântica de vínculos antigos.
+
+- `lib/dossiers/types.ts`, `navigation.ts`, `resolve.ts`: `materia` nos tipos, rótulos, rota `/materias/<slug>`, opções selecionáveis somente quando a matéria Git for aprovada, descarte de slugs ausentes/riscados.
+- `lib/territories/types.ts`, `navigation.ts`, `resolve.ts`: mesmo contrato. Os bairros oriundos dos metadados revisados `territories` continuam disponíveis sem cadastro no Supabase.
+- `app/dossies/[slug]/page.tsx`, `app/territorios/[slug]/page.tsx`: renderizam links canônicos com título e resumo obtidos do Git; só para relação editorial explicitamente cadastrada.
+- Painel `app/interno/dossies/[id]` e `app/interno/territorios/[id]`: lista opções Git. Actions de escrita verificam via `getMateria()` antes de aceitar o novo tipo, inclusive se o formulário for forjado.
+- `docs/PLANO_IMPLANTACAO_EDITORIAL_SUPABASE.md` preserva portão de DDL: CHECK de `link_type` do schema novo deverá admitir `materia`, mas **nenhuma migração/seed/alteração RLS foi aplicada nesta rodada**.
+- O percurso inverso `/materias` → dossiês, dependente de RLS, será tratado após staging: ainda não implementado. Não afirmar integração bidirecional completa.
+
+**Aceite:** TypeScript, lint, testes e build bloqueantes, HTTP, Chromium, axe/reflow no SHA exato. Não mesclar sem revisar sequência de PRs #25 → #26 → #27 → V9 e validar RLS em staging antes de cadastrar relacionamentos estruturados.
