@@ -534,3 +534,21 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Implementado na PR #27, sem dados de banco:** leitura tipada de `materia` separada de `editorial` em Casos e Bairros. O permalink canônico é `/materias/<slug>` e só se materializa se `getMaterias()` devolver publicação Git com `status='published'` e `reviewed=true`; slug órfão, rascunho ou inválido não ganha URL pública no resolvedor. As páginas de dossiê e bairro recebem o mesmo catálogo, sem cópias da matéria nem vínculos inferidos. A seção de leituras territoriais apresenta reportagens e pautas sem confundir as categorias. O editor ainda não oferece a opção e as ações do servidor bloqueiam gravação de `materia` até o esquema e a RLS serem validados em staging.
 
 **Contrato novo:** `tests/materia-links-v8.test.mjs`, com tipos, rotas, revisão editorial, bloqueio de escrita e slugs aprovados. Ainda faltam CI, TypeScript, build, Chromium, axe/reflow e Preview do mesmo SHA. Não integrar em produção nem migrar o banco a partir deste commit.
+
+---
+
+## Sprint V8.2 — núcleo editorial isolado, RLS real em PostgreSQL efêmero
+
+**PR de staging empilhada:** [#31](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/31) baseada na PR #27, sem rebase sobre main e sem aplicação em produção. **Nenhuma DDL foi executada no Supabase do usuário.**
+
+**Pacote entregue:**
+- `scripts/sql/staging/v82_phase1_editorial_core.sql`: blueprint transacional com exatamente cinco tabelas, sem seeds e fora de `supabase/migrations`. O script exige confirmação explícita de sessão de staging e falha quando a confirmação está ausente; isso não substitui identificar projeto e responsável.
+- `scripts/sql/staging/v82_verify_rls.sql`: fixtures sintéticas transacionais, verificação real de visibilidade e recusa de escrita para `anon` e `authenticated`, descarte integral dos dados via `ROLLBACK`.
+- `.github/workflows/validate-v82-staging-db.yml`: PostgreSQL 17 efêmero, criação de papéis públicos de teste, execução negativa do guard, aplicação do schema, testes RLS e verificação de ausência de fixtures residuais.
+- `tests/staging-editorial-schema-v82.test.mjs`: seis contratos estáticos de segurança da proposta. `docs/QA_STAGING_EDITORIAL_V82.md` contém checklist de homologação em Supabase staging.
+
+**Resultado do banco efêmero:** [workflow de RLS](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/40980991718) aprovado no primeiro commit da PR; PostgreSQL aplicou cinco tabelas e cinco políticas, testou guard sem autorização, papéis `anon` e `authenticated`, negação de escrita e rollback. O workflow do Next.js/Chromium será revalidado no HEAD após qualquer alteração documental.
+
+**Sem liberar escrita editorial:** RLS concede apenas leitura a visitantes e usuários autenticados, restrita a pais públicos; nenhum usuário autenticado pode escrever só por estar logado. Atualizações requerem `published=true` e pai visível. `link_type=materia` é tipo distinto de pauta; existência/revisão do slug continua sendo validada pela aplicação.
+
+**Próximo bloqueio de produção:** criar staging Supabase realmente isolado, configurar papéis e políticas de autorização editorial com testes, auditar exposição de `created_by`/`updated_by`, garantir grants da Data API, testar migração versionada gerada pelo CLI e revisar com responsável antes de promover. O roadmap V8 de acervo mantém quatro tabelas em fase separada. **Não executar as migrações 0003–0033 em bloco, nem integrar #31 à main sem revisão da cadeia #25 → #26 → #27.**
