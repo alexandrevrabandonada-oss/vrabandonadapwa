@@ -38,3 +38,15 @@ Se o SQL falhar, transação aborta sem tabelas parciais. Se aplicado em staging
 ## Verificação de privacidade V8.5
 
 O blueprint passa a restringir SELECT às colunas públicas de cada tabela. `created_by` e `updated_by` permanecem restritas, inclusive quando o pai está publicado. Conferir com `has_column_privilege` (anon e authenticated), validar que o `select` público da aplicação não pede autoria e tentar consulta direta da coluna como visitante (espera-se permissão negada). **Não aplicar esta proposta SQL no banco real sem um staging dedicado.**
+ 
+## V8.6 — autorização editorial por UUID (proposta, sem execução em projeto real)
+
+**Escopo:** scripts/sql/staging/v86_editorial_identity_authz.sql é um SQL candidato apenas para staging isolado. Não está em supabase/migrations, não altera banco real e requer segundo opt-in de sessão. O opt-in não comprova que a conexão aponta ao projeto correto.
+
+**Identidade:** editorial_private.members armazena UUID estável, papel editor ou publisher e active=false por padrão. O schema deve ficar fora dos schemas expostos da Data API. Usuários autenticados só podem ler a própria associação, sem criá-la nem se promover. Visitantes não têm acesso. Não usar email, user_metadata ou JWT não verificado para conceder permissões.
+
+**Separação:** editor ativo cria/altera apenas rascunho privado; publicador ativo pode publicar. Não há DELETE; vínculos e updates permanecem sem escrita. Campos de autoria internos continuam indisponíveis para anon/authenticated. As ações existentes do painel escrevem autoria por email e NÃO são compatíveis com este modelo de concessões limitadas. Não habilitar a interface sem corrigir isso e comprovar a autorização E2E.
+
+**Teste:** workflow do PostgreSQL 17 efêmero inclui stub de auth.uid exclusivamente para simular os claims de um gateway que verifica JWT. Matriz testa anon, não editor, editor desabilitado, editor ativo, publicador e sessão sem UUID; verifica rejeição de escalada e publicação não autorizada, operações legítimas e rollback. A simulação NÃO comprova validação real do Supabase Auth.
+
+**Dependências:** criar ou identificar projeto Supabase staging dedicado sem dados pessoais, confirmar escopo e custos, revisar configurações da Data API, executar o modelo de base apenas após aprovação, migrar com CLI e repetir teste E2E com identidades reais e políticas do banco. Não reutilizar diretamente a PR #29 histórica.
