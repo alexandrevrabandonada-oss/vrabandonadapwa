@@ -1,13 +1,13 @@
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { DossierUpdateForm } from "@/components/dossier-update-form";
 import { getInternalDossierById, getInternalDossierUpdateById } from "@/lib/dossiers/queries";
 import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import { getDossierUpdateTypeLabel, getDossierUpdateYearLabel } from "@/lib/dossiers/updates";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Editar update do dossiê",
@@ -20,14 +20,7 @@ type PageProps = {
 
 export default async function InternalDossierUpdateEditPage({ params }: PageProps) {
   const { id, updateId } = await params;
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/interno/entrar");
-  }
+  await requireEditorialAdmin();
 
   const dossier = await getInternalDossierById(id);
   if (!dossier) {

@@ -1,11 +1,10 @@
 "use server";
 
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import { getInternalPlaceHubById } from "@/lib/territories/queries";
 import { parsePlaceHubLinkRef } from "@/lib/territories/navigation";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type PlaceHubActionState = {
   ok: boolean;
@@ -36,19 +35,6 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-async function ensureAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    redirect("/interno/entrar");
-  }
-
-  return { supabase, user };
-}
 
 function revalidatePlaceHubRoutes(slug: string, id: string) {
   revalidatePath("/");
@@ -78,7 +64,7 @@ export async function savePlaceHubAction(_: PlaceHubActionState, formData: FormD
   const featured = toBool(formData.get("featured"));
   const sortOrder = Number.parseInt(normalize(formData.get("sort_order")), 10) || 0;
 
-  const { supabase, user } = await ensureAdmin();
+  const { supabase, user } = await requireEditorialAdmin();
 
   if (!title) {
     return { ok: false, message: "Título é obrigatório." };
@@ -168,7 +154,7 @@ export async function savePlaceHubLinkAction(_: PlaceHubActionState, formData: F
   const featured = toBool(formData.get("featured"));
   const sortOrder = Number.parseInt(normalize(formData.get("sort_order")), 10) || 0;
 
-  const { supabase } = await ensureAdmin();
+  const { supabase } = await requireEditorialAdmin();
 
   if (!placeHubId) {
     return { ok: false, message: "Lugar inválido." };
@@ -216,7 +202,7 @@ export async function removePlaceHubLinkAction(formData: FormData): Promise<void
   const placeHubId = normalize(formData.get("place_hub_id"));
   const linkId = normalize(formData.get("link_id"));
 
-  const { supabase } = await ensureAdmin();
+  const { supabase } = await requireEditorialAdmin();
 
   if (!placeHubId || !linkId) {
     return;

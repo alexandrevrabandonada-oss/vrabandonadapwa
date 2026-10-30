@@ -1,9 +1,8 @@
 "use server";
 
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { getInternalDossierById } from "@/lib/dossiers/queries";
 import { parseDossierLinkRef } from "@/lib/dossiers/navigation";
 
@@ -29,19 +28,6 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-async function ensureAdmin() {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    redirect("/interno/entrar");
-  }
-
-  return { supabase, user };
-}
 
 function revalidateDossier(slug: string) {
   revalidatePath("/dossies");
@@ -65,7 +51,7 @@ export async function saveInvestigationDossierAction(_: DossierActionState, form
   const featured = toBool(formData.get("featured"));
   const sortOrder = Number.parseInt(normalize(formData.get("sort_order")), 10) || 0;
 
-  const { supabase, user } = await ensureAdmin();
+  const { supabase, user } = await requireEditorialAdmin();
 
   if (!title) {
     return { ok: false, message: "Título é obrigatório." };
@@ -147,7 +133,7 @@ export async function addInvestigationDossierLinkAction(_: DossierActionState, f
   const featured = toBool(formData.get("featured"));
   const sortOrder = Number.parseInt(normalize(formData.get("sort_order")), 10) || 0;
 
-  const { supabase } = await ensureAdmin();
+  const { supabase } = await requireEditorialAdmin();
 
   if (!dossierId) {
     return { ok: false, message: "Dossiê inválido." };
@@ -190,7 +176,7 @@ export async function removeInvestigationDossierLinkAction(formData: FormData): 
   const dossierId = normalize(formData.get("dossier_id"));
   const linkId = normalize(formData.get("link_id"));
 
-  const { supabase } = await ensureAdmin();
+  const { supabase } = await requireEditorialAdmin();
 
   if (!dossierId || !linkId) {
     return;

@@ -1,6 +1,7 @@
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { DossierForm } from "@/components/dossier-form";
@@ -18,7 +19,6 @@ import { buildDossierLinkOptions, buildDossierTimeline, resolveDossierLinks } fr
 import { getDossierLinkRoleLabel, getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import { getInternalDossierById, getInternalDossierLinks, getInternalDossierUpdates } from "@/lib/dossiers/queries";
 import { getDossierLatestUpdate } from "@/lib/dossiers/updates";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { removeInvestigationDossierLinkAction } from "@/app/interno/dossies/actions";
 
 export const metadata: Metadata = {
@@ -32,14 +32,7 @@ type PageProps = {
 
 export default async function InternalDossierDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/interno/entrar");
-  }
+  await requireEditorialAdmin();
 
   const dossier = await getInternalDossierById(id);
   if (!dossier) {
