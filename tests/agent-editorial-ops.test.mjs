@@ -8,9 +8,14 @@ const fake = (url) => {
   const path = new URL(url).pathname;
   const texts = {
     "/": "<html><title>VR Abandonada</title></html>",
+    "/noticias": "<html><h1>Notícias</h1>",
+    "/materias": "<html><h1>O que acontece na cidade merece ficar registrado.</h1>Uma reportagem de teste",
+    "/dossies": "<html>Reportagens investigativas",
+    "/acervo": "<html>fontes-reportagens",
+    "/territorios": "<html>Vila Brasília",
     "/robots.txt": "User-agent: *\nSitemap: " + host + "/sitemap.xml",
-    "/sitemap.xml": '<?xml version="1.0"?><urlset><loc>' + host + "</loc></urlset>",
-    "/feed.xml": "<rss><title>VR Abandonada</title></rss>",
+    "/sitemap.xml": '<?xml version="1.0"?><urlset><loc>' + host + '/materias/teste-jornalistico</loc></urlset>',
+    "/feed.xml": "<rss><title>VR Abandonada</title><link>" + host + "/materias/teste-jornalistico</link></rss>",
     "/materias/teste-jornalistico": '<html><title>Uma reportagem de teste</title><link rel="canonical" href="' + host + '/materias/teste-jornalistico"><script type="application/ld+json">{}</script></html>',
   };
   if (!Object.hasOwn(texts, path)) return Promise.resolve({ ok:false,status:404 });
@@ -19,7 +24,7 @@ const fake = (url) => {
 test("audita caminhos públicos sem serviços pagos", async () => {
   const data=await auditPublicSite(fake, [{slug:"teste-jornalistico",title:"Uma reportagem de teste"}]);
   assert.equal(data.ok,true);
-  assert.equal(data.checked.length,5);
+  assert.equal(data.checked.length,10);
 });
 test("falhas de SEO e rotas são reportadas", async () => {
   const broken=async (url)=>{
