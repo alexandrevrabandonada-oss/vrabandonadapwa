@@ -8,9 +8,9 @@ import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
 const archiveAssetMockItems = allowPublicDemoContent() ? archiveAssetMockItemsDemo : [];
 
 const publicFields =
-  "id, memory_item_id, editorial_item_id, collection_slug, title, asset_type, file_url, thumb_url, source_label, source_date_label, approximate_year, place_label, rights_note, description, public_visibility, featured, sort_order, created_at, updated_at, created_by, updated_by";
+  "id, memory_item_id, editorial_item_id, collection_slug, title, asset_type, file_url, thumb_url, source_label, source_date_label, approximate_year, place_label, rights_note, description, public_visibility, featured, sort_order, created_at, updated_at";
 
-const internalFields = `${publicFields}, file_path, thumb_path`;
+const internalFields = `${publicFields}, created_by, updated_by, file_path, thumb_path`;
 
 function sortArchiveAssets(items: ArchiveAsset[]) {
   return [...items].sort((a, b) => {

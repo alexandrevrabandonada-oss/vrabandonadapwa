@@ -8,7 +8,8 @@ import { allowPublicDemoContent } from "@/lib/editorial/demo-content";
 const archiveCollectionMockItems = allowPublicDemoContent() ? archiveCollectionMockItemsDemo : [];
 
 const publicFields =
-  "id, title, slug, excerpt, description, cover_image_url, public_visibility, featured, sort_order, created_at, updated_at, created_by, updated_by";
+  "id, title, slug, excerpt, description, cover_image_url, public_visibility, featured, sort_order, created_at, updated_at";
+const internalFields = `${publicFields}, created_by, updated_by`;
 
 function sortArchiveCollections(items: ArchiveCollection[]) {
   return [...items].sort((a, b) => {
@@ -75,7 +76,7 @@ export async function getInternalArchiveCollections() {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("archive_collections")
-    .select(publicFields)
+    .select(internalFields)
     .order("featured", { ascending: false })
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
@@ -91,7 +92,7 @@ export async function getInternalArchiveCollectionById(id: string) {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("archive_collections")
-    .select(publicFields)
+    .select(internalFields)
     .eq("id", id)
     .maybeSingle();
 
@@ -106,7 +107,7 @@ export async function getInternalArchiveCollectionBySlug(slug: string) {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("archive_collections")
-    .select(publicFields)
+    .select(internalFields)
     .eq("slug", slug)
     .maybeSingle();
 
