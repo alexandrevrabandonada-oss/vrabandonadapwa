@@ -26,7 +26,7 @@ test("cada tabela exige RLS e a fase inicial não dá privilégio de escrita",()
     assert.ok(ddl.includes("alter table public."+name+" enable row level security;"));
   }
   assert.match(ddl,/revoke all on table[\s\S]*from public, anon, authenticated;/);
-  assert.match(ddl,/grant select on table[\s\S]*to anon, authenticated;/);
+  assert.equal((ddl.match(/grant select \([\s\S]*?\) on table public\./g) || []).length, 5);
   assert.doesNotMatch(ddl,/grant\s+(?:all|insert|update|delete)\s+on/i);
   assert.doesNotMatch(ddl,/for all|for insert|for update|for delete/i);
   assert.doesNotMatch(ddl,/using\s*\(\s*true\s*\)/i);
@@ -47,4 +47,11 @@ test("materia tem tipo distinto de editorial e link_key validado como slug",()=>
 test("tabelas começam privadas, com status draft",()=>{
   assert.equal((ddl.match(/public_visibility boolean not null default false/g)||[]).length,2);
   assert.equal((ddl.match(/status text not null default 'draft'/g)||[]).length,2);
+});
+
+test("autoria interna não é concedida por SELECT público", () => {
+ const grants=[...ddl.matchAll(/grant select \(([\s\S]*?)\) on table public\.([a-z_]+) to anon, authenticated;/g)];
+ assert.equal(grants.length, 5);
+ for(const [,cols] of grants) assert.doesNotMatch(cols,/\bcreated_by\b|\bupdated_by\b/);
+ assert.doesNotMatch(ddl,/grant select on table/);
 });
