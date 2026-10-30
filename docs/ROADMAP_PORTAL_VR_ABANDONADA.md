@@ -672,3 +672,8 @@ A revisão de código identificou que as projeções públicas de documentos e c
 
 
 **Verificação posterior:** deploy de produção `f3b44a8` READY; em 30/10, o navegador público exibiu “4 publicações disponíveis” em `/acervo`, incluindo a matéria CSN Cimentos. A PR #40 está efetivamente publicada. O catálogo documental continua indisponível; a PR #42 segue em CI e não ativa tabelas.
+
+
+### Resultado da proteção do Acervo — 30/10/2026
+
+[PR #42](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/42) passou nos testes Node, TypeScript, lint, build, HTTP local, Chromium, axe e reflow e foi integrada em `main` no commit `b0b823c1744fcd7fb7106b1ae0e454fc4e634a6d`. O deploy correspondente estava BUILDING na última checagem; não confundir integração com publicação verificada. Apenas a projeção da aplicação foi alterada: não há garantia de privacidade na Data API sem grants de colunas e RLS. As tabelas do Acervo continuam ausentes e não existe branch de desenvolvimento no projeto Supabase identificado, segundo listagem de 30/10. Não reutilizar outro projeto sem comprovar propósito; nenhuma alteração ou migração foi aplicada no banco.
