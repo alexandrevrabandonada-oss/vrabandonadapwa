@@ -669,3 +669,6 @@ A revisão de código identificou que as projeções públicas de documentos e c
 
 
 **Atualização de validação:** a primeira execução da PR #42 falhou no teste novo de projeção; o teste foi corrigido no commit `58aba59fb6ba7d2b0abeb6842fb8a35a7dc06f58`. Aguardar CI do novo HEAD; não afirmar proteção integrada ou RLS validada. A PR #40 está integrada, mas o deploy `f3b44a8` ainda estava em construção na última consulta.
+
+
+**Verificação posterior:** deploy de produção `f3b44a8` READY; em 30/10, o navegador público exibiu “4 publicações disponíveis” em `/acervo`, incluindo a matéria CSN Cimentos. A PR #40 está efetivamente publicada. O catálogo documental continua indisponível; a PR #42 segue em CI e não ativa tabelas.
