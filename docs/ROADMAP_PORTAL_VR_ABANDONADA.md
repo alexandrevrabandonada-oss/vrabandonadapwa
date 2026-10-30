@@ -629,3 +629,8 @@ Uma redação local investigativa em que a pessoa encontra uma notícia verific�
 **Regra sobre SEO de IA:** Google informa que fundamentos de rastreabilidade e conteúdo útil se aplicam a seus recursos de IA, sem arquivo `llms.txt` ou schema especial obrigatório. Não prometer posição, indexação ou presença em respostas de IA.
 
 **Status desta rodada:** pesquisa e atualização propostas em PR documental; sem modificações no produto, banco, DNS, métricas ou produção. Auditoria visual, desempenho, dados de campo, Search Console e domínio ainda pendentes. Critério de encerramento: resultado observado, fontes, data, risco e responsável para cada item, sem confundir código, preview e produção.
+
+
+### Correção de domínio — informação do proprietário, 30/10/2026
+
+O proprietário informa que perdeu `vrabandonada.com.br` por falta de renovação. O domínio disponível para o projeto é **vrabandonada.online**. Descartar propostas anteriores de recuperar ou migrar para `.com.br`; não presumir controle sobre ele nem redirecionamento funcional. Manter `www.vrabandonada.online` como canonical previsto no código, sujeito a confirmação HTTP/DNS e configuração real do `.online` com e sem `www`. Rever referências históricas ao `.com.br` à luz desta correção. Não alterar DNS ou código de domínio sem verificar o comportamento efetivo do `.online`.
