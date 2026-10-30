@@ -1,11 +1,10 @@
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { DossierForm } from "@/components/dossier-form";
 import { getInternalEditorialEntryById } from "@/lib/entrada/queries";
 import { buildEntrySeed } from "@/lib/enriquecimento/resolve";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Novo dossiê",
@@ -17,14 +16,7 @@ type PageProps = {
 };
 
 export default async function NewInternalDossierPage({ searchParams }: PageProps) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/interno/entrar");
-  }
+  await requireEditorialAdmin();
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const entry = resolvedSearchParams.entry_id ? await getInternalEditorialEntryById(resolvedSearchParams.entry_id) : null;

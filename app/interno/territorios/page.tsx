@@ -1,12 +1,11 @@
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { PlaceHubCard } from "@/components/place-hub-card";
 import { getPlaceHubStatusLabel } from "@/lib/territories/navigation";
 import { getInternalPlaceHubs, getInternalPlaceHubLinks } from "@/lib/territories/queries";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Territórios internos",
@@ -25,14 +24,7 @@ function isFilterValue(value: string | undefined): value is FilterValue {
 }
 
 export default async function InternalTerritoriesPage({ searchParams }: PageProps) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/interno/entrar");
-  }
+  await requireEditorialAdmin();
 
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const status = isFilterValue(resolvedSearchParams.status) ? resolvedSearchParams.status : "all";

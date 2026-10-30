@@ -1,6 +1,7 @@
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { Container } from "@/components/container";
 import { PlaceHubCard } from "@/components/place-hub-card";
@@ -23,7 +24,6 @@ import { buildPlaceHubLinkOptions, buildPlaceHubTimeline, resolvePlaceHubLinks }
 import { getPlaceHubStatusLabel } from "@/lib/territories/navigation";
 import { getInternalPlaceHubById, getInternalPlaceHubLinks, getInternalPlaceHubs } from "@/lib/territories/queries";
 import { removePlaceHubLinkAction } from "@/app/interno/territorios/actions";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Território interno",
@@ -35,14 +35,7 @@ type PageProps = {
 };
 
 export default async function InternalTerritoryDetailPage({ params }: PageProps) {
-  const supabase = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/interno/entrar");
-  }
+  await requireEditorialAdmin();
 
   const { id } = await params;
   const placeHub = await getInternalPlaceHubById(id);

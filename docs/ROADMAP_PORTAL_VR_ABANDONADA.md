@@ -560,3 +560,13 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Após a integração da PR #33:** o GitHub já auditava diariamente homepage, robots, sitemap, RSS e até cinco matérias. A nova etapa amplia a mesma rotina (sem criar tarefa duplicada) para `/noticias`, `/materias`, `/dossies`, `/acervo` e `/territorios`, além de comparar publicações aprovadas no Git com índice de matérias, sitemap, RSS, referências do Acervo, investigações de Casos e bairros expressamente marcados como foco territorial. O monitor não infere relação por menções contextuais e não consulta denúncias, arquivos privados ou fontes externas. O fluxo de alertas deduplicados por Issues existente é preservado.
 
 **Contrato:** `tests/public-site-journeys.test.mjs` cobre cenários simulados de sucesso, falha HTTP, reportagem/investigação desaparecida e fontes/permalinks ausentes. O monitor precisa de CI da nova branch antes do merge; uma auditoria agendada com sucesso indica apenas disponibilidade/coerência do HTML público naquele momento, não certifica indexação, acessibilidade em dispositivo real nem disponibilidade de documentos externos.
+
+---
+
+## Sprint V8.4 — autorização editorial na aplicação antes do staging
+
+**Auditoria após integração #33/#34 e inspeção da PR #29:** as páginas internas de dossiês e bairros e suas Server Actions verificavam `auth.getUser()`, mas não confirmavam autorização administrativa, ao contrário da rotina de captura que já usava `isAdminEmailAllowed`. A página de novo território sequer fazia sua própria checagem. Login não é autorização editorial.
+
+**Implementação proposta na branch V8.4:** criar guarda única `requireEditorialAdmin()` com `server-only`, `supabase.auth.getUser()`, verificação de e-mail na allowlist existente e redirecionamento na falha; aplicá-la antes de qualquer acesso interno ou escrita em dez superfícies (8 páginas e 2 Server Actions). O componente de novo território passa a ser assíncrono para exigir a guarda. Testes de contrato impedem regressões nos pontos de entrada.
+
+**Limites:** a guarda de aplicação é defesa adicional, **não substitui RLS**. O blueprint do banco continua somente leitura para `anon` e `authenticated`, sem cadastros `materia` habilitados. A PR #29 permanece histórica e não deve ser mesclada diretamente; a seleção de reportagens no editor só será proposta em nova etapa depois de staging dedicado, autorização baseada em identidade e RLS real. Não foram consultadas ou modificadas denúncias, permissões do banco, dados de produção nem a allowlist original.

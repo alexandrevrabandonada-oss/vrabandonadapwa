@@ -1,3 +1,4 @@
+import { requireEditorialAdmin } from "@/lib/editorial/internal-access";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
   description: "Criação de lugar vivo do VR Abandonada.",
 };
 
-export default function NewTerritoryPage() {
+export default async function NewTerritoryPage() {
+  await requireEditorialAdmin();
   return (
     <Container className="intro-grid internal-page territory-internal-page">
       <section className="hero internal-hero">
