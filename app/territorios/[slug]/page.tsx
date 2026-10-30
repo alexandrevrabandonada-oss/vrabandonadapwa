@@ -16,6 +16,7 @@ import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
+import { getMaterias } from "@/lib/materias";
 
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
@@ -92,7 +93,7 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
     );
   }
 
-  const [territories, links, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs] = await Promise.all([
+  const [territories, links, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs, materias] = await Promise.all([
     getPublishedPlaceHubs(),
     getPublishedPlaceHubLinks(placeHub.id),
     getPublishedEditorialItems(),
@@ -103,9 +104,10 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
     getPublishedCampaigns(),
     getPublishedImpacts(),
     getPublishedThemeHubs(),
+    getMaterias(),
   ]);
 
-  const resolvedLinks = resolvePlaceHubLinks(links, { editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
+  const resolvedLinks = resolvePlaceHubLinks(links, { materias, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
   const timelineEntries = buildPlaceHubTimeline(resolvedLinks);
 
   const linksByType = groupPlaceHubLinksByType(resolvedLinks);
@@ -207,18 +209,18 @@ export default async function TerritoryDetailPage({ params }: PageProps) {
         <PlaceHubTimeline entries={timelineEntries} />
       </section>
 
-      {linksByType.editorial?.length ? (
+      {linksByType.editorial?.length || linksByType.materia?.length ? (
         <section className="section">
           <div className="grid-2">
             <div>
-              <p className="eyebrow">pautas e investigação</p>
+              <p className="eyebrow">reportagens e pautas</p>
               <h2>Leituras que abrem o território.</h2>
             </div>
-            <p className="section__lead">As pautas ajudam a entrar pelo tema e depois descer para o lugar.</p>
+            <p className="section__lead">Reportagens verificadas e pautas publicadas conectam o leitor ao contexto do lugar.</p>
           </div>
 
           <div className="grid-3">
-            {linksByType.editorial.map((link) => <PlaceHubLinkCard key={link.id} link={link} compact />)}
+            {[...(linksByType.materia ?? []), ...(linksByType.editorial ?? [])].map((link) => <PlaceHubLinkCard key={link.id} link={link} compact />)}
           </div>
         </section>
       ) : null}

@@ -349,6 +349,8 @@ export function resolveDossierLinkHref(type: string, key: string) {
   switch (type) {
     case "editorial":
       return `/pautas/${key}`;
+    case "materia":
+      return `/materias/${key}`;
     case "memory":
       return `/memoria/${key}`;
     case "archive":

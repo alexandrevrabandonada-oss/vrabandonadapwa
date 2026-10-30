@@ -22,6 +22,8 @@ import { getPublishedDossierBySlug, getPublishedDossierLinks, getPublishedDossie
 import { buildDossierTimeline, groupDossierLinksByRole, resolveDossierLinks } from "@/lib/dossiers/resolve";
 import { getDossierUpdateNarrativeLabel, groupDossierUpdatesByType } from "@/lib/dossiers/updates";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
+import { getMaterias } from "@/lib/materias";
+import { EditorialStoryCard } from "@/components/editorial-story-card";
 import { getEditorialSeriesBySlug, getEditorialSeriesCards } from "@/lib/editorial/taxonomy";
 import { getHomeOpenGraphImagePath } from "@/lib/editorial/share";
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
@@ -74,12 +76,13 @@ export default async function DossierDetailPage({ params }: PageProps) {
 
   const links = await getPublishedDossierLinks(dossier.id);
   const updates = await getPublishedDossierUpdates(dossier.id);
-  const editorialItems = await getPublishedEditorialItems();
+  const [editorialItems, materias] = await Promise.all([getPublishedEditorialItems(), getMaterias()]);
   const memoryItems = await getPublishedMemoryItems();
   const archiveAssets = await getPublishedArchiveAssets();
   const archiveCollections = await getPublishedArchiveCollections();
   const seriesCards = getEditorialSeriesCards(editorialItems);
   const resolvedLinks = resolveDossierLinks(links, {
+    materias,
     editorialItems,
     memoryItems,
     archiveAssets,
@@ -89,6 +92,7 @@ export default async function DossierDetailPage({ params }: PageProps) {
   const roleGroups = groupDossierLinksByRole(resolvedLinks);
   const timelineEntries = buildDossierTimeline(resolvedLinks);
   const editorialBySlug = new Map(editorialItems.map((item) => [item.slug, item]));
+  const materiaBySlug = new Map(materias.map((item) => [item.slug, item]));
   const memoryBySlug = new Map(memoryItems.map((item) => [item.slug, item]));
   const archiveById = new Map(archiveAssets.map((item) => [item.id, item]));
   const collectionBySlug = new Map(archiveCollections.map((item) => [item.slug, item]));
@@ -302,6 +306,10 @@ export default async function DossierDetailPage({ params }: PageProps) {
 
             <div className="grid-2">
               {items.map((link) => {
+                if (link.link_type === "materia") {
+                  const article = materiaBySlug.get(link.link_key);
+                  return article ? <EditorialStoryCard key={link.id} article={article} contextLabel={getDossierLinkRoleLabel(link.link_role)} actionLabel="Ler reportagem" /> : null;
+                }
                 if (link.link_type === "editorial") {
                   const item = editorialBySlug.get(link.link_key);
                   return item ? <EditorialCard key={link.id} item={item} href={link.href} compact /> : null;

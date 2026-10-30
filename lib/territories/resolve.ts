@@ -3,6 +3,7 @@ import type {
   ArchiveCollection,
 } from "@/lib/archive/types";
 import type { EditorialItem } from "@/lib/editorial/types";
+import type { Materia } from "@/lib/materias";
 import type { MemoryItem } from "@/lib/memory/types";
 import type { InvestigationDossier } from "@/lib/dossiers/types";
 import type { PublicCampaign } from "@/lib/campaigns/types";
@@ -17,6 +18,7 @@ export type PlaceHubLinkOption = {
 };
 
 export type PlaceHubResolutionContext = {
+  materias?: Materia[];
   editorialItems: EditorialItem[];
   memoryItems: MemoryItem[];
   archiveAssets: ArchiveAsset[];
@@ -94,6 +96,11 @@ export function buildPlaceHubLinkOptions(context: PlaceHubResolutionContext) {
 function resolveTitleAndExcerpt(type: string, key: string, context: PlaceHubResolutionContext) {
   let title = key;
   let excerpt: string | null = null;
+
+  if (type === "materia") {
+    const article = context.materias?.find((item) => item.slug === key && item.status === "published" && item.reviewed === true);
+    if (article) { title = article.title; excerpt = article.summary; }
+  }
 
   if (type === "editorial") {
     const item = context.editorialItems.find((entry) => entry.slug === key);
@@ -176,6 +183,7 @@ export function resolvePlaceHubLinks(links: PlaceHubLink[], context: PlaceHubRes
         return null;
       }
 
+      if (parsed.type === "materia" && !context.materias?.some((item) => item.slug === parsed.key && item.status === "published" && item.reviewed === true)) return null;
       const href = getPlaceHubLinkHref(parsed.type, parsed.key);
       const { title, excerpt } = resolveTitleAndExcerpt(parsed.type, parsed.key, context);
 

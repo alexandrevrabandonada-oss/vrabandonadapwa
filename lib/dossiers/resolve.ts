@@ -1,4 +1,5 @@
 import type { ArchiveAsset } from "@/lib/archive/types";
+import type { Materia } from "@/lib/materias";
 import type { EditorialItem, EditorialSeries } from "@/lib/editorial/types";
 import type { MemoryItem } from "@/lib/memory/types";
 import type { ArchiveCollection } from "@/lib/archive/types";
@@ -11,6 +12,7 @@ export type DossierLinkOption = {
 };
 
 export type DossierResolutionContext = {
+  materias?: Materia[];
   editorialItems: EditorialItem[];
   memoryItems: MemoryItem[];
   archiveAssets: ArchiveAsset[];
@@ -61,8 +63,10 @@ export function resolveDossierLinks(links: InvestigationDossierLink[], context: 
         return null;
       }
 
-      let title = link.link_key;
-      let excerpt: string | null = null;
+      const materia = parsed.type === "materia" ? context.materias?.find((item) => item.slug === parsed.key && item.status === "published" && item.reviewed === true) : null;
+      if (parsed.type === "materia" && !materia) return null;
+      let title = materia?.title ?? link.link_key;
+      let excerpt: string | null = materia?.summary ?? null;
       const href = getDossierLinkHref(parsed.type, parsed.key);
 
       if (parsed.type === "editorial") {

@@ -178,6 +178,9 @@ export async function savePlaceHubLinkAction(_: PlaceHubActionState, formData: F
   if (!parsed) {
     return { ok: false, message: "Escolha uma peça relacionada válida." };
   }
+  if (parsed.type === "materia") {
+    return { ok: false, message: "Vínculos a reportagens ainda não estão disponíveis para escrita." };
+  }
 
   const payload = {
     place_hub_id: placeHubId,
