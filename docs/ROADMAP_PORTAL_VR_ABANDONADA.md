@@ -580,3 +580,15 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Mudança:** separar projeções públicas/internas no código e, no blueprint staging não aplicado, substituir grants gerais por SELECT por coluna para cinco tabelas; testar com `has_column_privilege` em PostgreSQL temporário como `anon` e `authenticated`. RLS e bloqueio de escrita permanecem. **Sem mudanças no Supabase real;** nem editores têm autorizações novas de gravação.
 
 **Validação pendente:** CI Node, TypeScript/lint/build, PostgreSQL RLS e Chromium no commit exato; staging Supabase dedicado, permissões por identidade e revisão de campos da API antes de habilitar curadoria da PR #29.
+
+---
+
+## Sprint V8.6 — identidade editorial e publicação separadas em staging
+
+A V8.4 validou a allowlist no servidor e a V8.5 restringiu projeções públicas. O próximo bloqueio é uma autorização SQL real por identidade, não somente por login autenticado.
+
+A proposta usa editorial_private.members, fora da Data API exposta, com UUID, papel editor/publicador e registro inativo por padrão. As políticas para dossiês e bairros separam edição de rascunhos privados e publicação; nenhuma concessão libera exclusão ou escrita de links, atualizações e autoria interna. Scripts ficam exclusivamente em scripts/sql/staging, sem migração ou modificação do Supabase real.
+
+O CI da V8.2 é ampliado para exercitar esses perfis em Postgres 17 temporário, com auth.uid simulado e fixtures revertidas. Exige teste negativo de execução sem opt-in e validação de não editor, editor desabilitado, editor, publicador e sessão sem identidade. O stub de claims é apenas representação local, NÃO demonstra validação de JWT real.
+
+**Gates para publicação futura:** staging isolado com identidade do projeto comprovada, dados sintéticos, autorização administrativa para membros, configuração de schemas expostos da Data API, E2E de segurança com Supabase Auth real, ajustes às Server Actions que ainda enviam autoria por email e revisão de política RLS para vínculos antes de liberar a curadoria. PR #29 permanece rascunho e não deve ser mesclada diretamente.

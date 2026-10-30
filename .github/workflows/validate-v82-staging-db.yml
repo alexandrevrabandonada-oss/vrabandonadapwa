@@ -4,6 +4,7 @@ on:
     paths:
       - 'scripts/sql/staging/**'
       - 'tests/staging-editorial-schema-v82.test.mjs'
+      - 'tests/editorial-identity-v86.test.mjs'
       - '.github/workflows/validate-v82-staging-db.yml'
   workflow_dispatch:
 
@@ -64,3 +65,29 @@ jobs:
           count=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from public.investigation_dossiers where slug like 'qa-v82-%'")
           hubs=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from public.place_hubs where slug like 'qa-v82-%'")
           test "$count" = '0' && test "$hubs" = '0'
+
+      - name: Simular auth.uid apenas no PostgreSQL efêmero
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/staging/v86_ci_auth_uid_stub.sql
+      - name: Bloquear V8.6 sem segundo opt-in
+        run: |
+          if psql -v ON_ERROR_STOP=1 -f scripts/sql/staging/v86_editorial_identity_authz.sql > /tmp/v86-guard.log 2>&1; then
+            echo "ERRO: V8.6 executou sem autorização"
+            exit 1
+          fi
+          grep -q 'V8.6 bloqueado' /tmp/v86-guard.log
+          no_schema=$(psql -At -v ON_ERROR_STOP=1 -c "select to_regnamespace('editorial_private') is null")
+          test "$no_schema" = 't'
+      - name: Instalar política de papéis apenas no PostgreSQL efêmero
+        run: |
+          {
+            echo "SET vrabandonada.editorial_authz_reviewed = 'yes';"
+            cat scripts/sql/staging/v86_editorial_identity_authz.sql
+          } | psql -v ON_ERROR_STOP=1
+      - name: Exercitar editor, publicador e demais perfis com rollback
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/staging/v86_verify_editorial_identity.sql
+      - name: Confirmar nenhuma fixture de membro ou conteúdo residual
+        run: |
+          members=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from editorial_private.members")
+          dossiers=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from public.investigation_dossiers where slug like 'qa-v86-%'")
+          hubs=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from public.place_hubs where slug like 'qa-v86-%'")
+          test "$members" = '0' && test "$dossiers" = '0' && test "$hubs" = '0'
