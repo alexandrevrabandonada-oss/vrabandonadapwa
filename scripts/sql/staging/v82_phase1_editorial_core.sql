@@ -159,13 +159,32 @@ revoke all on table
   public.place_hub_links
 from public, anon, authenticated;
 
-grant select on table
-  public.investigation_dossiers,
-  public.investigation_dossier_links,
-  public.investigation_dossier_updates,
-  public.place_hubs,
-  public.place_hub_links
-to anon, authenticated;
+-- Colunas de autoria podem conter emails da equipe editorial.
+-- RLS controla linhas; grants de coluna impedem SELECT direto de autoria.
+-- Novas colunas permanecem privadas por padrão.
+grant select (
+  id, title, slug, excerpt, description, status, cover_image_url, featured,
+  public_visibility, sort_order, lead_question, period_label, territory_label,
+  created_at, updated_at
+) on table public.investigation_dossiers to anon, authenticated;
+grant select (
+  id, dossier_id, link_type, link_key, link_role, timeline_year,
+  timeline_label, timeline_note, featured, sort_order, created_at, updated_at
+) on table public.investigation_dossier_links to anon, authenticated;
+grant select (
+  id, dossier_id, title, slug, excerpt, body, update_type,
+  published, published_at, featured, sort_order, created_at, updated_at
+) on table public.investigation_dossier_updates to anon, authenticated;
+grant select (
+  id, title, slug, excerpt, description, lead_question, place_type,
+  parent_place_slug, territory_label, address_label, latitude, longitude,
+  cover_image_url, featured, public_visibility, status, sort_order,
+  created_at, updated_at
+) on table public.place_hubs to anon, authenticated;
+grant select (
+  id, place_hub_id, link_type, link_key, link_role, timeline_year,
+  timeline_label, timeline_note, featured, sort_order, created_at, updated_at
+) on table public.place_hub_links to anon, authenticated;
 
 -- Sem políticas de escrita: editor autenticado não pode gravar até a
 -- etapa separada de identidade editorial e controle de propriedade/autorização.
