@@ -37,7 +37,7 @@ export async function auditPublicSite(fetchImpl = fetch, articles = []) {
   const targets = [
     { path: "/", must: ["<html", "VR Abandonada"] },
     { path: "/noticias", must: ["Notícias"] },
-    { path: "/materias", must: ["Matérias"] },
+    { path: "/materias", must: ["O que acontece na cidade merece ficar registrado."] },
     { path: "/dossies", must: ["Reportagens investigativas"] },
     { path: "/acervo", must: ["fontes-reportagens"] },
     { path: "/territorios", must: ["Vila Brasília"] },
