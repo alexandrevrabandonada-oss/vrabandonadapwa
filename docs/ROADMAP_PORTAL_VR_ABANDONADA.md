@@ -602,7 +602,7 @@ Uma redação local investigativa em que a pessoa encontra uma notícia verific�
 ### Decisões e fila priorizada
 
 **P0 — linha de base e confiança**
-1. [ ] Confirmar Vercel: deployment ativo, SHA, domínio e aliases; testar os quatro hosts por HTTPS, cadeia 301/308, caminho, query, canonical, robots, sitemap, RSS e páginas de matérias. Evidenciar data e resposta; resolver DNS somente com estado confirmado.
+1. [ ] Confirmar Vercel: deployment ativo, SHA, domínio e aliases; testar os dois hosts .online por HTTPS, cadeia 301/308, caminho, query, canonical, robots, sitemap, RSS e páginas de matérias. Evidenciar data e resposta; resolver DNS somente com estado confirmado.
 2. [ ] Medir Search Console por propriedade e data: cobertura, URLs inspecionadas, sitemap, consultas, cliques e impressões. Não presumir indexação. Levantar baseline de Web Vitals reais, dispositivo móvel e desktop; alvo p75 LCP ≤2,5s, INP ≤200ms e CLS ≤0,1. Lighthouse é laboratório e TBT não é INP real.
 3. [ ] Confirmar publicação e integridade das três matérias reais, situação de fontes/contraditório, imagem e atualização. Testar links internos e resultados de compartilhamento WhatsApp; sem publicar rascunhos automaticamente.
 4. [ ] Reavaliar segurança do envio, anexos, privacidade, autorização e integrações antes de receber material sensível. Confirmar PR #7 e permissões reais; não presumir que RLS ou interface isoladamente protegem objetos.
@@ -634,3 +634,13 @@ Uma redação local investigativa em que a pessoa encontra uma notícia verific�
 ### Correção de domínio — informação do proprietário, 30/10/2026
 
 O proprietário informa que perdeu `vrabandonada.com.br` por falta de renovação. O domínio disponível para o projeto é **vrabandonada.online**. Descartar propostas anteriores de recuperar ou migrar para `.com.br`; não presumir controle sobre ele nem redirecionamento funcional. Manter `www.vrabandonada.online` como canonical previsto no código, sujeito a confirmação HTTP/DNS e configuração real do `.online` com e sem `www`. Rever referências históricas ao `.com.br` à luz desta correção. Não alterar DNS ou código de domínio sem verificar o comportamento efetivo do `.online`.
+
+
+### Verificação operacional — 30/10/2026
+
+- Vercel: os aliases `www.vrabandonada.online` e `vrabandonada.online` apontam para o deployment de produção `dpl_FB8GM54BhAnW4KdrFh332WPAmLz1`, estado READY, commit `7830e42ec1b224346354e5206d59b23c6fff14d2`. A configuração de DNS de ambos retorna `misconfigured:false`; isto não é prova completa de HTTPS e navegação de todos os usuários.
+- A Vercel não informa redirect para o apex, mas `middleware.ts` no commit de produção implementa 308 de `vrabandonada.online` para `www.vrabandonada.online`, preservando caminho e query. Confirmar com uma requisição real sem seguir redirecionamento. O canonical www está coerente com o código.
+- Os dois nomes .com.br ainda constam na configuração Vercel, mas o proprietário informa que perdeu o domínio. A presença de aliases históricos/verificados NÃO demonstra posse ou tráfego atual. Inventariar referências antes de propor remoção; não depender dele, nem fazer alteração DNS.
+- Em 29/10, a auditoria agendada detectou HTTP 404 na matéria da explosão e abriu [issue #30](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/issues/30). Um [teste HTTP posterior em 29/10 às 22h07 de Brasília](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/40983892662) passou com 12 URLs, incluindo as três matérias, home, robots, sitemap, RSS e cinco jornadas. Isso evidencia recuperação naquele momento, não garante resposta hoje. A issue #30 continua aberta; não fechá-la sem nova verificação independente.
+- **Achado P1 de observabilidade:** o workflow agendado captura falha do script para criar issue e conclui com sucesso se o tratamento do alerta funcionou. Logo, bolinha verde não prova que a auditoria passou: consultar o log e a issue. Ajustar o workflow para registrar falha após executar o tratamento de alertas, sem perder deduplicação, e testar sucesso e falha. Verificar também janela entre publicação no Git e deploy, que pode causar alerta temporário; não afirmar causa do 404 histórico sem prova.
+- **Pendente:** HTTPS/308 real, teste visual e acessibilidade em dispositivos, Search Console e métricas de campo. Estes resultados não substituem teste ao vivo nem medição de indexação.
