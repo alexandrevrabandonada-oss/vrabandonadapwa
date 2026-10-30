@@ -666,3 +666,6 @@ Consulta read-only ao catálogo do Supabase de produção confirmou ausência da
 A revisão de código identificou que as projeções públicas de documentos e coleções solicitavam `created_by`/`updated_by`; risco potencial se as tabelas vierem a existir, não evidência de vazamento. [PR #42](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/42) separa consultas internas e públicas e adiciona testes. Pendente CI, revisão e integração; a projeção não substitui grants nem RLS na Data API.
 
 [PR #40](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/40) corrigiu plural e passou CI completo; integrada no commit `f3b44a86487bd262f8acf01dfcb5131b4646e28c`. Deploy Vercel estava em BUILDING na verificação; produção ainda exibia versão anterior. Confirmar deploy READY e texto público antes de declarar publicação. A reportagem CSN Cimentos publicada em outra frente foi preservada.
+
+
+**Atualização de validação:** a primeira execução da PR #42 falhou no teste novo de projeção; o teste foi corrigido no commit `58aba59fb6ba7d2b0abeb6842fb8a35a7dc06f58`. Aguardar CI do novo HEAD; não afirmar proteção integrada ou RLS validada. A PR #40 está integrada, mas o deploy `f3b44a8` ainda estava em construção na última consulta.
