@@ -93,3 +93,7 @@ Não copiar variáveis de ambiente de produção para previews públicos; stagin
 ## Aceite desta especificação
 
 **Entregue:** inventário da dependência de nove tabelas, verificação real read-only, avaliação de riscos legados e protocolo de rollout sem conteúdo fictício. **Não entregue:** novas migrações SQL, staging, RLS validada em novos objetos ou alteração de produção. Criar essas entregas somente dentro do rollout separado, com validação de migração e aprovação.
+
+## Ponte de leitura V8.1, ainda sem migração
+
+Código preparado para reconhecer `link_type='materia'` e encaminhar para `/materias/<slug>`, apenas se a matéria estiver publicada e revisada no Git. Links órfãos ou para rascunho são ocultados. `editorial` permanece apontando para `/pautas/<slug>`. A interface interna ainda não oferece a criação desse tipo, e as ações do servidor o rejeitam explicitamente até o rollout do novo CHECK e a validação RLS em staging. **Nenhuma DDL ou gravação no Supabase foi feita.**

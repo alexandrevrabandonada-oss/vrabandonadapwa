@@ -526,3 +526,11 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Ponto de decisão arquitetural:** os vínculos entre dossiê/bairro/documento e reportagem têm de usar `link_type + link_key` revisados, com permalink de `content/materias/*.json`, sem duplicação de matéria; o Git mantém a publicação jornalística canônica. Resolver no novo schema o descompasso entre os estados de dossiê de `0011` e `0012`; não executar as migrações antigas em cadeia.
 
 **Próximo após CI:** abrir uma PR separada de implantação **no momento em que existir staging e as PRs de UX estiverem integradas**, gerar migrações novas pelo CLI, validar autorização real `anon`/usuário comum/editor e só depois submeter a promoção à produção para aprovação explícita. Nenhuma implantação até então.
+
+---
+
+## Sprint V8.1 — ponte de leitura para reportagens Git
+
+**Implementado na PR #27, sem dados de banco:** leitura tipada de `materia` separada de `editorial` em Casos e Bairros. O permalink canônico é `/materias/<slug>` e só se materializa se `getMaterias()` devolver publicação Git com `status='published'` e `reviewed=true`; slug órfão, rascunho ou inválido não ganha URL pública no resolvedor. As páginas de dossiê e bairro recebem o mesmo catálogo, sem cópias da matéria nem vínculos inferidos. A seção de leituras territoriais apresenta reportagens e pautas sem confundir as categorias. O editor ainda não oferece a opção e as ações do servidor bloqueiam gravação de `materia` até o esquema e a RLS serem validados em staging.
+
+**Contrato novo:** `tests/materia-links-v8.test.mjs`, com tipos, rotas, revisão editorial, bloqueio de escrita e slugs aprovados. Ainda faltam CI, TypeScript, build, Chromium, axe/reflow e Preview do mesmo SHA. Não integrar em produção nem migrar o banco a partir deste commit.
