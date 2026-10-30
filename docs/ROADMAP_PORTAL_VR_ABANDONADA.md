@@ -580,3 +580,52 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Mudança:** separar projeções públicas/internas no código e, no blueprint staging não aplicado, substituir grants gerais por SELECT por coluna para cinco tabelas; testar com `has_column_privilege` em PostgreSQL temporário como `anon` e `authenticated`. RLS e bloqueio de escrita permanecem. **Sem mudanças no Supabase real;** nem editores têm autorizações novas de gravação.
 
 **Validação pendente:** CI Node, TypeScript/lint/build, PostgreSQL RLS e Chromium no commit exato; staging Supabase dedicado, permissões por identidade e revisão de campos da API antes de habilitar curadoria da PR #29.
+
+---
+
+## Auditoria estratégica de SEO, experiência e plataforma — 30/10/2026
+
+**Escopo e evidência:** revisão documental do código `main` no commit `7830e42ec1b224346354e5206d59b23c6fff14d2`, roadmap e lista de PRs; pesquisa em documentação primária. Não é auditoria visual, Lighthouse, medição de tráfego ou prova HTTP. A ferramenta de pesquisa não conseguiu abrir os domínios; isso não prova indisponibilidade. O SHA do deploy ativo deve ser confirmado na Vercel.
+
+### O que já existe no código
+
+- Next.js 15, GitHub e Vercel; três arquivos de matérias no repositório. O arquivo da Rua 33 marca `published` e `reviewed`, e registra fontes, limites e contraditório ainda não solicitado. Estado em Git não prova publicação no domínio.
+- Template de matéria fornece título, descrição, canonical, Open Graph, Article/NewsArticle, datas, fontes, correções e links relacionados. O sitemap contempla matérias, pautas, dossiês, territórios e Instagram; robots restringe área interna, API, auth e offline. Não confirma indexação ou conteúdo servido.
+- `lib/site-url.ts` normaliza hosts .com.br para `www.vrabandonada.online`. O roadmap anterior relata .com.br misconfigured: checar novamente DNS, HTTPS, 301/308 e caminho/query antes de decidir mudança. Não inverter canonical por suposição.
+- PR #37 propõe papéis e RLS de staging; #29 é histórica e depende de base antiga; #7 trata intake/storage; #6 contém rascunho antigo. Nenhuma dessas PRs abertas equivale a recurso em produção. Revisar dependências, CI e divergências antes de qualquer integração.
+- Diagnóstico V7.7/V8 anterior: tabelas editoriais ausentes no Supabase de produção à época da consulta. Revalidar antes de decisões; não aplicar migrations antigas em bloco ou expor documentos/identidades.
+
+### Norte de produto
+
+Uma redação local investigativa em que a pessoa encontra uma notícia verificável, entende o histórico, acessa documentos e acompanha mudanças. Manter COMUN como plataforma distinta para participação comunitária; ligar ao COMUN com contexto claro. Interface editorial documental, identidade VR e fotografias reais licenciadas/creditadas, sem adornos artificiais. Priorizar clareza, leitura móvel e prestação de contas.
+
+### Decisões e fila priorizada
+
+**P0 — linha de base e confiança**
+1. [ ] Confirmar Vercel: deployment ativo, SHA, domínio e aliases; testar os quatro hosts por HTTPS, cadeia 301/308, caminho, query, canonical, robots, sitemap, RSS e páginas de matérias. Evidenciar data e resposta; resolver DNS somente com estado confirmado.
+2. [ ] Medir Search Console por propriedade e data: cobertura, URLs inspecionadas, sitemap, consultas, cliques e impressões. Não presumir indexação. Levantar baseline de Web Vitals reais, dispositivo móvel e desktop; alvo p75 LCP ≤2,5s, INP ≤200ms e CLS ≤0,1. Lighthouse é laboratório e TBT não é INP real.
+3. [ ] Confirmar publicação e integridade das três matérias reais, situação de fontes/contraditório, imagem e atualização. Testar links internos e resultados de compartilhamento WhatsApp; sem publicar rascunhos automaticamente.
+4. [ ] Reavaliar segurança do envio, anexos, privacidade, autorização e integrações antes de receber material sensível. Confirmar PR #7 e permissões reais; não presumir que RLS ou interface isoladamente protegem objetos.
+
+**P1 — descoberta e produto**
+5. [ ] Jornada mobile: Últimas → matéria → fonte → caso/bairro → próxima leitura, com Acervo ↔ Bairros por vínculos editoriais expressos. Evitar criar relação factual pela simples menção de um bairro.
+6. [ ] Inspecionar home, notícia, investigação, Acervo, Bairros, Busca e Envie em 320/360/390/430px e desktop; zoom 200%, teclado, leitor de tela e contraste WCAG 2.2 AA. Registrar capturas e corrigir problemas por impacto; testes automáticos não substituem avaliação humana.
+7. [ ] Fortalecer notícias e dossiês: fotos documentais com direitos/créditos e texto alternativo, contexto claro, datas corretas, autoria verificável, método, correções, contato e respostas das partes. Separar notícia, análise e opinião. Nas investigações, distinguir o comprovado, o que falta e quando houve atualização.
+8. [ ] Validar metadata efetivamente entregue, URLs canônicas únicas, indexabilidade, links HTML, títulos, imagens OG, sitemap com lastmod verdadeiro e RSS. Avaliar News sitemap separado apenas para notícias recentes e operação que mantenha janela de dois dias; não é pré-requisito para aparecer no Google Notícias. Structured data ajuda compreensão, não garante resultados.
+9. [ ] Testar Search Console e relatórios agregados com privacidade; métricas: conteúdos originais, tempo aprovação→URL, índice de URLs válidas, cliques orgânicos, retorno por caso, falhas e recuperação. Não rastrear dados sensíveis ou anexar informações de denunciantes a analytics.
+
+**P2 — fluxo editorial e distribuição**
+10. [ ] Fluxo único: apuração → rascunho → revisão de evidências e contraditório → aprovação editorial → publicação Git → verificação de produção → distribuição. Permalink e histórico preservados; edição sem nova URL. Preparar piloto em uma matéria real com capa autorizada, fotos e links.
+11. [ ] Prototipar Decap CMS em ambiente isolado sobre conteúdo Git: validar autenticação, revisão via PR, schema JSON, prévia e imagens. Decap pode simplificar edição, mas requer adaptação de campos e segurança de acesso. Não instalar até piloto e avaliação de custo operacional.
+12. [ ] Comparar Ghost (newsletter/membros integrados, nova operação/migração), WordPress (ecossistema amplo, manutenção de plugins e segurança) e Next.js atual + editor Git (preserva links e produto, exige desenvolvimento). Avaliar TCO, backup/exportação, permissões, design, fluxo e acesso editorial; sem migrar antes de teste de publicação e plano de redirects.
+13. [ ] Planejar newsletter opt-in, RSS e distribuição social com medição proporcional e possibilidade de descadastro; considerar custos, consentimento e capacidade operacional antes de contratar plataforma.
+
+### Fontes da pesquisa
+
+- Google: Article schema https://developers.google.com/search/docs/appearance/structured-data/article ; AI features https://developers.google.com/search/docs/appearance/ai-features ; notícias e transparência https://developers.google.com/search/blog/2021/06/google-news-sources ; sitemap de notícias https://developers.google.com/search/docs/crawling-indexing/sitemaps/news-sitemap .
+- Web Vitals: https://web.dev/articles/vitals ; WCAG 2.2: https://www.w3.org/TR/WCAG22/ .
+- Decap: https://decapcms.org/docs/intro/ e https://decapcms.org/docs/editorial-workflows/ ; Ghost: https://ghost.org/help/manual/ .
+
+**Regra sobre SEO de IA:** Google informa que fundamentos de rastreabilidade e conteúdo útil se aplicam a seus recursos de IA, sem arquivo `llms.txt` ou schema especial obrigatório. Não prometer posição, indexação ou presença em respostas de IA.
+
+**Status desta rodada:** pesquisa e atualização propostas em PR documental; sem modificações no produto, banco, DNS, métricas ou produção. Auditoria visual, desempenho, dados de campo, Search Console e domínio ainda pendentes. Critério de encerramento: resultado observado, fontes, data, risco e responsável para cada item, sem confundir código, preview e produção.
