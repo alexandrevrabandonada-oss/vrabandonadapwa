@@ -552,3 +552,11 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Sem liberar escrita editorial:** RLS concede apenas leitura a visitantes e usuários autenticados, restrita a pais públicos; nenhum usuário autenticado pode escrever só por estar logado. Atualizações requerem `published=true` e pai visível. `link_type=materia` é tipo distinto de pauta; existência/revisão do slug continua sendo validada pela aplicação.
 
 **Próximo bloqueio de produção:** criar staging Supabase realmente isolado, configurar papéis e políticas de autorização editorial com testes, auditar exposição de `created_by`/`updated_by`, garantir grants da Data API, testar migração versionada gerada pelo CLI e revisar com responsável antes de promover. O roadmap V8 de acervo mantém quatro tabelas em fase separada. **Não executar as migrações 0003–0033 em bloco, nem integrar #31 à main sem revisão da cadeia #25 → #26 → #27.**
+
+---
+
+## Sprint V8.3 — monitoramento diário das jornadas públicas
+
+**Após a integração da PR #33:** o GitHub já auditava diariamente homepage, robots, sitemap, RSS e até cinco matérias. A nova etapa amplia a mesma rotina (sem criar tarefa duplicada) para `/noticias`, `/materias`, `/dossies`, `/acervo` e `/territorios`, além de comparar publicações aprovadas no Git com índice de matérias, sitemap, RSS, referências do Acervo, investigações de Casos e bairros expressamente marcados como foco territorial. O monitor não infere relação por menções contextuais e não consulta denúncias, arquivos privados ou fontes externas. O fluxo de alertas deduplicados por Issues existente é preservado.
+
+**Contrato:** `tests/public-site-journeys.test.mjs` cobre cenários simulados de sucesso, falha HTTP, reportagem/investigação desaparecida e fontes/permalinks ausentes. O monitor precisa de CI da nova branch antes do merge; uma auditoria agendada com sucesso indica apenas disponibilidade/coerência do HTML público naquele momento, não certifica indexação, acessibilidade em dispositivo real nem disponibilidade de documentos externos.
