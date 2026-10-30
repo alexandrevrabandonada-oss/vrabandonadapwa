@@ -2,8 +2,8 @@
   "slug": "csn-cimentos-origem-volta-redonda-expansao-venda-huaxin-2026",
   "kind": "investigation",
   "title": "Da escória de Volta Redonda aos R$ 12,7 bilhões: a história da CSN Cimentos até a negociação com a Huaxin",
-  "subtitle": "Nascida ao lado da Usina Presidente Vargas, cimenteira cresceu com duas grandes aquisições e agora é negociada para reduzir a dívida da CSN; fornecimento de escória é questão em aberto.",
-  "summary": "A CSN Cimentos começou em Volta Redonda em 2009, tornou-se uma das líderes brasileiras após comprar Elizabeth e LafargeHolcim e está em negociação exclusiva de venda à Huaxin por valor de empresa de R$ 12,7 bilhões. A venda ainda não foi concluída e o futuro do vínculo com a siderúrgica permanece incerto.",
+  "subtitle": "Da escória da Usina Presidente Vargas à negociação bilionária com a Huaxin: contratos de 25 anos e a situação dos trabalhadores põem Volta Redonda no centro da reportagem.",
+  "summary": "A CSN Cimentos nasceu da escória siderúrgica em Volta Redonda, comprou Elizabeth e LafargeHolcim e negocia exclusividade com a Huaxin por valor de empresa de R$ 12,7 bilhões. Um prospecto da CVM de 2021 revela fornecimento mínimo de 1,3 milhão de toneladas de escória por ano, contrato de 25 anos e terreno em comodato. Venda não concluída.",
   "section": "Economia, indústria e trabalho",
   "author": "VR Abandonada",
   "status": "draft",
@@ -85,6 +85,51 @@
       "label": "Exame — presença e perfil da Huaxin no Brasil, 30/10/2026",
       "url": "https://exame.com/invest/mercados/csn-da-exclusividade-a-chinesa-huaxin-para-vender-csn-cimentos-por-r-127-bilhoes/",
       "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "CVM — Prospecto preliminar de abertura de capital CSN Cimentos S.A. (2021), itens 14.1 e 16.2–16.4 (contratos de escória, fundentes, comodato, mão de obra e CBSI)",
+      "url": "https://sistemas.cvm.gov.br/dados/ofeanal/RJ-2021-02711/20211122_Minuta%20do%20Prospecto%20Preliminar.pdf",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "CSN — histórico oficial sobre cimento, moagem e escória de Volta Redonda",
+      "url": "https://www.csn.com.br/cimento/",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "Foco Regional — assembleia dos trabalhadores CSN Cimentos em Volta Redonda, 08/04/2024",
+      "url": "https://www.focoregional.com.br/Noticia/trabalhadores-da-csn-cimentos-em-vr-aceitam-p",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "Sindicato dos Trabalhadores da Construção Civil VR — instrumentos e acordos específicos da CSN Cimentos",
+      "url": "https://sindicatocivilvr.com.br/empresas/empresas-convencoes-coletivas/",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "XP Investimentos — análise do valor de empresa, dívida e caixa esperado, 30/10/2026",
+      "url": "https://conteudos.xpi.com.br/acoes/relatorios/csn-csna3-csn-anuncia-venda-da-divisao-de-cimento-mais-um-passo-rumo-a-desalavancagem/",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "UOL — estimativa Citi para dívida e valor patrimonial da cimenteira, 30/10/2026",
+      "url": "https://economia.uol.com.br/noticias/redacao/2026/10/30/csn-negocia-venda-de-cimentos-a-chinesa-huaxin-por-r-127-bi.ghtm",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "Infomet — reportagem histórica de 2005 com previsão de início em 2006 (não concretizada à época)",
+      "url": "https://www.infomet.com.br/site/noticias-mobile-ler.php?cod=24842&org=&rs=",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "CSN ESG — divulgação de 2022, contém provável erro de digitação '2019' ao narrar início da planta",
+      "url": "https://esg.csn.com.br/news/csn-se-torna-a-segunda-maior-cimenteira-do-brasil/",
+      "consultedAt": "2026-10-30"
+    },
+    {
+      "label": "CSN — apresentação de resultados 2025 com EBITDA 2024 e 2025",
+      "url": "https://investidor10.com.br/acoes/link_comunicado/csna3/33755/",
+      "consultedAt": "2026-10-30"
     }
   ],
   "blocks": [
@@ -107,6 +152,10 @@
     {
       "type": "paragraph",
       "text": "A escória de alto-forno é um coproduto do processo siderúrgico que pode ser empregado na produção de cimento, em combinação com outros materiais. Assim, a planta cimenteira passou a ter uma vantagem econômica relacionada à usina já instalada em Volta Redonda: uma matéria-prima associada à produção de aço, sem que isso, por si só, comprove ausência de impactos ambientais."
+    },
+    {
+      "type": "paragraph",
+      "text": "Os planos eram mais antigos do que a operação comercial. Notícia de 2005 registrava a intenção de iniciar a primeira fase até o fim de 2006, mas os documentos históricos da própria companhia situam o início efetivo em maio de 2009. As projeções de 2005 não devem ser confundidas com a data real de entrada em funcionamento."
     },
     {
       "type": "heading",
@@ -150,7 +199,7 @@
     },
     {
       "type": "paragraph",
-      "text": "No balanço divulgado para 2025, a divisão de cimento da CSN registrou aproximadamente 13,4 milhões de toneladas vendidas, receita líquida de R$ 4,91 bilhões e EBITDA ajustado de cerca de R$ 1,29 bilhão. Em 2024, a receita líquida havia sido de aproximadamente R$ 4,77 bilhões. EBITDA é uma medida de resultado operacional usada no mercado e não deve ser confundida com lucro líquido nem com disponibilidade de caixa."
+      "text": "No balanço divulgado para 2025, a divisão de cimento da CSN registrou aproximadamente 13,4 milhões de toneladas vendidas, receita líquida de R$ 4,906 bilhões e EBITDA ajustado de R$ 1,290 bilhão. Em 2024, a receita líquida havia sido de R$ 4,766 bilhões e o EBITDA ajustado, de R$ 1,361 bilhão. Portanto, a receita avançou de um ano para o outro, mas o EBITDA anual caiu — aspecto que precisa aparecer para que o leitor não confunda faturamento recorde com melhora em todos os indicadores. EBITDA é uma medida operacional e não equivale ao lucro líquido ou a caixa livre."
     },
     {
       "type": "paragraph",
@@ -186,19 +235,63 @@
     },
     {
       "type": "heading",
-      "text": "A pergunta de Volta Redonda: quem fornecerá a escória — e a que preço?"
+      "text": "O que os contratos revelam: escória por 25 anos, terras cedidas e integração industrial"
     },
     {
       "type": "paragraph",
-      "text": "O vínculo original entre cimento e aço não desaparece automaticamente com a mudança de controlador. Em reportagem publicada em 1º de setembro de 2026 pelo jornal O Estado de S. Paulo, reproduzida no clipping da entidade setorial INDA, fontes da negociação apontaram o fornecimento de escória da siderurgia para a operação cimenteira de Volta Redonda como um dos pontos a definir com o comprador. Uma dessas fontes afirmou que a CSN buscaria receber preço de mercado pelo insumo."
+      "text": "Uma fonte primária encontrada na Comissão de Valores Mobiliários aprofunda a questão local. A minuta do prospecto preliminar preparada pela CSN Cimentos S.A. para a tentativa de abertura de capital em 2021 descreve contratos entre a cimenteira e a siderúrgica. Não são documentos assinados obtidos integralmente nesta apuração, mas informações contratuais prestadas pela companhia ao mercado em novembro de 2021; não comprovam que todas as cláusulas permaneçam idênticas em outubro de 2026."
     },
     {
       "type": "paragraph",
-      "text": "Essa informação jornalística é uma pista relevante, não prova de contrato já celebrado ou de mudança de preço. Se a siderúrgica continuar fornecendo escória para a cimenteira, a relação poderá deixar de ser apenas uma integração dentro do mesmo grupo e passar a depender de condições comerciais entre empresas de controladores diferentes. Isso pode influenciar o custo industrial e a organização da operação, mas seus efeitos dependem de cláusulas ainda desconhecidas."
+      "text": "Segundo o item 16.4 desse documento, o contrato de fornecimento de escória de alto-forno da CSN à cimenteira previa quantidade anual mínima de 1,3 milhão de toneladas, prazo de 25 anos, opção de renovação a ser notificada no 21º ano, preços declarados como de mercado e reajustes anuais pelo INCC. O contrato teria entrado em vigor em maio de 2021, com efeitos retroativos a 1º de fevereiro daquele ano. É preciso verificar se foi alterado, novado, cedido, rescindido ou preservado desde então — sobretudo diante da operação societária hoje em negociação."
     },
     {
       "type": "paragraph",
-      "text": "A transação também levanta questões sobre trabalhadores, manutenção dos empregos, investimentos na unidade de Volta Redonda, direitos trabalhistas, licenciamento ambiental, logística de materiais e arrecadação municipal. Não há documentos suficientes nesta apuração para afirmar demissões, fechamento de fábrica, perda de arrecadação ou mudança efetiva nas licenças como consequência da negociação. Essas hipóteses exigem apuração específica."
+      "text": "A relação entre as empresas também opera no sentido inverso. O prospecto de 2021 descreve um contrato de fornecimento de fundentes (calcário e dolomito) da cimenteira para a Usina Presidente Vargas, com volume anual mínimo de 1,5 milhão de toneladas e máximo de 2,7 milhões, igualmente por 25 anos. Esses materiais são relevantes à produção siderúrgica. Assim, a dependência econômica é bilateral: cimento utiliza material associado à siderurgia e a siderurgia adquire insumos minerais do conjunto cimenteiro."
+    },
+    {
+      "type": "paragraph",
+      "text": "Outra informação de impacto territorial: em 2021, o terreno dentro da UPV onde ficava a planta de cimento era utilizado por meio de comodato, sem cobrança pelo uso do imóvel. O documento descreve contrato por prazo indeterminado e apresenta hipóteses de aviso prévio para rescisão. Há outros terrenos e galpões com comodatos próprios. Isso não significa que o terreno foi vendido ou que passará automaticamente a pertencer ao grupo chinês; a titularidade e o destino do comodato no eventual negócio ainda precisam ser esclarecidos."
+    },
+    {
+      "type": "paragraph",
+      "text": "A integração abrangia também despesas e serviços compartilhados: transporte ferroviário de escória e cimento, energia, água, gás, manutenção, laboratório, serviços ambientais e apoio administrativo, com mecanismos de reembolso. O prospecto cita ainda contratos com a CBSI para manutenção, limpeza e conservação, sem permitir concluir que esses contratos ou quadros de trabalhadores sejam idênticos em 2026."
+    },
+    {
+      "type": "paragraph",
+      "text": "No documento de 2021, a própria cimenteira afirma que a escória era negociada a condições de mercado. Isso exige cautela diante de reportagem do Estadão reproduzida pelo INDA em setembro de 2026, na qual fonte afirma que a CSN almejaria cobrar preço de mercado após uma venda. A aparente divergência pode decorrer de renegociação de preços, metodologia, escopo ou informação incompleta; não se pode afirmar, com os documentos disponíveis, que a escória fosse fornecida gratuitamente ou abaixo do mercado antes da venda."
+    },
+    {
+      "type": "paragraph",
+      "text": "A investigação deve agora buscar os contratos e aditivos vigentes em 2026, identificar a parte contratante que efetivamente será vendida, as cláusulas de mudança de controle, o tratamento do comodato, o prazo remanescente do fornecimento de escória, as tarifas e os efeitos sobre a siderúrgica. A existência dos contratos de 2021 torna a pergunta muito mais precisa: não se trata apenas de saber se haverá novo fornecimento, mas quais vínculos jurídicos e operacionais sobreviverão à alienação."
+    },
+    {
+      "type": "heading",
+      "text": "Os trabalhadores e a mudança de controlador"
+    },
+    {
+      "type": "paragraph",
+      "text": "Há histórico público específico da categoria em Volta Redonda. Em 8 de abril de 2024, 135 empregados da CSN Cimentos participaram de votação sobre proposta de acordo salarial, aprovada por 78,48%, segundo o Foco Regional. Esse número corresponde aos votantes daquela assembleia e não pode ser apresentado como total de empregos da fábrica. O Sindicato dos Trabalhadores da Construção Civil de Volta Redonda e Região mantém uma seção para acordos da CSN Cimentos."
+    },
+    {
+      "type": "paragraph",
+      "text": "A minuta de prospecto de 2021 registrava 221 trabalhadores terceirizados na linha identificada como CIME CIMENTOS–V.REDONDA-RJ em setembro daquele ano, além de outra linha de trabalhadores contratados sob identificação antiga, enquanto os empregados diretos eram informados no agregado da unidade Sudeste (906 naquele mês). Esses dados são antigos, têm recortes distintos e não permitem calcular o emprego atual da fábrica nem demonstrar demissões futuras."
+    },
+    {
+      "type": "paragraph",
+      "text": "O que deve ser solicitado às empresas e ao sindicato: número atual de empregados diretos e terceirizados na unidade de Volta Redonda, acordos coletivos vigentes, critérios de sucessão trabalhista, preservação de benefícios, representação sindical, planos de investimento e eventual reorganização dos contratos com prestadoras como a CBSI. Nenhum documento encontrado comprova anúncio de demissões como efeito desta negociação."
+    },
+    {
+      "type": "heading",
+      "text": "Quanto realmente poderia entrar no caixa da CSN?"
+    },
+    {
+      "type": "paragraph",
+      "text": "Analistas da XP Investimentos divulgaram em 30 de outubro uma estimativa que evidencia a diferença entre valor de empresa e entrada de caixa. Partindo do enterprise value de R$ 12,7 bilhões, a XP calcula cerca de R$ 2,9 bilhões em dívida líquida da própria cimenteira e de R$ 6,0 bilhões a R$ 6,5 bilhões que poderiam ser utilizados para quitar antecipadamente um financiamento-ponte do grupo. Com essas hipóteses, estimou impacto de aproximadamente R$ 3,3 bilhões no caixa da CSN. A análise é uma projeção de terceiros, não uma prestação de contas nem valor contratual final."
+    },
+    {
+      "type": "paragraph",
+      "text": "Outra instituição, o Citi, estimou dívida líquida próxima de R$ 3 bilhões na unidade cimenteira e valor patrimonial em torno de R$ 9,7 bilhões. Essas métricas tratam de estágios distintos da conta: o valor da participação antes da destinação dos recursos não equivale ao saldo de caixa após amortizações. O resultado depende do fechamento e das condições efetivas, que ainda não foram publicadas."
     },
     {
       "type": "heading",
@@ -206,11 +299,11 @@
     },
     {
       "type": "paragraph",
-      "text": "Quais unidades industriais, contratos, dívidas e participações societárias estarão incluídos nos documentos definitivos? Qual será o preço efetivo das ações e quanto entrará no caixa do grupo depois dos ajustes? Haverá um contrato de fornecimento de escória da UPV, com que volume, prazo e condições? Quais garantias, se houver, envolverão trabalhadores e investimentos locais? Que obrigações ambientais e de recuperação de áreas serão assumidas pelo eventual comprador? Como será analisada a operação pelos órgãos reguladores?"
+      "text": "Quais unidades industriais, contratos, dívidas e participações societárias estarão incluídos nos documentos definitivos? A negociação anunciada trata das ações da CSN Cimentos Brasil S.A.; como esse perímetro se relaciona com a CSN Cimentos S.A., emissora do prospecto de 2021? Qual será o preço efetivo das ações e quanto entrará no caixa do grupo depois dos ajustes? O contrato de fornecimento de escória informado em 2021, com mínimo de 1,3 milhão de toneladas ao ano e prazo de 25 anos, permanece em vigor? Existem aditivos ou cláusulas de mudança de controle? O mesmo vale para o fornecimento de calcário e dolomito, os terrenos cedidos em comodato, os serviços compartilhados e a relação com a CBSI? Quais compromissos trabalhistas, investimentos e obrigações ambientais serão assumidos pelo eventual comprador?"
     },
     {
       "type": "paragraph",
-      "text": "O VR Abandonada reconstruiu esta trajetória a partir de documentos corporativos, comunicados ao mercado, informações do Cade, balanços da CSN, um registro histórico preservado no Diário da Câmara e reportagens de veículos especializados. As informações sobre o fornecimento futuro de escória são atribuídas à reportagem do Estadão, e não tratadas como fato consumado. Até o fechamento desta versão, não havia resposta específica da CSN ou da Huaxin às perguntas locais formuladas aqui; a reportagem permanece aberta a esclarecimentos e atualização."
+      "text": "O VR Abandonada reconstruiu esta trajetória a partir de documentos corporativos, comunicados ao mercado, informações do Cade, balanços da CSN, registro histórico da Câmara dos Deputados, minuta de prospecto de 2021 arquivada na CVM e reportagens de veículos especializados. As informações sobre uma possível renegociação futura da escória são atribuídas ao Estadão e confrontadas com os contratos antigos descritos à CVM, e não tratadas como fato consumado. Até o fechamento desta versão, não havia resposta específica da CSN ou da Huaxin às perguntas locais formuladas aqui; nenhuma solicitação foi enviada em nome da redação nesta etapa. A reportagem permanece aberta a esclarecimentos e atualização."
     },
     {
       "type": "paragraph",
@@ -229,9 +322,18 @@
       "Confirmar preço das ações, eventual dívida própria da subsidiária e destinação dos recursos; enterprise value não é entrada líquida de caixa.",
       "Identificar licenças ambientais vigentes e obrigações legais perante INEA/órgãos municipais.",
       "Antes da publicação, checar fato novo após 30/10/2026 e revalidar dados conforme data real de subida.",
-      "Escolher imagem própria/licenciada autêntica; não usar imagem editorial gerada como foto factual."
+      "Escolher imagem própria/licenciada autêntica; não usar imagem editorial gerada como foto factual.",
+      "Verificar vigência, aditivos e gatilhos de mudança de controle nos contratos da minuta CVM de 2021 antes de falar em novo contrato ou alteração de preço",
+      "Obter dados atuais de emprego (135 votantes na assembleia de 2024 NÃO é total de empregados; 221 terceirizados é linha do prospecto 2021, NÃO total atual).",
+      "Conferir pelo jurídico a titularidade do terreno da unidade e o efeito de mudança de controle sobre comodato por prazo indeterminado.",
+      "Checar se instrumentos de 2021 sob CSN Cimentos S.A. se transferem ao perímetro CSN Cimentos Brasil S.A. anunciado em 2026.",
+      "Diferenciar EBITDA anual: 2025 R$1,290 bi vs 2024 R$1,361 bi, embora receita 2025 tenha sido recorde.",
+      "Checar inconsistências históricas em página CSN ESG 15/09/2022: texto afirma 2019 para início de operação; outras fontes oficiais e CVM apontam 2009."
     ],
     "imageStatus": "Sem capa externa licenciada; usar OG tipográfico automático do portal.",
-    "factCheck": "Referências acima lidas em fontes públicas. Não declarar aprovação editorial final automaticamente."
+    "factCheck": "Referências acima lidas em fontes públicas. Não declarar aprovação editorial final automaticamente.",
+    "version": "1.1",
+    "reviewedAt": "2026-10-30",
+    "discovery": "Minuta do prospecto 2021 CVM itens 16.2–16.4 descreve escória em contrato 25 anos com mínimo 1,3m ton/a, INCC/preço mercado; fundentes 1,5–2,7m ton/a 25 anos; comodato gratuito da planta dentro da UPV; compartilhamento custos e CBSI. Os termos vigentes em 2026 NÃO foram obtidos."
   }
 }
