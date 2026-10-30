@@ -16,7 +16,7 @@ export function EditorialAcervoIndex({ articles }: { articles: Materia[] }) {
           <h2 id="index-acervo-titulo">Publicações que não desaparecem.</h2>
           <p>Notícias, investigações e explicações num único índice. Os anexos documentais são uma camada complementar deste acervo.</p>
         </div>
-        <span className="vr-index__count">{articles.length} publicação{articles.length === 1 ? "" : "ões"} disponíveis</span>
+        <span className="vr-index__count">{articles.length} {articles.length === 1 ? "publicação disponível" : "publicações disponíveis"}</span>
       </div>
       <nav className="vr-index__quick" aria-label="Explorar o acervo por formato">
         <Link href="/materias">Todas as matérias</Link>
