@@ -13,19 +13,19 @@ export const site = {
   description:
     "Publicações, investigações e comunicação popular sobre Volta Redonda.",
   shortDescription:
-    "Notícias, Reels e memória popular de Volta Redonda.",
+    "Notícias, investigações e memória pública de Volta Redonda.",
   primaryNav: [
     { href: "/", label: "Início" },
     { href: "/agora", label: "Últimas" },
     { href: "/dossies", label: "Investigações" },
-    { href: "/noticias", label: "Notícias" },
+    { href: "/territorios", label: "Bairros" },
     { href: "/buscar", label: "Buscar" },
   ] satisfies SiteLink[],
   mobileNav: [
     { href: "/", label: "Início" },
-    { href: "/noticias", label: "Notícias" },
     { href: "/agora", label: "Últimas" },
-    { href: "/dossies", label: "Dossiês" },
+    { href: "/dossies", label: "Casos" },
+    { href: "/buscar", label: "Buscar" },
   ] satisfies SiteLink[],
   menuGroups: [
     {
@@ -35,8 +35,6 @@ export const site = {
         { href: "/noticias", label: "Notícias" },
         { href: "/materias", label: "Todas as matérias" },
         { href: "/dossies", label: "Investigações" },
-
-        { href: "/acompanhar", label: "Acompanhar" },
       ],
     },
     {
@@ -58,21 +56,20 @@ export const site = {
       ],
     },
     {
-      title: "Sobre o projeto",
+      title: "Colabore e conheça o projeto",
       items: [
+        { href: "/envie", label: "Enviar informação à redação" },
+        { href: "/participe", label: "Outras formas de participar" },
         { href: "/sobre", label: "Quem somos" },
         { href: "/metodo", label: "Como apuramos" },
-        { href: "/participe", label: "Participar" },
       ],
     },
   ] satisfies SiteGroup[],
   footerQuickLinks: [
     { href: "/agora", label: "Últimas" },
-    { href: "/noticias", label: "Notícias" },
-    { href: "/materias", label: "Matérias" },
     { href: "/dossies", label: "Investigações" },
     { href: "/territorios", label: "Bairros" },
-    { href: "/acervo", label: "Acervo" },
+    { href: "/acervo", label: "Documentos" },
     { href: "/metodo", label: "Método" },
   ] satisfies SiteLink[],
   hero: {

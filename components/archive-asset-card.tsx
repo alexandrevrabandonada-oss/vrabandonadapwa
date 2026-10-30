@@ -35,7 +35,7 @@ export function ArchiveAssetCard({
   const visual = isArchiveVisualAsset(asset);
 
   return (
-    <article className={`card archive-card ${compact ? "archive-card--compact" : ""}`} data-reading-block>
+    <article className={`card archive-card vr7-editorial-card ${compact ? "archive-card--compact" : ""}`} data-reading-block>
       <div className={`archive-card__media archive-card__media--${asset.asset_type}`}>
         {visual ? (
           <Image

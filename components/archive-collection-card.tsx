@@ -12,7 +12,7 @@ type Props = {
 
 export function ArchiveCollectionCard({ collection, href, assetCount, compact = false }: Props) {
   return (
-    <article className={`card archive-collection-card ${compact ? "archive-collection-card--compact" : ""}`}>
+    <article className={`card archive-collection-card vr7-editorial-card ${compact ? "archive-collection-card--compact" : ""}`}>
       <EditorialCover
         title={collection.title}
         primaryTag="coleção"

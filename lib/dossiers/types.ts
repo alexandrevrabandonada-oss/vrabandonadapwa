@@ -1,7 +1,7 @@
 export const dossierStatuses = ["draft", "in_progress", "monitoring", "concluded", "archived"] as const;
 export type DossierStatus = (typeof dossierStatuses)[number];
 
-export const dossierLinkTypes = ["editorial", "memory", "archive", "collection", "series"] as const;
+export const dossierLinkTypes = ["editorial", "materia", "memory", "archive", "collection", "series"] as const;
 export type DossierLinkType = (typeof dossierLinkTypes)[number];
 
 export const dossierLinkRoles = ["lead", "evidence", "context", "followup", "archive"] as const;
@@ -93,6 +93,7 @@ export const dossierStatusLabels: Record<DossierStatus, string> = {
 
 export const dossierLinkTypeLabels: Record<DossierLinkType, string> = {
   editorial: "Pauta",
+  materia: "Reportagem verificada",
   memory: "Memória",
   archive: "Acervo",
   collection: "Coleção",

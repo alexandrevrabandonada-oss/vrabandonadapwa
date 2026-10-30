@@ -1,0 +1,86 @@
+/*
+ * VR Abandonada — Design System editorial V7
+ * Contrato: uma identidade para notícia, investigação, bairro e documento.
+ * Tokens sem alterar a arte da marca nem criar temas sem revisão.
+ * Mantemos aliases legados nas folhas antigas durante migração gradual.
+ */
+:root {
+  /* Base cromática: preto de tinta, amarelo de destaque e brancos quentes */
+  --ds-canvas: #111214;
+  --ds-surface: #1b1d1e;
+  --ds-surface-raised: #222321;
+  --ds-surface-emphasis: #27251e;
+  --ds-border: #49443b;
+  --ds-border-strong: #716247;
+  --ds-text: #f4f0e8;
+  --ds-text-secondary: #c9c5bb;
+  --ds-text-tertiary: #a9a59d;
+  --ds-accent: #f2c338;
+  --ds-accent-hover: #ffda64;
+  --ds-ink-on-accent: #171511;
+  --ds-focus: #ffe080;
+
+  /* Ritmo editorial em rem: valores previsíveis em celular e desktop */
+  --ds-space-1: .25rem;
+  --ds-space-2: .5rem;
+  --ds-space-3: .75rem;
+  --ds-space-4: 1rem;
+  --ds-space-5: 1.25rem;
+  --ds-space-6: 1.5rem;
+  --ds-space-8: 2rem;
+  --ds-space-10: 2.5rem;
+  --ds-space-12: 3rem;
+
+  --ds-radius-sm: 6px;
+  --ds-radius-card: 10px;
+  --ds-radius-panel: 14px;
+  --ds-radius-pill: 999px;
+  --ds-stroke: 1px solid var(--ds-border);
+  --ds-card-surface: var(--ds-surface);
+  --ds-tap-target: 44px;
+  --ds-text-measure: 68ch;
+
+  --ds-font-body: "Bahnschrift", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --ds-step-xs: .75rem;
+  --ds-step-sm: .875rem;
+  --ds-step-base: 1rem;
+  --ds-step-lg: clamp(1.125rem, 1.6vw, 1.25rem);
+  --ds-step-h3: clamp(1.2rem, 2.1vw, 1.5rem);
+  --ds-step-h2: clamp(1.4rem, 2.7vw, 2rem);
+  --ds-step-h1: clamp(1.95rem, 5vw, 3.15rem);
+
+  --ds-leading-body: 1.58;
+  --ds-leading-headline: 1.1;
+  --ds-letter-headline: -.055em;
+  --ds-shadow-focus: 0 0 0 3px rgba(242,195,56,.2);
+}
+
+/* Shared reader-first interaction contract. Scoped to public editorial surfaces. */
+:where(.vr2-home, .vr6-hub, .vr-materia, .vr6-story-nav, .vr-index) :is(a,button,summary,input,select,textarea):focus-visible {
+  outline: 2px solid var(--ds-focus);
+  outline-offset: 3px;
+}
+:where(.vr2-home, .vr6-hub, .vr-materia, .vr6-story-nav, .vr-index) :is(a,button,summary) {
+  -webkit-tap-highlight-color: rgba(242,195,56,.18);
+}
+:where(.vr6-hub, .vr-materia) {
+  color: var(--ds-text);
+}
+:where(.vr6-hub, .vr-materia) p {
+  overflow-wrap: break-word;
+}
+:where(.vr6-hub, .vr-materia) :is(h1,h2,h3) {
+  text-wrap: balance;
+}
+:where(.vr6-hub, .vr-materia) :is(article,section,nav) {
+  min-width: 0;
+}
+:where(.vr6-hub, .vr-materia) :target {
+  scroll-margin-top: 6.25rem;
+}
+@media (max-width: 640px) {
+  :root { --ds-step-h1: clamp(1.85rem, 7.5vw, 2.4rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.vr2-home, .vr6-hub, .vr-materia) { scroll-behavior: auto; }
+}

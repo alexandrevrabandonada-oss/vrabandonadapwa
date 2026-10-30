@@ -12,6 +12,7 @@ import { PlaceHubTimeline } from "@/components/place-hub-timeline";
 import { getPublishedArchiveAssets } from "@/lib/archive/queries";
 import { getPublishedArchiveCollections } from "@/lib/archive/collections";
 import { getPublishedEditorialItems } from "@/lib/editorial/queries";
+import { getMaterias } from "@/lib/materias";
 
 import { getPublishedMemoryItems } from "@/lib/memory/queries";
 import { getPublishedDossiers } from "@/lib/dossiers/queries";
@@ -50,7 +51,7 @@ export default async function InternalTerritoryDetailPage({ params }: PageProps)
     notFound();
   }
 
-  const [territories, links, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs] = await Promise.all([
+  const [territories, links, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs, materias] = await Promise.all([
     getInternalPlaceHubs({ status: "all" }),
     getInternalPlaceHubLinks(placeHub.id),
     getPublishedEditorialItems(),
@@ -61,9 +62,10 @@ export default async function InternalTerritoryDetailPage({ params }: PageProps)
     getPublishedCampaigns(),
     getPublishedImpacts(),
     getPublishedThemeHubs(),
+    getMaterias(),
   ]);
 
-  const resolvedLinks = resolvePlaceHubLinks(links, { editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
+  const resolvedLinks = resolvePlaceHubLinks(links, { materias, editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });
   const timelineEntries = buildPlaceHubTimeline(resolvedLinks);
   const leadLink = resolvedLinks.find((link) => link.link_role === "lead") ?? resolvedLinks[0] ?? null;
   const options = buildPlaceHubLinkOptions({ editorialItems, memoryItems, archiveAssets, archiveCollections, dossiers, campaigns, impacts, themeHubs });

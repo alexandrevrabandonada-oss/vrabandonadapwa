@@ -80,27 +80,41 @@ function isPublicDossierStatus(status: string) {
   return status !== "draft";
 }
 
-export async function getPublishedDossiers() {
+/** O estado da consulta pública não pode ser confundido com a ausência de dossiês. */
+export type PublicDossierCatalogState = {
+  dossiers: InvestigationDossier[];
+  availability: "available" | "not_configured" | "unavailable";
+};
+
+export async function getPublicDossierCatalogState(): Promise<PublicDossierCatalogState> {
   const supabase = createSupabasePublicClient();
-
   if (!supabase) {
-    return getFallbackDossiers();
+    return { dossiers: getFallbackDossiers(), availability: "not_configured" };
   }
 
-  const { data, error } = await supabase
-    .from("investigation_dossiers")
-    .select(publicFields)
-    .eq("public_visibility", true)
-    .neq("status", "draft")
-    .order("featured", { ascending: false })
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
+  try {
+    const { data, error } = await supabase
+      .from("investigation_dossiers")
+      .select(publicFields)
+      .eq("public_visibility", true)
+      .neq("status", "draft")
+      .order("featured", { ascending: false })
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
 
-  if (error || !data || data.length === 0) {
-    return getFallbackDossiers();
+    if (error || !data) {
+      // Nunca transformar falha de consulta em uma afirmação editorial de lista vazia.
+      return { dossiers: getFallbackDossiers(), availability: "unavailable" };
+    }
+
+    return { dossiers: sortDossiers(data as InvestigationDossier[]), availability: "available" };
+  } catch {
+    return { dossiers: getFallbackDossiers(), availability: "unavailable" };
   }
+}
 
-  return sortDossiers(data as InvestigationDossier[]);
+export async function getPublishedDossiers() {
+  return (await getPublicDossierCatalogState()).dossiers;
 }
 
 export async function getPublishedDossierBySlug(slug: string) {
@@ -335,6 +349,8 @@ export function resolveDossierLinkHref(type: string, key: string) {
   switch (type) {
     case "editorial":
       return `/pautas/${key}`;
+    case "materia":
+      return `/materias/${key}`;
     case "memory":
       return `/memoria/${key}`;
     case "archive":

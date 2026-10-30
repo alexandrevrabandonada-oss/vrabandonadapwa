@@ -34,6 +34,7 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
     const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     document.body.style.overflow = "hidden";
     const dialog = dialogRef.current;
+    const trigger = triggerRef.current;
     dialog?.querySelector<HTMLButtonElement>(".site-menu__close")?.focus();
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -67,7 +68,7 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = previousOverflow;
       if (previouslyFocused?.isConnected) previouslyFocused.focus();
-      else triggerRef.current?.focus();
+      else trigger?.focus();
     };
   }, [open]);
 
@@ -85,7 +86,7 @@ export function SiteMenu({ variant = "header" }: { variant?: "header" | "mobile"
         className={triggerClassName}
         aria-expanded={open}
         aria-controls={panelId}
-        aria-label="Abrir menu principal"
+        aria-label={variant === "mobile" ? "Menu — abrir menu principal" : "Explorar — abrir menu principal"}
         onClick={() => setOpen(true)}
       >
         {variant === "mobile" ? <span className="vr2-menu-icon" aria-hidden="true">☰</span> : null}

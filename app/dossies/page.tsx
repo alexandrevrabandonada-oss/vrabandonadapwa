@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { Container } from "@/components/container";
-import { getPublishedDossiers, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
+import { EditorialStoryCard } from "@/components/editorial-story-card";
+import { getMaterias, materiaKind } from "@/lib/materias";
+import { getPublicDossierCatalogState, getPublishedDossierUpdatesByDossierIds } from "@/lib/dossiers/queries";
 import { getDossierStatusLabel } from "@/lib/dossiers/navigation";
 import type { InvestigationDossier } from "@/lib/dossiers/types";
 
@@ -35,22 +37,64 @@ function groupDossiers(dossiers: InvestigationDossier[]) {
 }
 
 export default async function DossiersPage() {
-  const dossiers = await getPublishedDossiers();
+  // Reportagens investigativas aprovadas no Git fazem parte do produto mesmo
+  // quando ainda não há um dossiê estruturado cadastrado no Supabase.
+  const [catalog, materias] = await Promise.all([getPublicDossierCatalogState(), getMaterias()]);
+  const { dossiers, availability } = catalog;
   const updates = await getPublishedDossierUpdatesByDossierIds(dossiers.map((dossier) => dossier.id));
   const groups = groupDossiers(dossiers);
+  const investigativeArticles = materias.filter((article) => materiaKind(article) === "investigation");
 
   return (
     <Container className="vr3-dossiers">
       <header className="vr3-dossiers__header">
         <p className="vr2-eyebrow">JORNALISMO INVESTIGATIVO · VOLTA REDONDA</p>
         <h1>Investigações</h1>
-        <p>Casos acompanhados com documentos, contexto e atualizações. Cada dossiê tem endereço permanente para você voltar ao assunto.</p>
+        <p>Reportagens investigativas e dossiês publicados, com documentos, fontes, contexto e atualizações. Cada publicação mantém seu endereço permanente.</p>
         <nav aria-label="Caminhos da cobertura" className="vr3-agora__quick-links">
           <Link href="/materias">Matérias ↗</Link>
           <Link href="/buscar">Pesquisar temas ↗</Link>
           <Link href="/metodo">Como apuramos ↗</Link>
         </nav>
       </header>
+
+      {availability !== "available" ? (
+        <section className="vr3-dossiers__empty" role="status" aria-labelledby="vr7-dossier-catalog-status">
+          <p className="vr2-eyebrow">CATÁLOGO DOCUMENTAL</p>
+          <h2 id="vr7-dossier-catalog-status">
+            {availability === "unavailable"
+              ? "Os dossiês documentais estão temporariamente indisponíveis."
+              : "O catálogo de dossiês não está conectado neste ambiente."}
+          </h2>
+          <p>
+            {availability === "unavailable"
+              ? "Não foi possível consultar a base agora. Isso não significa que não existam dossiês publicados."
+              : "A ausência de conexão não permite confirmar quais dossiês documentais estão publicados."}
+            {" "}As reportagens verificadas seguem disponíveis e podem ser consultadas por seus endereços permanentes.
+          </p>
+          <Link href="/buscar">Pesquisar reportagens ↗</Link>
+        </section>
+      ) : null}
+
+      {investigativeArticles.length > 0 ? (
+        <section className="vr3-dossiers__section" aria-labelledby="vr7-investigations-published">
+          <div className="vr3-dossiers__section-head">
+            <h2 id="vr7-investigations-published">Reportagens investigativas</h2>
+            <span>{investigativeArticles.length} {investigativeArticles.length === 1 ? "reportagem" : "reportagens"}</span>
+          </div>
+          <div className="vr3-dossiers__list">
+            {investigativeArticles.map((article) => (
+              <EditorialStoryCard
+                key={article.slug}
+                article={article}
+                contextLabel={article.investigationStatus === "ongoing" ? "EM ACOMPANHAMENTO" : "REPORTAGEM INVESTIGATIVA"}
+                showMainPlaces
+                actionLabel="Acompanhar reportagem"
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {groups.length ? (
         <div className="vr3-dossiers__groups">
@@ -64,7 +108,7 @@ export default async function DossiersPage() {
                 {group.items.map((dossier) => {
                   const update = updates.get(dossier.id)?.[0] ?? null;
                   return (
-                    <article key={dossier.id} className="vr3-dossiers__item">
+                    <article key={dossier.id} className="vr3-dossiers__item vr7-editorial-card">
                       <div className="vr2-meta">
                         <span>{getDossierStatusLabel(dossier.status)}</span>
                         {dossier.territory_label ? <span>{dossier.territory_label}</span> : null}
@@ -82,7 +126,7 @@ export default async function DossiersPage() {
             </section>
           ))}
         </div>
-      ) : (
+      ) : investigativeArticles.length === 0 && availability === "available" ? (
         <section className="vr3-dossiers__empty" aria-labelledby="vr3-dossiers-empty-title">
           <span className="vr2-eyebrow">DOSSIÊS EM PREPARAÇÃO</span>
           <h2 id="vr3-dossiers-empty-title">A investigação continua. O arquivo público está sendo organizado.</h2>
@@ -92,7 +136,7 @@ export default async function DossiersPage() {
             <Link href="/buscar">Pesquisar assuntos ↗</Link>
           </div>
         </section>
-      )}
+      ) : null}
 
       <aside className="vr3-dossiers__tail">
         <p><strong>Um caso não termina na primeira denúncia.</strong> Acompanhamos documentos, respostas públicas, correções e desdobramentos.</p>

@@ -14,7 +14,7 @@ type Props = {
 
 export function PlaceHubCard({ placeHub, href, itemCount = 0, latestMovement, compact = false }: Props) {
   return (
-    <article className={`card theme-hub-card ${compact ? "theme-hub-card--compact" : ""}`.trim()}>
+    <article className={`card theme-hub-card vr7-editorial-card ${compact ? "theme-hub-card--compact" : ""}`.trim()}>
       <EditorialCover
         title={placeHub.title}
         primaryTag={getPlaceHubStatusLabel(placeHub.status)}

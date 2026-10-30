@@ -14,7 +14,7 @@ type Props = {
 
 export function DossierCard({ dossier, href, itemCount, latestUpdate }: Props) {
   return (
-    <article className="card dossier-card">
+    <article className="card dossier-card vr7-editorial-card">
       <EditorialCover
         title={dossier.title}
         primaryTag={getDossierStatusLabel(dossier.status)}
