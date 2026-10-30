@@ -657,3 +657,12 @@ O proprietário informa que perdeu `vrabandonada.com.br` por falta de renovaçã
 - O Acervo exibiu “Catálogo documental temporariamente indisponível”; fontes de matérias estavam acessíveis. Investigar a dependência do banco previamente identificada, sem concluir que os documentos não existem e sem executar migrações em produção.
 - Contador mostrou plural incorreto; correção proposta na [PR #40](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/40), aguardando CI e integração. Não afirmar correção em produção antes da validação.
 - A issue #30 continua aberta e o novo workflow ainda não teve execução agendada; a observação atual da reportagem demonstra recuperação pontual da URL, mas não prova que todo o monitor esteja verde. Avaliar encerramento após execução completa.
+
+
+### Acervo — diagnóstico e proteção, 30/10/2026
+
+Consulta read-only ao catálogo do Supabase de produção confirmou ausência das tabelas `archive_assets`, `archive_collections`, `investigation_dossiers` e `place_hubs`. A consulta pública de Acervo depende de `archive_assets`, explicando a indisponibilidade observada; não foram consultados dados privados nem realizadas alterações no banco. A instalação segura do catálogo requer staging, migração mínima sem seeds, autorização e RLS, grants públicos por coluna, testes reais e rollback.
+
+A revisão de código identificou que as projeções públicas de documentos e coleções solicitavam `created_by`/`updated_by`; risco potencial se as tabelas vierem a existir, não evidência de vazamento. [PR #42](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/42) separa consultas internas e públicas e adiciona testes. Pendente CI, revisão e integração; a projeção não substitui grants nem RLS na Data API.
+
+[PR #40](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/40) corrigiu plural e passou CI completo; integrada no commit `f3b44a86487bd262f8acf01dfcb5131b4646e28c`. Deploy Vercel estava em BUILDING na verificação; produção ainda exibia versão anterior. Confirmar deploy READY e texto público antes de declarar publicação. A reportagem CSN Cimentos publicada em outra frente foi preservada.
