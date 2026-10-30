@@ -1,0 +1,24 @@
+name: Homologar auditoria HTTP do portal público
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit-public-site.mjs'
+      - 'tests/public-site-journeys.test.mjs'
+      - 'tests/agent-editorial-ops.test.mjs'
+      - '.github/workflows/audit-publication-pr.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  public-http:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Auditar HTTP público sem modificar Issues
+        run: node scripts/audit-public-site.mjs
