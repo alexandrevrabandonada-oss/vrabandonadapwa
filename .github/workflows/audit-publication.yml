@@ -46,3 +46,8 @@ jobs:
           else
             echo "Portal verificado; nenhum alerta aberto."
           fi
+      - name: Sinalizar falha da auditoria após processar alerta
+        if: ${{ always() && steps.audit.outputs.failed == 'true' }}
+        run: |
+          echo "::error::A auditoria pública encontrou falhas. Consulte o log e o alerta técnico."
+          exit 1
