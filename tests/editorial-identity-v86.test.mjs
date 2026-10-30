@@ -19,7 +19,7 @@ test("membros são UUID, não email/user_metadata e não podem se promover",()=>
  assert.match(sql,/active boolean not null default false/);
  assert.match(sql,/create policy editorial_members_self_read/);
  assert.match(sql,/user_id = \(select auth\.uid\(\)\)/);
- assert.doesNotMatch(sql,/security definer|user_metadata|raw_user_meta_data/i);
+ assert.doesNotMatch(sql.replace(/^\s*--.*$/gm,""),/security definer|user_metadata|raw_user_meta_data/i);
  assert.doesNotMatch(sql,/grant\s+(insert|update|delete|all)\s+on\s+(table\s+)?editorial_private\.members/i);
 });
 

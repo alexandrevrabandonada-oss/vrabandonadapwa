@@ -22,7 +22,7 @@ begin
   or (select count(*) from public.place_hubs where slug like 'qa-v86-%') <> 1 then
    raise exception 'anon viu conteudo interno';
  end if;
- if has_table_privilege(current_user,'editorial_private.members','INSERT')
+ if has_schema_privilege(current_user,'editorial_private','USAGE')
   or has_column_privilege(current_user,'public.investigation_dossiers','title','UPDATE') then
   raise exception 'anon recebeu privilegio de escrita';
  end if;
