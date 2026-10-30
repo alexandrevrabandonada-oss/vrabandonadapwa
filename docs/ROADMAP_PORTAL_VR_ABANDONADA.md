@@ -580,3 +580,95 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Mudança:** separar projeções públicas/internas no código e, no blueprint staging não aplicado, substituir grants gerais por SELECT por coluna para cinco tabelas; testar com `has_column_privilege` em PostgreSQL temporário como `anon` e `authenticated`. RLS e bloqueio de escrita permanecem. **Sem mudanças no Supabase real;** nem editores têm autorizações novas de gravação.
 
 **Validação pendente:** CI Node, TypeScript/lint/build, PostgreSQL RLS e Chromium no commit exato; staging Supabase dedicado, permissões por identidade e revisão de campos da API antes de habilitar curadoria da PR #29.
+
+---
+
+## Auditoria estratégica de SEO, experiência e plataforma — 30/10/2026
+
+**Escopo e evidência:** revisão documental do código `main` no commit `7830e42ec1b224346354e5206d59b23c6fff14d2`, roadmap e lista de PRs; pesquisa em documentação primária. Não é auditoria visual, Lighthouse, medição de tráfego ou prova HTTP. A ferramenta de pesquisa não conseguiu abrir os domínios; isso não prova indisponibilidade. O SHA do deploy ativo deve ser confirmado na Vercel.
+
+### O que já existe no código
+
+- Next.js 15, GitHub e Vercel; três arquivos de matérias no repositório. O arquivo da Rua 33 marca `published` e `reviewed`, e registra fontes, limites e contraditório ainda não solicitado. Estado em Git não prova publicação no domínio.
+- Template de matéria fornece título, descrição, canonical, Open Graph, Article/NewsArticle, datas, fontes, correções e links relacionados. O sitemap contempla matérias, pautas, dossiês, territórios e Instagram; robots restringe área interna, API, auth e offline. Não confirma indexação ou conteúdo servido.
+- `lib/site-url.ts` normaliza hosts .com.br para `www.vrabandonada.online`. O roadmap anterior relata .com.br misconfigured: checar novamente DNS, HTTPS, 301/308 e caminho/query antes de decidir mudança. Não inverter canonical por suposição.
+- PR #37 propõe papéis e RLS de staging; #29 é histórica e depende de base antiga; #7 trata intake/storage; #6 contém rascunho antigo. Nenhuma dessas PRs abertas equivale a recurso em produção. Revisar dependências, CI e divergências antes de qualquer integração.
+- Diagnóstico V7.7/V8 anterior: tabelas editoriais ausentes no Supabase de produção à época da consulta. Revalidar antes de decisões; não aplicar migrations antigas em bloco ou expor documentos/identidades.
+
+### Norte de produto
+
+Uma redação local investigativa em que a pessoa encontra uma notícia verificável, entende o histórico, acessa documentos e acompanha mudanças. Manter COMUN como plataforma distinta para participação comunitária; ligar ao COMUN com contexto claro. Interface editorial documental, identidade VR e fotografias reais licenciadas/creditadas, sem adornos artificiais. Priorizar clareza, leitura móvel e prestação de contas.
+
+### Decisões e fila priorizada
+
+**P0 — linha de base e confiança**
+1. [ ] Confirmar Vercel: deployment ativo, SHA, domínio e aliases; testar os dois hosts .online por HTTPS, cadeia 301/308, caminho, query, canonical, robots, sitemap, RSS e páginas de matérias. Evidenciar data e resposta; resolver DNS somente com estado confirmado.
+2. [ ] Medir Search Console por propriedade e data: cobertura, URLs inspecionadas, sitemap, consultas, cliques e impressões. Não presumir indexação. Levantar baseline de Web Vitals reais, dispositivo móvel e desktop; alvo p75 LCP ≤2,5s, INP ≤200ms e CLS ≤0,1. Lighthouse é laboratório e TBT não é INP real.
+3. [ ] Confirmar publicação e integridade das três matérias reais, situação de fontes/contraditório, imagem e atualização. Testar links internos e resultados de compartilhamento WhatsApp; sem publicar rascunhos automaticamente.
+4. [ ] Reavaliar segurança do envio, anexos, privacidade, autorização e integrações antes de receber material sensível. Confirmar PR #7 e permissões reais; não presumir que RLS ou interface isoladamente protegem objetos.
+
+**P1 — descoberta e produto**
+5. [ ] Jornada mobile: Últimas → matéria → fonte → caso/bairro → próxima leitura, com Acervo ↔ Bairros por vínculos editoriais expressos. Evitar criar relação factual pela simples menção de um bairro.
+6. [ ] Inspecionar home, notícia, investigação, Acervo, Bairros, Busca e Envie em 320/360/390/430px e desktop; zoom 200%, teclado, leitor de tela e contraste WCAG 2.2 AA. Registrar capturas e corrigir problemas por impacto; testes automáticos não substituem avaliação humana.
+7. [ ] Fortalecer notícias e dossiês: fotos documentais com direitos/créditos e texto alternativo, contexto claro, datas corretas, autoria verificável, método, correções, contato e respostas das partes. Separar notícia, análise e opinião. Nas investigações, distinguir o comprovado, o que falta e quando houve atualização.
+8. [ ] Validar metadata efetivamente entregue, URLs canônicas únicas, indexabilidade, links HTML, títulos, imagens OG, sitemap com lastmod verdadeiro e RSS. Avaliar News sitemap separado apenas para notícias recentes e operação que mantenha janela de dois dias; não é pré-requisito para aparecer no Google Notícias. Structured data ajuda compreensão, não garante resultados.
+9. [ ] Testar Search Console e relatórios agregados com privacidade; métricas: conteúdos originais, tempo aprovação→URL, índice de URLs válidas, cliques orgânicos, retorno por caso, falhas e recuperação. Não rastrear dados sensíveis ou anexar informações de denunciantes a analytics.
+
+**P2 — fluxo editorial e distribuição**
+10. [ ] Fluxo único: apuração → rascunho → revisão de evidências e contraditório → aprovação editorial → publicação Git → verificação de produção → distribuição. Permalink e histórico preservados; edição sem nova URL. Preparar piloto em uma matéria real com capa autorizada, fotos e links.
+11. [ ] Prototipar Decap CMS em ambiente isolado sobre conteúdo Git: validar autenticação, revisão via PR, schema JSON, prévia e imagens. Decap pode simplificar edição, mas requer adaptação de campos e segurança de acesso. Não instalar até piloto e avaliação de custo operacional.
+12. [ ] Comparar Ghost (newsletter/membros integrados, nova operação/migração), WordPress (ecossistema amplo, manutenção de plugins e segurança) e Next.js atual + editor Git (preserva links e produto, exige desenvolvimento). Avaliar TCO, backup/exportação, permissões, design, fluxo e acesso editorial; sem migrar antes de teste de publicação e plano de redirects.
+13. [ ] Planejar newsletter opt-in, RSS e distribuição social com medição proporcional e possibilidade de descadastro; considerar custos, consentimento e capacidade operacional antes de contratar plataforma.
+
+### Fontes da pesquisa
+
+- Google: Article schema https://developers.google.com/search/docs/appearance/structured-data/article ; AI features https://developers.google.com/search/docs/appearance/ai-features ; notícias e transparência https://developers.google.com/search/blog/2021/06/google-news-sources ; sitemap de notícias https://developers.google.com/search/docs/crawling-indexing/sitemaps/news-sitemap .
+- Web Vitals: https://web.dev/articles/vitals ; WCAG 2.2: https://www.w3.org/TR/WCAG22/ .
+- Decap: https://decapcms.org/docs/intro/ e https://decapcms.org/docs/editorial-workflows/ ; Ghost: https://ghost.org/help/manual/ .
+
+**Regra sobre SEO de IA:** Google informa que fundamentos de rastreabilidade e conteúdo útil se aplicam a seus recursos de IA, sem arquivo `llms.txt` ou schema especial obrigatório. Não prometer posição, indexação ou presença em respostas de IA.
+
+**Status desta rodada:** pesquisa e atualização propostas em PR documental; sem modificações no produto, banco, DNS, métricas ou produção. Auditoria visual, desempenho, dados de campo, Search Console e domínio ainda pendentes. Critério de encerramento: resultado observado, fontes, data, risco e responsável para cada item, sem confundir código, preview e produção.
+
+
+### Correção de domínio — informação do proprietário, 30/10/2026
+
+O proprietário informa que perdeu `vrabandonada.com.br` por falta de renovação. O domínio disponível para o projeto é **vrabandonada.online**. Descartar propostas anteriores de recuperar ou migrar para `.com.br`; não presumir controle sobre ele nem redirecionamento funcional. Manter `www.vrabandonada.online` como canonical previsto no código, sujeito a confirmação HTTP/DNS e configuração real do `.online` com e sem `www`. Rever referências históricas ao `.com.br` à luz desta correção. Não alterar DNS ou código de domínio sem verificar o comportamento efetivo do `.online`.
+
+
+### Verificação operacional — 30/10/2026
+
+- Vercel: os aliases `www.vrabandonada.online` e `vrabandonada.online` apontam para o deployment de produção `dpl_FB8GM54BhAnW4KdrFh332WPAmLz1`, estado READY, commit `7830e42ec1b224346354e5206d59b23c6fff14d2`. A configuração de DNS de ambos retorna `misconfigured:false`; isto não é prova completa de HTTPS e navegação de todos os usuários.
+- A Vercel não informa redirect para o apex, mas `middleware.ts` no commit de produção implementa 308 de `vrabandonada.online` para `www.vrabandonada.online`, preservando caminho e query. Confirmar com uma requisição real sem seguir redirecionamento. O canonical www está coerente com o código.
+- Os dois nomes .com.br ainda constam na configuração Vercel, mas o proprietário informa que perdeu o domínio. A presença de aliases históricos/verificados NÃO demonstra posse ou tráfego atual. Inventariar referências antes de propor remoção; não depender dele, nem fazer alteração DNS.
+- Em 29/10, a auditoria agendada detectou HTTP 404 na matéria da explosão e abriu [issue #30](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/issues/30). Um [teste HTTP posterior em 29/10 às 22h07 de Brasília](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/40983892662) passou com 12 URLs, incluindo as três matérias, home, robots, sitemap, RSS e cinco jornadas. Isso evidencia recuperação naquele momento, não garante resposta hoje. A issue #30 continua aberta; não fechá-la sem nova verificação independente.
+- **Achado P1 de observabilidade:** o workflow agendado captura falha do script para criar issue e conclui com sucesso se o tratamento do alerta funcionou. Logo, bolinha verde não prova que a auditoria passou: consultar o log e a issue. Ajustar o workflow para registrar falha após executar o tratamento de alertas, sem perder deduplicação, e testar sucesso e falha. Verificar também janela entre publicação no Git e deploy, que pode causar alerta temporário; não afirmar causa do 404 histórico sem prova.
+- **Pendente:** HTTPS/308 real, teste visual e acessibilidade em dispositivos, Search Console e métricas de campo. Estes resultados não substituem teste ao vivo nem medição de indexação.
+
+
+### Correção do monitor — 30/10/2026
+
+[PR #39](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/39) integrada em `main`, commit `3b5bee9fba4a7f53d16a239d07012c3bd0bb7aa3`: após processar abertura/deduplicação do alerta, o job sinaliza falha quando a auditoria falhou. YAML validado e quatro cenários simulados localmente: sucesso/falha com e sem issue existente. **Pendente:** confirmar a primeira execução real após integração e reavaliar issue #30; não confundir simulação com observação da operação agendada. Esta alteração é de workflow; não modifica conteúdo, DNS ou banco.
+
+
+### Verificação pública — 30/10/2026
+
+- A reportagem sobre a explosão na CSN abriu no navegador público; o atalho “No acervo” conduziu à seção correspondente e expandiu as dez fontes. O Acervo exibiu três reportagens e links para bairros. Essa observação de uma jornada pontual não substitui QA mobile, teste de todos os links ou indexação.
+- O Acervo exibiu “Catálogo documental temporariamente indisponível”; fontes de matérias estavam acessíveis. Investigar a dependência do banco previamente identificada, sem concluir que os documentos não existem e sem executar migrações em produção.
+- Contador mostrou plural incorreto; correção proposta na [PR #40](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/40), aguardando CI e integração. Não afirmar correção em produção antes da validação.
+- A issue #30 continua aberta e o novo workflow ainda não teve execução agendada; a observação atual da reportagem demonstra recuperação pontual da URL, mas não prova que todo o monitor esteja verde. Avaliar encerramento após execução completa.
+
+
+### Acervo — diagnóstico e proteção, 30/10/2026
+
+Consulta read-only ao catálogo do Supabase de produção confirmou ausência das tabelas `archive_assets`, `archive_collections`, `investigation_dossiers` e `place_hubs`. A consulta pública de Acervo depende de `archive_assets`, explicando a indisponibilidade observada; não foram consultados dados privados nem realizadas alterações no banco. A instalação segura do catálogo requer staging, migração mínima sem seeds, autorização e RLS, grants públicos por coluna, testes reais e rollback.
+
+A revisão de código identificou que as projeções públicas de documentos e coleções solicitavam `created_by`/`updated_by`; risco potencial se as tabelas vierem a existir, não evidência de vazamento. [PR #42](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/42) separa consultas internas e públicas e adiciona testes. Pendente CI, revisão e integração; a projeção não substitui grants nem RLS na Data API.
+
+[PR #40](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/40) corrigiu plural e passou CI completo; integrada no commit `f3b44a86487bd262f8acf01dfcb5131b4646e28c`. Deploy Vercel estava em BUILDING na verificação; produção ainda exibia versão anterior. Confirmar deploy READY e texto público antes de declarar publicação. A reportagem CSN Cimentos publicada em outra frente foi preservada.
+
+
+**Atualização de validação:** a primeira execução da PR #42 falhou no teste novo de projeção; o teste foi corrigido no commit `58aba59fb6ba7d2b0abeb6842fb8a35a7dc06f58`. Aguardar CI do novo HEAD; não afirmar proteção integrada ou RLS validada. A PR #40 está integrada, mas o deploy `f3b44a8` ainda estava em construção na última consulta.
+
+
+**Verificação posterior:** deploy de produção `f3b44a8` READY; em 30/10, o navegador público exibiu “4 publicações disponíveis” em `/acervo`, incluindo a matéria CSN Cimentos. A PR #40 está efetivamente publicada. O catálogo documental continua indisponível; a PR #42 segue em CI e não ativa tabelas.
