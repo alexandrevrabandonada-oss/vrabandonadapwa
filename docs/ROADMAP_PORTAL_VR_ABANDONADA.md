@@ -649,3 +649,11 @@ O proprietário informa que perdeu `vrabandonada.com.br` por falta de renovaçã
 ### Correção do monitor — 30/10/2026
 
 [PR #39](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/39) integrada em `main`, commit `3b5bee9fba4a7f53d16a239d07012c3bd0bb7aa3`: após processar abertura/deduplicação do alerta, o job sinaliza falha quando a auditoria falhou. YAML validado e quatro cenários simulados localmente: sucesso/falha com e sem issue existente. **Pendente:** confirmar a primeira execução real após integração e reavaliar issue #30; não confundir simulação com observação da operação agendada. Esta alteração é de workflow; não modifica conteúdo, DNS ou banco.
+
+
+### Verificação pública — 30/10/2026
+
+- A reportagem sobre a explosão na CSN abriu no navegador público; o atalho “No acervo” conduziu à seção correspondente e expandiu as dez fontes. O Acervo exibiu três reportagens e links para bairros. Essa observação de uma jornada pontual não substitui QA mobile, teste de todos os links ou indexação.
+- O Acervo exibiu “Catálogo documental temporariamente indisponível”; fontes de matérias estavam acessíveis. Investigar a dependência do banco previamente identificada, sem concluir que os documentos não existem e sem executar migrações em produção.
+- Contador mostrou plural incorreto; correção proposta na [PR #40](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/40), aguardando CI e integração. Não afirmar correção em produção antes da validação.
+- A issue #30 continua aberta e o novo workflow ainda não teve execução agendada; a observação atual da reportagem demonstra recuperação pontual da URL, mas não prova que todo o monitor esteja verde. Avaliar encerramento após execução completa.
