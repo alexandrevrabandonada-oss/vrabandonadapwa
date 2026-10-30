@@ -14,7 +14,7 @@ function samples() {
   return new Map(Object.entries({
     "/":"<html>VR Abandonada",
     "/noticias":"<html>Notícias",
-    "/materias":"<html>Matérias: Explosão na CSN &amp; apuração; Rua 33: custos e contratos",
+    "/materias":"<html>O que acontece na cidade merece ficar registrado. Explosão na CSN &amp; apuração; Rua 33: custos e contratos",
     "/dossies":"<html>Reportagens investigativas Rua 33: custos e contratos",
     "/acervo":"<html> fontes-reportagens fontes-explosao-csn fontes-rua-33-obras",
     "/territorios":'<html>Vila Brasília <a href="/territorios/vila-santa-cecilia">Bairro</a>',
