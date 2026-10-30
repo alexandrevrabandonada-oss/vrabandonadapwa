@@ -14,11 +14,13 @@ const investigationDossierUpdateMockItems = allowPublicDemoContent() ? investiga
 const publicFields =
   "id, title, slug, excerpt, description, status, cover_image_url, featured, public_visibility, sort_order, lead_question, period_label, territory_label, created_at, updated_at";
 
-const internalFields = publicFields + ", created_by, updated_by";
+const internalFields =
+  "id, title, slug, excerpt, description, status, cover_image_url, featured, public_visibility, sort_order, lead_question, period_label, territory_label, created_at, updated_at, created_by, updated_by";
 const linkFields = "id, dossier_id, link_type, link_key, link_role, timeline_year, timeline_label, timeline_note, featured, sort_order, created_at, updated_at";
 const publicUpdateFields =
   "id, dossier_id, title, slug, excerpt, body, update_type, published, published_at, featured, sort_order, created_at, updated_at";
-const internalUpdateFields = publicUpdateFields + ", created_by, updated_by";
+const internalUpdateFields =
+  "id, dossier_id, title, slug, excerpt, body, update_type, published, published_at, featured, sort_order, created_at, updated_at, created_by, updated_by";
 
 function sortDossiers(items: InvestigationDossier[]) {
   return [...items].sort((a, b) => {

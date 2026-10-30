@@ -11,7 +11,8 @@ const placeHubLinkMockItems = allowPublicDemoContent() ? placeHubLinkMockItemsDe
 
 const publicFields =
   "id, title, slug, excerpt, description, lead_question, place_type, parent_place_slug, territory_label, address_label, latitude, longitude, cover_image_url, featured, public_visibility, status, sort_order, created_at, updated_at";
-const internalFields = publicFields + ", created_by, updated_by";
+const internalFields =
+  "id, title, slug, excerpt, description, lead_question, place_type, parent_place_slug, territory_label, address_label, latitude, longitude, cover_image_url, featured, public_visibility, status, sort_order, created_at, updated_at, created_by, updated_by";
 const linkFields = "id, place_hub_id, link_type, link_key, link_role, timeline_year, timeline_label, timeline_note, featured, sort_order, created_at, updated_at";
 
 function sortHubs(items: PlaceHub[]) {

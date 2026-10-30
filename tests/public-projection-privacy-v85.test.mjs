@@ -11,8 +11,8 @@ test("consultas públicas de Casos não solicitam os e-mails internos",()=>{
   assert.ok(fields.length>80);
   assert.doesNotMatch(fields,/created_by|updated_by/);
  }
- assert.match(q,/const internalFields = publicFields \+ ", created_by, updated_by"/);
- assert.match(q,/const internalUpdateFields = publicUpdateFields \+ ", created_by, updated_by"/);
+ assert.match(q,/const internalFields =\s*"[^"]*created_by, updated_by"/);
+ assert.match(q,/const internalUpdateFields =\s*"[^"]*created_by, updated_by"/);
  assert.equal((q.match(/\.select\(publicUpdateFields\)/g)||[]).length,2);
  assert.equal((q.match(/\.select\(internalUpdateFields\)/g)||[]).length,2);
 });
@@ -22,7 +22,7 @@ test("Bairros não publicam campos de autoria interna",()=>{
  const pub=q.match(/const publicFields =\s*(".*?");/s)?.[1]??"";
  assert.ok(pub.length>80);
  assert.doesNotMatch(pub,/created_by|updated_by/);
- assert.match(q,/const internalFields = publicFields \+ ", created_by, updated_by"/);
+ assert.match(q,/const internalFields =\s*"[^"]*created_by, updated_by"/);
 });
 
 test("blueprint restringe acesso direto às colunas via Data API",()=>{
