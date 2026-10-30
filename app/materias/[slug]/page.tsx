@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/container";
+import { StoryContextNav } from "@/components/story-context-nav";
 import { getMateria, getMaterias, materiaKind, materiaKindLabel, publishedDate, publishedDateTime } from "@/lib/materias";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -53,7 +54,18 @@ export default async function MateriaPage({ params }: Props) {
     citation: story.sources.filter((s) => /^https?:\/\//.test(s.url)).map((s) => s.url),
   };
   const shareUrl = "https://wa.me/?text=" + encodeURIComponent(story.title + "\n" + canonical);
-  const related = (await getMaterias()).filter((s) => s.slug !== slug && s.section === story.section).slice(0, 3);
+  // Outra matéria da mesma editoria não prova que dois episódios estejam ligados.
+  // O recorte por bairro principal verificado vem primeiro; a editoria é apenas fallback.
+  const published = await getMaterias();
+  const mainPlaces = new Set(story.territories?.filter((place) => place.role === "main").map((place) => place.slug) ?? []);
+  const related = published.filter((candidate) => candidate.slug !== slug)
+    .map((candidate) => ({
+      candidate,
+      sharedPlace: candidate.territories?.some((place) => place.role === "main" && mainPlaces.has(place.slug)) ?? false,
+    }))
+    .filter(({ candidate, sharedPlace }) => sharedPlace || candidate.section === story.section)
+    .sort((a, b) => Number(b.sharedPlace) - Number(a.sharedPlace) || Date.parse(b.candidate.publishedAt) - Date.parse(a.candidate.publishedAt))
+    .slice(0, 3).map(({ candidate }) => candidate);
   return (
     <Container className="vr-materia">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
@@ -67,7 +79,7 @@ export default async function MateriaPage({ params }: Props) {
         <div className="vr-materia__byline">Por {story.author} · {publishedDate(story.publishedAt)}
           {story.updatedAt && story.updatedAt !== story.publishedAt ? " · Atualizada em " + publishedDateTime(story.updatedAt) : ""}
         </div>
-        {story.territories?.length ? <nav className="vr-materia__places" aria-label="Lugares mencionados nesta matéria"><strong>Por bairro:</strong> {story.territories.map((place) => <Link key={place.slug} href={"/territorios/" + place.slug}>{place.label}{place.role === "mentioned" ? " · menção" : ""} ↗</Link>)}</nav> : null}
+        <StoryContextNav story={story} />
         {story.investigationStatus === "ongoing" && <p className="vr-materia__status">● Investigação em acompanhamento · Respostas e documentos serão incorporados nesta mesma página</p>}
         {materiaKind(story) === "news" && story.updatedAt && <p className="vr-materia__status">● Notícia atualizada · Novos fatos e documentos são registrados neste endereço</p>}
       </header>
@@ -79,7 +91,7 @@ export default async function MateriaPage({ params }: Props) {
         </figure>
       )}
       <div className="vr-materia__body-layout">
-        <article className="vr-materia__body">
+        <article className="vr-materia__body" id="texto-da-materia">
           <p className="vr-materia__lead">{story.summary}</p>
           {story.blocks.map((block, idx) => {
             if (block.type === "heading") return <h2 key={idx}>{block.text}</h2>;
@@ -88,7 +100,7 @@ export default async function MateriaPage({ params }: Props) {
             return <p key={idx}>{block.text}</p>;
           })}
           {story.updates && story.updates.length > 0 && (
-            <section className="vr-materia__timeline" aria-label="Histórico de atualizações da publicação">
+            <section id="atualizacoes-da-materia" className="vr-materia__timeline" aria-label="Histórico de atualizações da publicação">
               <h2>{materiaKind(story) === "news" ? "Atualizações desta notícia" : "Histórico desta investigação"}</h2>
               <ol>{story.updates.map((entry, index) => <li key={index}>
                 <time dateTime={entry.date}>{publishedDateTime(entry.date)}</time>
@@ -101,7 +113,7 @@ export default async function MateriaPage({ params }: Props) {
               <h2>Nota de atualização e correção</h2><p>{story.correctionNote}</p>
             </section>
           )}
-          <section className="vr-materia__sources">
+          <section id="fontes-da-materia" className="vr-materia__sources">
             <h2>Fontes e documentos</h2>
             {story.sources.length ? <ol>{story.sources.map((source, i) => <li key={i}>
               {/^https?:\/\//.test(source.url) ? <a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a> : source.label}
@@ -121,7 +133,7 @@ export default async function MateriaPage({ params }: Props) {
         </aside>
       </div>
       {related.length > 0 && <section className="vr-materia__related">
-        <h2>Mais sobre {story.section}</h2>
+        <h2>Outras reportagens para continuar lendo</h2>
         {related.map((s) => <Link key={s.slug} href={"/materias/" + s.slug}>{s.title}<span aria-hidden="true">↗</span></Link>)}
       </section>}
     </Container>

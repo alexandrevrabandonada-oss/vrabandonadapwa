@@ -11,11 +11,14 @@ import { site } from "@/lib/site";
 import { getSiteUrl } from "@/lib/site-url";
 
 import "./globals.css";
+import "./design-tokens.css";
 import "./instagram.css";
 import "./materias.css";
 import "./portal-v2.css";
 import "./editorial-v4.css";
 import "./portal-mobile-v5.css";
+import "./experience-v6.css";
+import "./editorial-cards-v7.css";
 
 const siteUrl = getSiteUrl();
 

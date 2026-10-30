@@ -1,0 +1,66 @@
+name: Validate V8.2 staging editorial SQL
+on:
+  pull_request:
+    paths:
+      - 'scripts/sql/staging/**'
+      - 'tests/staging-editorial-schema-v82.test.mjs'
+      - '.github/workflows/validate-v82-staging-db.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  postgres-rls:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: v82_ci
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci-only-ephemeral-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d v82_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGDATABASE: v82_ci
+      PGUSER: postgres
+      PGPASSWORD: ci-only-ephemeral-password
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar cliente PostgreSQL
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client
+      - name: Criar papéis públicos de teste (sem credenciais reais)
+        run: |
+          psql -v ON_ERROR_STOP=1 -c 'create role anon nologin; create role authenticated nologin;'
+      - name: Comprovar fail-closed sem opt-in
+        run: |
+          if psql -v ON_ERROR_STOP=1 -f scripts/sql/staging/v82_phase1_editorial_core.sql > /tmp/v82-guard.log 2>&1; then
+            echo "ERRO: o SQL não bloqueou execução sem confirmação de staging"
+            exit 1
+          fi
+          grep -q 'V8.2 bloqueado' /tmp/v82-guard.log
+          count=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from information_schema.tables where table_schema='public' and table_name in ('investigation_dossiers','investigation_dossier_links','investigation_dossier_updates','place_hubs','place_hub_links')")
+          test "$count" = '0'
+      - name: Aplicar blueprint no PostgreSQL efêmero
+        run: |
+          {
+            echo "SET vrabandonada.editorial_staging_approved = 'yes';"
+            cat scripts/sql/staging/v82_phase1_editorial_core.sql
+          } | psql -v ON_ERROR_STOP=1
+      - name: Verificar RLS como anon e authenticated com fixtures revertidas
+        run: psql -v ON_ERROR_STOP=1 -f scripts/sql/staging/v82_verify_rls.sql
+      - name: Comprovar rollback integral dos testes
+        run: |
+          count=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from public.investigation_dossiers where slug like 'qa-v82-%'")
+          hubs=$(psql -At -v ON_ERROR_STOP=1 -c "select count(*) from public.place_hubs where slug like 'qa-v82-%'")
+          test "$count" = '0' && test "$hubs" = '0'

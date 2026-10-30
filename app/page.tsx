@@ -80,11 +80,27 @@ export default async function HomePage() {
   const latest = feed.slice(lead ? 1 : 0, lead ? 7 : 6);
   const featuredDossiers = dossiers.slice(0, 3);
   const investigationPool = materias.filter((story) => materiaKind(story) === "investigation");
-  const investigationStories = investigationPool.filter((story) => "materia-" + story.slug !== lead?.id).slice(0, 3);
-  const investigationLead = materias.find((story) => materiaKind(story) === "investigation" && "materia-" + story.slug === lead?.id) ?? null;
+  // O leitor não deve encontrar a mesma manchete duas vezes na página inicial.
+  // O bloco Investigações só repete um caso como atalho compacto, sem novo cartão editorial.
+  const visibleFeedIds = new Set([lead, ...latest.slice(0, 4)].filter((entry): entry is FeedEntry => Boolean(entry)).map((entry) => entry.id));
+  const investigationStories = investigationPool.filter((story) => !visibleFeedIds.has("materia-" + story.slug)).slice(0, 3);
+  const investigationLead = investigationPool.find((story) => visibleFeedIds.has("materia-" + story.slug)) ?? null;
   const hasVerifiedInvestigations = investigationStories.length > 0 || featuredDossiers.length > 0 || investigationLead !== null;
-  const featuredNeighborhoods = neighborhoods.slice(0, 5);
-  const coveredNeighborhoods = editorialNeighborhoods.filter((place) => !featuredNeighborhoods.some((hub) => hub.slug === place.slug)).slice(0, 5);
+  // Bairros começam pela cobertura verificada. Hubs públicos entram como complemento,
+  // evitando duplicar localidades e preservando o papel de menção contextual.
+  const coveredSlugs = new Set(editorialNeighborhoods.map((place) => place.slug));
+  const homePlaces = [
+    ...editorialNeighborhoods.map((place) => ({
+      slug: place.slug,
+      label: place.label,
+      contextOnly: place.main.length === 0,
+    })),
+    ...neighborhoods.filter((hub) => !coveredSlugs.has(hub.slug)).map((hub) => ({
+      slug: hub.slug,
+      label: hub.title,
+      contextOnly: false,
+    })),
+  ].slice(0, 5);
 
   return (
     <Container className="vr2-home">
@@ -134,7 +150,7 @@ export default async function HomePage() {
                   <div className="vr2-meta"><span>{item.category}</span><span>{dateLabel(item.date)}</span></div>
                   <h3><Link href={item.href}>{item.title}</Link></h3>
                   <p>{item.summary}</p>
-                  <Link href={item.href} aria-label={"Ler: " + item.title}>{item.category.startsWith("Investigação") ? "Ler investigação" : "Ler notícia"} <span aria-hidden="true">↗</span></Link>
+                  <Link href={item.href} aria-label={(item.category.startsWith("Investigação") ? "Ler investigação: " : "Ler notícia: ") + item.title}>{item.category.startsWith("Investigação") ? "Ler investigação" : "Ler notícia"} <span aria-hidden="true">↗</span></Link>
                 </article>
               )) : (
                 <div className="vr2-news-list__empty">
@@ -191,9 +207,9 @@ export default async function HomePage() {
           </div>
         ) : investigationLead ? (
           <div className="vr5-only-lead-note">
-            <strong>Investigação em destaque nesta edição</strong>
-            <p>O caso principal já aparece no topo. Acompanhe o histórico e as próximas respostas no mesmo endereço, sem repetir a matéria nesta página.</p>
-            <Link href={"/materias/" + investigationLead.slug}>Acompanhar este caso ↗</Link>
+            <strong>Investigação em acompanhamento</strong>
+            <p>A reportagem já está entre as publicações acima. Consulte as fontes e os próximos desdobramentos no mesmo endereço.</p>
+            <Link href={"/materias/" + investigationLead.slug}>Ver histórico e fontes ↗</Link>
           </div>
         ) : (
           <div className="vr2-investigations">
@@ -217,12 +233,13 @@ export default async function HomePage() {
           </div>
           <p>Volta Redonda vista a partir dos territórios onde as decisões têm consequências.</p>
           <div className="vr2-neighborhoods">
-            {featuredNeighborhoods.length ? featuredNeighborhoods.map((place) => (
-              <Link key={place.id} href={"/territorios/" + place.slug}>{place.title}<span aria-hidden="true">↗</span></Link>
-            )) : coveredNeighborhoods.length ? coveredNeighborhoods.map((place) => (
-              <Link key={place.slug} href={"/territorios/" + place.slug}>{place.label}<span aria-hidden="true">↗</span></Link>
+            {homePlaces.length ? homePlaces.map((place) => (
+              <Link key={place.slug} href={"/territorios/" + place.slug}>
+                {place.label}{place.contextOnly ? " · menção contextual" : ""}
+                <span aria-hidden="true">↗</span>
+              </Link>
             )) : (
-              <Link href="/territorios">Explorar os territórios da cidade <span aria-hidden="true">↗</span></Link>
+              <Link href="/territorios">Explorar bairros e lugares <span aria-hidden="true">↗</span></Link>
             )}
           </div>
           <Link href="/territorios" className="vr2-text-link">Ver todos os bairros ↗</Link>
@@ -234,7 +251,7 @@ export default async function HomePage() {
           <p>Pesquise nomes, contratos, bairros, vídeos e investigações. Um link permanente vale mais que uma publicação perdida no feed.</p>
           <form action="/buscar" method="get" role="search" className="vr2-search-form">
             <label htmlFor="vr2-q">Buscar no VR Abandonada</label>
-            <div><input id="vr2-q" type="search" name="q" placeholder="CSN, Rua 33, saúde…" maxLength={100} /><button type="submit" aria-label="Pesquisar no site">Buscar ↗</button></div>
+            <div><input id="vr2-q" type="search" name="q" placeholder="CSN, Rua 33, saúde…" maxLength={100} /><button type="submit" aria-label="Buscar no site">Buscar ↗</button></div>
           </form>
           <Link href="/acervo" className="vr2-text-link">Conhecer o acervo ↗</Link>
         </section>
@@ -243,13 +260,13 @@ export default async function HomePage() {
 
       <section className="vr2-about" aria-label="Sobre o projeto e participação">
         <div>
-          <span className="vr2-eyebrow">NOSSO COMPROMISSO</span>
-          <h2>Noticiar é o começo. Acompanhar é o compromisso.</h2>
-          <p>O VR Abandonada organiza informações de interesse público com contexto, transparência e memória. Para participação coletiva e acompanhamento comunitário, conheça o COMUN — um projeto com finalidade própria.</p>
+          <span className="vr2-eyebrow">VOCÊ TAMBÉM FAZ PARTE DA APURAÇÃO</span>
+          <h2>Tem uma informação que precisa ser investigada?</h2>
+          <p>Envie pistas, relatos ou referências à redação. Todo material passa por verificação antes de qualquer publicação.</p>
         </div>
         <div className="vr2-about__actions">
-          <Link href="/metodo" className="vr2-button vr2-button--accent">Método editorial ↗</Link>
-          <a href="https://comunsocial.online" className="vr2-button vr2-button--quiet" target="_blank" rel="noopener noreferrer">COMUN ↗</a>
+          <Link href="/envie" className="vr2-button vr2-button--accent">Enviar informação ↗</Link>
+          <Link href="/metodo" className="vr2-button vr2-button--quiet">Como apuramos ↗</Link>
         </div>
       </section>
     </Container>

@@ -37,6 +37,7 @@ export const placeHubPlaceTypeLabels: Record<PlaceHubPlaceType, string> = {
 
 export const placeHubLinkTypeLabels: Record<PlaceHubLinkType, string> = {
   editorial: "Pauta",
+  materia: "Reportagem verificada",
   memory: "Memória",
   archive: "Acervo",
   collection: "Coleção",
@@ -96,6 +97,8 @@ export function getPlaceHubLinkHref(type: string, key: string) {
   switch (type) {
     case "editorial":
       return `/pautas/${key}`;
+    case "materia":
+      return `/materias/${key}`;
     case "memory":
       return `/memoria/${key}`;
     case "archive":

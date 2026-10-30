@@ -13,6 +13,9 @@ on:
       - 'scripts/**'
       - 'package.json'
       - 'package-lock.json'
+      - 'next.config.ts'
+      - 'tsconfig.json'
+      - '.eslintrc*'
       - 'tests/**'
       - '.github/workflows/validate-portal.yml'
   push:
@@ -42,3 +45,29 @@ jobs:
         run: npm run lint
       - name: Compilar e validar matérias
         run: npm run build
+      - name: Verificar renderização HTTP local (sem Vercel)
+        run: node scripts/smoke-local-portal.mjs
+      - name: Instalar Playwright isolado para revisão Chromium
+        run: |
+          npm install --no-save --no-package-lock --ignore-scripts playwright@1.64.1 @axe-core/playwright@4.14.0
+          npx playwright install chromium --with-deps
+      - name: Auditar jornadas e capturar telas públicas no Chromium
+        run: node scripts/audit-local-ux.mjs
+      - name: Auditar acessibilidade WCAG e reflow equivalente a zoom 200/400%
+        run: node scripts/audit-accessibility-v7.mjs
+      - name: Publicar relatório de acessibilidade
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vr-abandonada-qa-accessibility
+          path: artifacts/qa-v7-accessibility/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Publicar capturas para revisão de UX
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vr-abandonada-qa-visual
+          path: artifacts/qa-v7-visual/
+          if-no-files-found: warn
+          retention-days: 7

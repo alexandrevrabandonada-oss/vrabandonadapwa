@@ -21,13 +21,15 @@ test("investigações Git-first reais prevalecem sobre tópicos genéricos", () 
   assert.match(home, /: featuredDossiers\.length/);
   assert.match(home, /TEMA DE COBERTURA/);
 });
-test("a barra móvel mostra Notícias e Últimas sem duplicar Menu", () => {
+test("a barra móvel separa Últimas, Investigações e Busca sem duplicar Menu", () => {
   const matches=nav.match(/mobileNav:\s*\[([\s\S]*?)\]\s*satisfies SiteLink\[\]/);
   assert.ok(matches);
   assert.equal((matches[1].match(/\{\s*href:/g)||[]).length, 4);
-  assert.match(matches[1],/href: "\/noticias"/);
+  assert.match(matches[1],/href: "\/buscar"/);
   assert.match(matches[1],/href: "\/agora"/);
   assert.match(matches[1],/href: "\/dossies"/);
+  assert.doesNotMatch(matches[1],/href: "\/noticias"/);
+  assert.match(nav,/href: "\/noticias"/);
   assert.match(read("components/mobile-bottom-nav.tsx"),/<SiteMenu variant="mobile"/);
   assert.match(css,/\.vr2-header \.site-menu__trigger \{display:none\}/);
 });

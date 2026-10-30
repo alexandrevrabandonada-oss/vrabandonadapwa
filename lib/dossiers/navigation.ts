@@ -2,6 +2,7 @@ import type { DossierLinkRole, DossierStatus } from "@/lib/dossiers/types";
 
 export const dossierLinkTypeLabels = {
   editorial: "Pauta",
+  materia: "Reportagem verificada",
   memory: "Memória",
   archive: "Acervo",
   collection: "Coleção",
@@ -100,6 +101,7 @@ export function getDossierStatusTone(status: string) {
 export function getDossierSectionOrder(type: string) {
   switch (type) {
     case "editorial":
+    case "materia":
       return 1;
     case "archive":
       return 2;
@@ -122,6 +124,8 @@ export function getDossierLinkHref(type: string, key: string) {
   switch (type) {
     case "editorial":
       return `/pautas/${key}`;
+    case "materia":
+      return `/materias/${key}`;
     case "memory":
       return `/memoria/${key}`;
     case "archive":

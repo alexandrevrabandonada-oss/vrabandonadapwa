@@ -63,27 +63,33 @@ function getFallbackLinks(placeHubId: string) {
   return sortLinks(placeHubLinkMockItems.filter((link) => link.place_hub_id === placeHubId));
 }
 
-export async function getPublishedPlaceHubs() {
+/** Bairros das reportagens sobrevivem a uma falha do catálogo de hubs. */
+export type PublicPlaceCatalogState = {
+  hubs: PlaceHub[];
+  availability: "available" | "not_configured" | "unavailable";
+};
+
+export async function getPublicPlaceCatalogState(): Promise<PublicPlaceCatalogState> {
   const supabase = createSupabasePublicClient();
-
-  if (!supabase) {
-    return getFallbackHubs();
+  if (!supabase) return { hubs: getFallbackHubs(), availability: "not_configured" };
+  try {
+    const { data, error } = await supabase
+      .from("place_hubs")
+      .select(publicFields)
+      .eq("public_visibility", true)
+      .neq("status", "draft")
+      .order("featured", { ascending: false })
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
+    if (error || !data) return { hubs: getFallbackHubs(), availability: "unavailable" };
+    return { hubs: sortHubs(data as PlaceHub[]), availability: "available" };
+  } catch {
+    return { hubs: getFallbackHubs(), availability: "unavailable" };
   }
+}
 
-  const { data, error } = await supabase
-    .from("place_hubs")
-    .select(publicFields)
-    .eq("public_visibility", true)
-    .neq("status", "draft")
-    .order("featured", { ascending: false })
-    .order("sort_order", { ascending: true })
-    .order("created_at", { ascending: false });
-
-  if (error || !data || data.length === 0) {
-    return getFallbackHubs();
-  }
-
-  return sortHubs(data as PlaceHub[]);
+export async function getPublishedPlaceHubs() {
+  return (await getPublicPlaceCatalogState()).hubs;
 }
 
 export async function getPublishedPlaceHubBySlug(slug: string) {

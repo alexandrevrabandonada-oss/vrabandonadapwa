@@ -22,25 +22,28 @@ test("menu fixo limita cinco colunas e páginas não extrapolam largura",()=>{
 });
 test("home não repete matéria em destaque dentro de investigações",()=>{
  const s=read("app/page.tsx");
- assert.match(s,/story\.slug !== lead\?\.id/);
+ assert.match(s,/visibleFeedIds\.has/);
  assert.match(s,/investigationLead/);
- assert.match(s,/Investigação em destaque nesta edição/);
+ assert.match(s,/Investigação em acompanhamento/);
  assert.match(s,/item\.category\.startsWith\("Investigação"\)/);
 });
 test("acervo vazio não é uma tela de estatísticas zeradas",()=>{
  const s=read("app/acervo/page.tsx");
- assert.match(s,/if \(allAssets\.length === 0 && collections\.length === 0\)/);
+ assert.match(s,/allAssets\.length > 0/);
  assert.match(s,/EditorialAcervoIndex/);
  assert.match(s,/getMaterias/);
  assert.match(s,/href="\/materias"/);
  assert.match(s,/href="\/dossies"/);
  assert.match(s,/Nada de registros fictícios/);
+ assert.match(s,/EditorialSourceIndex articles=\{articles\}/);
+ assert.match(s,/memoryItemId: activeMemory/);
 });
 test("territórios sem cadastros não simulam atlas já preenchido",()=>{
  const s=read("app/territorios/page.tsx");
- assert.match(s,/if \(territories\.length === 0\)/);
+ assert.match(s,/territories\.length === 0 && editorialTerritories\.length === 0/);
  assert.match(s,/href="\/noticias"/);
  assert.match(s,/Vila Brasília/);
+ assert.match(s,/newEditorialPlaces/);
  assert.match(s,/EditorialTerritoryIndex/);
  assert.match(s,/getPublishedEditorialTerritories/);
 });

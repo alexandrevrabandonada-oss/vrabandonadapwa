@@ -45,6 +45,7 @@ export function MobileBottomNav() {
     <nav className="mobile-bottom-nav vr2-bottom-nav" aria-label="Navegação móvel">
       {site.mobileNav.map((item) => (
         <Link key={item.href} href={item.href} className="mobile-bottom-nav__link vr2-bottom-nav__link"
+          aria-label={item.href === "/dossies" ? "Casos — investigações em acompanhamento" : undefined}
           aria-current={isActive(pathname, item.href) ? "page" : undefined}>
           <NavIcon href={item.href} />
           <span>{item.label}</span>

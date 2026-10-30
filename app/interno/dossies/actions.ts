@@ -157,6 +157,9 @@ export async function addInvestigationDossierLinkAction(_: DossierActionState, f
   if (!parsed) {
     return { ok: false, message: "Escolha uma peça relacionada válida." };
   }
+  if (parsed.type === "materia") {
+    return { ok: false, message: "Vínculos de reportagens dependem da migração editorial aprovada em staging." };
+  }
 
   const { error } = await supabase.from("investigation_dossier_links").insert({
     dossier_id: dossierId,

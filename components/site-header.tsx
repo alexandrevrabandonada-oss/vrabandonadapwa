@@ -16,8 +16,8 @@ export function SiteHeader() {
   return (
     <header className="site-header vr2-header">
       <div className="site-header__inner container vr2-header__inner">
-        <Link href="/" className="vr2-brand" aria-label="VR Abandonada — página inicial">
-          <span className="vr2-brand__mark" aria-hidden="true">VR</span>
+        <Link href="/" className="vr2-brand">
+          <span className="vr2-brand__mark">VR</span>
           <span className="vr2-brand__name">
             <strong>ABANDONADA</strong>
             <small>VOLTA REDONDA · RJ</small>

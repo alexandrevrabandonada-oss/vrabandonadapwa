@@ -344,3 +344,211 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 - Páginas editoriais derivadas de bairros em `/territorios/[slug]` coexistem com os hubs existentes do Supabase. Nenhum bairro vazio é inventado.
 - `/acervo` passa a mostrar matérias reais mesmo sem anexos publicados; `/buscar`, homepage, artigo e sitemap participam da mesma taxonomia.
 - Documento canônico da arquitetura: `docs/ARQUITETURA_ACERVO_TERRITORIOS.md`. Verificar CI e produção separadamente. Nesta sprint não escrever no Supabase, não alterar Storage, nem importar conteúdos privados.
+
+---
+
+## UX V6 — jornada contextual integrada (28/10/2026)
+
+**Diagnóstico sobre a main corrente, não a PR #17 antiga:** a main já introduziu jornalismo Git-first e bairros derivados por `territories: [{slug,label,role}]`, com distinção `main`/ `mentioned`. A proposta V6 parte desse estado e **não copia a PR #17 desatualizada**.
+
+**Promessa de produto mantida:** uma publicação original, múltiplas maneiras de encontrá-la e checar as evidências. Acervo e Bairros são índices do próprio conteúdo jornalístico, não microssites.
+
+**Implementação em PR separada `ux-v6-jornadas-contextuais-20261028`, pendente de merge:**
+- Em `/materias/[slug]`: guia contextual visível para texto, histórico se houver, fontes e registro no Acervo; vínculos territoriais explicitam `foco da matéria` versus `citado`; links internos só apontam para URL existente; outras matérias são recomendações de leitura, **não relações causais**.
+- Em `/acervo`: uma única composição visual em qualquer situação (com/sem registros no Supabase). Primeiro matérias publicadas, depois referências externas aprovadas agrupadas por reportagem e fechadas progressivamente, depois arquivos públicos e coleções. Links externos levam à origem, **não** constituem cópia ou garantia de disponibilidade. Preservar filtros `type,year,place,memory` e URLs de itens/coleções.
+- Em `/territorios`: intro editorial compacta, índice dos bairros efetivamente vinculados nas matérias, hubs publicados complementares, sem duplicar slugs. Nenhum novo bairro criado por texto livre ou menção não verificada.
+- De `/territorios/[slug]` para o Acervo: consulta das fontes das reportagens vinculadas diretamente ao local, com link de volta à matéria original.
+- CSS V6 escopado e acessível, com foco visível, áreas tocáveis e respeito à redução de movimento.
+
+**Não executar nesta PR:** migração Supabase, supressão de dados ou rotas existentes, troca do logo original fornecido por um desenho regenerado, novas fotografias de fatos, mudanças em texto editorial, publicação sem revisão, automações de denúncias ou integração COMUN.
+
+**Aceite objetivo:** testes Node/testes editoriais, typecheck, lint, build Next.js no SHA exato da PR; preview Vercel READY; revisão visual mobile 320/360/390/430 e desktop; conferir navegação por fragmentos, filtro de memória, links de fontes externos, teclado, 200% zoom, menu e leitor de voz. Não confundir preview READY com teste E2E nem validação por usuário real.
+
+**Próximo P1:** ligar documentos públicos hospedados a um identificador de apuração validado, sem importação automática, e consolidar taxonomia de território/editoria/caso no índice de busca; migrar gradualmente CSS V2–V6 para tokens sem alterar identidade aprovada.
+
+### Sprint V6.1 — percurso completo, homepage e âncoras
+
+**Evidência:** contexto da aba de Preview V6 aberta no navegador pelo usuário confirma que a Home ainda apresentava a reportagem Rua 33 como chamada de Últimas e repetia título/resumo em Investigações. O teste de navegação foi leitura de DOM/links da aba, **não inspeção visual de viewport nem E2E**.
+
+**Correções na PR #25, sem mexer no JSON jornalístico nem em produção:**
+- `app/page.tsx`: lista de IDs das matérias efetivamente visíveis na primeira área editorial; o mesmo permalink não reaparece como cartão integral em Investigações. Quando o caso também está visível em Últimas, há um único atalho compacto para histórico e fontes. Corrigida a comparação antiga que misturava slug puro com identificador `materia-...`.
+- Home prioriza bairros com vínculos territoriais presentes em matéria aprovada; hubs válidos entram sem duplicação; bairros somente citados exibem explicitamente `menção contextual`.
+- A chamada institucional longa de rodapé da Home foi convertida em uma ação concreta para enviar informações à redação, com regra de verificação editorial e link ao método.
+- `app/territorios/[slug]`: quando existe um hub territorial e cobertura editorial do mesmo bairro, a seção de notícias verificadas aparece **antes** dos extensos painéis descritivos e operacionais.
+- `components/reveal-source-from-hash.tsx`: ao chegar de uma matéria via `/acervo#fontes-<slug>`, o respectivo `details` abre automaticamente, de modo que a fonte realmente fique acessível. É usado somente para slugs conhecidos e preserva controle manual do leitor. Sem necessidade de consulta a dados privados.
+- Testes de regressão ajustados para exigir deduplicação, priorização dos bairros, ação de participação, ordem do conteúdo territorial e abertura de fonte por hash.
+
+**Aceite pendente:** finalizar checks do último SHA, confirmar Vercel Preview `READY` para o mesmo commit; inspecionar /, /acervo, /territorios e duas páginas de matéria em Android e desktop, com navegação por links e filtros. Não mesclar até inspeção visual. Os checks da V6 anterior eram verdes, porém não validam commits novos.
+
+**UX seguinte (não incluída nesta PR):** reduzir CSS legado por migração progressiva de tokens, implementar busca contextual por bairro e documentos com proveniência, e medir Web Vitals/contraste reais.
+
+---
+
+## Design System V7 — convergência visual e navegação
+
+**Depende da PR #25 (UX V6)**, baseada no HEAD `8520dcb389e851753483e0e246950a8ed9d4e04a`. Não é alteração de produção nem faz parte do merge automático da V6.
+
+### Entrega planejada nesta branch
+- Criar `app/design-tokens.css` como origem de cor, tipografia, medidas, raios, foco e alvos de toque, com aliases temporários V2/V6 e importação anterior aos estilos editoriais.
+- Extrair `components/editorial-hub-intro.tsx` do cabeçalho de Acervo/Bairros: um componente, navegação por âncora e URLs, H1 exclusivo da página.
+- Migrar estilos V6 e índices editoriais aos tokens e reduzir exagero do título e espaçamento de leitura das matérias sem alterar conteúdo.
+- Corrigir barra móvel para quatro destinos **Início · Últimas · Casos · Buscar** mais Menu. Notícias permanece disponível na URL própria e no menu, mas não compete pela função de atualização cronológica.
+- Ajustar menu e rodapé para evitar duplicação de `Acompanhar` e priorizar o envio de informações à redação.
+- Preservar inteiros os arquivos `content/materias`, o logo, a separação do COMUN e o Acervo privado.
+
+**Critérios de aceite:** `tests/design-system-v7.test.mjs` checa contrato de tokens, contraste AA básico, hierarquia de imports, navegação, introdução compartilhada e integridade dos dois artigos; suíte existente, typecheck, lint, build Next e preview READY do mesmo commit; inspeção visual real permanece necessária.
+
+**Documentação dedicada:** `docs/DESIGN_SYSTEM_EDITORIAL_V7.md`. Não apagar folhas legadas até migrar e revisar cada módulo. Depois desta etapa, migrar cartões editoriais gradualmente, auditar fontes e desempenho com navegador/dispositivo real.
+
+**Sem merge automático:** a V7 deve ser revista isoladamente e integrada depois da V6 aprovada, respeitando o histórico e as verificações de cada commit.
+
+---
+
+## Sprint V7.1 — cartões compartilhados e página Casos útil
+
+**Problema real identificado:** a navegação móvel V7 dá ao leitor a aba `Casos` (rota `/dossies`), mas essa página consultava apenas dossiês estruturados no Supabase. Reportagens investigativas aprovadas e presentes no Git — como a Rua 33 — podiam estar publicadas e, mesmo assim, a área exibir a mensagem de dossiês em preparação. Esse é um erro de produto, não apenas de CSS.
+
+**Implementação V7.1, PR empilhada na V7 (#26):**
+- `app/dossies/page.tsx`: integra `getMaterias()`, filtra só `materiaKind(article) === "investigation"` e exibe estas publicações com URL original `/materias/<slug>`. Os dossiês Supabase continuam em grupos próprios. O aviso de ausência aparece **somente** se não existir nem reportagem investigativa Git, nem dossiê público no banco. Não inventar dossiês artificiais nem declarar uma relação causal entre eles.
+- `components/editorial-story-card.tsx`: cartão canônico para matérias com título, seção, data, resumo, fontes externas publicadas e bairro principal revisado. Contexto de menção ao bairro é um rótulo explícito do chamador; não é um novo fato jornalístico.
+- `components/editorial-navigation.tsx`: Acervo e cobertura por bairros usam este cartão, preservando os links de origem, o H3/H4 correto e o rótulo contextual. A página Investigações usa o mesmo cartão para reportagens investigativas.
+- `app/editorial-cards-v7.css`: superfície, foco, contraste, toque, radius e movimento reduzido aplicados a cartões de reportagem, bairro, documento, coleção e dossiê. Os componentes específicos mantêm mídia, direitos, status e metadados próprios.
+- `tests/editorial-cards-v7.test.mjs`: regressões de informações publicadas, integração de Casos, permalinks, rótulos e interface.
+- `app/layout.tsx`: novo CSS entra após os estilos legados e usa tokens V7, sem apagar folhas anteriores ou reproduzir a marca.
+
+**Não alterados:** JSON de matérias, atribuições, fontes, revisão editorial, banco, esquemas, endpoints de envio de denúncias, identidade aprovada e URLs legadas. **Sem merge automático**.
+
+**Portões da PR:** CI Node, TypeScript, lint, Next build e Vercel Preview no SHA exato; QA visual /dossies, /acervo, /territorios e leitor de reportagens em Android e desktop; conferir links para fontes no Acervo e ausência de overflow. Vercel READY não equivale a UX verificada.
+
+**Próximo:** checar a correspondência explícita entre reportagem Git e dossiê Supabase (ID estável, editorialmente curado), evitando títulos parecidos como critério de união; consolidar componentes de metadados e cartões secundários só após a revisão visual desta PR.
+
+---
+
+## Sprint V7.2 — verificação HTTP independente de Vercel
+
+**Problema:** a Vercel devolve `build-rate-limit` para a PR #27, apesar de o GitHub Actions aprovar TypeScript, lint, testes Node e `next build`. Isso impedia provar que a versão candidata renderiza realmente suas páginas principais. Não assumir que um deploy antigo `READY` corresponde ao HEAD atual.
+
+**Implementado em V7.2, na mesma PR #27 (sem abrir nova PR):**
+- `scripts/smoke-local-portal.mjs` inicia o servidor Next.js de produção compilado, **em loopback**, após a etapa `npm run build`; faz requisições HTTP reais em Início, Últimas, Notícias, Investigações/Casos, Acervo, Bairros, Rua 33, Vila Brasília, `robots.txt` e `sitemap.xml`. Verifica status 200 e conteúdo editorial esperado.
+- Testa a premissa crucial: `/dossies` contém reportagem investigativa publicada no Git mesmo sem dossiê Supabase; `/acervo` expõe o atalho de fontes por slug aprovado.
+- Requisita permalink deliberadamente inexistente e exige HTTP 404. Faz encerramento de processo ao terminar, com timeout e logs curtos; não usa credenciais nem acessa serviços externos.
+- `.github/workflows/validate-portal.yml` executa o smoke após o build. Esta etapa protege regressões reais em HTML sem obrigar o uso da cota Vercel.
+- Corrigidos avisos de compatibilidade CSS relativos a `align-items: end` em três folhas, usando `flex-end`. No menu React, o botão de retorno do foco é capturado na abertura, evitando referência potencialmente variável na limpeza do efeito.
+
+**Evidência do primeiro ciclo (HEAD `6c6cf37a9cd3337f704ff995632429593e8a45e1`):**
+- **113 testes Node aprovados, 0 falhos;** TypeScript, lint e build sucesso; requisições HTTP locais de 10 páginas/rotas com 200 e uma com 404, incluindo verificação de Casos e âncora de Acervo.
+- O build registrou avisos do Autoprefixer sobre `end` e um aviso do ESLint sobre `triggerRef.current`, que motivaram as correções de compatibilidade seguintes.
+- **O teste local não é QA visual**: não confirma breakpoints reais, contraste renderizado, teclado, leitor de tela, carregamento com dados Supabase de produção, rede externa ou preview Vercel. Esses portões permanecem abertos.
+
+**Política de integração:** não mesclar as PRs #25, #26 ou #27 antes de QA visual e de um preview correspondente ao HEAD exato. Reusar o smoke em futuras alterações editoriais sem consumir builds externos desnecessários. Não contornar limites Vercel desabilitando proteções ou expondo variáveis.
+
+---
+
+## Sprint V7.3 — QA visual Chromium e correções fundamentadas
+
+**Objetivo:** remover o bloqueio de ausência de inspeção visual de fato, não confundir `next build` com experiência coerente. Navegador Chromium local executado pelo GitHub Actions contra o **mesmo HEAD** do Next compilado, sem tocar em produção ou depender de autenticação Vercel.
+
+**Implementação:**
+- `scripts/audit-local-ux.mjs`: usa Chromium/Playwright pinado no CI e navegador móvel em **320/360/390/430 px**, além de desktop **1440 px**. Percorre Início, Casos, Acervo, Bairros, reportagem Rua 33 e notícia Vila Brasília; captura PNGs públicos de página completa e um `summary.json` com erros/medidas; não guarda cookies, envs privados nem dados autenticados.
+- Mede `documentElement.scrollWidth <= clientWidth + 2`, confere colunas centralizadas de Acervo/Bairros, presença da Rua 33 em Casos, metadados do cartão sem CSS de rota externa, e evidências no Acervo.
+- No celular, testa clique na barra inferior, abertura/fechamento do menu com Escape, retorno de foco ao botão original, e link de reportagem para `/acervo#fontes-<slug>` com expansão automática.
+- `.github/workflows/validate-portal.yml` instala Playwright isoladamente no runner, após Node tests, lint, TypeScript, build e smoke HTTP, e disponibiliza PNGs/JSON como artefato `vr-abandonada-qa-visual` por 7 dias, inclusive em falha. Não publica screenshots na web ou em produção.
+
+**Achados reais da primeira captura Chromium (HEAD `7f7765292792217a6ceefa5fe88cd5b2798f8e25`):**
+- Em Acervo e Bairros, **6 px de overflow horizontal** tanto em 360 como em 390 px. Demais quatro rotas nesses tamanhos, e seis rotas desktop, sem overflow. Barra móvel, Escape/foco e fontes por hash passaram.
+- **Causa localizada:** regra móvel `.vr6-hub__jump { margin-right: -.4rem }` em `app/experience-v6.css`, neutralizada; trilho continua rolável internamente.
+- **Erro de aparência no cartão Casos:** `EditorialStoryCard` utilizava `.vr-index__meta` de folha CSS importada somente por `EditorialNavigation` em Acervo/Bairros. Em `/dossies`, a data ficava colada à categoria. O CSS V7 passa a definir layout `flex`, espaçamento, tipografia e padding próprios.
+- **Inconsistência de desktop:** `.vr6-hub { width:100% }` anulava a largura central herdada de `.container`, deixando Acervo/Bairros sem o mesmo alinhamento que outras páginas. Removida a sobrescrita. Teste agora exige margens laterais simétricas.
+- **Artefato histórico da primeira rodada:** https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/40737949329/artifacts/12837404954 ; é evidência do problema, **não da versão corrigida**.
+
+**Critérios pendentes antes do merge:** CI no HEAD final; capturas corrigidas analisadas por responsável e conferência visual da experiência real; Vercel Preview `READY` para o mesmo SHA; verificação de conteúdo com Supabase público e interação de zoom 200%/leitor de tela. Screenshot de navegador automatizado **não é substituto integral de QA humano**.
+
+**Governança:** PR #25 → #26 → #27 continuam empilhadas e em draft. Corrigir o artefato e evidenciar os resultados; não promover PR antiga nem mesclar produção sem autorização.
+
+---
+
+## Sprint V7.5 — gates de qualidade obrigatórios
+
+**Diagnóstico:** apesar de `npm run typecheck` e `npm run lint` aprovados no CI, `next.config.ts` ainda continha `ignoreBuildErrors: true` e `ignoreDuringBuilds: true`. Uma compilação ou deploy desacoplado do workflow poderia ignorar erros reais. Além disso, mudanças isoladas em `next.config.ts` ou `tsconfig.json` não estavam na lista de arquivos que disparavam o workflow de PR.
+
+**Implementação na mesma PR #27:** removidas as duas dispensas do Next (gates nativos voltam a valer); o workflow observa `next.config.ts`, `tsconfig.json` e `.eslintrc*`; adicionados testes de contrato verificando ausência das dispensas, sequência de CI e observação de mudanças. O ajuste foi agrupado em um commit para reduzir builds desnecessários da Vercel.
+
+**Situação antes da alteração:** PRs #25, #26 e #27 abertas, rascunho e encadeadas; `main` inalterada. No SHA `97efcfaf79447488b77ddcb32d41f593a579e20d`, 119 testes Node, Chromium, 10 varreduras axe sem violações detectadas e 10 testes de reflow aprovados; Vercel sem preview READY para esse SHA e com `build-rate-limit`. QA humano real (leitor de tela, zoom nativo, público Supabase) ainda pendente.
+
+**Critérios desta etapa:** CI obrigatório passar novamente no HEAD da V7.5, incluindo o `next build` agora sem dispensas; não considerar a etapa pronta sem comprovação. Não há alteração de dados jornalísticos, banco, logotipo, COMUN, DNS ou produção.
+
+---
+
+## Sprint V7.6 — distinguir catálogo vazio de indisponibilidade
+
+**Problema confirmado por auditoria de código:** `getPublishedDossiers()` retornava o mesmo fallback para três situações distintas: falta de configuração Supabase, falha de rede/RLS/consulta e retorno genuinamente vazio. Na produção, o fallback demonstrativo é desligado; a página `/dossies` poderia afirmar que o catálogo estava em preparação quando apenas a consulta falhou.
+
+**Mudança V7.6 na PR #27:** nova `getPublicDossierCatalogState()` com estados `available`, `not_configured`, `unavailable`; lista vazia válida permanece `available`. A API `getPublishedDossiers()` conserva o retorno anterior para as outras páginas; a rota Casos consome o estado completo, mostra mensagem informativa sobre falha/configuração e mantém as reportagens Git disponíveis. O aviso “dossiês em preparação” só aparece quando a consulta realmente foi bem-sucedida, vazia e não há reportagens Git. Nenhuma consulta exibe detalhes sensíveis do banco.
+
+**Limitação de verificação externa:** conexões Supabase listadas não permitiram identificar com segurança o projeto do banco deste portal; nenhuma base de terceiros/adjacente foi consultada, nenhuma migração ou política RLS foi modificada. O código do repositório contém políticas e seeds históricos, que não constituem evidência de estado atual do banco. Validar o Supabase real continua pendente até identificar projeto e credenciais de escopo público.
+
+**Validação exigida:** TypeScript, lint, build bloqueantes; Node tests com novo contrato de status; smoke HTTP de Casos em ambiente sem configuração; Chromium e axe; prévia Vercel para HEAD exato. Não mesclar #25/#26/#27 sem QA visual remoto e revisão de fontes.
+
+---
+
+## Sprint V7.7 — auditoria do Supabase de produção e catálogos honestos
+
+**Diagnóstico confirmado em 28/10/2026 por leitura somente leitura de ambientes conectados:**
+- O projeto Vercel `vrabandonadapwa` disponibiliza `NEXT_PUBLIC_SUPABASE_URL`, uma chave pública Supabase e `SUPABASE_SERVICE_ROLE_KEY` **apenas para `production`**, sem configuração equivalente para `preview`. Os valores secretos não foram exibidos ou replicados.
+- A URL pública da produção identifica inequivocamente o projeto Supabase `ghehhhztsukhshdhotmu`, acessível pela conexão "vrabandonada site", embora o nome administrativo do projeto seja genérico.
+- Consulta direta a `information_schema.tables`: em `public` existem somente `intake_submissions`, `admin_email_allowlist` e `universal_captures`, todos com RLS habilitado. Estão **ausentes** `archive_assets`, `archive_collections`, `place_hubs`, `investigation_dossiers`, `editorial_items` e demais tabelas da camada editorial esperada pelo código.
+- Histórico `supabase_migrations.schema_migrations`: apenas `20261028003300 secure_intake_and_admin_allowlist` e `20261028003847 restrict_capture_truncate`. Os scripts editoriais `supabase/migrations/0003…0033` do Git NÃO devem ser tratados como implantados na produção. Ausência constatada não implica permissão para aplicar migrations.
+- **Risco de uma implantação cega:** migrações históricas contêm dados demonstrativos (seeds) e algumas políticas `to authenticated using (true)` sem segregação granular. Exigir revisão de RLS, plano de backup, migrações mínimas sem conteúdo demonstrativo, teste em staging e rollback antes de tocar produção. Recebimento de denúncias e identidade de autores/fonte são dados sensíveis; não fazer consultas a essas tabelas neste fluxo.
+
+**Correções de produto incluídas na PR #27:**
+- `getPublicArchiveCatalogState()` e `getPublicPlaceCatalogState()`: retorno com `available`, `not_configured`, `unavailable`; preservam os métodos anteriores que retornam arrays para compatibilidade.
+- Acervo apresenta aviso discreto de indisponibilidade sem afirmar que não existem documentos; conserva reportagens Git e fontes verificadas. Os filtros operam sobre o mesmo conjunto obtido da primeira consulta, evitando o acesso duplicado a `archive_assets`.
+- Bairros mantém o índice territorial extraído das reportagens aprovadas e não confunde ausência de hubs no banco com ausência factual de cobertura.
+- Estados vazios de "em preparação" somente quando a consulta tiver sido realmente bem-sucedida; sem criar material inventado.
+- Testes `tests/public-catalog-availability-v7.test.mjs` verificam os contratos e as rotas. Nenhuma mudança em migrations, RLS, env, credenciais, domínio ou conteúdo jornalístico.
+
+**Critérios de aceite antes de qualquer merge:** 100% de Node tests, TS, lint, build, smoke HTTP, Chromium, axe/reflow no SHA exato e Preview Vercel correspondente; revisão de legibilidade das mensagens novas. A implementação das tabelas editoriais deve ser um projeto separado e auditado, e não uma aplicação irrefletida do histórico do repositório.
+
+---
+
+## Sprint V8 — projeto de implantação editorial segura no Supabase
+
+**Investigação operacional (28/10/2026):** confirmou-se pelo ambiente de produção da Vercel e pela conexão `vrabandonada site` qual é o projeto Supabase efetivamente usado. Preflight read-only `scripts/sql/portal-editorial-readiness.sql` foi **executado com sucesso no projeto real**, retornando nove tabelas editoriais ausentes: cinco de Casos/Bairros na fase 1 e quatro de Acervo e suas dependências na fase 2. Isso explica a ausência estrutural da camada Supabase nas interfaces, sem invalidar reportagens Git verificadas.
+
+**Entrega V8, SOMENTE código/documentação, na PR #27:**
+1. `scripts/sql/portal-editorial-readiness.sql`: inventário portátil, somente `SELECT`, com presença de tabela, RLS, concessão de `SELECT/INSERT` ao anon e existência de política de leitura. Não consulta nenhuma linha de denunciante/contato.
+2. `docs/PLANO_IMPLANTACAO_EDITORIAL_SUPABASE.md`: plano de dependências e rollout por fases (Casos/Bairros → Acervo), staging isolado, política de permissões mínimas, revisão de dados/direitos, sem seeds demonstrativos, checkpoints de backup/rollback e autorização explícita antes de implantar.
+3. `tests/editorial-db-rollout-v8.test.mjs`: contratos que garantem SQL somente leitura, inventário de nove tabelas e que os bloqueios conhecidos continuem documentados.
+4. **Nenhuma DDL executada**, nenhuma migração aplicada, nenhuma cópia de dados pessoais, nenhum `service_role` exposto ou movido para previews.
+
+**Riscos adicionais verificados no Supabase Security Advisor:** alerta para função administrativa `SECURITY DEFINER` executável por anon/authenticated, objetos descobríveis no GraphQL e proteção de senha vazada desabilitada. A presença de RLS não elimina esses avisos; não revogar `EXECUTE` sem estudar dependências de autorização. O projeto público atual mantém as tabelas de denúncia/captura separadas do esquema editorial proposto.
+
+**Ponto de decisão arquitetural:** os vínculos entre dossiê/bairro/documento e reportagem têm de usar `link_type + link_key` revisados, com permalink de `content/materias/*.json`, sem duplicação de matéria; o Git mantém a publicação jornalística canônica. Resolver no novo schema o descompasso entre os estados de dossiê de `0011` e `0012`; não executar as migrações antigas em cadeia.
+
+**Próximo após CI:** abrir uma PR separada de implantação **no momento em que existir staging e as PRs de UX estiverem integradas**, gerar migrações novas pelo CLI, validar autorização real `anon`/usuário comum/editor e só depois submeter a promoção à produção para aprovação explícita. Nenhuma implantação até então.
+
+---
+
+## Sprint V8.1 — ponte de leitura para reportagens Git
+
+**Implementado na PR #27, sem dados de banco:** leitura tipada de `materia` separada de `editorial` em Casos e Bairros. O permalink canônico é `/materias/<slug>` e só se materializa se `getMaterias()` devolver publicação Git com `status='published'` e `reviewed=true`; slug órfão, rascunho ou inválido não ganha URL pública no resolvedor. As páginas de dossiê e bairro recebem o mesmo catálogo, sem cópias da matéria nem vínculos inferidos. A seção de leituras territoriais apresenta reportagens e pautas sem confundir as categorias. O editor ainda não oferece a opção e as ações do servidor bloqueiam gravação de `materia` até o esquema e a RLS serem validados em staging.
+
+**Contrato novo:** `tests/materia-links-v8.test.mjs`, com tipos, rotas, revisão editorial, bloqueio de escrita e slugs aprovados. Ainda faltam CI, TypeScript, build, Chromium, axe/reflow e Preview do mesmo SHA. Não integrar em produção nem migrar o banco a partir deste commit.
+
+---
+
+## Sprint V8.2 — núcleo editorial isolado, RLS real em PostgreSQL efêmero
+
+**PR de staging empilhada:** [#31](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/pull/31) baseada na PR #27, sem rebase sobre main e sem aplicação em produção. **Nenhuma DDL foi executada no Supabase do usuário.**
+
+**Pacote entregue:**
+- `scripts/sql/staging/v82_phase1_editorial_core.sql`: blueprint transacional com exatamente cinco tabelas, sem seeds e fora de `supabase/migrations`. O script exige confirmação explícita de sessão de staging e falha quando a confirmação está ausente; isso não substitui identificar projeto e responsável.
+- `scripts/sql/staging/v82_verify_rls.sql`: fixtures sintéticas transacionais, verificação real de visibilidade e recusa de escrita para `anon` e `authenticated`, descarte integral dos dados via `ROLLBACK`.
+- `.github/workflows/validate-v82-staging-db.yml`: PostgreSQL 17 efêmero, criação de papéis públicos de teste, execução negativa do guard, aplicação do schema, testes RLS e verificação de ausência de fixtures residuais.
+- `tests/staging-editorial-schema-v82.test.mjs`: seis contratos estáticos de segurança da proposta. `docs/QA_STAGING_EDITORIAL_V82.md` contém checklist de homologação em Supabase staging.
+
+**Resultado do banco efêmero:** [workflow de RLS](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/40980991718) aprovado no primeiro commit da PR; PostgreSQL aplicou cinco tabelas e cinco políticas, testou guard sem autorização, papéis `anon` e `authenticated`, negação de escrita e rollback. O workflow do Next.js/Chromium será revalidado no HEAD após qualquer alteração documental.
+
+**Sem liberar escrita editorial:** RLS concede apenas leitura a visitantes e usuários autenticados, restrita a pais públicos; nenhum usuário autenticado pode escrever só por estar logado. Atualizações requerem `published=true` e pai visível. `link_type=materia` é tipo distinto de pauta; existência/revisão do slug continua sendo validada pela aplicação.
+
+**Próximo bloqueio de produção:** criar staging Supabase realmente isolado, configurar papéis e políticas de autorização editorial com testes, auditar exposição de `created_by`/`updated_by`, garantir grants da Data API, testar migração versionada gerada pelo CLI e revisar com responsável antes de promover. O roadmap V8 de acervo mantém quatro tabelas em fase separada. **Não executar as migrações 0003–0033 em bloco, nem integrar #31 à main sem revisão da cadeia #25 → #26 → #27.**
