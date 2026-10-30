@@ -12,11 +12,14 @@ const investigationDossierMockItems = allowPublicDemoContent() ? investigationDo
 const investigationDossierUpdateMockItems = allowPublicDemoContent() ? investigationDossierUpdateMockItemsDemo : [];
 
 const publicFields =
-  "id, title, slug, excerpt, description, status, cover_image_url, featured, public_visibility, sort_order, lead_question, period_label, territory_label, created_at, updated_at, created_by, updated_by";
+  "id, title, slug, excerpt, description, status, cover_image_url, featured, public_visibility, sort_order, lead_question, period_label, territory_label, created_at, updated_at";
 
-const internalFields = publicFields;
+const internalFields =
+  "id, title, slug, excerpt, description, status, cover_image_url, featured, public_visibility, sort_order, lead_question, period_label, territory_label, created_at, updated_at, created_by, updated_by";
 const linkFields = "id, dossier_id, link_type, link_key, link_role, timeline_year, timeline_label, timeline_note, featured, sort_order, created_at, updated_at";
-const updateFields =
+const publicUpdateFields =
+  "id, dossier_id, title, slug, excerpt, body, update_type, published, published_at, featured, sort_order, created_at, updated_at";
+const internalUpdateFields =
   "id, dossier_id, title, slug, excerpt, body, update_type, published, published_at, featured, sort_order, created_at, updated_at, created_by, updated_by";
 
 function sortDossiers(items: InvestigationDossier[]) {
@@ -193,7 +196,7 @@ export async function getPublishedDossierUpdates(dossierId: string) {
 
   const { data, error } = await supabase
     .from("investigation_dossier_updates")
-    .select(updateFields)
+    .select(publicUpdateFields)
     .eq("dossier_id", dossierId)
     .eq("published", true)
     .order("featured", { ascending: false })
@@ -223,7 +226,7 @@ export async function getPublishedDossierUpdatesByDossierIds(dossierIds: string[
 
   const { data, error } = await supabase
     .from("investigation_dossier_updates")
-    .select(updateFields)
+    .select(publicUpdateFields)
     .in("dossier_id", dossierIds)
     .eq("published", true)
     .order("featured", { ascending: false })
@@ -300,7 +303,7 @@ export async function getInternalDossierUpdates(dossierId: string) {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("investigation_dossier_updates")
-    .select(updateFields)
+    .select(internalUpdateFields)
     .eq("dossier_id", dossierId)
     .order("published", { ascending: false })
     .order("featured", { ascending: false })
@@ -319,7 +322,7 @@ export async function getInternalDossierUpdateById(updateId: string) {
   const supabase = await createSupabaseServerClient();
   const { data, error } = await supabase
     .from("investigation_dossier_updates")
-    .select(updateFields)
+    .select(internalUpdateFields)
     .eq("id", updateId)
     .maybeSingle();
 

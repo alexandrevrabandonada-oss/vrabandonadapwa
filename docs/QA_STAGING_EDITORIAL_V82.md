@@ -34,3 +34,7 @@
 
 ## Rollback e limites
 Se o SQL falhar, transação aborta sem tabelas parciais. Se aplicado em staging, o rollback deve ser migração revisada para o mesmo ambiente; não executar DROP em produção. Não promover código com UI de edição habilitada sem construir autorização editorial para administrador. A V8.2 não comprova RLS em ambiente real; testes Node verificam invariantes estáticos do blueprint.
+
+## Verificação de privacidade V8.5
+
+O blueprint passa a restringir SELECT às colunas públicas de cada tabela. `created_by` e `updated_by` permanecem restritas, inclusive quando o pai está publicado. Conferir com `has_column_privilege` (anon e authenticated), validar que o `select` público da aplicação não pede autoria e tentar consulta direta da coluna como visitante (espera-se permissão negada). **Não aplicar esta proposta SQL no banco real sem um staging dedicado.**

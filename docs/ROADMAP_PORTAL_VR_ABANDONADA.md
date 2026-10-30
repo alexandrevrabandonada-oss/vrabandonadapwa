@@ -570,3 +570,13 @@ Verificar CI e Preview, foco, overflow e viewport 360/390/412px. Compilação n�
 **Implementação proposta na branch V8.4:** criar guarda única `requireEditorialAdmin()` com `server-only`, `supabase.auth.getUser()`, verificação de e-mail na allowlist existente e redirecionamento na falha; aplicá-la antes de qualquer acesso interno ou escrita em dez superfícies (8 páginas e 2 Server Actions). O componente de novo território passa a ser assíncrono para exigir a guarda. Testes de contrato impedem regressões nos pontos de entrada.
 
 **Limites:** a guarda de aplicação é defesa adicional, **não substitui RLS**. O blueprint do banco continua somente leitura para `anon` e `authenticated`, sem cadastros `materia` habilitados. A PR #29 permanece histórica e não deve ser mesclada diretamente; a seleção de reportagens no editor só será proposta em nova etapa depois de staging dedicado, autorização baseada em identidade e RLS real. Não foram consultadas ou modificadas denúncias, permissões do banco, dados de produção nem a allowlist original.
+
+---
+
+## V8.5 — proteção de autoria interna na Data API
+
+**Achado:** as projeções públicas de dossiês, atualizações e bairros requisitavam colunas `created_by`/`updated_by` que podem conter e-mails de editores. O blueprint staging V8.2 também concedia `SELECT` da tabela inteira, permitindo que esses campos fossem solicitados diretamente pela API caso o esquema fosse instalado. **Isso é risco potencial, não evidência de que um vazamento ocorreu em produção.**
+
+**Mudança:** separar projeções públicas/internas no código e, no blueprint staging não aplicado, substituir grants gerais por SELECT por coluna para cinco tabelas; testar com `has_column_privilege` em PostgreSQL temporário como `anon` e `authenticated`. RLS e bloqueio de escrita permanecem. **Sem mudanças no Supabase real;** nem editores têm autorizações novas de gravação.
+
+**Validação pendente:** CI Node, TypeScript/lint/build, PostgreSQL RLS e Chromium no commit exato; staging Supabase dedicado, permissões por identidade e revisão de campos da API antes de habilitar curadoria da PR #29.

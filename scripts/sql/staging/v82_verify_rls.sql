@@ -32,6 +32,21 @@ insert into public.place_hub_links(place_hub_id,link_type,link_key,link_role)
 select id, 'materia', 'rua-33-cinco-anos-obra-contratos-custos-volta-redonda','lead'
 from public.place_hubs where slug like 'qa-v82-bairro-%';
 
+-- TESTE REAL: RLS só controla LINHAS. Bloquear leitura das colunas de
+-- autoria interna diretamente na Data API via grants de colunas.
+do $privacy$
+begin
+  if has_column_privilege('anon','public.investigation_dossiers','created_by','SELECT')
+    or has_column_privilege('authenticated','public.investigation_dossiers','updated_by','SELECT')
+    or has_column_privilege('anon','public.investigation_dossier_updates','created_by','SELECT')
+    or has_column_privilege('authenticated','public.investigation_dossier_updates','updated_by','SELECT')
+    or has_column_privilege('anon','public.place_hubs','created_by','SELECT')
+    or has_column_privilege('authenticated','public.place_hubs','updated_by','SELECT') then
+    raise exception 'V8.5: autoria interna publicamente legível';
+  end if;
+end;
+$privacy$;
+
 -- Para cada papel, RLS deve permitir SÓ os registros com pai público.
 set local role anon;
 
