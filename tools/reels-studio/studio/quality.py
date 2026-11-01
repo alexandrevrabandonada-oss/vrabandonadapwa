@@ -3,6 +3,7 @@ from __future__ import annotations
 import json, subprocess
 from pathlib import Path
 from .factory import probe,validate
+from .visualqa import sample_visual_health
 
 
 def _fps(rate):
@@ -36,6 +37,9 @@ def audit(project:dict,workspace:Path,media:Path,master:bool=False):
     if clips==0:advice.append('All scenes are stills/animated photographs. Add grounded footage or stronger subject/action direction.')
     if len(project.get('assets',{}))<6:advice.append('Asset diversity low; consider adding verified archival footage/photographs and documents.')
     if not project.get('human_approval',{}).get('approved'):advice.append('Creative 10/10 cannot be inferred from automated checks; independent aesthetic review required.')
+    visual=sample_visual_health(media,project.get('scenes',[])) if video else {'available':False}
+    advice.extend(x['reason']+' — '+str(x['scene']) for x in visual.get('flags',[]))
     return {'passed':not issues,'master':master,'technical':technical,'audio_stream':bool(audio),
+            'visual_health':visual,
             'issues':list(dict.fromkeys(issues)),'recommendations':advice,
             'creative_score':'NOT AUTOMATABLE','publication_status':'BLOCKED' if issues else 'PENDING EDITORIAL CONFIRMATION'}
