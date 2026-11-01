@@ -56,3 +56,11 @@ def test_render_variants_and_block_unknown_grade(tmp_path):
     assert report['frames']==4
     p['scenes'][0]['cinema']['grade']='synthetic_explosion'
     assert any('grade unknown' in e for e in validate(p,tmp_path)['errors'])
+
+def test_effect_parameters_have_bounded_limits(tmp_path):
+    p=make_project(tmp_path)
+    p['scenes'][0]['cinema']['perspective']=0.9
+    assert any('perspective exceeds safety limit' in e for e in validate(p,tmp_path)['errors'])
+    p['scenes'][0]['cinema']['perspective']=.015
+    p['scenes'][0]['cinema']['light_opacity']=.9
+    assert any('light opacity invalid' in e for e in validate(p,tmp_path)['errors'])
