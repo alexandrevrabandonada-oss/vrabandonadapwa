@@ -11,9 +11,9 @@
   "publishedAt": "2026-11-01T13:16:00-03:00",
   "investigationStatus": "ongoing",
   "cover": {
-    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f4/CSN01.jpg",
-    "alt": "Fotografia de arquivo da Usina Presidente Vargas, da CSN, com bairros de Volta Redonda ao fundo. Imagem captada em 6 de maio de 2014; não documenta a situação de emprego de 2026.",
-    "credit": "Foto de arquivo (06/05/2014): HenriqueBarraMansa / Wikimedia Commons — CC BY-SA 3.0. Fonte: https://commons.wikimedia.org/wiki/File:CSN01.jpg | Licença: https://creativecommons.org/licenses/by-sa/3.0/ (sem alterações na fotografia)."
+    "src": "/editorial/covers/volta-redonda-empregos-2025-2026.svg",
+    "alt": "Capa gráfica de economia do VR Abandonada. Em destaque, o saldo negativo de 3.154 vínculos formais em Volta Redonda entre janeiro de 2025 e agosto de 2026, com ilustração vetorial de instalações industriais.",
+    "credit": "Arte editorial: VR Abandonada · Dados: Novo Caged/MTE · Silhueta industrial ilustrativa, não fotografia."
   },
   "sources": [
     {
@@ -135,6 +135,12 @@
       "date": "2026-11-01T13:16:00-03:00",
       "label": "Publicação inicial",
       "text": "Levantamento Novo Caged de janeiro de 2025 a agosto de 2026, comparação regional e estadual, setores, ocupações e metodologia. Apuração sobre contratos e manifestação das partes seguem em acompanhamento."
+    },
+    {
+      "date": "2026-11-01T13:19:00-03:00",
+      "label": "Ajuste técnico da capa",
+      "text": "Substituída referência externa à fotografia por capa gráfica própria hospedada no repositório do site, conforme validação editorial de imagens locais. Dados e texto da investigação preservados."
     }
-  ]
+  ],
+  "updatedAt": "2026-11-01T13:19:00-03:00"
 }
