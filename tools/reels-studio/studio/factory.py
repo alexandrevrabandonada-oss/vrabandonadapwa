@@ -291,7 +291,7 @@ def main():
     p.add_argument('--output',type=Path)
     p.add_argument('--ratings',type=Path)
     p.add_argument('--style',choices=['documental','cinematic','kinetic'],default='cinematic')
-    a=p.parse_args();root=a.project.resolve().parent;root=root.parent if root.name=="examples" else root;obj=load_project(a.project)
+    a=p.parse_args();root=a.project.resolve().parent;root=root.parent if root.name in ("examples","output") else root;obj=load_project(a.project)
     if a.action=='validate':
         res=validate(obj,root,a.purpose);print(json.dumps(res,ensure_ascii=False,indent=2));sys.exit(0 if res['ok'] else 2)
     if a.action=='render':
