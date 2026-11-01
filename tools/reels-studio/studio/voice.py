@@ -8,7 +8,7 @@ from .factory import load_project,probe,validate,hash_file
 def attach_voice(manifest:Path,audio_source:Path,timing_path:Path|None=None)->dict:
     project=load_project(manifest)
     root=manifest.resolve().parent
-    if root.name=='examples':root=root.parent
+    if root.name in ('examples','output'):root=root.parent
     wav=audio_source.resolve()
     if not wav.is_file():raise FileNotFoundError(wav)
     media=probe(wav)
