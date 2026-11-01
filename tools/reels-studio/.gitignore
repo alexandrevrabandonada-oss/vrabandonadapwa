@@ -1,0 +1,10 @@
+private_assets/
+output/
+*.mp4
+*.mp3
+*.wav
+*.png
+*.jpg
+__pycache__/
+.pytest_cache/
+.env
