@@ -12,6 +12,7 @@ import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from .captions import load_timeline, active_caption
+from .cinema import filmic_grade, camera_plane, light_pass, depth_compose, documentary_stage, GRADES
 
 PALETTE = {'ink': (16, 20, 25), 'paper': (239, 235, 223),
            'copper': (239, 107, 52), 'electric': (45, 191, 222), 'muted': (195, 188, 174)}
@@ -70,6 +71,24 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
         if not isinstance(sc, dict): errors.append(f'scene {i}: invalid');continue
         if sc.get('type') not in allowed: errors.append(f'scene {i}: unknown type')
         if sc.get('asset') not in assets: errors.append(f'scene {i}: missing referenced asset')
+        cine=sc.get('cinema',{})
+        if cine and not isinstance(cine,dict):
+            errors.append(f'scene {i}: cinema must be a configuration object');cine={}
+        if cine:
+            if sc.get('type')=='document' and any(k in cine for k in ('grade','light','perspective','depth_focus')):
+                errors.append(f'scene {i}: evidence cannot receive stylized cinema effects')
+            if cine.get('grade','neutral') not in GRADES:
+                errors.append(f'scene {i}: cinema grade unknown')
+            if cine.get('light') not in (None,'warm','cool'):
+                errors.append(f'scene {i}: cinematic light invalid')
+            if cine.get('grade_intensity') is not None and not 0 <= float(cine['grade_intensity']) <= 1:
+                errors.append(f'scene {i}: grade intensity invalid')
+            if cine.get('light_opacity') is not None and not 0 <= float(cine['light_opacity']) <= .5:
+                errors.append(f'scene {i}: light opacity invalid')
+            if cine.get('perspective',0) and not 0 <= float(cine['perspective']) <= .05:
+                errors.append(f'scene {i}: perspective exceeds safety limit')
+            if cine.get('depth_focus',0) and not 0 <= float(cine['depth_focus']) <= 1:
+                errors.append(f'scene {i}: depth_focus invalid')
         if sc.get('type') == 'parallax':
             if sc.get('background_asset') not in assets: errors.append(f'scene {i}: background_asset missing')
             if sc.get('mask_asset') not in assets: errors.append(f'scene {i}: mask_asset missing')
@@ -265,10 +284,17 @@ class Engine:
             b=zoom_crop(bg,self.width,self.height,cx*.98+.01,cy*.98+.01,z)
             front=zoom_crop(src,self.width,self.height,cx*.985+.007,cy*.98+.01,z*1.07)
             mk=zoom_crop(mask,self.width,self.height,cx*.985+.007,cy*.98+.01,z*1.07)
-            frame=transparent_overlay(b,front,mk)
+            frame=depth_compose(b,front,mk,focus=float(sc.get('cinema',{}).get('depth_focus',.15)))
+        elif typ=='document' and sc.get('document_view','full')=='full':
+            frame=documentary_stage(self.image(sc['asset']),self.width,self.height,scale=1.0)
         else:
             frame=zoom_crop(self.image(sc['asset']),self.width,self.height,cx,cy,z)
-        frame=treatment(frame,'document' if typ=='document' else 'cinematic')
+        if typ!='document':frame=treatment(frame,'cinematic')
+        cine=sc.get('cinema',{})
+        if cine and typ!='document':
+            if cine.get('perspective'):frame=camera_plane(frame,ratio,float(cine['perspective']))
+            if cine.get('grade'):frame=filmic_grade(frame,cine['grade'],float(cine.get('grade_intensity',.65)),round((absolute_time or position)*self.fps))
+            if cine.get('light'):frame=light_pass(frame,ratio,cine['light'],float(cine.get('light_opacity',.24)))
         caption=active_caption(self.cues,absolute_time) if absolute_time is not None else None
         return graphics(frame,sc,position,self.width,self.height,caption)
     def close(self):
