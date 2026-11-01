@@ -124,3 +124,27 @@ def test_voice_must_fit_timeline(tmp_path):
         f.setnchannels(1);f.setsampwidth(2);f.setframerate(8000)
         f.writeframes(np.zeros(16000,dtype='<i2').tobytes())
     with pytest.raises(ValueError,match='exceeds storyboard'):attach_voice(p,audio)
+
+
+def test_voice_import_uses_resolvable_workspace_manifest(tmp_path):
+    import wave
+    from studio.voice import attach_voice
+    from studio.factory import load_project,validate
+    from PIL import Image
+    workspace=tmp_path
+    (workspace/'examples').mkdir();(workspace/'private_assets').mkdir()
+    Image.new('RGB',(100,190),(32,50,65)).save(workspace/'private_assets'/'scene.jpg')
+    proj={'project_id':'voice-attach-example','assets':{'scene':{'file':'private_assets/scene.jpg','role':'context','source':'synthetic test','capture_date':'2026-11-01','rights_status':'pending'}},
+          'scenes':[{'id':'first','asset':'scene','type':'photograph','duration':1.5}],
+          'narration':{'file':None,'timings_verified':False}}
+    manifest=workspace/'examples'/'voice.json'
+    manifest.write_text(json.dumps(proj))
+    voice=workspace/'voice.wav'
+    with wave.open(str(voice),'wb') as f:
+        f.setnchannels(1);f.setsampwidth(2);f.setframerate(8000)
+        f.writeframes(np.zeros(8000,dtype='<i2').tobytes())
+    got=attach_voice(manifest,voice)
+    next_m=Path(got['manifest_draft'])
+    assert next_m.exists()
+    assert validate(load_project(next_m),workspace)['ok']
+    assert Path(got['voice_imported']).is_file()
