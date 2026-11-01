@@ -92,7 +92,8 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
                     if start<0 or start+dur>float(meta.get('format',{}).get('duration',0))+.1:
                         errors.append(f'scene {i}: clip exceeds source duration')
             except (ValueError,KeyError,TypeError,subprocess.CalledProcessError) as e:
-                errors.append(f'scene {i}: invalid clip: {e}')        if (sc.get('type')=='document' and not sc.get('source_label')):
+                errors.append(f'scene {i}: invalid clip: {e}')
+        if (sc.get('type')=='document' and not sc.get('source_label')):
             errors.append(f'scene {i}: document requires source_label')
         try:
             d=float(sc['duration']); assert 0.2<=d<=180; total+=d
@@ -192,7 +193,8 @@ def graphics(frame:np.ndarray,scene:dict,t:float,width:int,height:int,caption:st
         y=int(height*.70)
         # lightweight ink shadow, no generic powerpoint card.
         for line in lines:
-            d.text((pad+3,y+4),line.upper(),font=f,fill=(0,0,0,175),stroke_width=2,stroke_fill=(0,0,0,155))            d.text((pad,y),line.upper(),font=f,fill=(*PALETTE['paper'],247))
+            d.text((pad+3,y+4),line.upper(),font=f,fill=(0,0,0,175),stroke_width=2,stroke_fill=(0,0,0,155))
+            d.text((pad,y),line.upper(),font=f,fill=(*PALETTE['paper'],247))
             y+=int(width*.088)
         d.line([(pad,int(height*.7)-12),(pad+round(width*.18),int(height*.7)-12)],fill=(*PALETTE['copper'],245),width=max(3,width//110))
     if caption:
@@ -286,7 +288,8 @@ def render(project:dict,root:Path,dest:Path,mode='preview',sample_fps=None)->dic
     dest.parent.mkdir(parents=True,exist_ok=True)
     video_only=dest.with_name(dest.stem+'.video_only.mp4')
     engine=Engine(project,root,width,height,fps)
-    cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','rawvideo','-pix_fmt','bgr24','-s',f'{width}x{height}','-r',str(fps),'-i','-',         '-c:v','libx264','-preset','veryfast','-crf', '21' if mode=='preview' else '18','-pix_fmt','yuv420p','-movflags','+faststart',str(video_only)]
+    cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','rawvideo','-pix_fmt','bgr24','-s',f'{width}x{height}','-r',str(fps),'-i','-',
+         '-c:v','libx264','-preset','veryfast','-crf', '21' if mode=='preview' else '18','-pix_fmt','yuv420p','-movflags','+faststart',str(video_only)]
     proc=subprocess.Popen(cmd,stdin=subprocess.PIPE,stderr=subprocess.PIPE)
     frames=0;scene_start=0.0
     try:
@@ -371,7 +374,8 @@ def main():
         candidate=create_variant(obj,a.style)
         out=a.output or root/'output'/(obj['project_id']+'-'+a.style+'.json')
         out.parent.mkdir(parents=True,exist_ok=True)
-        out.write_text(json.dumps(candidate,ensure_ascii=False,indent=2),encoding='utf-8')        print(json.dumps({'candidate':str(out),'valid':validate(candidate,root)['ok'],'unchanged_sources':True},ensure_ascii=False));return
+        out.write_text(json.dumps(candidate,ensure_ascii=False,indent=2),encoding='utf-8')
+        print(json.dumps({'candidate':str(out),'valid':validate(candidate,root)['ok'],'unchanged_sources':True},ensure_ascii=False));return
     if a.action=='score':
         ratings=json.loads(a.ratings.read_text())
         print(json.dumps(scorecard(ratings.get('previous'),ratings['current'],ratings['weights']),ensure_ascii=False,indent=2))
