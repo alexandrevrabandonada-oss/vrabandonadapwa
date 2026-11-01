@@ -61,3 +61,11 @@ Entrada: manifesto, arquivos locais, metadados de direitos, evidências para cla
 V0.1 motor local simples (este pacote); V0.2 catálogo persistente/ingestão e mídia em storage protegido; V0.3 Remotion Studio + componentes cinematográficos configuráveis + edição por cena; V0.4 auditoria de temporização, acessibilidade e render em CI; V1.0 distribuição assistida após aprovação. Blender opcional para planos 3D, não requisito de todo Reel. Documentos e imagens da época devem permanecer distinguíveis de reconstruções.
 
 **Atenção aos direitos:** diretório `private_assets/` é apenas para teste interno. As imagens enviadas pelo usuário são de autoria e direitos não verificados; não faça commit, distribuição externa ou publicação sem apuração e autorização necessárias. A imagem do jornal é evidência do que foi **publicado na edição**, não comprovação de números finais do episódio. A trilha sintética, quando usada, não é captação real na usina.
+
+## Biblioteca cinematográfica v0.3 (experimental)
+`studio/cinema.py` adiciona cor expressiva por cena (`molten`, `steel-blue`, `silver`, `industrial-ink`), luz móvel controlada, perspectiva leve, profundidade com máscara suavizada e um palco de página inteira para documentos. Configure apenas em cenas ilustrativas:
+```json
+"cinema": {"grade": "steel-blue", "grade_intensity": 0.56, "light": "cool",
+           "light_opacity": 0.16, "perspective": 0.012, "depth_focus": 0.4}
+```
+Em cenas `document`, o motor bloqueia efeitos estilísticos sobre a fonte. A visualização da página inteira preserva a integridade do fac-símile. Use `examples/o_peso_do_aco_cinema_v03.json` com arquivos locais de trabalho; fotografias e jornal originais não são redistribuídos no GitHub. O CI usa mídias sintéticas nos testes. A demonstração v0.3 não inclui voz, não é uma reportagem e não foi aprovada para publicação.
