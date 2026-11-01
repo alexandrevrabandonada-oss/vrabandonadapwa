@@ -2,26 +2,175 @@
   "project_id": "o-peso-do-aco-piloto",
   "edition": "factory-v0.1",
   "editorial_status": "INTERNAL_DEMO_NOT_FOR_PUBLICATION",
-  "human_approval": {"approved": false},
+  "human_approval": {
+    "approved": false
+  },
   "assets": {
-    "plant": {"file":"private_assets/csn_exterior.jpg", "role":"context", "source":"Imagem fornecida pelo usuário", "capture_date":null, "rights_status":"pending", "truth_context":"Foto de data desconhecida, NÃO é imagem do acidente de 1962"},
-    "coils": {"file":"private_assets/csn_bobinas.jpg", "role":"context", "source":"Imagem fornecida pelo usuário", "capture_date":null, "rights_status":"pending", "truth_context":"Contexto de indústria, sem data verificada"},
-    "coils_background": {"file":"private_assets/csn_bobinas_fundo.jpg", "role":"illustration", "source":"Derivado por inpainting do primeiro plano da foto de bobinas, somente efeito visual", "capture_date":null, "rights_status":"restricted"},
-    "coils_mask": {"file":"private_assets/csn_bobinas_mascara.png", "role":"illustration", "source":"Máscara de primeiro plano gerada a partir da foto de bobinas", "capture_date":null, "rights_status":"restricted"},
-    "metal": {"file":"private_assets/csn_metal.jpg", "role":"context", "source":"Imagem fornecida pelo usuário", "capture_date":null, "rights_status":"pending", "truth_context":"Não representar como foto do acidente"},
-    "newspaper": {"file":"private_assets/a_noite_1962.jpg", "role":"evidence", "source":"Página digitalizada enviada pelo usuário, A Noite, 29 de janeiro de 1962, página 4", "capture_date":"1962-01-29 (data da edição, não da digitalização)", "rights_status":"pending", "truth_context":"Balanço publicado naquela edição: 12 mortos, 11 feridos; não implica total final"}
+    "plant": {
+      "file": "private_assets/csn_exterior.jpg",
+      "role": "context",
+      "source": "Imagem fornecida pelo usuário",
+      "capture_date": null,
+      "rights_status": "pending",
+      "truth_context": "Foto de data desconhecida, NÃO é imagem do acidente de 1962"
+    },
+    "coils": {
+      "file": "private_assets/csn_bobinas.jpg",
+      "role": "context",
+      "source": "Imagem fornecida pelo usuário",
+      "capture_date": null,
+      "rights_status": "pending",
+      "truth_context": "Contexto de indústria, sem data verificada"
+    },
+    "coils_background": {
+      "file": "private_assets/csn_bobinas_fundo.jpg",
+      "role": "illustration",
+      "source": "Derivado por inpainting do primeiro plano da foto de bobinas, somente efeito visual",
+      "capture_date": null,
+      "rights_status": "restricted"
+    },
+    "coils_mask": {
+      "file": "private_assets/csn_bobinas_mascara.png",
+      "role": "illustration",
+      "source": "Máscara de primeiro plano gerada a partir da foto de bobinas",
+      "capture_date": null,
+      "rights_status": "restricted"
+    },
+    "metal": {
+      "file": "private_assets/csn_metal.jpg",
+      "role": "context",
+      "source": "Imagem fornecida pelo usuário",
+      "capture_date": null,
+      "rights_status": "pending",
+      "truth_context": "Não representar como foto do acidente"
+    },
+    "newspaper": {
+      "file": "private_assets/a_noite_1962.jpg",
+      "role": "evidence",
+      "source": "Página digitalizada enviada pelo usuário, A Noite, 29 de janeiro de 1962, página 4",
+      "capture_date": "1962-01-29 (data da edição, não da digitalização)",
+      "rights_status": "pending",
+      "truth_context": "Balanço publicado naquela edição: 12 mortos, 11 feridos; não implica total final"
+    }
   },
   "narration": {
-    "voice_name":"Alexandre", "provider":"ElevenLabs",
-    "flow_id":"qx80P2HVVBmCEJKyOi8V", "take_duration_sec":20.7122,
-    "file":null, "timings_verified":false,
-    "text":"Em janeiro de mil novecentos e sessenta e dois, uma tragédia marcou os trabalhadores da siderurgia em Volta Redonda. No dia vinte e nove, o jornal A Noite estampou: chuva de ferro derretido mata doze e fere onze operários. Esse era o balanço divulgado naquela edição. Mas o que aconteceu depois? E quais histórias ainda precisam ser contadas?"
+    "voice_name": "Alexandre",
+    "provider": "ElevenLabs",
+    "flow_id": "qx80P2HVVBmCEJKyOi8V",
+    "take_duration_sec": 20.7122,
+    "file": null,
+    "timings_verified": false,
+    "text": "Em janeiro de mil novecentos e sessenta e dois, uma tragédia marcou os trabalhadores da siderurgia em Volta Redonda. No dia vinte e nove, o jornal A Noite estampou: chuva de ferro derretido mata doze e fere onze operários. Esse era o balanço divulgado naquela edição. Mas o que aconteceu depois? E quais histórias ainda precisam ser contadas?"
   },
-  "soundtrack":{"file":null,"source":"Trilha de demonstração opcional, não usar som como prova de acidente"},
+  "soundtrack": {
+    "file": null,
+    "source": "Trilha de demonstração opcional, não usar som como prova de acidente"
+  },
   "scenes": [
-    {"id":"s01", "type":"parallax", "asset":"coils", "background_asset":"coils_background", "mask_asset":"coils_mask", "duration":3.5, "context_label":"SIDERURGIA / IMAGEM DE ARQUIVO — DATA NÃO CONFIRMADA", "camera":{"from":[0.50,0.48,1.0],"to":[0.47,0.51,1.14]}},
-    {"id":"s02", "type":"photograph", "asset":"metal", "duration":3.5, "context_label":"PROCESSO SIDERÚRGICO / DATA NÃO CONFIRMADA", "camera":{"from":[0.51,0.52,1.0],"to":[0.59,0.46,1.15]}},
-    {"id":"s03", "type":"document", "asset":"newspaper", "duration":4.5, "source_label":"A NOITE · 29 JAN 1962 · PÁGINA 4", "camera":{"from":[0.5,0.28,1.0],"to":[0.63,0.28,1.15]},"claim":"A edição publicou 12 mortos e 11 feridos", "evidence_id":"newspaper"},
-    {"id":"s04", "type":"photograph", "asset":"plant", "duration":3.5, "context_label":"CSN / IMAGEM SEM DATA CONFIRMADA", "overlay":"O PESO DO AÇO", "camera":{"from":[0.48,0.45,1.02],"to":[0.53,0.51,1.13]}}
+    {
+      "id": "s01",
+      "type": "parallax",
+      "asset": "coils",
+      "background_asset": "coils_background",
+      "mask_asset": "coils_mask",
+      "duration": 3.5,
+      "context_label": "SIDERURGIA / IMAGEM DE ARQUIVO — DATA NÃO CONFIRMADA",
+      "camera": {
+        "from": [
+          0.5,
+          0.48,
+          1.0
+        ],
+        "to": [
+          0.47,
+          0.51,
+          1.14
+        ]
+      },
+      "direction": {
+        "subject": "Bobinas siderúrgicas retratadas em fotografia de data desconhecida",
+        "intent": "Situar o universo material da indústria sem alegar registro do acidente",
+        "camera_motive": "Câmera contorna a bobina para revelar um segundo plano real",
+        "cut_motive": "Da matéria produzida ao processo siderúrgico"
+      }
+    },
+    {
+      "id": "s02",
+      "type": "photograph",
+      "asset": "metal",
+      "duration": 3.5,
+      "context_label": "PROCESSO SIDERÚRGICO / DATA NÃO CONFIRMADA",
+      "camera": {
+        "from": [
+          0.51,
+          0.52,
+          1.0
+        ],
+        "to": [
+          0.59,
+          0.46,
+          1.15
+        ]
+      },
+      "direction": {
+        "subject": "Operação siderúrgica fotografada sem data confirmada",
+        "intent": "Criar transição visual entre o metal e a memória operária",
+        "camera_motive": "Aproximar da área luminosa sem converter a imagem em prova da tragédia",
+        "cut_motive": "Do metal ao jornal de época"
+      }
+    },
+    {
+      "id": "s03",
+      "type": "document",
+      "asset": "newspaper",
+      "duration": 4.5,
+      "source_label": "A NOITE · 29 JAN 1962 · PÁGINA 4",
+      "camera": {
+        "from": [
+          0.5,
+          0.28,
+          1.0
+        ],
+        "to": [
+          0.63,
+          0.28,
+          1.15
+        ]
+      },
+      "claim": "A edição publicou 12 mortos e 11 feridos",
+      "evidence_id": "newspaper",
+      "direction": {
+        "subject": "Fac-símile de A Noite, 29 de janeiro de 1962",
+        "intent": "Mostrar a fonte jornalística de época antes de interpretar números",
+        "camera_motive": "Revelar o cabeçalho e conduzir à manchete verificável",
+        "cut_motive": "Do documento ao contexto industrial contemporâneo"
+      }
+    },
+    {
+      "id": "s04",
+      "type": "photograph",
+      "asset": "plant",
+      "duration": 3.5,
+      "context_label": "CSN / IMAGEM SEM DATA CONFIRMADA",
+      "overlay": "O PESO DO AÇO",
+      "camera": {
+        "from": [
+          0.48,
+          0.45,
+          1.02
+        ],
+        "to": [
+          0.53,
+          0.51,
+          1.13
+        ]
+      },
+      "direction": {
+        "subject": "Vista geral da área industrial atribuída à CSN",
+        "intent": "Fechar a abertura com a relação entre cidade, trabalho e memória",
+        "camera_motive": "Deslocamento espacial sutil preservando a fotografia",
+        "cut_motive": "Transição para próxima seção da reportagem"
+      }
+    }
   ]
 }
