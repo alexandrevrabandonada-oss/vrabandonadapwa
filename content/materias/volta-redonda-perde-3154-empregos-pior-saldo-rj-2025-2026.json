@@ -1,0 +1,140 @@
+{
+  "slug": "volta-redonda-perde-3154-empregos-pior-saldo-rj-2025-2026",
+  "kind": "investigation",
+  "title": "Volta Redonda perde 3.154 empregos e tem o pior saldo do estado do Rio em 20 meses",
+  "subtitle": "Levantamento com dados do Novo Caged mostra retração na indústria, nos serviços e na construção enquanto cidades vizinhas e o estado registram saldos positivos.",
+  "summary": "Entre janeiro de 2025 e agosto de 2026, Volta Redonda registrou 56.042 admissões e 59.196 desligamentos, saldo de −3.154 vínculos formais. A cidade teve o menor saldo absoluto dos 92 municípios do Rio de Janeiro no intervalo; isso não equivale à maior taxa de desemprego.",
+  "section": "Economia, indústria e trabalho",
+  "author": "VR Abandonada",
+  "status": "published",
+  "reviewed": true,
+  "publishedAt": "2026-11-01T13:16:00-03:00",
+  "investigationStatus": "ongoing",
+  "cover": {
+    "src": "https://upload.wikimedia.org/wikipedia/commons/f/f4/CSN01.jpg",
+    "alt": "Fotografia de arquivo da Usina Presidente Vargas, da CSN, com bairros de Volta Redonda ao fundo. Imagem captada em 6 de maio de 2014; não documenta a situação de emprego de 2026.",
+    "credit": "Foto de arquivo (06/05/2014): HenriqueBarraMansa / Wikimedia Commons — CC BY-SA 3.0. Fonte: https://commons.wikimedia.org/wiki/File:CSN01.jpg | Licença: https://creativecommons.org/licenses/by-sa/3.0/ (sem alterações na fotografia)."
+  },
+  "sources": [
+    {
+      "label": "MTE — Novo Caged, agosto de 2026 e demais competências do período",
+      "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/acoes-e-programas/programas-projetos-acoes-obras-e-atividades/estatisticas-trabalho/novo-caged/2026/agosto/pagina-inicial",
+      "consultedAt": "2026-11-01"
+    },
+    {
+      "label": "MTE — Painel Novo Caged (admissões, desligamentos, saldos por município e setor)",
+      "url": "https://app.powerbi.com/view?r=eyJrIjoiNWI5NWI0ODEtYmZiYy00Mjg3LTkzNWUtY2UyYjIwMDE1YWI2IiwidCI6IjNlYzkyOTY5LTVhNTEtNGYxOC04YWM5LWVmOThmYmFmYTk3OCJ9",
+      "consultedAt": "2026-11-01"
+    },
+    {
+      "label": "IBGE — Volta Redonda, população estimada",
+      "url": "https://www.ibge.gov.br/cidades-e-estados/rj/volta-redonda.html",
+      "consultedAt": "2026-11-01"
+    },
+    {
+      "label": "Prefeitura — balanço histórico de 2024, divulgado em janeiro de 2025",
+      "url": "https://www.voltaredonda.rj.gov.br/comunicacao/noticias/24-gabinete-do-prefeito/9322-volta-redonda-criou-mais-de-4%2C5-mil-empregos-em-2024/",
+      "consultedAt": "2026-11-01"
+    },
+    {
+      "label": "Folha do Aço — análise da Firjan sobre perda de empregos em serviços de saúde, julho de 2026",
+      "url": "https://folhadoaco.com.br/2026/07/12/volta-redonda-perde-quase-13-mil-empregos-no-ano-mas-da-sinais-de-reacao-em-maio/",
+      "consultedAt": "2026-11-01"
+    },
+    {
+      "label": "MTE — anúncio da divulgação de setembro de 2026",
+      "url": "https://www.gov.br/trabalho-e-emprego/pt-br/noticias-e-conteudo/2026/outubro/mte-divulga-dados-do-emprego-formal-de-setembro-na-proxima-quarta-feira-4",
+      "consultedAt": "2026-11-01"
+    },
+    {
+      "label": "Wikimedia Commons — fotografia da capa CSN01.jpg, autor e licença CC BY-SA 3.0",
+      "url": "https://commons.wikimedia.org/wiki/File:CSN01.jpg",
+      "consultedAt": "2026-11-01"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Volta Redonda atravessa uma retração no emprego formal que contrasta com o desempenho do Médio Paraíba e do estado do Rio de Janeiro. Entre janeiro de 2025 e agosto de 2026, foram 56.042 admissões e 59.196 desligamentos no município, resultando em saldo negativo de 3.154 vínculos com carteira assinada. No mesmo período, o estado fluminense acumulou saldo positivo de 178.375, e o Médio Paraíba, incluindo Volta Redonda, registrou +4.728. O resultado local foi o menor saldo absoluto entre os 92 municípios fluminenses; esse ranking não representa taxa de desemprego nem perda proporcional ao estoque de empregos."
+    },
+    {
+      "type": "heading",
+      "text": "De 2024 positivo à retração de 2025 e 2026"
+    },
+    {
+      "type": "paragraph",
+      "text": "No início de 2025, a Prefeitura divulgou que o município havia encerrado 2024 com saldo positivo de 4.528 vagas, conforme a base disponível naquele momento. Na base revisada utilizada nesta reportagem, 2025 terminou com saldo negativo de 1.225 empregos. Entre janeiro e agosto de 2026, o saldo foi de −1.929. O número histórico de 2024 não foi reprocessado na mesma edição do painel para esta matéria: a comparação indica uma mudança de trajetória, não uma série inteiramente harmonizada."
+    },
+    {
+      "type": "paragraph",
+      "text": "Comparando intervalos de igual duração, janeiro a agosto de 2025 registrou −1.785 vínculos e janeiro a agosto de 2026 registrou −1.929: deterioração de 144 vagas no saldo."
+    },
+    {
+      "type": "heading",
+      "text": "Vizinhos crescem, Volta Redonda encolhe"
+    },
+    {
+      "type": "paragraph",
+      "text": "Nos 20 meses, Barra Mansa somou +2.086 empregos formais; Porto Real, +1.872; Valença, +1.175; Resende, +1.043; Barra do Piraí, +864; Pinheiral, +292. Angra dos Reis registrou +3.218. Os demais 11 municípios do Médio Paraíba, sem Volta Redonda, somaram +7.882, enquanto Volta Redonda registrou −3.154. Os resultados medem locais dos estabelecimentos, e não obrigatoriamente moradores de cada cidade."
+    },
+    {
+      "type": "heading",
+      "text": "A indústria perdeu 1.139 vínculos"
+    },
+    {
+      "type": "paragraph",
+      "text": "Na indústria de Volta Redonda foram 12.734 admissões e 13.873 desligamentos entre janeiro de 2025 e agosto de 2026: saldo de −1.139. O conjunto dos 12 municípios do Médio Paraíba registrou +2.602 na indústria; os demais 11, excluindo Volta Redonda, somaram +3.741. Em Porto Real, o saldo industrial foi +1.732; em Barra do Piraí, +542; em Resende, +495; e em Barra Mansa, +425."
+    },
+    {
+      "type": "paragraph",
+      "text": "O recorte por classe de atividade econômica identifica perdas concentradas em instalação de máquinas e equipamentos industriais (−942) e produção de laminados planos de aço (−308). Outras classes industriais compensaram parte dessas perdas. Famílias ocupacionais com saldos negativos incluem mecânicos de manutenção de máquinas industriais (−292), soldagem e corte de ligas metálicas (−208) e especialistas em inspeções industriais (−148). Esses códigos identificam atividades e ocupações, mas não individualizam empregadores como CSN ou CBSI."
+    },
+    {
+      "type": "heading",
+      "text": "Serviços concentram a maior perda líquida"
+    },
+    {
+      "type": "paragraph",
+      "text": "A indústria não explica sozinha a retração. O saldo dos serviços foi −1.870; o da construção, −411; o comércio registrou +263; e a agropecuária, +3, fechando o saldo municipal de −3.154. Fevereiro de 2026 teve saldo municipal de −1.361, concentrado nos serviços (−1.215)."
+    },
+    {
+      "type": "paragraph",
+      "text": "Reportagem da Folha do Aço de julho de 2026 atribuiu à análise da Firjan uma perda de 1.202 vínculos em atividades de apoio à gestão de saúde, no acumulado de janeiro a maio, concentrada especialmente em fevereiro. A hipótese de mudanças administrativas ou contratuais precisa ser verificada em contratos e movimentações documentadas. Não é possível identificar com base nessa informação um contrato responsável, nem concluir que todos os vínculos encerrados correspondam a pessoas ainda desempregadas."
+    },
+    {
+      "type": "heading",
+      "text": "Pressão por oportunidades e faixa etária"
+    },
+    {
+      "type": "paragraph",
+      "text": "O IBGE estima a população municipal em cerca de 280 mil moradores em 2026, com relativa estabilidade nas estimativas recentes. Mesmo sem forte crescimento populacional total, jovens podem ingressar no mercado, pessoas antes inativas podem passar a procurar trabalho e mudanças migratórias podem alterar a oferta de mão de obra. A série do Novo Caged mostra saldo de +2.447 para movimentações de pessoas de até 24 anos e −5.601 para 25 anos ou mais; esses resultados não comprovam substituição direta entre idades nem quantificam a taxa de desemprego da população residente."
+    },
+    {
+      "type": "heading",
+      "text": "Quais são as causas e quem deve responder?"
+    },
+    {
+      "type": "paragraph",
+      "text": "Os dados mostram onde as perdas ocorreram, mas não demonstram causa única. Precisam ser apurados ciclos de obras e manutenção industrial, mudanças de prestadoras, encerramentos de contratos, modalidades de vínculo, salários e decisões empresariais. Também cabe perguntar à Prefeitura, às empresas, à Firjan e às representações de trabalhadores que medidas concretas estão sendo tomadas para manter e gerar empregos duradouros."
+    },
+    {
+      "type": "paragraph",
+      "text": "O saldo negativo do Novo Caged é a diferença entre admissões e desligamentos formais registrados em estabelecimentos do município; não equivale a 3.154 pessoas desempregadas, nem mede a ocupação informal ou todos os trabalhadores residentes. A mesma pessoa pode aparecer em mais de uma movimentação."
+    },
+    {
+      "type": "heading",
+      "text": "Metodologia e atualização"
+    },
+    {
+      "type": "paragraph",
+      "text": "Levantamento do VR Abandonada feito a partir do Painel Novo Caged do Ministério do Trabalho e Emprego, competências de janeiro de 2025 a agosto de 2026, comparando saldos setoriais, municipais e estaduais na mesma edição. Dados podem sofrer revisões. Setembro de 2026 estava anunciado pelo MTE para 4 de novembro, às 14h30. Esta reportagem é investigação em acompanhamento; o contraditório específico de Prefeitura, empresas, Firjan e entidades de trabalhadores permanece pendente."
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-11-01T13:16:00-03:00",
+      "label": "Publicação inicial",
+      "text": "Levantamento Novo Caged de janeiro de 2025 a agosto de 2026, comparação regional e estadual, setores, ocupações e metodologia. Apuração sobre contratos e manifestação das partes seguem em acompanhamento."
+    }
+  ]
+}
