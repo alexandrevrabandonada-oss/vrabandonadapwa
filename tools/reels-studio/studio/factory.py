@@ -11,6 +11,7 @@ from typing import Any
 import cv2
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+from .captions import load_timeline, active_caption
 
 PALETTE = {'ink': (16, 20, 25), 'paper': (239, 235, 223),
            'copper': (239, 107, 52), 'electric': (45, 191, 222), 'muted': (195, 188, 174)}
@@ -73,8 +74,25 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
             if sc.get('background_asset') not in assets: errors.append(f'scene {i}: background_asset missing')
             if sc.get('mask_asset') not in assets: errors.append(f'scene {i}: mask_asset missing')
         if sc.get('claim') and not sc.get('evidence_id'):errors.append(f'scene {i}: claim without evidence_id')
+        if sc.get('type')=='document' and sc.get('overlay'):
+            errors.append(f'scene {i}: no title overlay over primary-source document')
+        if len(fit_text(str(sc.get('overlay','')),26)) > 3:
+            errors.append(f'scene {i}: overlay too long; split the scene instead of truncating text')
         if sc.get('evidence_id') and sc['evidence_id'] not in assets:errors.append(f'scene {i}: referenced evidence missing')
-        if (sc.get('type')=='document' and not sc.get('source_label')):
+        if sc.get('type')=='clip' and sc.get('asset') in assets:
+            try:
+                item=assets[sc['asset']]
+                filename=local_file(root,item.get('file',''))
+                if filename.is_file():
+                    meta=probe(filename)
+                    if not any(st.get('codec_type')=='video' for st in meta.get('streams',[])):
+                        errors.append(f'scene {i}: clip has no video stream')
+                    start=float(sc.get('clip_start',0))
+                    dur=float(sc.get('duration',0))
+                    if start<0 or start+dur>float(meta.get('format',{}).get('duration',0))+.1:
+                        errors.append(f'scene {i}: clip exceeds source duration')
+            except (ValueError,KeyError,TypeError,subprocess.CalledProcessError) as e:
+                errors.append(f'scene {i}: invalid clip: {e}')        if (sc.get('type')=='document' and not sc.get('source_label')):
             errors.append(f'scene {i}: document requires source_label')
         try:
             d=float(sc['duration']); assert 0.2<=d<=180; total+=d
@@ -83,14 +101,26 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
     if narration.get('file'):
         try:
             p=local_file(root,narration['file'])
-            if not p.exists(): errors.append('narration file missing')
-        except ValueError as e: errors.append(f'narration: {e}')
+            if not p.is_file(): errors.append('narration file missing')
+            else:
+                media=probe(p)
+                audio_duration=float(media['format']['duration'])
+                if not any(st.get('codec_type')=='audio' for st in media.get('streams',[])):
+                    errors.append('narration file has no audio stream')
+                if audio_duration>total+.15:errors.append('narration longer than video: would truncate speech')
+                if narration.get('sha256') and narration['sha256']!=hash_file(p):errors.append('narration hash mismatch')
+                if narration.get('caption_timeline'):
+                    caption_path=local_file(root,narration['caption_timeline'])
+                    if not caption_path.is_file():errors.append('caption timeline file missing')
+                    else:load_timeline(caption_path,narration.get('text',''),audio_duration)
+        except (ValueError,KeyError,TypeError,subprocess.CalledProcessError) as e: errors.append(f'narration: {e}')
     else:
         warnings.append('narration not embedded: final voice/synchronization gate fails')
         if purpose=='publish': errors.append('publish blocked: narration or explicit audio waiver required')
-    if not narration.get('timings_verified',False):
-        warnings.append('word/phrase timings not verified: captions cannot be called synchronized')
-        if purpose=='publish': errors.append('publish blocked: captions/timings not verified')
+    timed = bool(narration.get('caption_timeline') and narration.get('timings_verified') and narration.get('timings_reviewed'))
+    if not timed:
+        warnings.append('timecoded captions not independently reviewed: cannot claim precise synchronization')
+        if purpose=='publish': errors.append('publish blocked: captions/timings not reviewed')
     if purpose=='publish' and not project.get('human_approval',{}).get('approved',False):
         errors.append('publish blocked: human editorial approval missing')
     return {'ok':not errors,'purpose':purpose,'errors':errors,'warnings':warnings,
@@ -143,10 +173,10 @@ def fit_text(text:str,max_chars=27)->list[str]:
             lines.append(' '.join(part));part=[]
         part.append(w)
     if part:lines.append(' '.join(part))
-    return lines[:4]
+    return lines
 
 
-def graphics(frame:np.ndarray,scene:dict,t:float,width:int,height:int)->np.ndarray:
+def graphics(frame:np.ndarray,scene:dict,t:float,width:int,height:int,caption:str|None=None)->np.ndarray:
     fg=Image.fromarray(cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)).convert('RGBA')
     lay=Image.new('RGBA',(width,height),(0,0,0,0));d=ImageDraw.Draw(lay)
     # Technical metadata located in peripheral safe zone; never masquerade as archived text.
@@ -155,17 +185,36 @@ def graphics(frame:np.ndarray,scene:dict,t:float,width:int,height:int)->np.ndarr
     if label:
         font=ImageFont.truetype(font_path(False),max(14,round(width*.032)))
         d.text((pad,int(height*.09)),label,font=font,fill=(*PALETTE['paper'],232),stroke_width=1,stroke_fill=(0,0,0,185))
-    ttl=scene.get('overlay','')
+    ttl=scene.get('overlay','') if not caption else ''
     if ttl:
         f=ImageFont.truetype(font_path(True),max(20,round(width*.069)))
         lines=fit_text(ttl,26)
         y=int(height*.70)
         # lightweight ink shadow, no generic powerpoint card.
         for line in lines:
-            d.text((pad+3,y+4),line.upper(),font=f,fill=(0,0,0,175),stroke_width=2,stroke_fill=(0,0,0,155))
-            d.text((pad,y),line.upper(),font=f,fill=(*PALETTE['paper'],247))
+            d.text((pad+3,y+4),line.upper(),font=f,fill=(0,0,0,175),stroke_width=2,stroke_fill=(0,0,0,155))            d.text((pad,y),line.upper(),font=f,fill=(*PALETTE['paper'],247))
             y+=int(width*.088)
         d.line([(pad,int(height*.7)-12),(pad+round(width*.18),int(height*.7)-12)],fill=(*PALETTE['copper'],245),width=max(3,width//110))
+    if caption:
+        # Subtitles stay above bottom app chrome. They belong to a verified timing file,
+        # not to a guessed audio transcript; graphic is not drawn on other frames.
+        f=ImageFont.truetype(font_path(True),max(16,round(width*.043)))
+        words=caption.split();lines=[];line=''
+        max_width=width-int(2*pad)
+        for w in words:
+            candidate=(line+' '+w).strip()
+            if d.textbbox((0,0),candidate,font=f)[2]>max_width and line:
+                lines.append(line);line=w
+            else:line=candidate
+        if line:lines.append(line)
+        if len(lines)>3:raise ValueError('caption too long for mobile safe region')
+        line_height=int(width*.061)
+        y=int(height*.79)-line_height*len(lines)
+        for line in lines:
+            bb=d.textbbox((0,0),line,font=f,stroke_width=2)
+            x=(width-(bb[2]-bb[0]))//2
+            d.text((x,y),line,font=f,fill=(*PALETTE['paper'],255),stroke_width=3,stroke_fill=(0,0,0,235))
+            y+=line_height
     if scene.get('disclaimer'):
         f=ImageFont.truetype(font_path(False),max(12,round(width*.025)))
         d.text((pad,int(height*.9)),scene['disclaimer'],font=f,fill=(*PALETTE['paper'],225))
@@ -184,6 +233,11 @@ class Engine:
         self.project=project;self.root=root;self.width=width;self.height=height;self.fps=fps
         self.images:dict[str,np.ndarray]={};self.caps:dict[str,cv2.VideoCapture]={}
         self.assets=project['assets']
+        self.cues=[]
+        nar=project.get('narration',{})
+        if nar.get('file') and nar.get('caption_timeline'):
+            duration=float(probe(local_file(root,nar['file']))['format']['duration'])
+            self.cues=load_timeline(local_file(root,nar['caption_timeline']),nar.get('text',''),duration)
     def image(self,asset_id:str)->np.ndarray:
         if asset_id not in self.images:
             p=local_file(self.root,self.assets[asset_id]['file'])
@@ -191,7 +245,7 @@ class Engine:
             if im is None:raise ValueError('Cannot decode image '+asset_id)
             self.images[asset_id]=im
         return self.images[asset_id]
-    def frame(self,sc:dict,position:float)->np.ndarray:
+    def frame(self,sc:dict,position:float,absolute_time:float|None=None)->np.ndarray:
         typ=sc['type'];dur=float(sc['duration']);ratio=np.clip(position/dur,0,1)
         cx,cy,z=camera(sc,ratio)
         if typ=='clip':
@@ -200,7 +254,7 @@ class Engine:
             cap=self.caps[aid]
             cap.set(cv2.CAP_PROP_POS_MSEC,1000*(float(sc.get('clip_start',0))+position))
             ok,src=cap.read()
-            if not ok:src=np.zeros((self.height,self.width,3),dtype=np.uint8)
+            if not ok:raise ValueError(f'clip {aid} unavailable at {position:.3f}s — rejecting silent black frames')
             frame=zoom_crop(src,self.width,self.height,cx,cy,z)
         elif typ=='parallax':
             bg=self.image(sc['background_asset']);src=self.image(sc['asset']);mask=self.image(sc['mask_asset'])
@@ -213,7 +267,8 @@ class Engine:
         else:
             frame=zoom_crop(self.image(sc['asset']),self.width,self.height,cx,cy,z)
         frame=treatment(frame,'document' if typ=='document' else 'cinematic')
-        return graphics(frame,sc,position,self.width,self.height)
+        caption=active_caption(self.cues,absolute_time) if absolute_time is not None else None
+        return graphics(frame,sc,position,self.width,self.height,caption)
     def close(self):
         for c in self.caps.values():c.release()
 
@@ -231,15 +286,15 @@ def render(project:dict,root:Path,dest:Path,mode='preview',sample_fps=None)->dic
     dest.parent.mkdir(parents=True,exist_ok=True)
     video_only=dest.with_name(dest.stem+'.video_only.mp4')
     engine=Engine(project,root,width,height,fps)
-    cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','rawvideo','-pix_fmt','bgr24','-s',f'{width}x{height}','-r',str(fps),'-i','-',
-         '-c:v','libx264','-preset','veryfast','-crf', '21' if mode=='preview' else '18','-pix_fmt','yuv420p','-movflags','+faststart',str(video_only)]
+    cmd=['ffmpeg','-hide_banner','-loglevel','error','-y','-f','rawvideo','-pix_fmt','bgr24','-s',f'{width}x{height}','-r',str(fps),'-i','-',         '-c:v','libx264','-preset','veryfast','-crf', '21' if mode=='preview' else '18','-pix_fmt','yuv420p','-movflags','+faststart',str(video_only)]
     proc=subprocess.Popen(cmd,stdin=subprocess.PIPE,stderr=subprocess.PIPE)
-    frames=0
+    frames=0;scene_start=0.0
     try:
         for sc in project['scenes']:
             for i in range(round(float(sc['duration'])*fps)):
-                fr=engine.frame(sc,i/fps)
+                fr=engine.frame(sc,i/fps,scene_start+i/fps)
                 proc.stdin.write(fr.tobytes());frames+=1
+            scene_start+=float(sc['duration'])
         proc.stdin.close();msg=proc.stderr.read().decode('utf-8',errors='replace');rc=proc.wait()
         if rc!=0:raise RuntimeError('ffmpeg render failed: '+msg[-2000:])
     except Exception:
@@ -263,7 +318,7 @@ def render(project:dict,root:Path,dest:Path,mode='preview',sample_fps=None)->dic
     ff=probe(dest)
     result={'output':str(dest),'mode':mode,'frames':frames,'fps':fps,'width':width,'height':height,
             'audio_attached':bool(audio),'narration_attached':bool(path and audio),
-            'audio_sync_verified':bool(nar.get('timings_verified',False) and path and audio),
+            'audio_sync_verified':bool(nar.get('timings_verified',False) and nar.get('timings_reviewed') and nar.get('caption_timeline') and path and audio),
             'ffprobe':ff,'validation':check,'publication_status':'INTERNAL ONLY'}
     dest.with_suffix('.qa.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
     return result
@@ -284,7 +339,7 @@ def scorecard(previous:dict|None, new:dict, weights:dict)->dict:
 
 def main():
     p=argparse.ArgumentParser(description='VR Abandonada Reel Factory — no automatic publication')
-    p.add_argument('action',choices=['validate','render','audit','score','qa','improve','variant'])
+    p.add_argument('action',choices=['validate','render','audit','score','qa','improve','variant','shotlist'])
     p.add_argument('--project',type=Path,required=True)
     p.add_argument('--purpose',choices=['internal','publish'],default='internal')
     p.add_argument('--mode',choices=['preview','master'],default='preview')
@@ -308,13 +363,15 @@ def main():
     if a.action=='improve':
         from .iterate import prioritize
         ratings=json.loads(a.ratings.read_text()); print(json.dumps(prioritize(ratings),ensure_ascii=False,indent=2));return
+    if a.action=='shotlist':
+        from .director import shotlist
+        print(json.dumps(shotlist(obj),ensure_ascii=False,indent=2));return
     if a.action=='variant':
         from .iterate import create_variant
         candidate=create_variant(obj,a.style)
         out=a.output or root/'output'/(obj['project_id']+'-'+a.style+'.json')
         out.parent.mkdir(parents=True,exist_ok=True)
-        out.write_text(json.dumps(candidate,ensure_ascii=False,indent=2),encoding='utf-8')
-        print(json.dumps({'candidate':str(out),'valid':validate(candidate,root)['ok'],'unchanged_sources':True},ensure_ascii=False));return
+        out.write_text(json.dumps(candidate,ensure_ascii=False,indent=2),encoding='utf-8')        print(json.dumps({'candidate':str(out),'valid':validate(candidate,root)['ok'],'unchanged_sources':True},ensure_ascii=False));return
     if a.action=='score':
         ratings=json.loads(a.ratings.read_text())
         print(json.dumps(scorecard(ratings.get('previous'),ratings['current'],ratings['weights']),ensure_ascii=False,indent=2))
