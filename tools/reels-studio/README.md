@@ -1,0 +1,63 @@
+# Fábrica de Reels VR Abandonada — v0.1 (protótipo executável)
+
+**Resultado real:** um motor audiovisual reutilizável, separado do portal e sem qualquer API de publicação. Produz provas internas de composição 2,5D e valida fontes, direitos, duração, narração e saída. **Não representa um sistema artístico ou editorial 10/10 concluído.**
+
+## Componentes
+
+| Componente | Estado em v0.1 | Gate / limitação |
+|---|---|---|
+| Manifesto JSON por Reel | implementado | fatos e fontes declarados, não inferidos |
+| Acervo com proveniência | implementado | bloqueia publicação com direitos pendentes |
+| Cenas reutilizáveis `photograph`, `parallax`, `document`, `clip` | implementado | movimento ainda básico, trabalho 3D avançado pendente |
+| Render 9:16 (540×960 preview, 1080×1920 master) | implementado | master final deve ser testado em ambiente de render |
+| Importação de voz já gerada | implementada | MP3 precisa ser disponibilizado localmente; tempo deve caber nas cenas |
+| Mix com FFmpeg | implementado | loudness/mix devem ser medidos e aprovados após áudio real |
+| Scorecard e backlog ponderado | implementado | nota artística exige avaliação humana; não é IA pontuando a si mesma |
+| Variantes de câmera | implementado | somente câmera; preserva evidências, tempo, legenda e direitos |
+| QA técnico e bloqueio de publicação | implementado | não substitui verificação jurídica/editorial |
+| Correção tipográfica auto, supervisão ótica/semântica | pendente | QA em celular necessário |
+| Voz e legendas palavra a palavra | não integrado | sem MP3/timing confirmado não afirmar sincronização |
+| Remotion / Blender avançado | alvo de arquitetura | não instalados nem testados neste pacote |
+| Publicação Instagram/site | **desativada por design** | somente após revisão e integração separadas |
+
+## Uso local
+
+```bash
+python -m pip install -r requirements.txt
+python -m studio.factory validate --project examples/o_peso_do_aco.json
+python -m studio.factory render --project examples/o_peso_do_aco.json --mode preview
+python -m studio.factory qa --project examples/o_peso_do_aco.json --mode preview
+python -m studio.factory improve --project examples/o_peso_do_aco.json --ratings examples/scorecard_v7.json
+python -m studio.factory variant --project examples/o_peso_do_aco.json --style kinetic --output examples/o_peso_do_aco_kinetic.json
+# Produção HD: quando fontes e parâmetros estiverem validados
+python -m studio.factory render --project examples/o_peso_do_aco.json --mode master
+pytest -q
+```
+
+### Importar áudio existente sem refazer geração
+
+```bash
+python -m studio.voice --project examples/o_peso_do_aco.json --audio /CAMINHO/A/NARRACAO_APROVADA.mp3
+```
+
+Essa ação gera um novo manifesto em `output/`, sem alterar o original. **Se o áudio for mais longo que a soma das cenas, o importador BLOQUEIA**, para impedir truncamento de depoimentos e fatos. O sincronismo de palavras exige alinhamento separado e inspeção humana: importar áudio não significa legenda sincronizada.
+
+## Entradas e saídas da linha
+
+Entrada: manifesto, arquivos locais, metadados de direitos, evidências para claims, texto narrado e MP3/timings aprovados. Saídas: MP4, metadados FFprobe, scorecard, relatório de bloqueios, backlog de melhorias e variantes de câmera.
+
+**Operação por pauta:** coleta/acervo → checagem editorial → shotlist/manifesto → geração de áudio aprovada → montagem e variantes → render → QA técnico + revisão 2 pessoas → correção → pacote para aprovação → publicação (fora desta ferramenta).
+
+## Regra 10/10: aprovação não é automática
+
+- Grade qualitativa ponderada: direção de arte 20%, profundidade 15%, ação 15%, acervo 15%, montagem 10%, tipografia 7%, cor 5%, voz/áudio 7%, integridade editorial 6%.
+- Score >=9,5 **permite encaminhar para revisão**, nunca concede aprovação.
+- Duas avaliações humanas independentes de celular e audição integral, com critérios por shot. Mostrar discordâncias, não reduzir tudo a média.
+- Para o conteúdo ir a público: 100% dos arquivos utilizados com direitos compatíveis, todos os claims com evidência, áudio e legendas conferidos, versão 1080×1920 30fps, revisão de crédito, privacidade e contexto histórico; aprovação editorial final explícita.
+- Conteúdo cuja verificação esteja pendente pode ser renderizado como **estudo interno**, nunca publicado automaticamente.
+
+## Arquitetura proposta de evolução
+
+V0.1 motor local simples (este pacote); V0.2 catálogo persistente/ingestão e mídia em storage protegido; V0.3 Remotion Studio + componentes cinematográficos configuráveis + edição por cena; V0.4 auditoria de temporização, acessibilidade e render em CI; V1.0 distribuição assistida após aprovação. Blender opcional para planos 3D, não requisito de todo Reel. Documentos e imagens da época devem permanecer distinguíveis de reconstruções.
+
+**Atenção aos direitos:** diretório `private_assets/` é apenas para teste interno. As imagens enviadas pelo usuário são de autoria e direitos não verificados; não faça commit, distribuição externa ou publicação sem apuração e autorização necessárias. A imagem do jornal é evidência do que foi **publicado na edição**, não comprovação de números finais do episódio. A trilha sintética, quando usada, não é captação real na usina.
