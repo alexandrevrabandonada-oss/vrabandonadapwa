@@ -91,7 +91,8 @@ def stage(readers,t,w,h)->np.ndarray:
         result=np.empty((h,w,3),np.uint8);result[:]=(11,17,47)
         w1=round(w*.55)
         result[round(h*.14):round(h*.84),:w1]=cover(left,w1,round(h*.70),.52,.52,1.10)
-        result[round(h*.22):round(h*.84),w1:]=cover(right,w-w1,round(h*.62),.56,.45,1.05)
+        y0=round(h*.22);y1=round(h*.84)
+        result[y0:y1,w1:]=cover(right,w-w1,y1-y0,.56,.45,1.05)
         cv2.line(result,(w1,round(h*.16)),(w1,round(h*.83)),(42,80,240),max(3,w//120))
         return film_color(result,pink=True)
     u=t-10.5
