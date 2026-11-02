@@ -103,3 +103,11 @@ O arquivo MP3 do ElevenLabs não foi transferido durante esta rodada; nenhum ví
 - 52 testes locais passaram (+ 1 skip), e ambas as variações do filme piloto foram renderizadas a **24 fps** (303 quadros; 12,625s; 540×960) em ambiente local, sem narração. Os exemplos não são peças publicáveis.
 - Relatório com benchmarks de operadores, notas conservadoras e bloqueios: `RELATORIO_V07.md`.
 - A voz profissional Alexandre continua gerada no ElevenLabs, mas **ainda não está no MP4**. Nem os direitos das imagens nem a revisão humana estão concluídos.
+
+## v0.10 — parallax fotográfico físico (protótipo)
+- `studio/depth_stage.py` separa fotografia, fundo derivado e máscara registrados nas mesmas coordenadas; movimenta planos independentes com oclusão. São **derivados visuais**, não novas evidências.
+- Em cenas `type: "parallax"`, configurar `"depth_mode":"physical","pan_x":0.28,"pan_y":0.55,"depth_strength":1.45` com `asset`, `background_asset` e `mask_asset`.
+- O modo antigo permanece disponível. Não aplicar `depth_mode` em cenas `document`; a validação rejeita o uso.
+- O exemplo `examples/o_peso_do_aco_depth_v10.json` usa arquivos privados por referência, sem redistribuir fotos. O CI testa com fontes sintéticas.
+- Master 1080×1920/30fps foi verificado **apenas para uma cena de 3,6 s**; montagem de 12,4s ainda é prévia 540×960/24fps, sem voz sincronizada.
+- Biblioteca de identidade expressiva local **não sincronizada integralmente** ao repositório; especificação no arquivo `IDENTIDADE_BRUTALISMO_EXPRESSIVO_V09.md`. Relatório de auditoria: `RELATORIO_V10.md`.
