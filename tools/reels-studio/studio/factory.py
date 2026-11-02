@@ -349,7 +349,7 @@ def render(project:dict,root:Path,dest:Path,mode='preview',sample_fps=None)->dic
         if path and bed:
             args.extend(['-filter_complex','[1:a]loudnorm=I=-16:LRA=8:TP=-1.5[v];[2:a]volume=0.12[b];[v][b]amix=inputs=2:duration=first:dropout_transition=0[a]',
                         '-map','0:v','-map','[a]'])
-        else:args.extend(['-map','0:v','-map','1:a'])
+        else:args.extend(['-map','0:v','-map','1:a','-af','acompressor=threshold=0.08:ratio=4:attack=10:release=150,loudnorm=I=-16:LRA=8:TP=-1.5'])
         args.extend(['-c:v','copy','-c:a','aac','-b:a','160k','-t',str(frames/fps),'-movflags','+faststart',str(dest)])
         subprocess.run(args,check=True);video_only.unlink()
     else:video_only.replace(dest)
