@@ -1,0 +1,64 @@
+name: Reels Studio — Aço Gráfico V18 two real sources
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/**'
+      - '.github/workflows/reels-studio-v18-multisource.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  two-sources:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install video tools and test libraries
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -r requirements.txt
+      - name: Verify V18 tests
+        run: python -m pytest -q tests/test_v18.py
+      - name: Download and authenticate both original videos
+        run: |
+          set -euo pipefail
+          mkdir -p work/v18/source work/v18/output
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.18 (file credits retained)' \
+            'https://upload.wikimedia.org/wikipedia/commons/f/f9/Armature_en_acier_de_pliage.webm' \
+            --output work/v18/source/senegal_2024.webm
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.18 (file credits retained)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v18/source/france_2011.webm
+          echo 'cacc1db79fd88d7da28eb8783a57514159a5a3c1  work/v18/source/senegal_2024.webm' | sha1sum -c -
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v18/source/france_2011.webm' | sha1sum -c -
+          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 work/v18/source/france_2011.webm
+      - name: Render 12-second vertical film from authenticated recordings
+        run: |
+          python -m studio.editorial_multisource_v18 \
+            --senegal work/v18/source/senegal_2024.webm \
+            --france work/v18/source/france_2011.webm \
+            --output work/v18/output/V18_ACO_GRAFICO_DUAS_FONTES_REAIS.mp4 \
+            --width 540 --height 960 --fps 24
+          ffprobe -v error -show_entries stream=codec_type,codec_name,width,height,r_frame_rate -show_entries format=duration,size -of json work/v18/output/V18_ACO_GRAFICO_DUAS_FONTES_REAIS.mp4 > work/v18/output/FFPROBE_V18.json
+      - name: Prepare contact sheet frames and license report
+        run: |
+          ffmpeg -v error -y -i work/v18/output/V18_ACO_GRAFICO_DUAS_FONTES_REAIS.mp4 -vf 'fps=1/2,scale=216:384' work/v18/output/QUADRO_%02d.jpg
+          cp LICENCA_FILMAGENS_V18.md work/v18/output/LICENCA_E_CREDITOS.md
+      - name: Upload internal audit package (not public)
+        uses: actions/upload-artifact@v4
+        with:
+          name: v18-two-real-sources-internal-film
+          path: |
+            tools/reels-studio/work/v18/source/*.webm
+            tools/reels-studio/work/v18/output/*.mp4
+            tools/reels-studio/work/v18/output/*.json
+            tools/reels-studio/work/v18/output/*.jpg
+            tools/reels-studio/work/v18/output/*.md
+          retention-days: 7
+          if-no-files-found: error
