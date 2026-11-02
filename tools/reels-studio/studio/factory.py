@@ -429,13 +429,14 @@ def scorecard(previous:dict|None, new:dict, weights:dict)->dict:
 
 def main():
     p=argparse.ArgumentParser(description='VR Abandonada Reel Factory — no automatic publication')
-    p.add_argument('action',choices=['validate','render','audit','score','qa','improve','variant','shotlist','editplan'])
+    p.add_argument('action',choices=['validate','render','audit','score','qa','improve','variant','shotlist','editplan','soundplan'])
     p.add_argument('--project',type=Path,required=True)
     p.add_argument('--purpose',choices=['internal','publish'],default='internal')
     p.add_argument('--mode',choices=['preview','master'],default='preview')
     p.add_argument('--output',type=Path)
     p.add_argument('--ratings',type=Path)
     p.add_argument('--style',choices=['documental','cinematic','kinetic'],default='cinematic')
+    p.add_argument('--audio',type=Path,help='Existing voice recording; no TTS generation')
     a=p.parse_args();root=a.project.resolve().parent;root=root.parent if root.name in ("examples","output") else root;obj=load_project(a.project)
     if a.action=='validate':
         res=validate(obj,root,a.purpose);print(json.dumps(res,ensure_ascii=False,indent=2));sys.exit(0 if res['ok'] else 2)
@@ -457,6 +458,14 @@ def main():
         from .beatcut import check_beats,inspect_repetition,timeline
         errors,warnings=check_beats(obj)
         print(json.dumps({'beats':timeline(obj),'errors':errors,'warnings':warnings,'visual_diversity':inspect_repetition(obj)},ensure_ascii=False,indent=2));return
+    if a.action=='soundplan':
+        from .soundfirst import analyze
+        if not a.audio:raise ValueError('--audio is required for soundplan')
+        report=analyze(a.audio,obj['scenes'])
+        if a.output:
+            a.output.parent.mkdir(parents=True,exist_ok=True)
+            a.output.write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
+        print(json.dumps(report,ensure_ascii=False,indent=2));return
     if a.action=='shotlist':
         from .director import shotlist
         print(json.dumps(shotlist(obj),ensure_ascii=False,indent=2));return
