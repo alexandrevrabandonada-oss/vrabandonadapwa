@@ -45,6 +45,13 @@ def check(path:Path,width=540,height=960,seconds=12.,fps=24):
        'artistic_quality_certified':False,'publication_approved':False}
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('input',type=Path);a=p.parse_args()
-    r=check(a.input);print(json.dumps(r,ensure_ascii=False,indent=2))
+    p=argparse.ArgumentParser()
+    p.add_argument('input',type=Path)
+    p.add_argument('--width',type=int,default=540)
+    p.add_argument('--height',type=int,default=960)
+    p.add_argument('--fps',type=int,default=24)
+    p.add_argument('--seconds',type=float,default=12.)
+    a=p.parse_args()
+    r=check(a.input,width=a.width,height=a.height,fps=a.fps,seconds=a.seconds)
+    print(json.dumps(r,ensure_ascii=False,indent=2))
     if not r['ok']:raise SystemExit(1)
