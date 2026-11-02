@@ -25,7 +25,7 @@ A segunda tomada da voz `Alexandre` no ElevenLabs está gerada, duração 20,712
 | Auditoria audiovisual | 10% | 7,9 | 8,5 |
 | Integridade editorial | 10% | 7,3 | 7,5 |
 | Testes e reutilização | 5% | 8,9 | 9,2 |
-| **Maturidade ponderada** | **100%** | **6,17** | **6,51** |
+| **Maturidade ponderada** | **100%** | **6,17** | **6,49** |
 
 Notas internas e qualitativas, não testes independentes. A nota artística do Reel V7 **permanece 6,63/10**.
 
