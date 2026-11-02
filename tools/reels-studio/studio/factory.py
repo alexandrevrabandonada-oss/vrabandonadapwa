@@ -17,6 +17,7 @@ from .beatcut import check_beats, inspect_repetition, timeline
 from .motion import validate_keyframes, evaluate as evaluate_keyframes
 from .layout import fit_font_and_lines
 from .visual_grammar import composite as transition_composite,validate_transition
+from .fast_stills import BoundedStillCache
 
 PALETTE = {'ink': (16, 20, 25), 'paper': (239, 235, 223),
            'copper': (239, 107, 52), 'electric': (45, 191, 222), 'muted': (195, 188, 174)}
@@ -264,6 +265,7 @@ class Engine:
     def __init__(self,project:dict,root:Path,width=540,height=960,fps=24):
         self.project=project;self.root=root;self.width=width;self.height=height;self.fps=fps
         self.images:dict[str,np.ndarray]={};self.caps:dict[str,cv2.VideoCapture]={}
+        self.still_cache=BoundedStillCache()
         self.assets=project['assets']
         self.cues=[]
         nar=project.get('narration',{})
@@ -299,7 +301,17 @@ class Engine:
         elif typ=='document' and sc.get('document_view','full')=='full':
             frame=documentary_stage(self.image(sc['asset']),self.width,self.height,scale=1.0)
         else:
-            frame=zoom_crop(self.image(sc['asset']),self.width,self.height,cx,cy,z)
+            source=self.image(sc['asset'])
+            if typ=='photograph':
+                keyframes=sc.get('camera_keyframes') or []
+                camera_spec=sc.get('camera',{})
+                ends=[camera_spec.get('from',[.5,.5,1.]),camera_spec.get('to',[.5,.5,1.08])]
+                max_zoom=max(1.0,float(z),*(float(k['focus'][2]) for k in keyframes),*(float(pt[2]) for pt in ends))
+                key=(sc.get('id'),sc['asset'],self.width,self.height,round(max_zoom,4))
+                still=self.still_cache.get(key,source,self.width,self.height,max_zoom)
+                frame=still.crop(cx,cy,max(1,float(z))) if still is not None else zoom_crop(source,self.width,self.height,cx,cy,z)
+            else:
+                frame=zoom_crop(source,self.width,self.height,cx,cy,z)
         if typ!='document':frame=treatment(frame,'cinematic')
         cine=sc.get('cinema',{})
         if cine and typ!='document':
@@ -367,6 +379,7 @@ def render(project:dict,root:Path,dest:Path,mode='preview',sample_fps=None)->dic
     else:video_only.replace(dest)
     ff=probe(dest)
     result={'output':str(dest),'mode':mode,'frames':frames,'fps':fps,'width':width,'height':height,
+            'photo_cache':engine.still_cache.stats(),
             'audio_attached':bool(audio),'narration_attached':bool(path and audio),
             'audio_sync_verified':bool(nar.get('timings_verified',False) and nar.get('timings_reviewed') and nar.get('caption_timeline') and path and audio),
             'ffprobe':ff,'validation':check,'publication_status':'INTERNAL ONLY'}
