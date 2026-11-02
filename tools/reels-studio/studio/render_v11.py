@@ -70,9 +70,15 @@ class V11World(V10World):
         cv2.rectangle(bg,(0,h-75),(w,h),PALETTE['ink'],-1)
         # Explicitly mark lab footage so it can't silently become historical imagery.
         item=self.man['motion_clips'][s['clip_source']]
-        lab=micro_label(item['on_screen_label'])
-        if lab.shape[1]>w-30:lab=cv2.resize(lab,(w-30,max(12,round(lab.shape[0]*(w-30)/lab.shape[1]))))
-        blend(bg,lab,14,h-58)
+        if item['role']=='simulation':
+            top=type_image('SIMULAÇÃO GRÁFICA',max(22,round(w*.045)),PALETTE['signal'])
+            bottom=type_image('NÃO É ARQUIVO HISTÓRICO',max(20,round(w*.040)),PALETTE['cream'])
+            blend(bg,top,14,h-77)
+            blend(bg,bottom,14,h-43)
+        else:
+            lab=micro_label(item['on_screen_label'])
+            if lab.shape[1]>w-30:lab=cv2.resize(lab,(w-30,max(12,round(lab.shape[0]*(w-30)/lab.shape[1]))))
+            blend(bg,lab,14,h-58)
         return bg
 
     def close(self):
