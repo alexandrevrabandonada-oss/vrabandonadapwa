@@ -73,3 +73,21 @@ def test_audio_and_moving_footage(tmp_path):
     assert diff(frames[0],frames[1])>1
     assert diff(frames[1],frames[2])>5
     assert not validate(p,tmp_path,'publish')['ok']
+
+def test_portfolio_requires_multiple_topics():
+    from studio.benchmark import evaluate_portfolio
+    one={'topic':'CSN','creative_score':9.9,'external_reviewer_score':9.8,'technical_pass':True,
+         'rights_clear':True,'editorial_approved':True,'voice_synced':True,'mobile_reviewed':True}
+    assert not evaluate_portfolio([one])['ready']
+    assert not evaluate_portfolio([one,one,one])['ready']
+
+def test_portfolio_requires_human_review_and_audio():
+    from studio.benchmark import evaluate_portfolio
+    cases=[{'topic':x,'creative_score':10,'external_reviewer_score':9.8,'technical_pass':True,
+        'rights_clear':True,'editorial_approved':True,'voice_synced':True,'mobile_reviewed':True}
+        for x in ('CSN','Rua 33','Saúde')]
+    assert evaluate_portfolio(cases)['ready']
+    cases[0]['external_reviewer_score']=8
+    assert not evaluate_portfolio(cases)['ready']
+    cases[0]['external_reviewer_score']=9.8;cases[1]['voice_synced']=False
+    assert not evaluate_portfolio(cases)['ready']
