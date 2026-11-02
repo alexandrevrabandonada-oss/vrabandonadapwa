@@ -29,7 +29,7 @@ Medições únicas, no mesmo ambiente, não representativas de outras máquinas;
 | QA audiovisual | 10% | 8,5 | 8,7 |
 | Integridade editorial | 10% | 7,6 | 7,6 |
 | Reutilização / testes | 5% | 9,4 | 9,6 |
-| **Total ponderado** | **100%** | **6,67** | **6,81** |
+| **Total ponderado** | **100%** | **6,67** | **6,80** |
 
 As notas são autoavaliações, não certificações. A nota artística do Reel V7 segue **6,63/10**: não houve Reel profissional novo aprovado.
 
