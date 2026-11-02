@@ -22,7 +22,7 @@ jobs:
       - name: Run v17 source and composition tests
         run: |
           python -m pip install -r requirements.txt
-          pytest -q tests/test_v17.py
+          python -m pytest -q tests/test_v17.py
       - name: Download documented Wikimedia ORIGINAL
         run: |
           mkdir -p work/source work/output
