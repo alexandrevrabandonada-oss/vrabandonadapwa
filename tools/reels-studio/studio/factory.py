@@ -129,6 +129,20 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
         try:
             d=float(sc['duration']); assert 0.2<=d<=180; total+=d
         except (ValueError, KeyError, TypeError, AssertionError):errors.append(f'scene {i}: invalid duration')
+    # v0.12: Optional catalog and footage-use contract, fail-closed for publication.
+    if project.get('media_catalog') is not None or project.get('editorial_usage') is not None:
+        from .media_registry import analyze_catalog, inspect_usage
+        catalog=project.get('media_catalog')
+        usages=project.get('editorial_usage')
+        if not isinstance(catalog,dict) or not isinstance(usages,list):
+            errors.append('media_catalog must be an object and editorial_usage a list')
+        else:
+            media_report=analyze_catalog(catalog)
+            use_report=inspect_usage(catalog,usages,public=(purpose=='publish'))
+            errors.extend('media catalog: '+e for e in media_report['errors'])
+            errors.extend('media use: '+e for e in use_report['errors'])
+            warnings.extend('media catalog: '+e for e in media_report['warnings'])
+            warnings.extend('media use: '+e for e in use_report['warnings'])
     beat_errors,beat_warnings=check_beats(project)
     errors.extend(beat_errors);warnings.extend(beat_warnings)
     warnings.extend(inspect_repetition(project)['warnings'])
