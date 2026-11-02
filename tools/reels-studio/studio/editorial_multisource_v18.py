@@ -147,12 +147,22 @@ def run(paths:dict[str,Path],out:Path,*,w=540,h=960,fps=24,seconds=12,strict=Tru
         writer.release()
         for rdr in readers.values():rdr.close()
     # One SOURCE's on-location soundtrack only; no fabricated historical recording.
-    cmd=['ffmpeg','-y','-loglevel','error','-i',str(silent),'-i',str(paths['senegal']),
+    # Stage 1: speech-friendly dynamic normalization and single video encode.
+    initial=out.with_name(out.stem+'_firstpass.mp4')
+    cmd1=['ffmpeg','-y','-loglevel','error','-i',str(silent),'-i',str(paths['senegal']),
         '-map','0:v:0','-map','1:a?','-t',str(seconds),'-c:v','libx264',
         '-preset','fast','-crf','19','-pix_fmt','yuv420p','-c:a','aac','-b:a','128k',
+        '-af','acompressor=threshold=0.08:ratio=3:attack=10:release=150,loudnorm=I=-16:LRA=8:TP=-1.5',
+        '-movflags','+faststart',str(initial)]
+    subprocess.run(cmd1,check=True)
+    # Stage 2: preserve encoded video exactly, limit transient peaks, meter again in QA.
+    cmd2=['ffmpeg','-y','-loglevel','error','-i',str(initial),
+        '-map','0:v:0','-map','0:a:0','-t',str(seconds),'-c:v','copy',
+        '-c:a','aac','-b:a','128k',
         '-af','acompressor=threshold=0.12:ratio=2.5:attack=10:release=120,loudnorm=I=-16:LRA=8:TP=-2.5:linear=false,alimiter=limit=0.70:level=false,volume=-0.7dB',
         '-movflags','+faststart',str(out)]
-    subprocess.run(cmd,check=True)
+    subprocess.run(cmd2,check=True)
+    initial.unlink(missing_ok=True)
     meta={'version':'v0.18','internal_only':True,'source_integrity':checked,
           'scene_grammars':['human_action','industrial_scale','cross_source_split','human_return'],
           'native_size':[w,h],'fps':fps,'duration_sec':seconds,
