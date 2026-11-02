@@ -37,7 +37,7 @@ jobs:
             --photo work/v19/sources/csn_2014.jpg \
             --video work/v19/sources/rodovia_2017.webm \
             --out work/v19/output/V19_CIDADE_DO_ACO_CONTEXTO_INTERNO.mp4 \
-            --start 15
+            --start 41
       - name: Enforce 14-second technical QA
         run: |
           set -o pipefail
