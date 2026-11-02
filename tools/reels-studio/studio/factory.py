@@ -277,7 +277,7 @@ class Engine:
             if im is None:raise ValueError('Cannot decode image '+asset_id)
             self.images[asset_id]=im
         return self.images[asset_id]
-    def frame(self,sc:dict,position:float,absolute_time:float|None=None)->np.ndarray:
+    def frame(self,sc:dict,position:float,absolute_time:float|None=None,decorate:bool=True)->np.ndarray:
         typ=sc['type'];dur=float(sc['duration']);ratio=np.clip(position/dur,0,1)
         cx,cy,z=evaluate_keyframes(sc,position) if sc.get('camera_keyframes') else camera(sc,ratio)
         if typ=='clip':
@@ -307,7 +307,7 @@ class Engine:
             if cine.get('grade'):frame=filmic_grade(frame,cine['grade'],float(cine.get('grade_intensity',.65)),round((absolute_time or position)*self.fps))
             if cine.get('light'):frame=light_pass(frame,ratio,cine['light'],float(cine.get('light_opacity',.24)))
         caption=active_caption(self.cues,absolute_time) if absolute_time is not None else None
-        return graphics(frame,sc,position,self.width,self.height,caption)
+        return graphics(frame,sc,position,self.width,self.height,caption) if decorate else frame
     def close(self):
         for c in self.caps.values():c.release()
 
@@ -335,11 +335,12 @@ def render(project:dict,root:Path,dest:Path,mode='preview',sample_fps=None)->dic
             transition=sc.get('transition_in',{})
             transition_time=float(transition.get('duration',0)) if prior else 0
             style=transition.get('style','hard_cut')
-            prior_frame=engine.frame(prior,max(0,float(prior['duration'])-1/fps),max(0,scene_start-1/fps)) if prior and transition_time else None
+            prior_frame=engine.frame(prior,max(0,float(prior['duration'])-1/fps),max(0,scene_start-1/fps),decorate=False) if prior and transition_time else None
             for i in range(round(float(sc['duration'])*fps)):
                 position=i/fps
-                fr=engine.frame(sc,position,scene_start+position)
-                if prior_frame is not None and position<transition_time:
+                is_transition=prior_frame is not None and position<transition_time
+                fr=engine.frame(sc,position,scene_start+position,decorate=not is_transition)
+                if is_transition:
                     fr=transition_composite(prior_frame,fr,position/transition_time,style)
                 proc.stdin.write(fr.tobytes());frames+=1
             scene_start+=float(sc['duration'])
