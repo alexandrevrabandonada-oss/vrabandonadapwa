@@ -69,3 +69,13 @@ V0.1 motor local simples (este pacote); V0.2 catálogo persistente/ingestão e m
            "light_opacity": 0.16, "perspective": 0.012, "depth_focus": 0.4}
 ```
 Em cenas `document`, o motor bloqueia efeitos estilísticos sobre a fonte. A visualização da página inteira preserva a integridade do fac-símile. Use `examples/o_peso_do_aco_cinema_v03.json` com arquivos locais de trabalho; fotografias e jornal originais não são redistribuídos no GitHub. O CI usa mídias sintéticas nos testes. A demonstração v0.3 não inclui voz, não é uma reportagem e não foi aprovada para publicação.
+
+## v0.4 — montagem orientada a roteiro (teste interno)
+- `studio/beatcut.py`: cada cena pode ter `edit_beats` com `scene_id`, `time_sec`, `reason` e `audio_anchor` textual de roteiro; **não são timecodes reais da voz**.
+- `studio/motion.py`: `camera_keyframes` controlam foco, deslocamento e zoom no decorrer da cena; 2 a 12 pontos com `at` em segundos e `focus:[x,y,zoom]`.
+- `studio/layout.py`: títulos e identificação de fontes passam por medição tipográfica para não serem cortados no celular.
+- `studio/benchmark.py`: aceite 10/10 depende de **três produções em temas diferentes**, nota criativa humana/externa >=9.5, direitos liberados, voz sincronizada, revisão mobile e aprovação editorial.
+- Exemplo de anotação: `"edit_beats":[{"scene_id":"s01","time_sec":0,"reason":"Situar o território","audio_anchor":"Em janeiro"}]`.
+- Exemplo de câmera: `"camera_keyframes":[{"at":0,"focus":[0.5,0.48,1.0]},{"at":3,"focus":[0.55,0.5,1.12]}]`. A última marca deve coincidir com a duração da cena.
+- Rodar `python -m studio.factory editplan --project <manifesto.json>` para inspecionar o plano de edição. A geração prévia da voz Alexandre no ElevenLabs não foi transferida; não afirmar sincronização verificada.
+- Relatório v0.4: `RELATORIO_V04.md`. Sem autorização de publicação, não inclui acervo privado nem MP3 no repositório.
