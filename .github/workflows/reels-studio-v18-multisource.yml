@@ -48,7 +48,8 @@ jobs:
           ffprobe -v error -show_entries stream=codec_type,codec_name,width,height,r_frame_rate -show_entries format=duration,size -of json work/v18/output/V18_ACO_GRAFICO_DUAS_FONTES_REAIS.mp4 > work/v18/output/FFPROBE_V18.json
       - name: Enforce measured video and audio QA
         run: |
-          python -m studio.qa_v18 work/v18/output/V18_ACO_GRAFICO_DUAS_FONTES_REAIS.mp4 > work/v18/output/QA_V18.json
+          set -o pipefail
+          python -m studio.qa_v18 work/v18/output/V18_ACO_GRAFICO_DUAS_FONTES_REAIS.mp4 | tee work/v18/output/QA_V18.json
       - name: Prepare contact sheet frames and license report
         run: |
           ffmpeg -v error -y -i work/v18/output/V18_ACO_GRAFICO_DUAS_FONTES_REAIS.mp4 -vf 'fps=1/2,scale=216:384' work/v18/output/QUADRO_%02d.jpg
