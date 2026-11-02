@@ -111,10 +111,26 @@ def make_audio(path:Path,duration=14.,sr=24000):
     with wave.open(str(path),'wb') as out:
         out.setnchannels(1);out.setsampwidth(2);out.setframerate(sr);out.writeframes(pcm.tobytes())
 
+def verify_local(key,path:Path):
+    if key not in SOURCES:raise ValueError("unknown source")
+    manifest=path.parent/(key+".json")
+    if not path.is_file() or not manifest.is_file():raise ValueError("source or verified manifest missing")
+    meta=json.loads(manifest.read_text(encoding="utf8"))
+    if meta.get("id")!=key or meta.get("publication_approved") is not False:
+        raise ValueError("untrusted source manifest")
+    digest=hashlib.sha1()
+    with path.open("rb") as fd:
+        while (chunk:=fd.read(1024*1024)):digest.update(chunk)
+    if digest.hexdigest()!=meta.get("sha1") or path.stat().st_size!=meta.get("size_bytes"):
+        raise ValueError("source hash differs from verified Commons manifest")
+    if meta.get("license_review")!=SOURCES[key]["license_review"]:
+        raise ValueError("license review status mismatch")
+    return meta
+
 def render(photo:Path,footage:Path,out:Path,w=540,h=960,fps=24,seconds=14,
            photo_start=0.,video_start=15.):
     if fps not in (24,30) or (w,h) not in ((540,960),(1080,1920)):raise ValueError("unsafe master profile")
-    if not photo.is_file() or not footage.is_file():raise FileNotFoundError("local sources missing")
+    verify_local("csn_2014",photo);verify_local("rodovia_2017",footage)
     still=cv2.imread(str(photo))
     if still is None:raise ValueError("invalid photo")
     cap=cv2.VideoCapture(str(footage))
