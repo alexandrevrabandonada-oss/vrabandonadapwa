@@ -1,0 +1,60 @@
+name: Reels Studio V19 — Volta Redonda media proof
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/volta_redonda_v19.py'
+      - 'tools/reels-studio/studio/qa_v18.py'
+      - 'tools/reels-studio/tests/test_v19.py'
+      - '.github/workflows/reels-studio-v19-volta-redonda.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  real-vr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install media dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -r requirements.txt
+      - name: Test source, temporal and license gates
+        run: python -m pytest -q tests/test_v19.py
+      - name: Acquire originals from Commons API, verify SHA-1 and preserve credits
+        run: |
+          set -euo pipefail
+          mkdir -p work/v19/sources work/v19/output
+          python -m studio.volta_redonda_v19 fetch --out work/v19/sources | tee work/v19/output/PROVENIENCIA_V19.json
+          ffprobe -v error -show_entries format=duration,size -of json work/v19/sources/rodovia_2017.webm > work/v19/output/PROBE_RODOVIA.json
+      - name: Render a real Volta Redonda city-context reel
+        run: |
+          python -m studio.volta_redonda_v19 render \
+            --photo work/v19/sources/csn_2014.jpg \
+            --video work/v19/sources/rodovia_2017.webm \
+            --out work/v19/output/V19_CIDADE_DO_ACO_CONTEXTO_INTERNO.mp4 \
+            --start 15
+      - name: Enforce 14-second technical QA
+        run: |
+          set -o pipefail
+          python -m studio.qa_v18 work/v19/output/V19_CIDADE_DO_ACO_CONTEXTO_INTERNO.mp4 --seconds 14 --width 540 --height 960 --fps 24 | tee work/v19/output/QA_V19.json
+      - name: Contact sheet and attribution file
+        run: |
+          ffmpeg -v error -y -i work/v19/output/V19_CIDADE_DO_ACO_CONTEXTO_INTERNO.mp4 -vf 'fps=1/2,scale=216:384' work/v19/output/FRAME_%02d.jpg
+          cp LICENCA_FONTES_V19.md work/v19/output/CREDITOS_DIREITOS.md
+      - name: Internal artifact; no public publishing
+        uses: actions/upload-artifact@v4
+        with:
+          name: v19-real-volta-redonda-context-internal
+          path: |
+            tools/reels-studio/work/v19/sources/*
+            tools/reels-studio/work/v19/output/*.mp4
+            tools/reels-studio/work/v19/output/*.json
+            tools/reels-studio/work/v19/output/*.jpg
+            tools/reels-studio/work/v19/output/*.md
+          if-no-files-found: error
+          retention-days: 7
