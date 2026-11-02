@@ -150,7 +150,7 @@ def run(paths:dict[str,Path],out:Path,*,w=540,h=960,fps=24,seconds=12,strict=Tru
     cmd=['ffmpeg','-y','-loglevel','error','-i',str(silent),'-i',str(paths['senegal']),
         '-map','0:v:0','-map','1:a?','-t',str(seconds),'-c:v','libx264',
         '-preset','fast','-crf','19','-pix_fmt','yuv420p','-c:a','aac','-b:a','128k',
-        '-af','acompressor=threshold=0.08:ratio=3:attack=10:release=150,loudnorm=I=-16:LRA=8:TP=-1.5',
+        '-af','acompressor=threshold=0.12:ratio=2.5:attack=10:release=120,loudnorm=I=-16:LRA=8:TP=-2.5:linear=false,alimiter=limit=0.70:level=false,volume=-0.7dB',
         '-movflags','+faststart',str(out)]
     subprocess.run(cmd,check=True)
     meta={'version':'v0.18','internal_only':True,'source_integrity':checked,
