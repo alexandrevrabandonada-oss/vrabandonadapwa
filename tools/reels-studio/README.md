@@ -96,3 +96,10 @@ As cenas podem usar `"transition_in":{"style":"print_registration","duration":0.
 `studio.variants_v06.produce(manifest, 'restrained'|'expressive')` gera duas alternativas A/B, preservando imagens, origens, direitos, texto e referências.
 `python -m studio.voice_delivery --source /CAMINHO/tomada_original.mp3 --output private_assets/voz/alexandre_original.mp3 --expected-duration 20.7122` registra a gravação original já obtida pelo usuário sem solicitar síntese; o status de sincronização permanece não verificado, até conferência do áudio e alinhamento.
 O arquivo MP3 do ElevenLabs não foi transferido durante esta rodada; nenhum vídeo de prova contém a voz profissional real. O desempenho de renderização de variantes longas ainda precisa de otimização. Ver `RELATORIO_V06.md` para notas, testes e pendências. Não colocar áudios privados, credenciais ou imagens sem direitos em commits.
+
+## v0.7 — otimização A/B verificável
+- `studio/fast_stills.py` prepara fotografias para câmera virtual com cache LRU limitado a 96 MiB, registrando `photo_cache` no relatório; arquivo original permanece inalterado.
+- `studio/visual_grammar.py` memoriza geometria das três transições por resolução. A auditoria de fidelidade compara o efeito otimizado ao algoritmo anterior e preserva documentação.
+- 52 testes locais passaram (+ 1 skip), e ambas as variações do filme piloto foram renderizadas a **24 fps** (303 quadros; 12,625s; 540×960) em ambiente local, sem narração. Os exemplos não são peças publicáveis.
+- Relatório com benchmarks de operadores, notas conservadoras e bloqueios: `RELATORIO_V07.md`.
+- A voz profissional Alexandre continua gerada no ElevenLabs, mas **ainda não está no MP4**. Nem os direitos das imagens nem a revisão humana estão concluídos.
