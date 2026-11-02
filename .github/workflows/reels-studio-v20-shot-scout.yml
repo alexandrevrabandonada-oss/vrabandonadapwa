@@ -1,0 +1,58 @@
+name: Reels Studio V20 — local video shot scouting
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/shot_scout_v20.py'
+      - 'tools/reels-studio/tests/test_v20.py'
+      - '.github/workflows/reels-studio-v20-shot-scout.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review-only-scout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install decoding and test dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install -r requirements.txt
+      - name: Unit regression on synthetic footage
+        run: python -m pytest -q tests/test_v20.py tests/test_v11.py
+      - name: Fetch original Volta Redonda media and verify Commons byte integrity
+        run: |
+          set -euo pipefail
+          mkdir -p work/v20/source work/v20/review
+          python -m studio.volta_redonda_v19 fetch --out work/v20/source > work/v20/review/PROVENIENCIA_V19_REUTILIZADA.json
+      - name: Rank real 2017 documentary segments; publication remains blocked
+        run: |
+          set -euo pipefail
+          python -m studio.shot_scout_v20 \
+            --video work/v20/source/rodovia_2017.webm \
+            --manifest work/v20/source/rodovia_2017.json \
+            --out work/v20/review \
+            --window 2.8 --stride 2.8 --top 8
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path("work/v20/review/V20_TRIAGEM.json").read_text())
+          assert data["publication_approved"] is False
+          assert data["rights_cleared"] is False
+          assert data["aesthetic_quality_certified"] is False
+          print("Windows examined:",data["windows_scanned"],
+                "Action candidates (not verified):",data["action_candidate_count"])
+          PY
+      - name: Attach review-only sheet and machine-readable metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: v20-volta-redonda-shot-scout-internal-review
+          path: |
+            tools/reels-studio/work/v20/review/*.json
+            tools/reels-studio/work/v20/review/*.jpg
+          if-no-files-found: error
+          retention-days: 7
