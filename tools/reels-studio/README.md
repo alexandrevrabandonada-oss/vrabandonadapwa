@@ -79,3 +79,13 @@ Em cenas `document`, o motor bloqueia efeitos estilísticos sobre a fonte. A vis
 - Exemplo de câmera: `"camera_keyframes":[{"at":0,"focus":[0.5,0.48,1.0]},{"at":3,"focus":[0.55,0.5,1.12]}]`. A última marca deve coincidir com a duração da cena.
 - Rodar `python -m studio.factory editplan --project <manifesto.json>` para inspecionar o plano de edição. A geração prévia da voz Alexandre no ElevenLabs não foi transferida; não afirmar sincronização verificada.
 - Relatório v0.4: `RELATORIO_V04.md`. Sem autorização de publicação, não inclui acervo privado nem MP3 no repositório.
+
+## v0.5 — áudio verificável e acervo com procedência
+
+- `studio/alignment.py` recebe arquivos JSON com `words:[{text,start,end}]`; não calcula timing por velocidade presumida. Confere todos os termos contra o texto aprovado e exporta `.json` (cues) + `.srt`, com flag **DRAFT_TIME_CODES_NOT_HUMAN_REVIEWED**.
+- Exemplo: `python -m studio.alignment --words /CAMINHO/words.json --transcript /CAMINHO/roteiro.txt --duration 20.712 --output output/legendas_rascunho`.
+- `studio/audioqa.inspect_audio(Path("output/reel.mp4"))` mede EBU R128 e true peak.
+- `studio/provenance.snapshot(project, workspace)` registra origem e SHA-256; hash não prova direito de publicação.
+- A mixagem da faixa única de voz recebe compressão moderada + normalização, evitando que TTS baixíssimo chegue sem tratamento ao master.
+- Há testes de regressão `tests/test_v05.py` e registro em `RELATORIO_V05.md`. **Os três ensaios audiovisuais de outras pautas usam voz e imagens sintéticas de laboratório, não a voz Alexandre.** Foram gerados localmente; não são acervo jornalístico nem foram commitados por direitos/privacidade.
+- A gravação profissional Alexandre permanece gerada no ElevenLabs, mas indisponível ao renderizador: não elevar a nota de sincronização real nem alterar os gates editoriais.
