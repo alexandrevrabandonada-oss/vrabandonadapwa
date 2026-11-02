@@ -16,6 +16,7 @@ from .cinema import filmic_grade, camera_plane, light_pass, depth_compose, docum
 from .beatcut import check_beats, inspect_repetition, timeline
 from .motion import validate_keyframes, evaluate as evaluate_keyframes
 from .layout import fit_font_and_lines
+from .visual_grammar import composite as transition_composite,validate_transition
 
 PALETTE = {'ink': (16, 20, 25), 'paper': (239, 235, 223),
            'copper': (239, 107, 52), 'electric': (45, 191, 222), 'muted': (195, 188, 174)}
@@ -96,6 +97,7 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
             if sc.get('background_asset') not in assets: errors.append(f'scene {i}: background_asset missing')
             if sc.get('mask_asset') not in assets: errors.append(f'scene {i}: mask_asset missing')
         errors.extend(f'scene {i}: {e}' for e in validate_keyframes(sc))
+        if i>0:errors.extend(f'scene {i}: {e}' for e in validate_transition(sc))
         if sc.get('claim') and not sc.get('evidence_id'):errors.append(f'scene {i}: claim without evidence_id')
         if sc.get('type')=='document' and sc.get('overlay'):
             errors.append(f'scene {i}: no title overlay over primary-source document')
@@ -328,11 +330,20 @@ def render(project:dict,root:Path,dest:Path,mode='preview',sample_fps=None)->dic
     proc=subprocess.Popen(cmd,stdin=subprocess.PIPE,stderr=subprocess.PIPE)
     frames=0;scene_start=0.0
     try:
+        prior=None
         for sc in project['scenes']:
+            transition=sc.get('transition_in',{})
+            transition_time=float(transition.get('duration',0)) if prior else 0
+            style=transition.get('style','hard_cut')
+            prior_frame=engine.frame(prior,max(0,float(prior['duration'])-1/fps),max(0,scene_start-1/fps)) if prior and transition_time else None
             for i in range(round(float(sc['duration'])*fps)):
-                fr=engine.frame(sc,i/fps,scene_start+i/fps)
+                position=i/fps
+                fr=engine.frame(sc,position,scene_start+position)
+                if prior_frame is not None and position<transition_time:
+                    fr=transition_composite(prior_frame,fr,position/transition_time,style)
                 proc.stdin.write(fr.tobytes());frames+=1
             scene_start+=float(sc['duration'])
+            prior=sc
         proc.stdin.close();msg=proc.stderr.read().decode('utf-8',errors='replace');rc=proc.wait()
         if rc!=0:raise RuntimeError('ffmpeg render failed: '+msg[-2000:])
     except Exception:
