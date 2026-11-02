@@ -89,3 +89,10 @@ Em cenas `document`, o motor bloqueia efeitos estilísticos sobre a fonte. A vis
 - A mixagem da faixa única de voz recebe compressão moderada + normalização, evitando que TTS baixíssimo chegue sem tratamento ao master.
 - Há testes de regressão `tests/test_v05.py` e registro em `RELATORIO_V05.md`. **Os três ensaios audiovisuais de outras pautas usam voz e imagens sintéticas de laboratório, não a voz Alexandre.** Foram gerados localmente; não são acervo jornalístico nem foram commitados por direitos/privacidade.
 - A gravação profissional Alexandre permanece gerada no ElevenLabs, mas indisponível ao renderizador: não elevar a nota de sincronização real nem alterar os gates editoriais.
+
+## v0.6 — gramática cinematográfica e transferência de voz existente
+
+As cenas podem usar `"transition_in":{"style":"print_registration","duration":0.25}`, com opções `hard_cut`, `slag_reveal` e `press_gate`; duração máxima 0,45s e no máximo metade da cena. A regra não altera o arquivo de imagem/documento: é um efeito temporário de montagem.
+`studio.variants_v06.produce(manifest, 'restrained'|'expressive')` gera duas alternativas A/B, preservando imagens, origens, direitos, texto e referências.
+`python -m studio.voice_delivery --source /CAMINHO/tomada_original.mp3 --output private_assets/voz/alexandre_original.mp3 --expected-duration 20.7122` registra a gravação original já obtida pelo usuário sem solicitar síntese; o status de sincronização permanece não verificado, até conferência do áudio e alinhamento.
+O arquivo MP3 do ElevenLabs não foi transferido durante esta rodada; nenhum vídeo de prova contém a voz profissional real. O desempenho de renderização de variantes longas ainda precisa de otimização. Ver `RELATORIO_V06.md` para notas, testes e pendências. Não colocar áudios privados, credenciais ou imagens sem direitos em commits.
