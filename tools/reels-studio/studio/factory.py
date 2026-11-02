@@ -18,6 +18,7 @@ from .motion import validate_keyframes, evaluate as evaluate_keyframes
 from .layout import fit_font_and_lines
 from .visual_grammar import composite as transition_composite,validate_transition
 from .fast_stills import BoundedStillCache
+from .depth_stage import DepthStage
 
 PALETTE = {'ink': (16, 20, 25), 'paper': (239, 235, 223),
            'copper': (239, 107, 52), 'electric': (45, 191, 222), 'muted': (195, 188, 174)}
@@ -94,6 +95,10 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
                 errors.append(f'scene {i}: perspective exceeds safety limit')
             if cine.get('depth_focus',0) and not 0 <= float(cine['depth_focus']) <= 1:
                 errors.append(f'scene {i}: depth_focus invalid')
+        if sc.get('depth_mode') not in (None,'physical'):
+            errors.append(f'scene {i}: unknown depth mode')
+        if sc.get('depth_mode') and sc.get('type')!='parallax':
+            errors.append(f'scene {i}: physical depth restricted to parallax context scenes')
         if sc.get('type') == 'parallax':
             if sc.get('background_asset') not in assets: errors.append(f'scene {i}: background_asset missing')
             if sc.get('mask_asset') not in assets: errors.append(f'scene {i}: mask_asset missing')
@@ -266,6 +271,7 @@ class Engine:
         self.project=project;self.root=root;self.width=width;self.height=height;self.fps=fps
         self.images:dict[str,np.ndarray]={};self.caps:dict[str,cv2.VideoCapture]={}
         self.still_cache=BoundedStillCache()
+        self.depth_stages={}
         self.assets=project['assets']
         self.cues=[]
         nar=project.get('narration',{})
@@ -292,12 +298,19 @@ class Engine:
             frame=zoom_crop(src,self.width,self.height,cx,cy,z)
         elif typ=='parallax':
             bg=self.image(sc['background_asset']);src=self.image(sc['asset']);mask=self.image(sc['mask_asset'])
-            if mask.ndim==3:mask=cv2.cvtColor(mask[:,:,:3],cv2.COLOR_BGR2GRAY)
-            # Different coordinates and scale for foreground creates real occlusion.
-            b=zoom_crop(bg,self.width,self.height,cx*.98+.01,cy*.98+.01,z)
-            front=zoom_crop(src,self.width,self.height,cx*.985+.007,cy*.98+.01,z*1.07)
-            mk=zoom_crop(mask,self.width,self.height,cx*.985+.007,cy*.98+.01,z*1.07)
-            frame=depth_compose(b,front,mk,focus=float(sc.get('cinema',{}).get('depth_focus',.15)))
+            if sc.get('depth_mode')=='physical':
+                key=(sc['id'],sc['asset'],sc['background_asset'],sc['mask_asset'],self.width,self.height)
+                if key not in self.depth_stages:
+                    self.depth_stages[key]=DepthStage(src,bg,mask,self.width,self.height,
+                        pan_x=float(sc.get('pan_x',cx)),pan_y=float(sc.get('pan_y',cy)),
+                        strength=float(sc.get('depth_strength',1.0)))
+                frame=self.depth_stages[key].frame(ratio,accent=(52,135,239),subtle=bool(sc.get('restrained_depth',False)))
+            else:
+                if mask.ndim==3:mask=cv2.cvtColor(mask[:,:,:3],cv2.COLOR_BGR2GRAY)
+                b=zoom_crop(bg,self.width,self.height,cx*.98+.01,cy*.98+.01,z)
+                front=zoom_crop(src,self.width,self.height,cx*.985+.007,cy*.98+.01,z*1.07)
+                mk=zoom_crop(mask,self.width,self.height,cx*.985+.007,cy*.98+.01,z*1.07)
+                frame=depth_compose(b,front,mk,focus=float(sc.get('cinema',{}).get('depth_focus',.15)))
         elif typ=='document' and sc.get('document_view','full')=='full':
             frame=documentary_stage(self.image(sc['asset']),self.width,self.height,scale=1.0)
         else:
