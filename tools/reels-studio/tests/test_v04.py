@@ -91,3 +91,15 @@ def test_portfolio_requires_human_review_and_audio():
     assert not evaluate_portfolio(cases)['ready']
     cases[0]['external_reviewer_score']=9.8;cases[1]['voice_synced']=False
     assert not evaluate_portfolio(cases)['ready']
+
+def test_repetition_qa_is_diagnostic_not_artificial_score(tmp_path):
+    p=fixture(tmp_path)
+    details=inspect_repetition(p)
+    assert details['distinct_assets']==2
+    assert len(timeline(p))==2
+    assert not check_beats(p)[0]
+
+def test_anchor_and_scene_alignment_must_be_exact(tmp_path):
+    p=fixture(tmp_path)
+    p['edit_beats'][1]['time_sec']=-1
+    assert not validate(p,tmp_path)['ok']
