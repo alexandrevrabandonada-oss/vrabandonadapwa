@@ -13,6 +13,9 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from .captions import load_timeline, active_caption
 from .cinema import filmic_grade, camera_plane, light_pass, depth_compose, documentary_stage, GRADES
+from .beatcut import check_beats, inspect_repetition, timeline
+from .motion import validate_keyframes, evaluate as evaluate_keyframes
+from .layout import fit_font_and_lines
 
 PALETTE = {'ink': (16, 20, 25), 'paper': (239, 235, 223),
            'copper': (239, 107, 52), 'electric': (45, 191, 222), 'muted': (195, 188, 174)}
@@ -92,6 +95,7 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
         if sc.get('type') == 'parallax':
             if sc.get('background_asset') not in assets: errors.append(f'scene {i}: background_asset missing')
             if sc.get('mask_asset') not in assets: errors.append(f'scene {i}: mask_asset missing')
+        errors.extend(f'scene {i}: {e}' for e in validate_keyframes(sc))
         if sc.get('claim') and not sc.get('evidence_id'):errors.append(f'scene {i}: claim without evidence_id')
         if sc.get('type')=='document' and sc.get('overlay'):
             errors.append(f'scene {i}: no title overlay over primary-source document')
@@ -117,6 +121,9 @@ def validate(project: dict, root: Path, purpose: str = 'internal') -> dict:
         try:
             d=float(sc['duration']); assert 0.2<=d<=180; total+=d
         except (ValueError, KeyError, TypeError, AssertionError):errors.append(f'scene {i}: invalid duration')
+    beat_errors,beat_warnings=check_beats(project)
+    errors.extend(beat_errors);warnings.extend(beat_warnings)
+    warnings.extend(inspect_repetition(project)['warnings'])
     narration=project.get('narration', {})
     if narration.get('file'):
         try:
@@ -203,18 +210,20 @@ def graphics(frame:np.ndarray,scene:dict,t:float,width:int,height:int,caption:st
     pad=int(width*.065)
     label=scene.get('source_label') or scene.get('context_label','')
     if label:
-        font=ImageFont.truetype(font_path(False),max(14,round(width*.032)))
-        d.text((pad,int(height*.09)),label,font=font,fill=(*PALETTE['paper'],232),stroke_width=1,stroke_fill=(0,0,0,185))
+        font,lab_lines=fit_font_and_lines(label,font_path(False),max(14,round(width*.032)),max(12,round(width*.022)),width-2*pad,3)
+        y_label=int(height*.09)
+        for line in lab_lines:
+            d.text((pad,y_label),line,font=font,fill=(*PALETTE['paper'],232),stroke_width=1,stroke_fill=(0,0,0,185))
+            y_label+=int(font.size*1.33)
     ttl=scene.get('overlay','') if not caption else ''
     if ttl:
-        f=ImageFont.truetype(font_path(True),max(20,round(width*.069)))
-        lines=fit_text(ttl,26)
+        f,lines=fit_font_and_lines(ttl.upper(),font_path(True),max(20,round(width*.069)),max(18,round(width*.046)),width-2*pad,3)
         y=int(height*.70)
         # lightweight ink shadow, no generic powerpoint card.
         for line in lines:
             d.text((pad+3,y+4),line.upper(),font=f,fill=(0,0,0,175),stroke_width=2,stroke_fill=(0,0,0,155))
             d.text((pad,y),line.upper(),font=f,fill=(*PALETTE['paper'],247))
-            y+=int(width*.088)
+            y+=int(f.size*1.22)
         d.line([(pad,int(height*.7)-12),(pad+round(width*.18),int(height*.7)-12)],fill=(*PALETTE['copper'],245),width=max(3,width//110))
     if caption:
         # Subtitles stay above bottom app chrome. They belong to a verified timing file,
@@ -268,7 +277,7 @@ class Engine:
         return self.images[asset_id]
     def frame(self,sc:dict,position:float,absolute_time:float|None=None)->np.ndarray:
         typ=sc['type'];dur=float(sc['duration']);ratio=np.clip(position/dur,0,1)
-        cx,cy,z=camera(sc,ratio)
+        cx,cy,z=evaluate_keyframes(sc,position) if sc.get('camera_keyframes') else camera(sc,ratio)
         if typ=='clip':
             aid=sc['asset']
             if aid not in self.caps:self.caps[aid]=cv2.VideoCapture(str(local_file(self.root,self.assets[aid]['file'])))
@@ -368,7 +377,7 @@ def scorecard(previous:dict|None, new:dict, weights:dict)->dict:
 
 def main():
     p=argparse.ArgumentParser(description='VR Abandonada Reel Factory — no automatic publication')
-    p.add_argument('action',choices=['validate','render','audit','score','qa','improve','variant','shotlist'])
+    p.add_argument('action',choices=['validate','render','audit','score','qa','improve','variant','shotlist','editplan'])
     p.add_argument('--project',type=Path,required=True)
     p.add_argument('--purpose',choices=['internal','publish'],default='internal')
     p.add_argument('--mode',choices=['preview','master'],default='preview')
@@ -392,6 +401,10 @@ def main():
     if a.action=='improve':
         from .iterate import prioritize
         ratings=json.loads(a.ratings.read_text()); print(json.dumps(prioritize(ratings),ensure_ascii=False,indent=2));return
+    if a.action=='editplan':
+        from .beatcut import check_beats,inspect_repetition,timeline
+        errors,warnings=check_beats(obj)
+        print(json.dumps({'beats':timeline(obj),'errors':errors,'warnings':warnings,'visual_diversity':inspect_repetition(obj)},ensure_ascii=False,indent=2));return
     if a.action=='shotlist':
         from .director import shotlist
         print(json.dumps(shotlist(obj),ensure_ascii=False,indent=2));return
