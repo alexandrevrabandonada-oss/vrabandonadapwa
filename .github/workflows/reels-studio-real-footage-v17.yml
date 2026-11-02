@@ -47,6 +47,7 @@ jobs:
         with:
           name: v17-real-footage-internal-proof
           path: |
+            tools/reels-studio/work/source/armature_senegal_2024.webm
             tools/reels-studio/work/output/*.mp4
             tools/reels-studio/work/output/*.json
             tools/reels-studio/work/output/*.jpg
