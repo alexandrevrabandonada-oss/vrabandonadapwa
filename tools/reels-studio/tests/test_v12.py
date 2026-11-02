@@ -47,3 +47,18 @@ def test_nonexistent_voice_is_not_synchronized():
     report=check(CAT,PLAN,VOICE)
     assert report['voice']['audio_present'] is False
     assert report['distribution_action_taken'] is False
+
+def test_factory_enforces_registry_when_attached(tmp_path):
+    import numpy as np,cv2
+    from studio.factory import validate
+    assert cv2.imwrite(str(tmp_path/'local.jpg'),np.zeros((50,80,3),np.uint8))
+    p={'project_id':'media-gate-example','assets':{
+        'source':{'file':'local.jpg','source':'synthetic fixture','role':'context',
+                  'capture_date':'generated','rights_status':'cleared'}},
+       'scenes':[{'id':'s','asset':'source','type':'photograph','duration':1.0,
+                  'direction':{'subject':'fixture','intent':'test','camera_motive':'slow push','cut_motive':'end'}}],
+       'human_approval':{'approved':False},'narration':{},
+       'media_catalog':CAT,'editorial_usage':PLAN['shots']}
+    assert validate(p,tmp_path)['ok']
+    result=validate(p,tmp_path,'publish')
+    assert any('unverified rights' in e for e in result['errors'])
