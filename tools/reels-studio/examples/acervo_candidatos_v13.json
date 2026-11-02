@@ -1,0 +1,52 @@
+{
+  "version": "0.13",
+  "review_date": "2026-11-01",
+  "purpose": "discovery_not_redistribution",
+  "candidates": [
+    {
+      "id": "SENEGAL-STEEL-2024",
+      "type": "video",
+      "title": "Armature en acier de pliage",
+      "url": "https://commons.wikimedia.org/wiki/File:Armature_en_acier_de_pliage.webm",
+      "attribution": "4MAPS / Demba Welle",
+      "place": "Tivaouane Peulh-Niaga, Senegal",
+      "date": "2024-03-05",
+      "declared_license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "license_review_status": "source_page_checked_requires_editorial_derivative_review",
+      "downloaded": false,
+      "editorial_role": "international_process_context_only",
+      "never_use_as": "1962 CSN/Volta Redonda event evidence",
+      "notes": "ShareAlike and attribution obligations must be respected in distributed adaptation"
+    },
+    {
+      "id": "US-INDUSTRY-1904",
+      "type": "video",
+      "title": "Casting a Guide Box - Westinghouse Works",
+      "url": "https://commons.wikimedia.org/wiki/File:Casting_a_Guide_Box_-_Westinghouse_Works.webm",
+      "attribution": "Billy Bitzer",
+      "place": "United States",
+      "date": "1904",
+      "declared_license": "Public domain in the United States; international status unconfirmed",
+      "license_review_status": "pending_jurisdictional_review",
+      "downloaded": false,
+      "editorial_role": "archival_reference_only",
+      "never_use_as": "CSN historical footage",
+      "notes": "Wikimedia Commons warns PD-US may not mean PD in other jurisdictions; no binary downloaded"
+    },
+    {
+      "id": "VR-VIDEO-2017",
+      "type": "video",
+      "title": "Rodovia do Contorno é inaugurada após 22 anos de obra",
+      "url": "https://commons.wikimedia.org/wiki/File:Rodovia_do_Contorno_%C3%A9_inaugurada_ap%C3%B3s_22_anos_de_obra.webm",
+      "attribution": "TV BrasilGov",
+      "place": "Volta Redonda, RJ",
+      "date": "2017-12-08",
+      "declared_license": "CC BY 3.0 reported, license review outstanding",
+      "license_review_status": "pending",
+      "downloaded": false,
+      "editorial_role": "contemporary_city_context_only",
+      "never_use_as": "1962 CSN accident / Rua 33 project footage"
+    }
+  ]
+}
