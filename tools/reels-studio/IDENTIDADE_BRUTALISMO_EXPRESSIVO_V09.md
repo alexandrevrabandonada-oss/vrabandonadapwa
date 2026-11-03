@@ -34,3 +34,25 @@ Implementação no pacote da conversa `VR_FABRICA_REELS_V09` em `studio/expressi
 4. Criar três filmes em pautas diferentes; avaliar também em celular e com avaliadores humanos independentes.
 
 **Nota do Reel V7 continua 6,63/10.** A prévia V0.9 é uma prova da biblioteca de direção visual, não um Reel de reportagem aprovado.
+
+## Canonicalização v0.25 — Aranhaverso-brutalista industrial
+
+Os princípios visuais aprovados para continuar desenvolvendo (sem copiar personagens ou cenas): **retícula gráfica em camadas, impressão cromaticamente deslocada em tipografia, chapas diagonais, movimento em profundidade, alternância de composições, cor expressiva e edição orientada à fala**. O referencial proprietário não deve ser reproduzido literalmente. As evidências históricas permanecem identificadas e suas alterações nunca devem criar fatos.
+
+O perfil-base de experimento é **Aço Gráfico / Zine Industrial**, com uma alternativa **Documental Ciano** para testar legibilidade; não promover automaticamente a versão mais colorida sem avaliar a história.
+
+**Toda versão entregue precisa apresentar duas notas em escala 0–10:**
+
+1. **Arte do Reel**: rubrica fixa identidade 20%, composição 15%, movimento 15%, acervo 15%, narrativa 10%, legendas 10% e som/voz 15%. Registre o peso e as notas por eixo em JSON; indique se são estimativas internas ou revisão humana externa. QA técnico NÃO concede nota estética.
+2. **Capacidade da fábrica**: nota distinta, comparável à histórica 8,14/10, que mede processo testado, renderização, fontes, sincronismo e reusabilidade. **Não elevar por mudanças cosméticas sem regressão comprovada.**
+
+A v0.25 gerou localmente duas versões de 14,5 s. Avaliação interna provisória da arte: **6,61/10 Zine**, **6,45/10 Documental**, e v0.24 retrospectivamente **5,80/10**. Nota interna de processo estimada: **8,24/10** apenas depois de verificar a suíte geral, preservando histórico de 8,14/10. Sem voz Alexandre audível nos vídeos, sem master HD nativo, sem avaliação externa e sem publicação. Evidência: `RELATORIO_V25.md` e `examples/scorecard_aranhaverso_v25.json`.
+
+### Anti-regressões de identidade
+
+- Não trocar tomadas reais por um pôster estático ou blocos de cor apenas para subir nota visual.
+- Não aplicar 'offset' e texturas que falsifiquem o conteúdo de um documento/fotograma histórico. Efeitos existem ao redor ou como acabamento explicitamente artístico.
+- Não reutilizar o mesmo fundo/corte/tratamento por três planos seguidos sem progressão narrativa.
+- Não encher a tela de palavras: preservar a leitura da fonte, a legenda e a hierarquia principal.
+- Não declarar voz sincronizada quando só os timestamps das legendas foram alinhados.
+- Metas de produção: três pautas distintas, **imagem local em movimento**, locução Alexandre, master 1080×1920/30, revisão humana no celular e scorecard estruturado.
