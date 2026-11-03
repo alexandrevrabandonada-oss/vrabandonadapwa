@@ -77,7 +77,11 @@ def validate_story(scenes=SCENES, duration=DURATION)->dict:
             'automated_artistic_10_10_certification':False}
 
 def font(size,small=False):
-    return ImageFont.truetype(FONT_BODY if small else FONT_BOLD,max(10,int(size)))
+    preferred=FONT_BODY if small else FONT_BOLD
+    fallback=('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf' if small
+              else '/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed-Bold.ttf')
+    selected=preferred if Path(preferred).is_file() else fallback
+    return ImageFont.truetype(selected,max(10,int(size)))
 
 def cv_rgb(rgb):
     return tuple(reversed(rgb))
