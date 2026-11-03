@@ -17,7 +17,7 @@ Foram renderizadas duas peças internas de **14,500 s, 540×960, 24 fps, H.264/A
 
 ## Controles executados localmente
 
-**12 testes de regressão** aprovados: nove possibilidades de composição; múltiplas pautas; variação de quadros; oclusão da manchete versus v27; entrada e retirada da tipografia; duas paletas; legenda sem órfãs; origem da fonte; condição de voz; papéis inválidos e duração real das palavras. `qa_v28.py` também avaliou ambos os MP4s:
+**12 testes de regressão** aprovados: nove possibilidades de composição para diferentes papéis de mídia; variação de quadros; oclusão da manchete versus v27; entrada e retirada da tipografia; duas paletas; legenda sem órfãs; origem da fonte; condição de voz; papéis inválidos e duração real das palavras. `qa_v28.py` também avaliou ambos os MP4s:
 
 | Indicador | Gráfico | Cinema |
 |---|---:|---:|
