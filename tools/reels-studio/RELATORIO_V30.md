@@ -35,3 +35,13 @@ Reel v0.29 (estimativa artística) **7,18/10**; capacidade interna da fábrica *
 ## Adendo — validação de caminho de voz sem TTS duplicado
 
 A fábrica passou a rejeitar arquivos de narração ausentes, silenciosos ou com duração incompatível via `studio/voice_integrity_v30.py`, e agora pode testar a presença perceptível de um áudio de referência após a mixagem por similaridade temporal da onda PCM. Cinco testes sintéticos foram concluídos localmente: silêncio, duração incorreta, preservação de sinal, voz de laboratório não identificada como Alexandre e mixagem efetiva. O editor não certifica identidade de locutor sem a origem auditada da gravação. O MP3 verdadeiro continua pendente de importação.
+
+## Execução e QA comprovados no GitHub
+
+**Run v0.30 final:** https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/41654085701 — **sucesso** após integração dos novos testes de voz; workflow baixou e conferiu as fotos, selecionou quatro janelas de vídeo, renderizou o master, mediu o MP4 e preservou o artefato. O primeiro run v0.30 (41653315579) também havia passado.
+
+**Master verificado:** 1080 × 1920, 30 fps, 14,5 s, H.264/AAC, **−16,1 LUFS / −1,8 dBTP**, 32 palavras sincronizadas em dados, e **voz não embutida**. Distâncias perceptuais entre as três fotos: **28, 32 e 36** bits (hash dHash de 64 bits), não são imagens duplicadas. QA: aprovado; movimento detectável nas tomadas industriais (diferenças médias 36,89 e 26,41 na amostragem).
+
+**Nota artística interna v0.30: 7,36/10** (+0,18 versus v0.29) e **capacidade técnica 8,68/10** (+0,08). A nota artística é uma estimativa conservadora após inspeção da folha de contato; o ponto que realmente melhora é a variedade de arquivo, não a narração ou uma pauta investigativa. O cálculo está em `examples/scorecard_v30.json` com pesos e subtotais reproduzíveis. Nenhuma destas notas é avaliação independente nem certificação.
+
+A marca Aranhaverso-brutalista continua como inspiração de princípios abstratos de retícula, impressão, gestos cinéticos e contraste — sem reproduzir elementos proprietários do filme.
