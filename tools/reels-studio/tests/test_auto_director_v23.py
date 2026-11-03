@@ -7,8 +7,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import auto_director_v23 as d
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from studio import auto_director_v23 as d
 
 
 def fixture_frame(w=640,h=360):
