@@ -4,8 +4,7 @@ on:
     paths:
       - 'tools/reels-studio/studio/visual_director_v33.py'
       - 'tools/reels-studio/studio/verified_media_v31.py'
-      - 'tools/reels-studio/studio/visual_director_v33.py'
-      - 'tools/reels-studio/studio/visual_qa_v31.py'
+      - 'tools/reels-studio/studio/visual_qa_v33.py'
       - 'tools/reels-studio/tests/test_visual_motion_v33.py'
       - 'tools/reels-studio/tests/test_visual_v31.py'
       - '.github/workflows/reels-studio-v33-motion-master.yml'
@@ -64,7 +63,7 @@ jobs:
             --variant graphic --quality master
       - name: Validate real four-source identity, audio levels, subtitle times, no fake narration
         run: |
-          python -m studio.visual_qa_v31 \
+          python -m studio.visual_qa_v33 \
             --video work/v33/output/V33_ARQUIVO_REAL_MASTER.mp4 \
             --words examples/voice_alexandre_words_v24.json \
             --out work/v33/output/V33_QA.json
