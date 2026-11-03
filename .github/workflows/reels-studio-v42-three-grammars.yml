@@ -1,0 +1,52 @@
+name: Reels Studio V42 — three real-source motion grammars (offline CI)
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/three_grammars_v42.py'
+      - 'tools/reels-studio/studio/quality_gate_v42.py'
+      - 'tools/reels-studio/tests/test_three_grammars_v42.py'
+      - 'tools/reels-studio/RELATORIO_V42.md'
+      - 'tools/reels-studio/examples/scorecard_v42.json'
+      - '.github/workflows/reels-studio-v42-three-grammars.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  three-formats-internal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install fonts, FFmpeg and testing dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-lato
+          python -m pip install -r requirements.txt
+      - name: Test archival, action and broadcast editing contracts (synthetic frames, no third-party footage)
+        run: python -m pytest -q tests/test_three_grammars_v42.py
+      - name: Compile the three-grammar engine and audit module
+        run: |
+          python -m py_compile studio/three_grammars_v42.py studio/quality_gate_v42.py
+          python - <<'PY'
+          from studio.three_grammars_v42 import PROFILES,W,H,FPS,TextCache,frame_base
+          assert len(PROFILES)==3
+          assert (W,H,FPS)==(1080,1920,30)
+          for profile in PROFILES:
+              frame=frame_base(.7,profile,TextCache())
+              assert frame.shape==(H,W,3)
+          print('three profiles: geometry and type are generated correctly')
+          PY
+      - name: Enforce no private media or narration in repository
+        run: |
+          test ! -d private_assets
+          test ! -d work/v42/private_assets
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          score=json.loads(Path('examples/scorecard_v42.json').read_text())
+          assert score['publication_approved'] is False
+          assert score['narration_embedded'] is False
+          PY
