@@ -4,6 +4,8 @@ on:
     paths:
       - 'tools/reels-studio/studio/auto_director_v23.py'
       - 'tools/reels-studio/tests/test_auto_director_v23.py'
+      - 'tools/reels-studio/studio/voice_bridge_v23.py'
+      - 'tools/reels-studio/tests/test_voice_bridge_v23.py'
       - '.github/workflows/reels-studio-v23-director.yml'
   workflow_dispatch:
 permissions:
@@ -24,7 +26,7 @@ jobs:
           python -m pip install -r requirements.txt
           fc-match "Roboto Condensed:style=Bold"
       - name: Validate beat grid, local footage, truthful titles, audio timing
-        run: python -m pytest -q tests/test_auto_director_v23.py
+        run: python -m pytest -q tests/test_auto_director_v23.py tests/test_voice_bridge_v23.py
       - name: Fetch a genuine CSN photograph and international steel footage
         run: |
           set -euo pipefail
