@@ -1,8 +1,8 @@
 """Aço Gráfico v0.23: beat-directed editorial reels from authenticated local media.
 
 Generates preview variants with no network, publishing or invented footage.
-The example uses a photo of CSN (2014) and video of the Rodovia do Contorno (2017),
-identified as DISTINCT sources. Sound design is generated from original synthetic DSP.
+The demonstration supports a CSN photo (2014) paired with local news (2017) or
+separately labelled French industrial context (2011). Original synthetic soundtrack.
 """
 from __future__ import annotations
 import argparse
@@ -71,7 +71,7 @@ def validate_story(scenes=SCENES, duration=DURATION)->dict:
         errors.append('not enough genuinely moving footage')
     return {'ok':not errors,'errors':errors,'scene_count':len(scenes),
             'visual_grammars':len({s.layout for s in scenes}),
-            'local_motion_footage_sec':round(sum(s.end-s.start for s in scenes if s.source in ('video','both')),3),
+            'real_moving_footage_sec':round(sum(s.end-s.start for s in scenes if s.source in ('video','both')),3),
             'hook_duration_sec':scenes[0].end if scenes else None,
             'edit_points_on_beat':not any('rhythmic' in e for e in errors),
             'automated_artistic_10_10_certification':False}
@@ -126,8 +126,8 @@ def source_credit(draw,scene, video_year=2017):
     draw.rectangle((20,874,520,900),fill=(12,20,30,230))
     draw.text((26,881),txt,font=font(12,True),fill=PAPER)
 
-def layout_frame(photo,video,t,index,variant='expressive',video_year=2017):
-    scene=SCENES[index]
+def layout_frame(photo,video,t,index,variant='expressive',video_year=2017,scenes=SCENES):
+    scene=scenes[index]
     p=(t-scene.start)/(scene.end-scene.start)
     p=max(0.,min(1.,p))
     expressive=variant=='expressive'
@@ -277,9 +277,23 @@ def verify_bytes(path:Path,manifest:Path):
 def probe(path:Path):
     return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_format','-show_streams','-of','json',str(path)],text=True))
 
+def compute_voice_timeline(voice:Path|None):
+    from dataclasses import replace
+    if voice is None:return DURATION,SCENES,None
+    p=probe(voice)
+    if not any(s['codec_type']=='audio' for s in p['streams']):
+        raise ValueError('provided narration has no audio stream')
+    duration=float(p['format']['duration'])
+    if duration<=0 or duration>DURATION+1.8:
+        raise ValueError('voice cannot fit the available shot plan without a different edit')
+    target=max(DURATION,math.ceil((duration+.32)*2)/2)
+    shots=SCENES[:-1]+(replace(SCENES[-1],end=target),)
+    return target,shots,duration
+
 def render(photo:Path,video:Path,out:Path,variant='expressive',voice:Path|None=None):
     if variant not in ('expressive','restrained'):raise ValueError('variant not supported')
-    report=validate_story()
+    total,scenes,voice_duration=compute_voice_timeline(voice)
+    report=validate_story(scenes,total)
     if not report['ok']:raise ValueError(str(report['errors']))
     photo_m=verify_bytes(photo,photo.with_suffix('.json'))
     video_m=verify_bytes(video,video.with_suffix('.json'))
@@ -289,9 +303,9 @@ def render(photo:Path,video:Path,out:Path,variant='expressive',voice:Path|None=N
     source=cv2.imread(str(photo))
     if source is None:raise ValueError('photo cannot be decoded')
     out.parent.mkdir(parents=True,exist_ok=True)
-    # Pre-conform 2017 program to 540-pixel high and deterministic source timeline.
+    # Conform the archive film to deterministic frame size/timebase.
     prep=out.with_name(out.stem+'_conformed.mp4')
-    subprocess.run(['ffmpeg','-y','-v','error','-ss',('0' if video_year==2011 else '41'),'-i',str(video),'-t',str(DURATION+1),
+    subprocess.run(['ffmpeg','-y','-v','error','-ss',('0' if video_year==2011 else '41'),'-i',str(video),'-t',str(total+1),
                     '-vf','fps=24,scale=960:540:flags=lanczos','-an','-c:v','libx264','-preset','veryfast',
                     '-crf','23',str(prep)],check=True)
     cap=cv2.VideoCapture(str(prep))
@@ -300,44 +314,41 @@ def render(photo:Path,video:Path,out:Path,variant='expressive',voice:Path|None=N
     writer=cv2.VideoWriter(str(silent),cv2.VideoWriter_fourcc(*'mp4v'),FPS,(W,H))
     if not writer.isOpened():raise ValueError('video encoder unavailable')
     try:
-        for i in range(round(DURATION*FPS)):
+        for i in range(round(total*FPS)):
             t=i/FPS
             ok,moving=cap.read()
             if not ok:raise ValueError('historical video ended before the edit')
-            shot=min(j for j,s in enumerate(SCENES) if s.start<=t<s.end)
-            frame=layout_frame(source,moving,t,shot,variant,video_year)
+            shot=min(j for j,s in enumerate(scenes) if s.start<=t<s.end)
+            frame=layout_frame(source,moving,t,shot,variant,video_year,scenes)
             writer.write(frame)
     finally:
         writer.release();cap.release()
-    soundtrack=out.with_suffix('.wav');make_soundtrack(soundtrack,variant=variant)
+    soundtrack=out.with_suffix('.wav');make_soundtrack(soundtrack,duration=total,variant=variant)
     if voice is not None:
-        info=probe(voice)
-        length=float(info['format']['duration'])
-        if length>DURATION+.02:
-            raise ValueError('provided voice would be cut; must lengthen edit first')
+        # Adapt final image hold to verified speech duration, preserve original voice pitch and speed.
         # Duck soundtrack under provided original voice, do not time-stretch the speaker.
         filt='[1:a]volume=0.30[m];[m][2:a]sidechaincompress=threshold=0.018:ratio=7:attack=8:release=200[duck];[duck][2:a]amix=inputs=2:duration=longest:weights=0.62 1.0,loudnorm=I=-16:TP=-2.0:LRA=8[a]'
         args=['ffmpeg','-y','-v','error','-i',str(silent),'-i',str(soundtrack),'-i',str(voice),'-filter_complex',filt,
               '-map','0:v','-map','[a]']
     else:
-        args=['ffmpeg','-y','-v','error','-i',str(silent),'-i',str(soundtrack),'-map','0:v','-map','1:a']
+        args=['ffmpeg','-y','-v','error','-i',str(silent),'-i',str(soundtrack),'-map','0:v','-map','1:a','-af','acompressor=threshold=0.035:ratio=8:attack=8:release=190:makeup=1.8,loudnorm=I=-16:LRA=7:TP=-2.5,alimiter=limit=0.65:level=false']
     args+=['-c:v','libx264','-preset','veryfast','-crf','19','-pix_fmt','yuv420p','-c:a','aac',
            '-b:a','160k','-t',str(DURATION+1),'-movflags','+faststart',str(out)]
     subprocess.run(args,check=True)
     audio=next((s for s in probe(out)['streams'] if s['codec_type']=='audio'),None)
-    return {'version':'v0.23','variant':variant,'video':str(out),'duration_sec':DURATION,
+    return {'version':'v0.23','variant':variant,'video':str(out),'duration_sec':total,
             'fps':FPS,'width':W,'height':H,'original_sources':[photo_m['id'],video_m['id']], 'film_year':video_year,
-            'original_moving_source_sec':report['local_motion_footage_sec'],
-            'narration_added':bool(voice),'word_level_sync_verified':False,
+            'real_moving_footage_sec':report['real_moving_footage_sec'],
+            'narration_added':bool(voice),'narration_duration_sec':voice_duration,'word_level_sync_verified':False,
             'audio_track':bool(audio),'story_analysis':report,
             'technical_preview_only':True,'publication_approved':False,
             'artistic_score':None}
 
-def make_contact(video:Path,dest:Path):
+def make_contact(video:Path,dest:Path,scenes=SCENES):
     cap=cv2.VideoCapture(str(video))
     if not cap.isOpened():raise ValueError('could not open output')
     thumbs=[]
-    for sc in SCENES:
+    for sc in scenes:
         cap.set(cv2.CAP_PROP_POS_MSEC,(sc.start+.5*(sc.end-sc.start))*1000)
         ok,frame=cap.read()
         if not ok:raise ValueError('could not extract contact frame')
@@ -359,7 +370,7 @@ def main():
     p.add_argument('--voice',type=Path)
     a=p.parse_args()
     result=render(a.photo,a.video,a.output,a.variant,a.voice)
-    result['contact_sheet']=make_contact(a.output,a.output.with_suffix('.jpg'))
+    result['contact_sheet']=make_contact(a.output,a.output.with_suffix('.jpg'),compute_voice_timeline(a.voice)[1])
     a.output.with_suffix('.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf8')
     print(json.dumps(result,ensure_ascii=False,indent=2))
 if __name__=='__main__':main()
