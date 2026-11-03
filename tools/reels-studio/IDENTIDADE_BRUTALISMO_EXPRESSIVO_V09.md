@@ -75,3 +75,14 @@ A v0.25 gerou localmente duas versões de 14,5 s. Avaliação interna provisóri
 **Anti-regressão vinculante:** nenhuma versão deve receber promoção de NOTA ARTÍSTICA somente por cores, filtros, retículas ou QA técnico. Qualquer alegação de evolução em animação deve mostrar pelo menos três gramáticas de movimento, dois planos independentes e uma comparação audiovisual REAL; revisão no celular por pessoa externa continua pendente até ser feita.
 
 **Rubrica artística v2 (a partir de v0.32; não retroativa):** direção de movimento/animação **25%**, profundidade/câmera/camadas **15%**, ritmo/montagem/sincronismo **15%**, variedade de tomadas e ação real **15%**, narrativa/integridade documental **10%**, voz/legendas/áudio **10%**, cor/retícula/tipografia **10%**. Os scores antigos permanecem na rubrica antiga; não comparar novas notas brutas sem indicar a mudança. A nota do último Reel completo v0.31 continua **7,56/10** e a capacidade técnica, **8,76/10**, até haver novo master verificado e avaliação.
+
+
+## Atualização obrigatória v0.34 — Movimento é identidade
+
+O estilo Aranhaverso-brutalista original do VR Abandonada deve ser reconhecível em preto e branco: não basta usar cores, retículas e títulos. **A coreografia das imagens é a assinatura visual**.
+
+**Critérios de movimento:** antecipação e acomodação; camadas em profundidade com direções independentes; entradas com impacto e pausas; poses gráficas deliberadas a 15 fps sem degradar filmagens reais a 30 fps; movimentos de câmera motivados pelo conteúdo; máscaras e vigas que revelem evidências sem adulterá-las; títulos devem desaparecer inteiros, sem fragmentos de letras.
+
+**Prova A/B:** manter a mesma paleta, fontes e mídia e mudar somente as curvas, amplitudes e pausas. O sistema deve testar trajetórias e movimento entre fotogramas; porcentagem de pixels alterados NÃO mede qualidade artística ou retenção.
+
+Código de contrato integrado `studio/choreography_v34.py`, testes `tests/test_choreography_v34.py`. Prévia v0.34 local: 14,5 s, 540×960 e dois ritmos temporais; filmagem derivada de master anterior, não o original puro. Sem voz Alexandre no MP4, sem publicação, sem revisão artística independente. Master Full HD v0.33 permanece referência distinta.
