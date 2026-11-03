@@ -4,6 +4,8 @@ import json
 import cv2
 import numpy as np
 import pytest
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from studio.shot_scout_v20 import authenticate, rank_metrics, scout, contact_sheet, cut_distance
 
 
