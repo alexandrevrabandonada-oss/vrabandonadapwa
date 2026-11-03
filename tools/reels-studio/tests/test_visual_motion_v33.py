@@ -77,3 +77,20 @@ def test_reject_unsupported_motion_scene():
 def test_reject_negative_edit_time():
     with pytest.raises(ValueError,match='negative'):
         V.kinetic_state_v33(0,-1)
+
+def test_title_ink_moves_on_twos_independent_of_image():
+    overlay=np.zeros((V.base.H,V.base.W,4),np.uint8)
+    overlay[220:300,100:250]=(250,210,88,255)
+    a=V.animated_title_v33(overlay,.067,'impact')
+    b=V.animated_title_v33(overlay,.090,'impact')
+    assert np.array_equal(a,b)  # same 15fps graphic exposure
+    c=V.animated_title_v33(overlay,.275,'impact')
+    assert not np.array_equal(a,c)
+    assert np.array_equal(overlay[220:300,100:250],np.array([250,210,88,255],dtype=np.uint8))
+    assert not np.any(a[1810:1910])  # stable provenance zone untouched
+
+def test_documentary_credit_remains_locked_when_headline_moves():
+    overlay=np.zeros((V.base.H,V.base.W,4),np.uint8)
+    overlay[1830:1880,30:250]=(255,188,75,255)
+    out=V.animated_title_v33(overlay,.035,'impact')
+    assert np.array_equal(out[1810:1900],overlay[1810:1900])
