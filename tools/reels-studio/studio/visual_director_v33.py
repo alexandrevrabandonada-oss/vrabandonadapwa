@@ -184,6 +184,28 @@ def inspect_motion_language_v33():
             'independent_layers':True,'voice_embedded':False,
             'aesthetic_quality_certified':False}
 
+
+def animated_title_v33(overlay,elapsed,phase):
+    """Independent pose-held title choreography; attribution stays locked in place."""
+    if phase!='impact':return overlay
+    stepped=math.floor(max(0,elapsed)*15+1e-8)/15
+    x=min(1.,stepped/.267)
+    x=x*x*(3-2*x)
+    dx=int(-890*(1-x))
+    if dx==0:return overlay
+    out=overlay.copy()
+    # Affected region includes ONLY editorial heading plate, never source imagery,
+    # stable source credits, timed subtitles or voice-status text.
+    y0,y1=175,630
+    out[y0:y1]=0
+    region=overlay[y0:y1]
+    matrix=np.float32([[1,0,dx],[0,1,0]])
+    out[y0:y1]=cv2.warpAffine(region,matrix,(overlay.shape[1],y1-y0),
+                             flags=cv2.INTER_LINEAR,borderMode=cv2.BORDER_CONSTANT,
+                             borderValue=(0,0,0,0))
+    return out
+
+
 def render(photo_1941:Path,photo_1969:Path,photo_2014_02:Path,photo_2014_01:Path,
            film_path:Path,words_path:Path,out:Path,*,variant='graphic',voice_path=None,
            quality='master'):
@@ -224,7 +246,7 @@ def render(photo_1941:Path,photo_1969:Path,photo_2014_02:Path,photo_2014_01:Path
             still=photographs[index] if index<4 else photographs[3]
             frame=kinetic_motion_v33(base.frame_image(still,movie,shot,elapsed,variant),shot,elapsed,index,variant)
             phase='impact' if elapsed<.30 else 'quiet'
-            frame=base.alpha_composite(frame,overlays[(index,phase)])
+            frame=base.alpha_composite(frame,animated_title_v33(overlays[(index,phase)],elapsed,phase))
             current=base.caption_draw(words,t,variant)
             if current:
                 gid,active=current
