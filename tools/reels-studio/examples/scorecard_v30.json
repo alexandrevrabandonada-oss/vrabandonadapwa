@@ -1,0 +1,49 @@
+{
+  "version": "v0.30",
+  "assessment_type": "ESTIMATIVA_EDITORIAL_INTERNA_SEM_REVISAO_INDEPENDENTE",
+  "baseline_v29": {"artistic_score": 7.18, "factory_capability": 8.60},
+  "artistic_dimensions_weight": {
+    "original_brutalist_print_identity": 0.20,
+    "composition_typography": 0.15,
+    "cinematic_action_montage": 0.15,
+    "archival_relevance_diversity": 0.15,
+    "journalistic_narrative": 0.10,
+    "caption_readability": 0.10,
+    "audio_voice": 0.15
+  },
+  "artistic_internal_subscores": {
+    "original_brutalist_print_identity": 8.75,
+    "composition_typography": 8.55,
+    "cinematic_action_montage": 8.10,
+    "archival_relevance_diversity": 7.40,
+    "journalistic_narrative": 6.45,
+    "caption_readability": 8.50,
+    "audio_voice": 3.40
+  },
+  "best_artistic_score": 7.36,
+  "factory_capability_estimate": 8.68,
+  "artistic_delta_vs_v29": 0.18,
+  "factory_delta_vs_v29": 0.08,
+  "score_reason": "Aumentou a diversidade real de fotos locais (1965, CSN02/2014, CSN01/2014); gramática visual, fala ausente e filme estrangeiro mantêm limitações anteriores.",
+  "new_verified_capabilities": {
+    "distinct_local_photos": 3,
+    "maximum_exposure_single_still_seconds": 2.18,
+    "baseline_exposure_single_still_seconds": 6.16,
+    "repetition_reduction_percent": 64.6,
+    "has_natively_composed_full_hd": true,
+    "frame_rate": 30,
+    "actual_word_times": 32,
+    "silence_and_audio_mix_regression_tests": 5,
+    "original_Alexandre_voice_in_master": false,
+    "human_mobile_review": false,
+    "audience_retention_evidence": false,
+    "release_approved": false
+  },
+  "limitations": [
+    "Nenhum MP3 Alexandre incorporado, pois bytes originais não chegaram ao renderizador.",
+    "Fotografia histórica de 1965 mostra prédio do Escritório Central da CSN, não operações industriais.",
+    "Vídeo de ação siderúrgica é França 2011, nunca CSN.",
+    "Sem avaliação independente, publicação ou medição de engajamento real.",
+    "Não é um Reel jornalístico finalizado, é estudo de linguagem audiovisual."
+  ]
+}
