@@ -33,3 +33,16 @@ O renderizador escolhia um único trecho da reportagem de 2017 pela posição te
 - Nenhum frame de 2014 ou 2017 representa o acidente de 1962.
 - Não autorizar publicação automática, merge ou divulgação a partir de testes técnicos.
 - **Nota da capacidade permanece 8,14/10 até a v0.20 demonstrar ganhos e os testes passarem.** Nota artística exploratória da v0.19: 6,2/10; não há novo filme avaliado.
+
+
+## Auditoria por amostragem da fonte original (rodada v0.20.1)
+- A execução **41549381823** do novo workflow V20 passou e gerou o pacote de revisão. Arquivos originais verificados novamente pela fonte Commons.
+- Relatório da v0.20: **60 janelas examinadas; 45 janelas candidatas a ação**, por heurística óptica. Oito foram listadas na folha de contato; várias receberam nota automática **100/100**.
+- Revisão dos oito exemplos selecionados **e amostragem a cada 5 s do vídeo original 0–165 s** mostrou um erro estrutural: animação e grafismos televisivos 0–13 s e 157–169 s; apresentação em estúdio ~13–41,5 s; enquadramento de entrevista na rodovia ~41,5–157 s. Limites são aproximados, não decupagem quadro a quadro.
+- As oito propostas visualizadas eram inadequadas ao objetivo de ação cinematográfica local. **Nenhuma foi pré-selecionada editorialmente.** Isso não diz que não haja qualquer movimento local em toda a fonte; significa que a auditoria por amostragem encontrou **zero tomadas aprovadas para compor o filme de ação**.
+- Novo `studio/editorial_curation_v20.py` exige intervalos documentados, revisão identificada e correspondência de hash antes de levar qualquer sugestão à lista de pré-seleção. `examples/rodovia_curadoria_v20.json` contém a revisão visual por amostragem. Uma janela que atravessa dois intervalos ou que cai em grafismos/entrevista é **recusada**, independentemente da nota automática.
+- `tests/test_editorial_curation_v20.py` cobre pontuação alta falsa, divergência de fonte, intervalos não cobertos, janela que cruza categoria e recusa de certificação automática de publicação. O workflow V20 invoca o gate e exige `action_preselected_count == 0` para a fonte de 2017.
+- **Pesquisa de novas tomadas** catalogada em `examples/acervo_candidatos_reais_v20.json`, cinco referências locais com condições de uso **não liberadas**: Diário do Vale e CNN (28/10/2026), Reuters Connect/STRINGERSHUB (licença comercial pendente), Arquivo Nacional (greve de 1988), e Núcleo Piratininga/Os Homens da Fábrica. Nenhum vídeo novo foi incorporado nem publicado.
+
+### Critério de resultado
+Se o novo workflow v0.20.1 aprovar, teremos demonstrado a capacidade da fábrica de **recusar uma fonte visualmente inadequada após inspeção editorial**, não uma melhoria cinematográfica certificada. O score de capacidade da v0.19 permanece **8,14/10**; o filme V19 6,2/10 permanece o último ensaio visual avaliado. Não fabricar nota nova, nem afirmar narração/sincronização Alexandre, master final ou liberação de direitos.
