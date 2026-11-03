@@ -1,7 +1,7 @@
 """Aço Gráfico v0.31: multi-era historical documentary master at 1080x1920.
 
-Improves on v29's single-photo repetition by requiring three genuine independent
-photographs: 1965 archive, 2014 panorama CSN02, 2014 panorama CSN01. Exactly
+Improves on v29 with four genuine local photos: 1941 construction workers,
+1969 CSN interior with steel coils, and 2014 CSN01/CSN02 panoramas. Exactly
 one explicit foreign-video context is used. Original source data unchanged.
 The design is an original industrial print/kinetic language; no third-party
 character art or iconic animation panels are reproduced.
@@ -10,7 +10,7 @@ from __future__ import annotations
 import argparse,hashlib,json,math,subprocess
 from pathlib import Path
 import cv2,numpy as np
-from PIL import Image
+from PIL import Image,ImageDraw
 from . import master_director_v29 as base
 from .verified_media_v31 import verify
 from .voice_integrity_v30 import inspect_candidate
