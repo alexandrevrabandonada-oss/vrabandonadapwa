@@ -12,7 +12,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 SOURCE_TYPES = {
-    "PRIMARY_FOOTAGE", "BROADCAST_EXCERPT", "DOCUMENTARY_WITH_ARCHIVES", "PHOTO_ONLY"
+    "PRIMARY_FOOTAGE", "BROADCAST_EXCERPT", "DOCUMENTARY_WITH_ARCHIVES", "PHOTO_ONLY", "MIXED_COLLECTION_REFERENCE"
 }
 ACCESS_STATES = {
     "REFERENCE_FOUND", "VIEWABLE_ONLINE", "ACCESS_REQUESTED", "COPY_RECEIVED"
@@ -48,7 +48,7 @@ def validate_record(a: dict) -> None:
         raise ValueError("rights clearance belongs in separate approval workflow")
     if a["access_state"] == "COPY_RECEIVED":
         raise ValueError("COPY_RECEIVED must be registered with validated local bytes, not as a lead")
-    if a["source_type"] == "PHOTO_ONLY" and a["editorial_role"] == "CITY_ACTION":
+    if a["source_type"] in ("PHOTO_ONLY", "MIXED_COLLECTION_REFERENCE") and a["editorial_role"] == "CITY_ACTION":
         raise ValueError("photos cannot be marked recorded local action")
 
 def inspect_leads(leads: dict) -> dict:
@@ -65,7 +65,7 @@ def inspect_leads(leads: dict) -> dict:
         seen.add(a["id"])
     return {
         "source_leads": len(entries),
-        "video_leads": sum(s["source_type"] != "PHOTO_ONLY" for s in entries),
+        "video_leads": sum(s["source_type"] in ("PRIMARY_FOOTAGE", "BROADCAST_EXCERPT", "DOCUMENTARY_WITH_ARCHIVES") for s in entries),
         "bytes_received": 0,
         "rights_cleared_count": 0,
         "footage_reviewed_count": 0,
@@ -113,7 +113,7 @@ def export_pending_catalog(leads: dict) -> dict:
             "license_review_pending": True,
             "capture_date": None,  # period descriptors are not verified timestamps
             "event_verified": False,
-        } for s in leads["sources"]]
+        } for s in leads["sources"] if s["source_type"] != "MIXED_COLLECTION_REFERENCE"]
     }
 
 def main() -> None:
