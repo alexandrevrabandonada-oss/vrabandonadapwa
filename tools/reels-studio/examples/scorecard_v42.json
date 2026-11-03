@@ -43,12 +43,13 @@
   "artistic_scores": {
     "arquivo": 7.25,
     "industria": 7.15,
-    "telejornal": 7.01
+    "telejornal": 7.01,
+    "auto_16sec": 7.35
   },
   "best_reel_ever_before_v42": 7.78,
   "factory_capability_previous": 8.91,
   "factory_capability_estimate_after_ci": 8.96,
-  "factory_capability_ci_gate": "do not claim 8.96 until GitHub Actions verified successful",
+  "factory_capability_ci_gate": "8.96 only after GH V42 workflow plus global CI pass; keep 8.91 otherwise",
   "tests_local_passed": 15,
   "technical_qa_three_formats_passed": true,
   "narration_embedded": false,
@@ -59,5 +60,9 @@
     "foreign 2011 industry footage is not CSN",
     "formats tested with limited source diversity",
     "no independent viewer test"
-  ]
+  ],
+  "auto_scout_tests_passed": 15,
+  "three_grammars_tests_passed": 15,
+  "auto_master_qa_passed": true,
+  "last_internal_master_quality": "ESTIMATIVA, NÃO NOTA DE ENGAJAMENTO"
 }

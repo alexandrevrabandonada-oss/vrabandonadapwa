@@ -1,0 +1,50 @@
+name: Reels Studio V42 — auto shot scout and three source grammars
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/shot_scout_v42.py'
+      - 'tools/reels-studio/studio/auto_director_v42.py'
+      - 'tools/reels-studio/studio/qa_v42.py'
+      - 'tools/reels-studio/studio/three_grammars_v42.py'
+      - 'tools/reels-studio/studio/quality_gate_v42.py'
+      - 'tools/reels-studio/tests/test_shot_scout_v42.py'
+      - 'tools/reels-studio/tests/test_three_grammars_v42.py'
+      - 'tools/reels-studio/RELATORIO_V42.md'
+      - '.github/workflows/reels-studio-v42-auto-shot-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-multisource-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install audiovisual Python dependencies and fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-lato
+          python -m pip install -r requirements.txt
+          python -m pip install pytest
+      - name: Test two distinct video-selection/animation systems without distributing private footage
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest -q tests/test_shot_scout_v42.py tests/test_three_grammars_v42.py
+          python -m py_compile studio/shot_scout_v42.py studio/auto_director_v42.py studio/qa_v42.py studio/three_grammars_v42.py studio/quality_gate_v42.py
+      - name: Verify no private original footage entered the repository
+        run: |
+          test ! -d private_assets
+          test ! -d work/v42/private_assets
+          python - <<'PY'
+          import pathlib
+          root=pathlib.Path('studio')
+          assert not any(p.suffix.lower() in {'.mp4','.webm','.mov','.mp3','.wav'} for p in root.rglob('*'))
+          print('private source binaries not committed')
+          PY

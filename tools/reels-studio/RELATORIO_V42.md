@@ -1,46 +1,37 @@
-# Fábrica Aço Gráfico v0.42 — Três linguagens do mesmo motor
+# Fábrica Aço Gráfico — v0.42 | Laboratório privado multifonte e seleção automática
 
-**03/11/2026 · Laboratório privado · PR #44 em rascunho.**
+**Data: 03/11/2026. Estado: artefatos internos, não publicados; PR #44 em rascunho.**
 
-Objetivo: validar três modalidades de Reels com **origens audiovisuais distintas**, sem reduzir a identidade autoral a cores ou animação de um cartão genérico.
+## Mudança real de arquitetura
 
-| Ensaio | Fonte e ano | Gramática de movimento | Regra documental |
-|---|---|---|---|
-| Arquivo histórico | Construção CSN 1941, interior CSN 1969, panorâmica CSN 2014 | 2,5D fotográfico, díptico com movimento independente, revelação industrial | Crédito histórico por plano; nenhuma foto é filmagem de acidente |
-| Ação industrial | Damien Vicart, França, 2011 | Ação de vídeo original, máscaras em camadas, cortes em regiões distintas do filme | **França**, nunca CSN nem 1962 |
-| Telejornal urbano | TV BrasilGov, reportagem Rodovia do Contorno, 2017 | Enquadramento horizontal preservado dentro de canvas vertical, moldura editorial, cronologia e transição entre reportagem/apresentador/entrevista | Preserva tarja e imagem de TV sem cortar para simular 9:16 nativo; não é captação atual |
+A fábrica agora oferece **dois caminhos complementares**:
 
-Três vídeos de **6 segundos, 1080×1920, 30 fps**, com grafismos editoriais movidos por poses a 15 fps, H.264/AAC e música sintética original, *sem voz Alexandre*. Fontes verificadas por hash SHA-1. Os clipes foram obtidos de fontes acessíveis anteriormente registradas no projeto; o sistema não infere direitos de publicação. Os originais **não vão ao repositório ou a artifacts públicos de CI**.
+1. `shot_scout_v42.py` + `auto_director_v42.py`: análise real de fonte original por mudanças visuais, candidatos de janelas de vídeo, exclusão de duplicatas por dHash, seleção com espaçamento e papel editorial declarado. O plano de edição é determinístico e pode ser inspecionado. A narrativa macro ainda é escrita por humano; **não há IA que entenda semanticamente cada tomada**.
+2. `three_grammars_v42.py`: três modos independentes e compatíveis com fontes documentais diferentes — arquivo fotográfico 2,5D, vídeo de ação industrial em camadas, e telejornal 16:9 preservado na tela vertical. Não é uma simples alteração de cores.
 
-### Comandos locais
+A movimentação das fotografias é gerada por recortes e geometria editorial, sem alterar ou regravar os originais. O modo de telejornal mantém enquadramentos horizontais e não confunde entrevistas de 2017 com imagens de 2026 nem de 1962. O modo indústria usa registro francês de 2011 explicitamente rotulado, **não filmagem da CSN**.
 
-```bash
-cd tools/reels-studio
-python -m pytest -q tests/test_three_grammars_v42.py
-python -m studio.three_grammars_v42 --profile arquivo --sources /CAMINHO/sources --output /CAMINHO/V42_ARQUIVO_HISTORICO.mp4
-python -m studio.three_grammars_v42 --profile industria --sources /CAMINHO/sources --output /CAMINHO/V42_ACAO_INDUSTRIAL.mp4
-python -m studio.three_grammars_v42 --profile telejornal --sources /CAMINHO/sources --output /CAMINHO/V42_TELEJORNAL_URBANO.mp4
-python -m studio.quality_gate_v42 --video /CAMINHO/V42_ARQUIVO_HISTORICO.mp4
-```
+## Render e QA locais efetivamente aprovados
 
-CI testa motor e integridade do manifesto com imagens sintéticas, sem distribuir os arquivos externos. Verifique QA local antes de distribuir qualquer artefato. A licença não bloqueia o ensaio local, mas **a publicação permanece desativada**.
+- `V42_AUTO_CINEMATIC_MASTER.mp4`, `V42_AUTO_RESTRAINED_MASTER.mp4`: **1080×1920, 30 fps, 16,0 segundos**, H.264/AAC, diferença A/B com mesmas imagens, fontes e sequência de cortes, mas movimento de diferentes intensidades. Áudio instrumental original, sem voz Alexandre.
+- Scouts da origem: **18 janelas do filme francês e 29 janelas na seção de entrevista da reportagem regional de 2017**. Seleção: 2 janelas industriais + 1 janela de reportagem; combinação editorial com fotografias da própria CSN em **1941, 1969 e 2014**; cinco origens de cena e seis gramáticas por master.
+- A&B passaram `qa_v42`: **−16,4 LUFS, −1,2 dBFS de pico verdadeiro**, 6 cenas com movimento medido, 5 fontes distintas e 0 erros técnicos. As duas versões não têm locução. A/B apresenta diferença visual mensurável, embora alguns planos deliberadamente em repouso permaneçam semelhantes.
+- `V42_ARQUIVO_HISTORICO.mp4`, `V42_ACAO_INDUSTRIAL.mp4`, `V42_TELEJORNAL_URBANO.mp4`: três filmes de **6,0 segundos, 1080×1920 a 30fps**, todos com QA aprovado. O modo de vídeo usa quadros das fontes originais, não de Reels derivados.
+- **30 testes locais adicionais aprovados**: 15 para seleção e edição, 15 para perfis audiovisuais. Não são testes de retenção, opinião pública ou estética independente.
+- O vídeo original da Rodovia do Contorno (2017) contém majoritariamente apresentador e entrevista; o motor trata seus trechos como **telejornal/entrevista**, nunca como filmagem industrial da CSN. A notícia sobre a fumaça da CSN de 28/10/2026 tem vídeos de fonte local, mas os bytes ainda não foram importados; portanto **não entram nestes renders**.
 
-## Auditoria de resultados
+## Integridade e limites de segurança editorial
 
-**Três produções independentes de 6 segundos, 1080 × 1920 a 30 fps, H.264/AAC; 15 testes unitários aprovados.**
+- Todas as cinco fontes originais foram verificadas por SHA-1 antes do render, incluindo o 2017 WebM original TV BrasilGov e a filmagem francesa de Damien Vicart de 2011.
+- Os cinco arquivos originais permanecem fora do repositório GitHub. Como combinado, o laboratório privado permite ensaios com material de direitos de publicação pendentes; a **saída pública continua bloqueada**.
+- Não há MP3 da voz Alexandre no ambiente do render; *não* foi sintetizado outro. Trilha instrumental produzida por síntese local, não música protegida reutilizada.
+- Os resultados não são reportagens publicáveis, e suas fontes não documentam um mesmo evento. A transparência sobre isso está nos próprios créditos do vídeo.
 
-- **Arquivo histórico:** QA passou; −16,8 LUFS e pico verdadeiro −2,0 dBFS; cinco amostras de mudança visual de 0,4584; 0,6606; 0,5089; 0,814; 0,4107.
-- **Ação industrial:** QA passou; −17,7 LUFS e pico verdadeiro −1,6 dBFS; cinco amostras de mudança visual de 0,4926; 0,6303; 0,5978; 0,5997; 0,3792.
-- **Telejornal urbano:** QA passou; −16,4 LUFS e pico verdadeiro −1,9 dBFS; cinco amostras de mudança visual de 0,3917; 0,4271; 0,0863; 0,4164; 0,1385.
+## Notas editoriais conservadoras — SEM certificação estética
 
-A auditoria foi corrigida depois de encontrar um erro de serialização `numpy.bool_`. O quadro final de 2014 foi renderizado novamente após falhar no teste de movimento, adicionando pan cinematográfico durante a revelação. Os resultados apresentados são os **pós-correção**.
+- Melhor amostra nova v0.42, master automático de 16s: **7,35/10** (estimativa interna). Estudos separados de seis segundos: arquivo **7,25**, indústria **7,15**, telejornal **7,01**. A melhor nota histórica ainda é **7,78**, da v0.39. Não há revisão humana externa.
+- Capacidade da fábrica de referência **8,91/10**; proposta **8,96/10 somente após CI específico e CI geral sem falhas**, como ganho por seleção automática de tomada e suporte a três gramáticas reais. Não elevar em função da contagem de efeitos ou fontes.
 
-**NÃO** interpretar movimento percentual como qualidade artística; as notas são rubrica interna e permanecem abaixo do pico histórico de 7,78/10. **NÃO** reutilizar quaisquer trechos de 2017 como filmagem de 1962 ou evento atual, nem trechos franceses como captação local da CSN.
+## Próxima evolução útil
 
-## Gargalos ainda relevantes
-
-1. Obter a voz Alexandre já gerada e inserir no master com validação de áudio, sem gastar novamente créditos.
-2. Testar criativamente elementos de movimento mais profundos (separação real de objetos e oclusão) em duas ou três pautas completas, não apenas seis segundos.
-3. Aumentar filmagens atuais e históricas de Volta Redonda, incluindo entrevistas e cenas de rua, sempre rotuladas corretamente.
-4. Avaliação humana independente dos vídeos, especialmente celular e acessibilidade, para sustentar aumento da nota artística.
-5. CI executa testes de código sobre fontes sintéticas; os três masters privados são verificados no laboratório local e não são enviados como artefatos públicos ao repositório.
+Priorizar nova aquisição de vídeos **da própria Volta Redonda** em movimento, classificação semântica com revisão humana, trechos mais longos de pautas investigativas e transferência da gravação profissional Alexandre **já gerada**. Com essas entradas, avaliar uma reportagem real com diretores adaptativos, duração flexível, mais fontes, mais ações e menos gráficos desnecessários.
