@@ -170,7 +170,7 @@ def render(photo:Path,film:Path,words:Path,out:Path,look="molten"):
                           variant="expressive" if look=="molten" else "restrained")
     subprocess.run(["ffmpeg","-y","-loglevel","error","-i",str(silent),
                     "-i",str(soundtrack),"-map","0:v:0","-map","1:a:0",
-                    "-af","loudnorm=I=-17:TP=-2.5:LRA=7",
+                    "-af","acompressor=threshold=0.035:ratio=8:attack=8:release=190:makeup=1.8,loudnorm=I=-16:LRA=7:TP=-2.5,alimiter=limit=0.65:level=false",
                     "-c:v","libx264","-preset","veryfast","-crf","19",
                     "-pix_fmt","yuv420p","-c:a","aac","-b:a","160k",
                     "-movflags","+faststart",str(out)],check=True)
