@@ -1,0 +1,99 @@
+name: Reels Studio V31 — authentic 1941 and 1969 CSN archive montage
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/verified_media_v31.py'
+      - 'tools/reels-studio/studio/visual_director_v31.py'
+      - 'tools/reels-studio/studio/visual_qa_v31.py'
+      - 'tools/reels-studio/tests/test_visual_v31.py'
+      - '.github/workflows/reels-studio-v31-archives.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  full-hd-local-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original-document rendering dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Validate 1941/1969 chronological truth and four unique sources
+        run: |
+          python -m pytest -q tests/test_visual_v31.py tests/test_visual_director_v30.py
+      - name: Retrieve verified original photos, preserving the 1941 TIFF
+        run: |
+          set -euo pipefail
+          mkdir -p work/v31/sources work/v31/output
+          python -m studio.verified_media_v31 --out work/v31/sources > work/v31/output/SOURCES_V31.json
+          python - <<'PY'
+          from pathlib import Path
+          from studio.verified_media_v31 import verify
+          for key in ('csn_construction_1941','csn_interior_1969','csn_2014_02','csn_2014_01'):
+              meta=verify(Path('work/v31/sources')/(key+'.jpg'),key)
+              assert meta['publication_approved'] is False
+              print(key,meta['source_year'],meta['sha1'])
+          assert Path('work/v31/sources/csn_construction_1941.tif').is_file()
+          PY
+      - name: Fetch actual industrial movement, transparently labeled France 2011
+        run: |
+          set -euo pipefail
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.31 (documentary internal test)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v31/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v31/sources/france_2011.webm' | sha1sum -c -
+      - name: Compose fresh 1080x1920 30fps archival-brutalist master
+        run: |
+          python -m studio.visual_director_v31 \
+            --build1941 work/v31/sources/csn_construction_1941.jpg \
+            --inside1969 work/v31/sources/csn_interior_1969.jpg \
+            --csn02 work/v31/sources/csn_2014_02.jpg \
+            --csn01 work/v31/sources/csn_2014_01.jpg \
+            --film work/v31/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v31/output/V31_ARQUIVO_REAL_MASTER.mp4 \
+            --variant graphic --quality master
+      - name: Validate real four-source identity, audio levels, subtitle times, no fake narration
+        run: |
+          python -m studio.visual_qa_v31 \
+            --video work/v31/output/V31_ARQUIVO_REAL_MASTER.mp4 \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v31/output/V31_QA.json
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          base=Path('work/v31/output')
+          m=json.loads((base/'V31_ARQUIVO_REAL_MASTER.json').read_text())
+          q=json.loads((base/'V31_QA.json').read_text())
+          assert q['technical_ok']
+          assert m['version']=='v0.31'
+          assert len(m['photo_source_ids'])==4
+          assert min(m['photo_perceptual_hash_distances'])>=6
+          assert m['image_diversity']['reels_shots']==8
+          assert m['source_archival_construction_1941_and_real_interior_1969']
+          assert m['voice_embedded'] is False and m['voice_sha256'] is None
+          assert m['publication_approved'] is False
+          assert q['signal_qa']['width']==1080 and q['signal_qa']['height']==1920
+          PY
+      - name: Preserve exact original archives, video, contact sheet and QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: v31-csn-real-1941-1969-2014-master-internal
+          path: |
+            tools/reels-studio/work/v31/output/V31_ARQUIVO_REAL_MASTER.mp4
+            tools/reels-studio/work/v31/output/V31_ARQUIVO_REAL_MASTER.jpg
+            tools/reels-studio/work/v31/output/V31_ARQUIVO_REAL_MASTER.json
+            tools/reels-studio/work/v31/output/V31_QA.json
+            tools/reels-studio/work/v31/output/V31_QA.srt
+            tools/reels-studio/work/v31/output/SOURCES_V31.json
+            tools/reels-studio/work/v31/sources/csn_construction_1941.tif
+            tools/reels-studio/work/v31/sources/csn_interior_1969.jpg
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,59 @@
+{
+  "version": "v0.28",
+  "measurement_type": "INTERNAL_EDITORIAL_ESTIMATE_NOT_INDEPENDENT",
+  "rated_after_review": "2026-11-03",
+  "baseline": {
+    "artistic_v27_impact": 6.93,
+    "factory_capability_v27": 8.45
+  },
+  "weights": {
+    "identidade_aranhaverso_brutalista": 0.2,
+    "composicao_visual": 0.15,
+    "movimento_montagem": 0.15,
+    "qualidade_e_variedade_do_acervo": 0.15,
+    "narrativa_jornalistica": 0.1,
+    "legendas_e_leitura_mobile": 0.1,
+    "som_e_voz": 0.15
+  },
+  "variants": {
+    "graphic": {
+      "dimensions": {
+        "identidade_aranhaverso_brutalista": 8.75,
+        "composicao_visual": 8.45,
+        "movimento_montagem": 7.9,
+        "qualidade_e_variedade_do_acervo": 6.1,
+        "narrativa_jornalistica": 6.55,
+        "legendas_e_leitura_mobile": 8.1,
+        "som_e_voz": 3.4
+      },
+      "weighted_artistic_score": 7.09,
+      "estimator": "internal editorial review of six exported contact frames and actual video",
+      "verified_voice_audio": false,
+      "audience_retention_test": false
+    },
+    "cinema": {
+      "dimensions": {
+        "identidade_aranhaverso_brutalista": 8.35,
+        "composicao_visual": 8.55,
+        "movimento_montagem": 7.9,
+        "qualidade_e_variedade_do_acervo": 6.1,
+        "narrativa_jornalistica": 6.55,
+        "legendas_e_leitura_mobile": 8.1,
+        "som_e_voz": 3.4
+      },
+      "weighted_artistic_score": 7.03,
+      "estimator": "internal editorial review of six exported contact frames and actual video",
+      "verified_voice_audio": false,
+      "audience_retention_test": false
+    }
+  },
+  "factory_capability": {
+    "previous": 8.45,
+    "current_estimate": 8.5,
+    "independent_validation": false,
+    "note": "More reusable cinematic layout and 12 new tests; no production voice or audience evaluation"
+  },
+  "not_artistically_certified": true,
+  "publication_approved": false
+}
+

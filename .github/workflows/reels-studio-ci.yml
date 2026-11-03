@@ -1,0 +1,26 @@
+name: Reels Studio isolated CI
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/**'
+      - '.github/workflows/reels-studio-ci.yml'
+  workflow_dispatch:
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install FFmpeg and system fonts
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-lato fonts-roboto-unhinted
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Test source-only pipeline with synthetic fixtures
+        run: PYTHONPATH=. python -m pytest -q
+      - name: Validate module syntax
+        run: python -m compileall -q studio

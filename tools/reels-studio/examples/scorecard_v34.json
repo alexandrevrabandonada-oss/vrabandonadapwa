@@ -1,0 +1,32 @@
+{
+  "version": "v0.34",
+  "notes": "Local motion previews; GitHub choreography CI pending. Not a new narrated native Full HD master.",
+  "previous_native_master_v33": {
+    "artistic_internal": 7.71,
+    "factory_internal": 8.83
+  },
+  "previews": {
+    "kinetic_artistic_internal": 7.45,
+    "measured_artistic_internal": 7.35,
+    "canvas": "540x960@30",
+    "duration_seconds": 14.5,
+    "original_voice_embedded": false,
+    "foreign_footage_is_derivative": true
+  },
+  "motion_qa": {
+    "local_unit_tests_passed": 13,
+    "unique_grammars": 8,
+    "same_palette_AB": true,
+    "mean_fraction_differing_AB": 0.305,
+    "minimum_fraction_changed_in_shot": 0.352,
+    "integrated_lufs": -17.6,
+    "true_peak_dBTP": -2.8
+  },
+  "factory_score_provisional_after_CI": 8.86,
+  "approval": {
+    "published": false,
+    "merged": false,
+    "external_human_reviewed": false,
+    "artistic_10_certified": false
+  }
+}

@@ -1,0 +1,23 @@
+name: Reels Studio V40 — archive licensing gate for CSN documentary 1953
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/archive_rights_gate_v40.py'
+      - 'tools/reels-studio/tests/test_archive_rights_gate_v40.py'
+      - 'tools/reels-studio/RELATORIO_V40.md'
+      - '.github/workflows/reels-studio-v40-archive-rights.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-unlicensed-footage:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test original documentary archive rights rules
+        run: |
+          python -m pip install pytest
+          python -m pytest -q tests/test_archive_rights_gate_v40.py

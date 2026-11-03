@@ -1,0 +1,89 @@
+name: Reels Studio V37 — source-truth driven movement typography
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/story_motion_v37.py'
+      - 'tools/reels-studio/studio/qa_story_v37.py'
+      - 'tools/reels-studio/tests/test_story_motion_v37.py'
+      - 'tools/reels-studio/studio/temporal_audit_v38.py'
+      - 'tools/reels-studio/tests/test_temporal_audit_v38.py'
+      - '.github/workflows/reels-studio-v37-semantic-typography.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cinematic-story:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test, motion and audio dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Assert 8 truly different typography paths, fact-based scene labels and zero false-voice states
+        run: python -m pytest -q tests/test_story_motion_v37.py tests/test_temporal_audit_v38.py
+      - name: Verify original source chronology and integrity
+        run: |
+          set -euo pipefail
+          mkdir -p work/v37/sources work/v37/output
+          python -m studio.verified_media_v31 --out work/v37/sources > work/v37/output/SOURCES_V37.json
+          test -s work/v37/sources/csn_construction_1941.tif
+          test -s work/v37/sources/csn_interior_1969.jpg
+          test -s work/v37/sources/csn_2014_01.jpg
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.37 (internal visual experiment)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v37/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v37/sources/france_2011.webm' | sha1sum -c -
+      - name: Render A/B from actual documentary source bytes, not v36 movie frames
+        run: |
+          for v in kinetic measured; do
+            if [ "$v" = kinetic ]; then name=CINETICA; else name=CONTIDA; fi
+            python -m studio.story_motion_v37 \
+              --photo1941 work/v37/sources/csn_construction_1941.tif \
+              --photo1969 work/v37/sources/csn_interior_1969.jpg \
+              --photo2014 work/v37/sources/csn_2014_01.jpg \
+              --film work/v37/sources/france_2011.webm \
+              --words examples/voice_alexandre_words_v24.json \
+              --variant "$v" --out "work/v37/output/V37_NARRATIVA_${name}.mp4"
+          done
+      - name: Independent audit of motion, native Full HD, loudness and factual manifests
+        run: |
+          python -m studio.qa_story_v37 work/v37/output
+          for v in CINETICA CONTIDA; do
+            python -m studio.temporal_audit_v38 \
+              --video "work/v37/output/V37_NARRATIVA_${v}.mp4" \
+              --words examples/voice_alexandre_words_v24.json \
+              --out "work/v37/output/V37_${v}_TEMPORAL_QA.json"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('work/v37/output/V37_AUDITORIA.json')
+          d=json.loads(p.read_text())
+          assert not d['a']['voice_embedded'] and not d['b']['voice_embedded']
+          assert d['a']['audio']['true_peak_dbfs']<=-1.0
+          assert d['b']['audio']['true_peak_dbfs']<=-1.0
+          for v in ('CINETICA','CONTIDA'):
+              m=json.loads(Path(f'work/v37/output/V37_NARRATIVA_{v}.json').read_text())
+              assert m['publication_approved'] is False
+              assert len(set(m['title_grammars']))==8
+              assert m['narration_embedded'] is False
+          PY
+      - name: Upload footage and source-audit proof for internal artistic review
+        uses: actions/upload-artifact@v4
+        with:
+          name: v37-documentary-story-led-motion-not-published
+          path: |
+            tools/reels-studio/work/v37/output/V37_*.mp4
+            tools/reels-studio/work/v37/output/V37_*.jpg
+            tools/reels-studio/work/v37/output/V37_*.json
+            tools/reels-studio/work/v37/output/V37_*.srt
+            tools/reels-studio/work/v37/output/SOURCES_V37.json
+          retention-days: 7
+          if-no-files-found: error

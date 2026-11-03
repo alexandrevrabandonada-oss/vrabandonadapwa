@@ -1,0 +1,5 @@
+{
+  "weights": {"art_direction":20,"depth":15,"life":15,"real_assets":15,"editing":10,"type_legibility":7,"color":5,"audio_sync":7,"editorial_integrity":6},
+  "previous":{"art_direction":6.4,"depth":6.8,"life":4.2,"real_assets":8.4,"editing":6.3,"type_legibility":6.2,"color":6.0,"audio_sync":4.8,"editorial_integrity":8.5},
+  "current":{"art_direction":6.5,"depth":6.9,"life":4.6,"real_assets":8.8,"editing":6.8,"type_legibility":6.4,"color":6.0,"audio_sync":4.8,"editorial_integrity":8.6}
+}

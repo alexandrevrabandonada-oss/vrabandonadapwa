@@ -1,0 +1,60 @@
+name: Reels Studio V22 — CSN archival storyboard and visual integrity
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/archival_storyboard_v22.py'
+      - 'tools/reels-studio/studio/archival_stage_v22.py'
+      - 'tools/reels-studio/examples/fontes_industriais_v22.json'
+      - 'tools/reels-studio/tests/test_v22.py'
+      - '.github/workflows/reels-studio-v22-archive-stage.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unlicensed-no-media:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Test uncut historical framing and source disclosure
+        run: python -m pytest -q tests/test_v22.py
+      - name: Export storyboard without inventing film timecodes
+        run: |
+          mkdir -p work/v22
+          python -m studio.archival_storyboard_v22 --catalog examples/fontes_industriais_v22.json --out work/v22/DECUPAGEM_PENDENTE_V22.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('work/v22/DECUPAGEM_PENDENTE_V22.json').read_text())
+          assert len(r['storyboard']['planned_shots'])==4
+          assert not r['storyboard']['publication_approved']
+          assert all(s['timecode_start'] is None for s in r['storyboard']['planned_shots'])
+          PY
+      - name: Save synthetic design integrity proof (NOT historical film)
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import cv2
+          from studio.archival_stage_v22 import archive_frame,lab_frame
+          path=Path('work/v22/ESTUDO_VISUAL_SINTETICO_V22.png')
+          frame,info=archive_frame(lab_frame(2),2,annotate_simulation=True)
+          assert not info['publication_approved']
+          assert cv2.imwrite(str(path),frame)
+          PY
+      - name: Upload internal metadata and synthetic layout only
+        uses: actions/upload-artifact@v4
+        with:
+          name: v22-archival-storyboard-without-restricted-media
+          path: |
+            tools/reels-studio/work/v22/DECUPAGEM_PENDENTE_V22.json
+            tools/reels-studio/work/v22/ESTUDO_VISUAL_SINTETICO_V22.png
+          retention-days: 7
+          if-no-files-found: error

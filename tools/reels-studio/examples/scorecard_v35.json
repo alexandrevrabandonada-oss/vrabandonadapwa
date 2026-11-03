@@ -1,0 +1,47 @@
+{
+  "version": "v0.35",
+  "assessment": "internal_editorial_estimate_not_independent",
+  "artistic_score_kinetic": 7.65,
+  "artistic_score_measured": 7.55,
+  "previous_best_artistic_score": {
+    "version": "v0.33",
+    "score": 7.71
+  },
+  "factory_capability_score": 8.91,
+  "previous_factory_score": 8.86,
+  "rubric_weights": {
+    "identity": 0.2,
+    "composition_typography": 0.15,
+    "action_animation": 0.15,
+    "archival_relevance": 0.15,
+    "journalistic_narrative": 0.1,
+    "captions": 0.1,
+    "voice_audio": 0.15
+  },
+  "A_subscores": {
+    "identity": 8.8,
+    "composition_typography": 8.65,
+    "action_animation": 8.85,
+    "archival_relevance": 8.45,
+    "journalistic_narrative": 6.55,
+    "captions": 8.35,
+    "voice_audio": 3.4
+  },
+  "verification": {
+    "local_tests": 13,
+    "both_fullhd": true,
+    "original_film_sha1_verified": true,
+    "motion_scenes_A": 8,
+    "motion_scenes_B": 8,
+    "AB_different_pixels_mean": 0.23,
+    "voice_in_master": false,
+    "publication_approved": false,
+    "full_ci_render_verified": false
+  },
+  "limitations": [
+    "Synthesis from ElevenLabs already exists but MP3 not transferred",
+    "2026-11-03 local v35 full render, separate GitHub v35 integrity CI only",
+    "2014 CSN still repeated across two scenes",
+    "No independent audience rating"
+  ]
+}
