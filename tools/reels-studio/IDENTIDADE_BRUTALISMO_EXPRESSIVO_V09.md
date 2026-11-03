@@ -56,3 +56,22 @@ A v0.25 gerou localmente duas versões de 14,5 s. Avaliação interna provisóri
 - Não encher a tela de palavras: preservar a leitura da fonte, a legenda e a hierarquia principal.
 - Não declarar voz sincronizada quando só os timestamps das legendas foram alinhados.
 - Metas de produção: três pautas distintas, **imagem local em movimento**, locução Alexandre, master 1080×1920/30, revisão humana no celular e scorecard estruturado.
+
+
+## Correção canônica v0.32 — identidade Aranhaverso é ANIMAÇÃO, não apenas cor
+
+**Prioridade nº 1: movimento expressivo autoral.** A referência estética geral ao Aranhaverso exige direção de movimento e linguagem de animação como partes essenciais da identidade Aço Gráfico. Uma paleta magenta/cobalto com retícula estática, títulos sobrepostos e zoom genérico NÃO cumpre a identidade.
+
+**Sete mandamentos de movimento da fábrica:**
+
+1. **Camadas independentes:** fotografia, fundo, recortes, estruturas industriais, letras e partículas têm trajetórias com ritmos diferentes. Um único zoom geral não comprova parallax.
+2. **Cadência mista intencional:** filmagem documental mantém seus 30 fps no master; gráficos e personagens tipográficos podem segurar poses a cada dois quadros (15 fps) ou variar exposições. Nunca artificializar a temporalidade de um registro histórico sem rotulá-lo.
+3. **Peso e coreografia:** antecipação, impacto, overshoot, inércia, colisão e pausa são sincronizados com a mensagem e a voz, não aplicados aleatoriamente como um filtro.
+4. **Câmera espacial:** travessias oblíquas, profundidade, oclusões por estruturas e janelas móveis fazem o quadro parecer um espaço em transformação. Não falsificar a cena de um documento ou foto factual.
+5. **Impressão animada:** registro deslocado, retícula, recortes e eco cromático só nas CAMADAS EDITORIAIS; os pixels originais da fonte não são tratados como tinta inventada.
+6. **Montagem narrativa:** mudanças reais de planos e energia nos momentos certos da locução; movimento não é desculpa para vídeo com uma só foto repetida.
+7. **Respeito ao assunto:** luto, acidentes e testemunhos graves exigem movimento mais contido, sem flashes ou efeitos espetaculares incongruentes.
+
+**Anti-regressão vinculante:** nenhuma versão deve receber promoção de NOTA ARTÍSTICA somente por cores, filtros, retículas ou QA técnico. Qualquer alegação de evolução em animação deve mostrar pelo menos três gramáticas de movimento, dois planos independentes e uma comparação audiovisual REAL; revisão no celular por pessoa externa continua pendente até ser feita.
+
+**Rubrica artística v2 (a partir de v0.32; não retroativa):** direção de movimento/animação **25%**, profundidade/câmera/camadas **15%**, ritmo/montagem/sincronismo **15%**, variedade de tomadas e ação real **15%**, narrativa/integridade documental **10%**, voz/legendas/áudio **10%**, cor/retícula/tipografia **10%**. Os scores antigos permanecem na rubrica antiga; não comparar novas notas brutas sem indicar a mudança. A nota do último Reel completo v0.31 continua **7,56/10** e a capacidade técnica, **8,76/10**, até haver novo master verificado e avaliação.
