@@ -1,0 +1,114 @@
+name: Reels Studio V28 — kinetic title reveal, real video A/B and visual QA
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/art_director_v28.py'
+      - 'tools/reels-studio/studio/render_v28.py'
+      - 'tools/reels-studio/studio/qa_v28.py'
+      - 'tools/reels-studio/tests/test_art_director_v28.py'
+      - 'tools/reels-studio/examples/scorecard_v28.json'
+      - '.github/workflows/reels-studio-v28-kinetic-typography.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-regression-and-two-previews:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install FFmpeg and condensed editorial type system
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fontconfig fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Check visual grammar and independently timed captions
+        run: |
+          python -m pytest -q tests/test_art_director_v28.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          sc=json.loads(Path('examples/scorecard_v28.json').read_text())
+          assert abs(sum(sc['weights'].values())-1)<1e-9
+          for variant in sc['variants'].values():
+            score=round(sum(variant['dimensions'][key]*weight for key,weight in sc['weights'].items()),2)
+            assert score==variant['weighted_artistic_score']
+            assert not variant['verified_voice_audio']
+          assert sc['not_artistically_certified']
+          print('Verified the arithmetic; artistic ratings remain editorial estimates, not machine judgments.')
+          PY
+      - name: Acquire authentic media and verify source hash before cinema
+        run: |
+          set -euo pipefail
+          mkdir -p work/v28/sources work/v28/output
+          python - <<'PY'
+          from pathlib import Path
+          from studio.volta_redonda_v19 import fetch_asset
+          print(fetch_asset('csn_2014',Path('work/v28/sources')))
+          PY
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 3 \
+            --user-agent 'VRAbandonadaStudio/0.28 (documentary internal study)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v28/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v28/sources/france_2011.webm' | sha1sum -c -
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('work/v28/sources/france_2011.webm')
+          p.with_suffix('.json').write_text(json.dumps({
+            'id':'france_2011','date_label':2011,'sha1':hashlib.sha1(p.read_bytes()).hexdigest(),
+            'size_bytes':p.stat().st_size,'author':'Damien Vicart',
+            'source_url':'https://commons.wikimedia.org/wiki/File:Vicart_-_Aci%C3%A9rie.webm',
+            'editorial_role':'foreign steel industry; never CSN',
+            'publication_approved':False},indent=2))
+          PY
+      - name: Render image-first A/B using real industrial action
+        run: |
+          python -m studio.render_v28 \
+            --photo work/v28/sources/csn_2014.jpg \
+            --film work/v28/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --brief examples/editorial_brief_v26.json \
+            --out work/v28/output/V28_GRAFICO.mp4 --variant graphic
+          python -m studio.render_v28 \
+            --photo work/v28/sources/csn_2014.jpg \
+            --film work/v28/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --brief examples/editorial_brief_v26.json \
+            --out work/v28/output/V28_CINEMA.mp4 --variant cinema
+      - name: Independently measure codecs, EBU loudness, source variety and captions
+        run: |
+          python -m studio.qa_v28 --video work/v28/output/V28_GRAFICO.mp4 \
+            --manifest work/v28/output/V28_GRAFICO.json --out work/v28/output/QA_V28_GRAFICO.json
+          python -m studio.qa_v28 --video work/v28/output/V28_CINEMA.mp4 \
+            --manifest work/v28/output/V28_CINEMA.json --out work/v28/output/QA_V28_CINEMA.json
+          cp examples/scorecard_v28.json work/v28/output/SCORECARD_V28.json
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          for variant in ('GRAFICO','CINEMA'):
+            root=Path('work/v28/output')
+            render=json.loads((root/f'V28_{variant}.json').read_text())
+            qa=json.loads((root/f'QA_V28_{variant}.json').read_text())
+            assert qa['technical_ok'] and qa['distinct_source_video_windows']==3
+            assert render['visual_engine']=='ARANHAVERSO_BRUTALISTA_V28'
+            assert render['voice_embedded'] is False
+            assert render['publication_approved'] is False
+          print('Two previews internally auditable; no fabricated voice or publication approval.')
+          PY
+      - name: Save internal movies and evidence of testing (no user voice)
+        uses: actions/upload-artifact@v4
+        with:
+          name: v28-original-kinetic-industrial-editorial-two-previews
+          path: |
+            tools/reels-studio/work/v28/output/V28_*.mp4
+            tools/reels-studio/work/v28/output/V28_*.jpg
+            tools/reels-studio/work/v28/output/V28_*.json
+            tools/reels-studio/work/v28/output/QA_*.json
+            tools/reels-studio/work/v28/output/SCORECARD_V28.json
+          retention-days: 7
+          if-no-files-found: error
+
