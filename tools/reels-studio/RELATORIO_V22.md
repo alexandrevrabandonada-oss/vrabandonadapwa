@@ -50,3 +50,14 @@ A imagem sintética é um **teste de composição extremamente elementar**, com 
 ## Contabilidade honesta
 
 Capacidade previamente autoavaliada da fábrica **8,14/10** continua igual; v0.22 tem ganho de acervo documentado e proteção editorial, **não um Reel artisticamente melhor**. Nenhum master final, vídeo industrial arquivístico, voiceover ou publicação foi concluído. O PR permanece draft, sem merge.
+
+
+## Adendo v0.22.1 — série de quatro filmes da cidade
+
+A dissertação de Luana Xavier Ottoline (PPGH/UNIRIO, 2024, **tabela 2, p. 113**) documenta os quatro títulos da Série Volta Redonda: **O Minério e o Carvão (1953)**, **Expansão de Volta Redonda (1954)**, **Nem Tudo é Aço (1954)** e **Volta Redonda Como é Hoje (1954)**. Trata-se de uma **fonte acadêmica secundária** para os títulos de 1954: a Cinemateca ainda precisa confirmar códigos individuais, disponibilidade e conteúdo real das cenas. A dissertação menciona ainda supervisão do Serviço de Relações Públicas da CSN nos créditos de `O Minério e o Carvão`, o que merece análise crítica da linguagem institucional do filme. Fonte: https://www.unirio.br/cchs/ppgh/producao-academica/dissertacoes-de-mestrado-e-egressos-pasta/arquivos/Dissertacao_Luana_Xavier_Ottoline_PPGH_UNIRIO.pdf
+
+A [Cinemateca apresenta outro filme de trabalho e mineração, `Manganês: extração, beneficiamento, galerias` (011610, 1943)](https://www.bcc.org.br/filmes/443348). Embora a sinopse mencione vistas de Volta Redonda, não comprova que todas as tomadas de extração foram captadas na cidade ou na CSN.
+
+Os **quatro novos itens** foram adicionados ao catálogo com `rights_state=UNKNOWN`, `copy_state=NOT_RECEIVED` e sem timecodes. A função `validate_catalog` passou a conferir que nenhuma pista secundária seja promovida automaticamente a filmagem confirmada. O rascunho do e-mail à Cinemateca foi **atualizado no Gmail, sem envio**, para perguntar especificamente pelos títulos da série e suas condições de acesso/licenciamento.
+
+**Advertência de escopo:** ter identificado títulos e sinopses não nos autoriza a dizer que temos quatro novos filmes no computador ou que seus direitos são públicos. A prova visual sintética continua reprovada como amostra de cinema profissional; serve apenas ao teste de enquadramento.
