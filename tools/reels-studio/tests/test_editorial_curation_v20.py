@@ -3,6 +3,8 @@ import copy
 import json
 from pathlib import Path
 import pytest
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from studio.editorial_curation_v20 import curate
 
 
