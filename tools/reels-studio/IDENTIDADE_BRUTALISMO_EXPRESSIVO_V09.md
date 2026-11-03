@@ -86,3 +86,12 @@ O estilo Aranhaverso-brutalista original do VR Abandonada deve ser reconhecível
 **Prova A/B:** manter a mesma paleta, fontes e mídia e mudar somente as curvas, amplitudes e pausas. O sistema deve testar trajetórias e movimento entre fotogramas; porcentagem de pixels alterados NÃO mede qualidade artística ou retenção.
 
 Código de contrato integrado `studio/choreography_v34.py`, testes `tests/test_choreography_v34.py`. Prévia v0.34 local: 14,5 s, 540×960 e dois ritmos temporais; filmagem derivada de master anterior, não o original puro. Sem voz Alexandre no MP4, sem publicação, sem revisão artística independente. Master Full HD v0.33 permanece referência distinta.
+
+
+## Consolidação de movimento v0.35 — mesma cor não equivale a mesma animação
+
+**Princípio de identidade:** um espectador deve reconhecer a linguagem cinética mesmo com a paleta reduzida a preto e branco. O impacto exige composição espacial, entrada/antecipação, colisão, sobreposição, deslocamento independente, cadência proposital e repouso documental — não basta zoom lento, filtro ou retícula.
+
+**Nova prova interna:** duas variantes Full HD de 14,5 s, produzidas com as mesmas imagens, paleta e tipografia, mas trajetórias e durações de entrada diferentes. Oito gramáticas, 30 fps da imagem documental e 15 poses/s para grafismo; 16 instantes pareados dão diferença visual média de 23% da área útil, **não um índice de engajamento**. A fonte móvel é o vídeo original da França de 2011 com SHA-1 conferido, e as imagens locais são 1941/1969/2014. Voz Alexandre não foi embutida. Ver `RELATORIO_V35.md` e `examples/scorecard_v35.json`.
+
+**Regra de avaliação:** separar movimento real interquadros (QA, testes) de linguagem cinematográfica apreciada por pessoas (nota editorial); preservar o fac-símile da evidência e reduzir efeitos em contextos sensíveis. Não subir nota artística por resolução, cor, hash, repetição de layouts ou aprovados no CI. **v0.35: 7,65/10 (Reel A, estimativa), 8,91/10 (capacidade da fábrica, estimativa)**; melhor nota artística registrada segue v0.33 (7,71/10). O render completo foi verificado localmente; CI v0.35 separado protege o contrato de movimento, não prova automaticamente o master.
