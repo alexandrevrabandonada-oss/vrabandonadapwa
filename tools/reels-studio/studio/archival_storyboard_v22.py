@@ -46,7 +46,24 @@ def validate_catalog(catalog: dict) -> dict:
                 raise ValueError("incomplete synopsis observation idea")
             if scene.get("timecode_verified") is not False or scene.get("observed_frames") is not False:
                 raise ValueError("synopsis-derived ideas cannot claim verified timecodes or frames")
-    return {"source_count": len(unique), "rights_cleared_count": 0, "copies_received_count": 0,
+    leads = catalog.get("secondary_research_leads", [])
+    if not isinstance(leads, list):
+        raise ValueError("secondary research leads must be a list")
+    for lead in leads:
+        sid=lead.get("id")
+        if not sid or sid in unique:
+            raise ValueError("duplicate or missing research lead ID")
+        unique.add(sid)
+        if not lead.get("title") or not lead.get("reference_note"):
+            raise ValueError("research lead lacks identification")
+        if urlparse(lead.get("reference_url","")).scheme != "https":
+            raise ValueError("research lead needs HTTPS citation")
+        if lead.get("copy_state") != "NOT_RECEIVED" or lead.get("rights_state") != "UNKNOWN":
+            raise ValueError("uncorroborated research lead cannot claim copy or rights")
+        if lead.get("publication_approved") is True or lead.get("timecodes") or lead.get("shot_ideas"):
+            raise ValueError("research lead cannot enter scene production")
+    return {"source_count": len(catalog["sources"]), "secondary_leads_count": len(leads),
+            "rights_cleared_count": 0, "copies_received_count": 0,
             "publication_approved": False, "status": "RESEARCH_ONLY_NO_REEL"}
 
 
