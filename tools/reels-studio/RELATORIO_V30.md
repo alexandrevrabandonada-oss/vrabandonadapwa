@@ -31,3 +31,7 @@ A gravação original de aproximadamente 14,071s **continua gerada no ElevenLabs
 Reel v0.29 (estimativa artística) **7,18/10**; capacidade interna da fábrica **8,60/10**. A v0.30 só receberá nota artística revisada após inspeção de seus quadros e QA reais. Os dados de metrificação podem demonstrar diversidade de arquivo, não excelência visual ou previsão de engajamento. Direitos e revisão editorial são uma etapa separada antes de uma publicação, sem bloquear experimentação interna.
 
 **Estado do PR:** draft, sem merge, sem publicação. Nenhum pedido à Cinemateca enviado durante esta etapa.
+
+## Adendo — validação de caminho de voz sem TTS duplicado
+
+A fábrica passou a rejeitar arquivos de narração ausentes, silenciosos ou com duração incompatível via `studio/voice_integrity_v30.py`, e agora pode testar a presença perceptível de um áudio de referência após a mixagem por similaridade temporal da onda PCM. Cinco testes sintéticos foram concluídos localmente: silêncio, duração incorreta, preservação de sinal, voz de laboratório não identificada como Alexandre e mixagem efetiva. O editor não certifica identidade de locutor sem a origem auditada da gravação. O MP3 verdadeiro continua pendente de importação.
