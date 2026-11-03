@@ -1,6 +1,9 @@
 {
   "version": "v0.29",
-  "baseline": {"best_artistic_v28": 7.09, "factory_capability_v28": 8.5},
+  "baseline": {
+    "best_artistic_v28": 7.09,
+    "factory_capability_v28": 8.5
+  },
   "nature": "INTERNAL_ESTIMATE_NOT_INDEPENDENT_NOT_A_CERTIFICATION",
   "film": "CSN 2014 real photo + steel factory France 2011; editorial demonstration",
   "artistic_weighting": {
@@ -32,5 +35,33 @@
     "independent_artistic_review": false,
     "audience_retention_evidence": false
   },
-  "release_approved": false
+  "release_approved": false,
+  "variants": {
+    "graphic": {
+      "weighted_artistic_score": 7.18,
+      "evaluation": "Internal estimate; graphic v29; no voice"
+    },
+    "cinema": {
+      "weighted_artistic_score": 7.12,
+      "evaluation": "Internal estimate; cyan palette; no voice"
+    }
+  },
+  "measured_two_masters": {
+    "graphic": {
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "duration_seconds": 14.5,
+      "integrated_lufs": -16.1,
+      "true_peak_dbfs": -1.8
+    },
+    "cinema": {
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "duration_seconds": 14.5,
+      "integrated_lufs": -16.1,
+      "true_peak_dbfs": -1.8
+    }
+  }
 }
