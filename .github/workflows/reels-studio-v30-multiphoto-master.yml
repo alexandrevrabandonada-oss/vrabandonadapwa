@@ -1,0 +1,92 @@
+name: Reels Studio V30 — distinct local CSN sources native documentary master
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/verified_media_v30.py'
+      - 'tools/reels-studio/studio/visual_director_v30.py'
+      - 'tools/reels-studio/studio/visual_qa_v30.py'
+      - 'tools/reels-studio/tests/test_visual_director_v30.py'
+      - '.github/workflows/reels-studio-v30-multiphoto-master.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verified-multi-archive-master:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install rendering, media and visual QA prerequisites
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Test 3-source archive provenance, voice-semantic timing and nonrepeat layout
+        run: python -m pytest -q tests/test_visual_director_v30.py
+      - name: Fetch and hash-verify three different photographs of the CSN or its historic office
+        run: |
+          set -euo pipefail
+          mkdir -p work/v30/sources work/v30/output
+          python -m studio.verified_media_v30 --out work/v30/sources > work/v30/output/FONTES_V30.json
+          python - <<'PY'
+          from pathlib import Path
+          from studio.verified_media_v30 import verify,CATALOG
+          for key in CATALOG:
+              item=verify(Path(f'work/v30/sources/{key}.jpg'),key)
+              print(key,item['source_year'],item['sha1'],item['note'])
+          PY
+      - name: Fetch and verify distinct real industrial action footage (2011, France)
+        run: |
+          set -euo pipefail
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.30 (internal original historic media test)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v30/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v30/sources/france_2011.webm' | sha1sum -c -
+      - name: Render native 1080x1920 Aranhaverso-brutalista with truly distinct historic photos
+        run: |
+          python -m studio.visual_director_v30 \
+            --archive1965 work/v30/sources/archive_1965.jpg \
+            --csn02 work/v30/sources/csn_2014_02.jpg \
+            --csn01 work/v30/sources/csn_2014_01.jpg \
+            --film work/v30/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v30/output/V30_MULTIFONTE_MASTER.mp4 \
+            --variant graphic --quality master
+      - name: Verify Full HD, EBU R128, no fake voice, three visually distinct local stills
+        run: |
+          python -m studio.visual_qa_v30 \
+            --video work/v30/output/V30_MULTIFONTE_MASTER.mp4 \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v30/output/V30_MULTIFONTE_QA.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('work/v30/output')
+          manifest=json.loads((root/'V30_MULTIFONTE_MASTER.json').read_text())
+          qa=json.loads((root/'V30_MULTIFONTE_QA.json').read_text())
+          assert qa['technical_ok'] and qa['signal_qa']['width']==1080 and qa['signal_qa']['height']==1920
+          assert qa['signal_qa']['fps']=='30/1' and qa['signal_qa']['word_count']==32
+          assert manifest['native_composition'] and not manifest['upscaled_old_video']
+          assert len(manifest['photo_source_ids'])==3
+          assert min(manifest['photo_perceptual_hash_distances'])>=6
+          assert qa['image_diversity']['measurable_exposure_reduction_percent']>=64
+          assert manifest['voice_embedded'] is False and not manifest['publication_approved']
+          assert not qa['artistic_score_certified']
+          PY
+      - name: Save reproducible master, contact, source metadata, SRT and technical QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: v30-native-master-three-real-csn-photo-sources-not-published
+          path: |
+            tools/reels-studio/work/v30/output/V30_MULTIFONTE_MASTER.mp4
+            tools/reels-studio/work/v30/output/V30_MULTIFONTE_MASTER.jpg
+            tools/reels-studio/work/v30/output/V30_MULTIFONTE_MASTER.json
+            tools/reels-studio/work/v30/output/V30_MULTIFONTE_QA.json
+            tools/reels-studio/work/v30/output/V30_MULTIFONTE_QA.srt
+            tools/reels-studio/work/v30/output/FONTES_V30.json
+          retention-days: 7
+          if-no-files-found: error
