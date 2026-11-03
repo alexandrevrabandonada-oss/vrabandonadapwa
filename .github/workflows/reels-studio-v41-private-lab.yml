@@ -1,0 +1,28 @@
+name: Reels Studio V41 — Private laboratory media intake vs publication
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/archive_rights_gate_v40.py'
+      - 'tools/reels-studio/studio/private_media_ingest_v41.py'
+      - 'tools/reels-studio/tests/test_archive_rights_gate_v40.py'
+      - 'tools/reels-studio/tests/test_private_lab_v41.py'
+      - 'tools/reels-studio/RELATORIO_V41.md'
+      - '.github/workflows/reels-studio-v41-private-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  internal-test-vs-public-release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: python -m pip install pytest
+      - name: Validate private access and separate publication gate
+        run: python -m pytest -q tests/test_archive_rights_gate_v40.py tests/test_private_lab_v41.py
+      - name: Do not ship original protected media through CI
+        run: |
+          test ! -d private_assets || { echo 'private_assets should never be committed'; exit 1; }
