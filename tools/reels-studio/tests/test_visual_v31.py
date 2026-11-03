@@ -47,7 +47,7 @@ def test_foreign_source_cannot_masquerade_as_csn():
     bad=list(V.SCENES)
     bad[4]=V.base.Shot(s.start,s.end,s.role,s.frame_mode,s.headline,
         'CSN VOLTA REDONDA, 2011',s.film_at,s.focus)
-    with pytest.raises(ValueError,match='misidentified'):
+    with pytest.raises(ValueError,match='misidentify'):
         V.inspect_plan(tuple(bad))
 
 def test_four_assets_need_4_different_paths():
