@@ -1,6 +1,6 @@
 """V28 dedicated image-forward design shim over tested v26 source/audio backend."""
 from __future__ import annotations
-import argparse,json,sys
+import argparse,json,sys,threading
 from pathlib import Path
 from . import director_v26 as d26
 # Compatibility for the v26 renderer's historical top-level layout import.
@@ -10,6 +10,8 @@ from . import art_director_v28 as visual
 from .director_v26 import auto_plan,scan_motion_windows,schedule_source_windows
 
 
+_RENDER_LOCK=threading.RLock()
+
 def render(plan,photo,video,words,out,voice=None):
     by_beat={(round(s['start'],3),round(s['end'],3)):s for s in plan['shots']}
     def stage(photo_frame,moving_frame,beat,p,_style='zine'):
@@ -18,15 +20,18 @@ def render(plan,photo,video,words,out,voice=None):
         return visual.image_stage(photo_frame,moving_frame,shot,p,plan['variant'])
     def paint(base,shot,t,p,index,total,cues,variant):
         return visual.overlay(base,shot,t,p,index,total,cues,variant,voice_embedded=bool(voice))
-    saved_stage=prior.old.scene_background
-    saved_overlay=prior.graphic_overlay
-    try:
-        prior.old.scene_background=stage
-        prior.graphic_overlay=paint
-        report=prior.render(plan,photo,video,words,out,voice)
-    finally:
-        prior.old.scene_background=saved_stage
-        prior.graphic_overlay=saved_overlay
+    # v26 relies on module hooks. Serialize v28 renders in the same process so
+    # a parallel agent job cannot swap another job's graphic layers mid-export.
+    with _RENDER_LOCK:
+        saved_stage=prior.old.scene_background
+        saved_overlay=prior.graphic_overlay
+        try:
+            prior.old.scene_background=stage
+            prior.graphic_overlay=paint
+            report=prior.render(plan,photo,video,words,out,voice)
+        finally:
+            prior.old.scene_background=saved_stage
+            prior.graphic_overlay=saved_overlay
     report.update({'visual_engine':'ARANHAVERSO_BRUTALISTA_V28',
                    'source_occupancy_priority':'IMAGE_FIRST',
                    'headlines_retreat_after_sec':.62,
