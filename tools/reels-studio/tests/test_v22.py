@@ -83,3 +83,14 @@ def test_unsafe_research_upgrade_fails():
     c["sources"][0]["rights_state"]="CLEARED"
     with pytest.raises(ValueError,match="rights"):
         validate_catalog(c)
+
+def test_secondary_1954_films_remain_unverified_leads_not_action_sources():
+    c=catalog()
+    r=validate_catalog(c)
+    assert r["secondary_leads_count"]==4
+    assert all(s["copy_state"]=="NOT_RECEIVED" and s["rights_state"]=="UNKNOWN"
+               for s in c["secondary_research_leads"])
+    assert len(propose_decoupage(c)["planned_shots"])==4
+    c["secondary_research_leads"][0]["rights_state"]="CLEARED"
+    with pytest.raises(ValueError,match="rights"):
+        validate_catalog(c)
