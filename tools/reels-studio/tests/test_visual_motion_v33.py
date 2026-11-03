@@ -86,7 +86,7 @@ def test_title_ink_moves_on_twos_independent_of_image():
     assert np.array_equal(a,b)  # same 15fps graphic exposure
     c=V.animated_title_v33(overlay,.275,'impact')
     assert not np.array_equal(a,c)
-    assert np.array_equal(overlay[220:300,100:250],np.array([250,210,88,255],dtype=np.uint8))
+    assert np.all(overlay[220:300,100:250] == np.array([250,210,88,255],dtype=np.uint8))
     assert not np.any(a[1810:1910])  # stable provenance zone untouched
 
 def test_documentary_credit_remains_locked_when_headline_moves():
