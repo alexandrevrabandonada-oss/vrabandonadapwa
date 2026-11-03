@@ -1,0 +1,56 @@
+{
+  "name": "Aco Grafico / movimento expressivo original",
+  "rule": "ANIMACAO PRIMEIRO; cores nao bastam",
+  "documentary_fps": 30,
+  "graphics_fps": 15,
+  "animation_only_editorial_layers": true,
+  "publication_approved": false,
+  "cues": [
+    {
+      "pattern": "collision",
+      "layers": 3,
+      "trajectories": [
+        "horizontal_left",
+        "horizontal_right",
+        "perspective_push"
+      ],
+      "narrative_reason": "gancho: a cidade entra em quadro por planos independentes",
+      "flash_rate_hz": 0,
+      "reduces_original_video_fps": false
+    },
+    {
+      "pattern": "parallax",
+      "layers": 3,
+      "trajectories": [
+        "near_fast",
+        "middle_slow",
+        "far_nearly_still"
+      ],
+      "narrative_reason": "espacializar uma foto real sem inventar acao documentaria",
+      "flash_rate_hz": 0,
+      "reduces_original_video_fps": false
+    },
+    {
+      "pattern": "registration",
+      "layers": 2,
+      "trajectories": [
+        "title_ink_offset",
+        "title_base_enter"
+      ],
+      "narrative_reason": "acentuar uma mudanca de data dentro da camada editorial",
+      "flash_rate_hz": 0,
+      "reduces_original_video_fps": false
+    },
+    {
+      "pattern": "release",
+      "layers": 2,
+      "trajectories": [
+        "caption_hold",
+        "camera_slow_drift"
+      ],
+      "narrative_reason": "pausa de leitura e respeito a fonte primaria",
+      "flash_rate_hz": 0,
+      "reduces_original_video_fps": false
+    }
+  ]
+}
