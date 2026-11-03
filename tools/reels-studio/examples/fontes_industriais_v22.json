@@ -104,5 +104,55 @@
     "mandatory_on_screen_source": true,
     "cutlist_requires_verified_timecodes": true,
     "speech_Alexandre_status": "GENERATED_AT_ELEVENLABS_NOT_IMPORTED"
-  }
+  },
+  "secondary_research_leads": [
+    {
+      "id": "ince_expansao_1954",
+      "title": "Expansão de Volta Redonda",
+      "year": 1954,
+      "type": "FILM_TITLE_SECONDARY_SOURCE",
+      "institution": "INCE — a confirmar na Cinemateca",
+      "exact_film_id": null,
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.unirio.br/cchs/ppgh/producao-academica/dissertacoes-de-mestrado-e-egressos-pasta/arquivos/Dissertacao_Luana_Xavier_Ottoline_PPGH_UNIRIO.pdf",
+      "reference_note": "Luana Xavier Ottoline, dissertação UNIRIO 2024, tabela 2 (p. 113). Não foi identificado catálogo individual nem tipo exato de cenas."
+    },
+    {
+      "id": "ince_nem_tudo_aco_1954",
+      "title": "Nem tudo é aço",
+      "year": 1954,
+      "type": "FILM_TITLE_SECONDARY_SOURCE",
+      "institution": "INCE — a confirmar na Cinemateca",
+      "exact_film_id": null,
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.unirio.br/cchs/ppgh/producao-academica/dissertacoes-de-mestrado-e-egressos-pasta/arquivos/Dissertacao_Luana_Xavier_Ottoline_PPGH_UNIRIO.pdf",
+      "reference_note": "Título em dissertação UNIRIO 2024; cronologia MEC registra nome mais longo Nem tudo é aço em Volta Redonda."
+    },
+    {
+      "id": "ince_vr_como_hoje_1954",
+      "title": "Volta Redonda como é hoje",
+      "year": 1954,
+      "type": "FILM_TITLE_SECONDARY_SOURCE",
+      "institution": "INCE — a confirmar na Cinemateca",
+      "exact_film_id": null,
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.unirio.br/cchs/ppgh/producao-academica/dissertacoes-de-mestrado-e-egressos-pasta/arquivos/Dissertacao_Luana_Xavier_Ottoline_PPGH_UNIRIO.pdf",
+      "reference_note": "Tabela 2 e cronologia do INCE; pode haver variantes de título. Não presumir imagens da usina."
+    },
+    {
+      "id": "ince_manganes_1943",
+      "title": "Manganês: extração, beneficiamento, galerias",
+      "year": 1943,
+      "type": "INDUSTRIAL_DOCUMENTARY_NEEDS_LOCATION_REVIEW",
+      "institution": "INCE / Cinemateca Brasileira",
+      "exact_film_id": "011610",
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.bcc.org.br/filmes/443348",
+      "reference_note": "Ficha BCC descreve trabalhadores extraindo manganês e vistas de Volta Redonda. Não inferir que todas as cenas industriais ocorrem na CSN ou que cada mina fica na cidade."
+    }
+  ]
 }
