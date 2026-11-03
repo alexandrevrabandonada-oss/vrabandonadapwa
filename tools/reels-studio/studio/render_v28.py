@@ -20,17 +20,20 @@ def render(plan,photo,video,words,out,voice=None):
         return visual.image_stage(photo_frame,moving_frame,shot,p,plan['variant'])
     def paint(base,shot,t,p,index,total,cues,variant):
         return visual.overlay(base,shot,t,p,index,total,cues,variant,voice_embedded=bool(voice))
+    backend=getattr(prior,'old',None)
+    if backend is None:backend=getattr(prior,'core',None)
+    if backend is None:raise RuntimeError('unsupported rendering backend')
     # v26 relies on module hooks. Serialize v28 renders in the same process so
     # a parallel agent job cannot swap another job's graphic layers mid-export.
     with _RENDER_LOCK:
-        saved_stage=prior.old.scene_background
+        saved_stage=backend.scene_background
         saved_overlay=prior.graphic_overlay
         try:
-            prior.old.scene_background=stage
+            backend.scene_background=stage
             prior.graphic_overlay=paint
             report=prior.render(plan,photo,video,words,out,voice)
         finally:
-            prior.old.scene_background=saved_stage
+            backend.scene_background=saved_stage
             prior.graphic_overlay=saved_overlay
     report.update({'visual_engine':'ARANHAVERSO_BRUTALISTA_V28',
                    'source_occupancy_priority':'IMAGE_FIRST',
