@@ -1,0 +1,27 @@
+name: Reels Studio V32 — kinetic identity is movement, not palette
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/motion_contract_v32.py'
+      - 'tools/reels-studio/tests/test_motion_contract_v32.py'
+      - 'tools/reels-studio/examples/motion_identity_v32.json'
+      - '.github/workflows/reels-studio-v32-motion-identity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  motion-identity:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Test cinematic-movement requirements and reject palette-only identities
+        run: |
+          python -m pip install 'pytest>=7,<10'
+          python -m pytest -q tests/test_motion_contract_v32.py
+          python -m studio.motion_contract_v32 examples/motion_identity_v32.json
