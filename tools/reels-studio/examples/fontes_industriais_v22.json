@@ -1,0 +1,108 @@
+{
+  "version": "v0.22",
+  "status": "RESEARCH_ONLY",
+  "publication_approved": false,
+  "sources": [
+    {
+      "id": "cinemateca_csn_minerio_1953",
+      "title": "O Minério e o Carvão",
+      "official_id": "013614",
+      "year": 1953,
+      "custodial_site": "Cinemateca Brasileira — Banco de Conteúdos Culturais",
+      "reference_url": "https://www.bcc.org.br/filmes/443375",
+      "form": "LIVE_ACTION_DOCUMENTARY",
+      "place": "Volta Redonda (cenas descritas na sinopse oficial)",
+      "stated_origin": "Ministério da Educação e Cultura / INCE",
+      "director": "Humberto Mauro",
+      "approx_duration_seconds": 720,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": [
+        {
+          "event": "train_arrival",
+          "description": "Trem chegando com carga à CSN",
+          "timecode_verified": false,
+          "observed_frames": false
+        },
+        {
+          "event": "wagon_scale",
+          "description": "Pesagem dos vagões em balança de plataforma",
+          "timecode_verified": false,
+          "observed_frames": false
+        },
+        {
+          "event": "coal_unloading",
+          "description": "Descarga de carvão de vagão",
+          "timecode_verified": false,
+          "observed_frames": false
+        },
+        {
+          "event": "conveyor_machinery",
+          "description": "Minerais em esteiras até o beneficiamento",
+          "timecode_verified": false,
+          "observed_frames": false
+        }
+      ]
+    },
+    {
+      "id": "cinemateca_csn_1941",
+      "title": "Cine Jornal Brasileiro V.2 N.012",
+      "official_id": "014181",
+      "year": 1941,
+      "custodial_site": "Cinemateca Brasileira",
+      "reference_url": "https://bcc.org.br/assuntos-de-filmes/csn-companhia-sider%C3%BArgica-nacional",
+      "form": "HISTORICAL_NEWSREEL",
+      "place": "Contexto da CSN / local exato de cada plano não verificado",
+      "stated_origin": "Departamento de Imprensa e Propaganda",
+      "director": "Não verificado",
+      "approx_duration_seconds": null,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": []
+    },
+    {
+      "id": "cinemateca_1968_animation",
+      "title": "Milagre do Desenvolvimento",
+      "official_id": "028619",
+      "year": 1968,
+      "custodial_site": "Cinemateca Brasileira",
+      "reference_url": "https://www.bcc.org.br/assuntos-de-filmes/csn-companhia-sider%C3%BArgica-nacional",
+      "form": "ANIMATED_EDUCATIONAL_FILM",
+      "place": "Obra sobre desenvolvimento; nenhuma tomada real da CSN comprovada",
+      "stated_origin": "Instituto Nacional de Cinema",
+      "director": "Alain Jaccoud",
+      "approx_duration_seconds": 597,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": []
+    },
+    {
+      "id": "arquivo_nacional_1988",
+      "title": "Filmagem da greve e ocupação militar de Volta Redonda",
+      "official_id": "BR_RJANRIO_FJ_0_FIL_0001_0003",
+      "year": 1988,
+      "custodial_site": "Arquivo Nacional / Fundo Ernesto Germano Parés",
+      "reference_url": "https://querepublicaeessa.an.gov.br/index.php/que-republica-e-essa/assuntos/temas/78-secoes-anteriores/66-filme/487-uma-invasao-registrada-em-video",
+      "form": "LIVE_ACTION_DOCUMENTARY",
+      "place": "Volta Redonda — cada tomada a confirmar",
+      "stated_origin": "Fundo Ernesto Germano Parés",
+      "director": "Não verificado",
+      "approx_duration_seconds": null,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": []
+    }
+  ],
+  "technique": {
+    "mandatory_raw_image_preservation": true,
+    "archival_4_3_display": "contain_no_crop",
+    "synthetic_or_animation_as_1988_evidence": false,
+    "mandatory_on_screen_source": true,
+    "cutlist_requires_verified_timecodes": true,
+    "speech_Alexandre_status": "GENERATED_AT_ELEVENLABS_NOT_IMPORTED"
+  }
+}
