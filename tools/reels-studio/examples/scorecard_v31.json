@@ -1,0 +1,57 @@
+{
+  "version": "v0.31",
+  "assessment_type": "ESTIMATIVA_EDITORIAL_INTERNA_NAO_INDEPENDENTE",
+  "baseline_v30": {
+    "artistic_score": 7.36,
+    "factory_capability": 8.68
+  },
+  "artistic_dimensions_weight": {
+    "original_brutalist_print_identity": 0.2,
+    "composition_typography": 0.15,
+    "cinematic_action_montage": 0.15,
+    "archival_relevance_diversity": 0.15,
+    "journalistic_narrative": 0.1,
+    "caption_readability": 0.1,
+    "audio_voice": 0.15
+  },
+  "artistic_internal_subscores": {
+    "original_brutalist_print_identity": 8.75,
+    "composition_typography": 8.65,
+    "cinematic_action_montage": 8.1,
+    "archival_relevance_diversity": 8.55,
+    "journalistic_narrative": 6.55,
+    "caption_readability": 8.5,
+    "audio_voice": 3.4
+  },
+  "best_artistic_score": 7.56,
+  "factory_capability_estimate": 8.76,
+  "artistic_delta_vs_v30": 0.2,
+  "factory_delta_vs_v30": 0.08,
+  "verified": {
+    "fullhd_native": "1080x1920/30fps/14.5s",
+    "real_csn_photo_years": [
+      1941,
+      1969,
+      2014,
+      2014
+    ],
+    "real_photos": 4,
+    "shots": 8,
+    "film_windows": 4,
+    "word_timings": 32,
+    "cues": 9,
+    "github_run_success": 41659371817,
+    "regression_tests_passed": 20,
+    "qa_errors": 0,
+    "integrated_lufs": -16.1,
+    "true_peak_dbfs": -1.4,
+    "voice_embedded": false,
+    "publication_approved": false
+  },
+  "limitations": [
+    "Voz Alexandre ainda não transferida para MP4",
+    "Filmagem siderúrgica francesa explicitamente ilustrativa",
+    "Sem revisão independente ou avaliação de retenção",
+    "Estudo de linguagem visual, não reportagem investigativa concluída"
+  ]
+}
