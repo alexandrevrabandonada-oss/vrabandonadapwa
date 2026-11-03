@@ -38,3 +38,6 @@ O master interno teve **1080×1920, 30 fps, 14,5 segundos, H.264/AAC** verificad
 **Por que ainda não é 10/10?** Roteiro demonstrativo sem novo furo jornalístico; três cenas usam uma única foto original; a ação mostrada foi captada na França; falta MP3 Alexandre no arquivo; faltam avaliações independentes mobile e testes reais de retenção, e a arte ainda depende de estilos pré-definidos.
 
 O 1080p nativo é ganho real de infraestrutura audiovisual, **não uma promoção automática da nota estética**. Direitos e aprovação editorial continuam como etapa separada antes de publicar, mas não paralisaram a montagem interna.
+
+## Adendo — controle A/B e validação CI
+Também foi renderizada localmente a variante **Cinema**, paleta ciano, na mesma resolução 1080×1920, 30fps e duração 14,5s. Ambos passaram no QA local (−16,1 LUFS e −1,8 dBFS TP). Nenhum contém a voz Alexandre. **Notas internas:** Gráfico **7,18/10**; Cinema **7,12/10**. Capacidade técnica **8,60/10** (estimativa editorial, não nota independente). [Workflow v0.29](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/41645896536) aprovado no GitHub, com 11 testes, SHA, master gráfico Full HD, QA, SRT e artefato 13234594375. A variante Cinema foi verificada **localmente**, não se afirma que o workflow renderizou ambas.
