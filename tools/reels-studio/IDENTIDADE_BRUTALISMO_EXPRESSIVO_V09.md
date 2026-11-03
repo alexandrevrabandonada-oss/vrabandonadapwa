@@ -95,3 +95,18 @@ Código de contrato integrado `studio/choreography_v34.py`, testes `tests/test_c
 **Nova prova interna:** duas variantes Full HD de 14,5 s, produzidas com as mesmas imagens, paleta e tipografia, mas trajetórias e durações de entrada diferentes. Oito gramáticas, 30 fps da imagem documental e 15 poses/s para grafismo; 16 instantes pareados dão diferença visual média de 23% da área útil, **não um índice de engajamento**. A fonte móvel é o vídeo original da França de 2011 com SHA-1 conferido, e as imagens locais são 1941/1969/2014. Voz Alexandre não foi embutida. Ver `RELATORIO_V35.md` e `examples/scorecard_v35.json`.
 
 **Regra de avaliação:** separar movimento real interquadros (QA, testes) de linguagem cinematográfica apreciada por pessoas (nota editorial); preservar o fac-símile da evidência e reduzir efeitos em contextos sensíveis. Não subir nota artística por resolução, cor, hash, repetição de layouts ou aprovados no CI. **v0.35: 7,65/10 (Reel A, estimativa), 8,91/10 (capacidade da fábrica, estimativa)**; melhor nota artística registrada segue v0.33 (7,71/10). O render completo foi verificado localmente; CI v0.35 separado protege o contrato de movimento, não prova automaticamente o master.
+
+
+## v0.37 — Animação subordinada à informação, não ao efeito
+
+A coreografia, a tipografia e as imagens têm de servir à história jornalística. **Proibido apresentar nomes de técnicas (“COLISÃO”, “PERSPECTIVAS”, “CAMADAS”) como manchetes no Reel** quando o objeto da reportagem é a CSN: são termos do caderno de direção, não fatos sobre a cidade.
+
+- **O título informa, o movimento dramatiza:** título legível e factual; dinâmica de entrada específica para o contexto (construção, arquivo, máquina, comparação), depois cede espaço à fotografia/documento.
+- **Oito gestos diferentes devem existir nos pixels renderizados**, não apenas num manifesto: colisão, desdobramento de arquivo, venezianas, perspectiva, revelação, contraponto, viga e repouso.
+- **A/B mantém a paleta** e varia o movimento e a duração das poses; a avaliação não pode premiar simplesmente cores ou etiquetas diferentes.
+- **Cadência dupla deliberada:** arquivo filmado permanece fluido a 30 fps; grafismos podem trabalhar a 15 poses/s. Não alterar fotogramas históricos para simular ocorrências ou pessoas inexistentes.
+- **A evidência deve respirar:** títulos se retiram, créditos de procedência permanecem; cenas da França nunca são identificadas como CSN; recuo dos efeitos em cenas sensíveis.
+- **Áudio é condição separada de aprovação:** 32 marcas reais de palavras não significam narração integrada; sem bytes e identidade vocal conferidos, manter indicação explícita “SEM NARRAÇÃO”.
+- Notas permanecem divididas entre qualidade artística do Reel e capacidade testada da fábrica; uma não substitui a outra.
+
+Prova local v0.37: 2 masters 1080×1920/30, 14,5s, 15 testes aprovados, −16,1 LUFS / −2,0 dBTP, 8 trajetórias tipográficas e títulos históricos. Detalhes no `RELATORIO_V37.md`. Ainda sem voz no MP4, sem publicação e sem revisão externa.
