@@ -65,3 +65,12 @@ Arquivos entregues em `studio/spider_brutalist_v25.py`, `studio/qa_brutalist_v25
 Priorizar uma ponte para receber o MP3 já pago **sem gerar de novo**, sincronizar fala/legenda e inserir no master; construir um planejador declarativo que extraia do roteiro as cenas e suas relações com o acervo, ao invés de 7 beats hardcoded; produzir ao menos três pautas com filmagem local real e três grades visuais automaticamente; testar master HD real e scorecard humano. Direitos continuam sendo um gate separado antes de publicação, e não o foco das rodadas criativas.
 
 **Estado:** versão v0.25 local renderizada, GitHub PR #44 em rascunho, sem merge e sem publicação. O status específico de CI será atualizado somente após confirmação da execução.
+
+
+## Verificação CI v0.25 — concluída em 03/11/2026
+
+- [**GitHub Actions v25**](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/41572276318): **SUCCESS**, duas versões A/B renderizadas com fontes reais baixadas e verificadas, 10 testes novos e QA independente.
+- [**Suíte isolada geral**](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/41572276236): **SUCCESS, 159 testes aprovados e 1 ignorado**. A primeira execução falhara porque os testes de fonte não deveriam exigir os arquivos baixados e porque faltavam fontes editoriais no runner. Foi corrigida com fixtures sintéticas explicitamente rotuladas na suíte isolada e instalação `fonts-lato`/`fonts-roboto-unhinted`; o workflow V25 continua baixando e conferindo SHA dos **arquivos reais**.
+- [Artefato interno V25 nº 13202460536](https://github.com/alexandrevrabandonada-oss/vrabandonadapwa/actions/runs/41572276318): dois MP4, quadros de contato, manifestos e QA; **nenhum master publicado**.
+
+**Nota técnica da capacidade da fábrica, reestimada após a nova regressão: 8,24/10** (antes 8,14/10; +0,10, estimativa interna, não certificação). **Notas artísticas mantidas em 6,61/10 Zine e 6,45/10 Documental.** Ganhamos identidade e reprodutibilidade, mas sem voz inserida ainda não se pode declarar um Reel final.
