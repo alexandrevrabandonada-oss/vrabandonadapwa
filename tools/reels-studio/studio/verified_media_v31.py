@@ -60,11 +60,21 @@ def fetch(key:str,root:Path)->dict:
     root.mkdir(parents=True,exist_ok=True)
     filename=root/(key+'.jpg');raw=root/(key+('.tif' if info['mime']=='image/tiff' else '.jpg'))
     partial=root/(key+'.partial')
-    size=0;digest=hashlib.sha1()
+    # Commons occasionally rate-limits shared CI egress. Honor 429 with
+    # spaced retries; never silently substitute a thumbnail or another image.
+    from urllib.error import HTTPError
+    import time
     try:
-        with urlopen(Request(url,headers={'User-Agent':UA}),timeout=90) as r, partial.open('wb') as out:
-            for chunk in iter(lambda:r.read(1<<20),b''):
-                digest.update(chunk);size+=len(chunk);out.write(chunk)
+        for attempt in range(4):
+            size=0;digest=hashlib.sha1()
+            try:
+                with urlopen(Request(url,headers={'User-Agent':UA}),timeout=90) as r, partial.open('wb') as out:
+                    for chunk in iter(lambda:r.read(1<<20),b''):
+                        digest.update(chunk);size+=len(chunk);out.write(chunk)
+                break
+            except HTTPError as error:
+                if error.code not in (429,503) or attempt==3:raise
+                time.sleep((20,45,75)[attempt])
         if size!=info['size'] or digest.hexdigest()!=info['sha1'].lower():
             raise ValueError('original source bytes do not match Wikimedia API')
         partial.replace(raw)
