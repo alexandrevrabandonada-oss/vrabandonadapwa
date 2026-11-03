@@ -50,7 +50,15 @@ def analyze(file:Path,meta:dict)->dict:
     if not 23.9<frame_rate<24.1:issues.append('unexpected framerate')
     if not 14.4<duration<14.62:issues.append('incorrect runtime')
     if max(black)>.50:issues.append('image canvas near-black in a reviewed scene')
-    if meta.get('voice_embedded') is not False:issues.append('MP3 voice was not supplied; must not claim voiced master')
+    # Voice is optional in internal previews. When a real source MP3 was
+    # ingested by the renderer, require its source-byte SHA; metadata alone
+    # still does not prove perceptual synchronization.
+    voice_claimed=meta.get('voice_embedded') is True
+    voice_sha=meta.get('voice_sha256')
+    if voice_claimed and (not isinstance(voice_sha,str) or len(voice_sha)!=64):
+        issues.append('voiced master has no source-audio SHA256')
+    if not voice_claimed and voice_sha:
+        issues.append('silent-preview metadata unexpectedly contains narration hash')
     if meta.get('visual_engine')!='ARANHAVERSO_BRUTALISTA_V28':issues.append('wrong visual engine')
     if meta.get('publication_approved') is not False:issues.append('publication not approved')
     shots=meta.get('plan',{}).get('shots',[])
@@ -71,7 +79,7 @@ def analyze(file:Path,meta:dict)->dict:
             'compositions':len(shots),'headline_retreat_sec':meta.get('headlines_retreat_after_sec'),
             'primary_image_zone_height_px':672,
             'subtitle_timestamps_from_real_voice':bool(meta.get('word_timings_real')),
-            'voice_embedded':False,'loudness':audio,
+            'voice_embedded':voice_claimed,'voice_audibility_independently_verified':False,'loudness':audio,
             'automatic_artistic_score':None,'independent_review':False,
             'publication_approved':False}
 
