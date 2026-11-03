@@ -13,6 +13,7 @@ import cv2,numpy as np
 from PIL import Image
 from . import master_director_v29 as base
 from .verified_media_v30 import verify
+from .voice_integrity_v30 import inspect_candidate
 
 SCENES=(
  base.Shot(0,1.90,'photo','archive','A CIDADE TEM MEMÓRIA',
@@ -90,6 +91,20 @@ def guide_after_lettering(frame,shot,variant,index,elapsed):
     return frame
 
 
+def narration_safe_overlay(shot,variant,index,phase,has_narration):
+    # A received file can be audible yet its speaker identity remains unverified.
+    # Never claim the signal itself proves the voice is Alexandre.
+    layer=base.static_overlay(shot,variant,index,phase,voice_embedded=False)
+    if has_narration:
+        from PIL import ImageDraw
+        image=Image.fromarray(layer,'RGBA')
+        draw=ImageDraw.Draw(image)
+        draw.rectangle((32,1870,1010,1914),fill=(9,13,24,255))
+        draw.text((40,1879),'NARRAÇÃO INSERIDA · IDENTIDADE A CONFERIR',
+                  font=base.font(24,'body'),fill=base.CREAM)
+        layer=np.asarray(image)
+    return layer
+
 def render(photo_1965:Path,photo_2014_02:Path,photo_2014_01:Path,
            film_path:Path,words_path:Path,out:Path,*,variant='graphic',voice_path=None,
            quality='master'):
@@ -99,7 +114,7 @@ def render(photo_1965:Path,photo_2014_02:Path,photo_2014_01:Path,
     photographs,meta,distances=source_checks([photo_1965,photo_2014_02,photo_2014_01])
     filmhash=base.hashcheck(film_path,'c1129cac8654866856c7bec31196206f16eac6c7')
     words=base.read_words(words_path)
-    voice=base.inspect_audio(voice_path) if voice_path else None
+    voice=inspect_candidate(voice_path,words_path) if voice_path else None
     cap=cv2.VideoCapture(str(film_path))
     if not cap.isOpened():raise ValueError('film missing')
     film_fps=float(cap.get(cv2.CAP_PROP_FPS))
@@ -107,7 +122,7 @@ def render(photo_1965:Path,photo_2014_02:Path,photo_2014_01:Path,
     silent=out.with_name(out.stem+'_silent.avi')
     writer=cv2.VideoWriter(str(silent),cv2.VideoWriter_fourcc(*'MJPG'),base.FPS,(base.W,base.H))
     if not writer.isOpened():raise ValueError('native writer failed')
-    overlays={(i,phase):base.static_overlay(s,variant,i,phase,voice_embedded=voice is not None)
+    overlays={(i,phase):narration_safe_overlay(s,variant,i,phase,voice is not None)
               for i,s in enumerate(SCENES) for phase in ('impact','quiet')}
     doc=json.dumps(words,ensure_ascii=False,separators=(',',':'))
     reader_i=-1;last_frame=-1;movie=None
@@ -174,6 +189,8 @@ def render(photo_1965:Path,photo_2014_02:Path,photo_2014_01:Path,
         'source_film_france_2011':True,
         'source_archival_office_1965_not_plant_interiors':True,
         'voice_embedded':voice is not None,'voice_sha256':voice['sha256'] if voice else None,
+        'original_Alexandre_generation_hash_verified':False,
+        'speaker_identity_verified':False,
         'word_timing_from_real_recording':True,
         'publication_approved':False,'aesthetic_score':None,'human_reviewed':False,
         'status':'INTERNAL_REVIEW_ONLY'}
