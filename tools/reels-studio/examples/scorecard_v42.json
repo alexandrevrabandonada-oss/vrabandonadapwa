@@ -1,0 +1,63 @@
+{
+  "version": "v0.42",
+  "rating_source": "ESTIMATIVA_INTERNA_NAO_INDEPENDENTE",
+  "project": "Fábrica Aço Gráfico / VR Abandonada",
+  "artistic_dimensions_weight": {
+    "identity": 0.2,
+    "composition_typography": 0.15,
+    "motion_language": 0.15,
+    "source_diversity": 0.15,
+    "journalistic_narrative": 0.1,
+    "readability": 0.1,
+    "audio_voice": 0.15
+  },
+  "artistic_subscores": {
+    "arquivo": {
+      "identity": 8.1,
+      "composition_typography": 7.9,
+      "motion_language": 7.35,
+      "source_diversity": 8.9,
+      "journalistic_narrative": 6.8,
+      "readability": 8.5,
+      "audio_voice": 3.2
+    },
+    "industria": {
+      "identity": 8.2,
+      "composition_typography": 8.2,
+      "motion_language": 8.5,
+      "source_diversity": 7.0,
+      "journalistic_narrative": 6.35,
+      "readability": 8.4,
+      "audio_voice": 3.2
+    },
+    "telejornal": {
+      "identity": 8.0,
+      "composition_typography": 8.0,
+      "motion_language": 7.8,
+      "source_diversity": 7.3,
+      "journalistic_narrative": 6.7,
+      "readability": 8.0,
+      "audio_voice": 3.2
+    }
+  },
+  "artistic_scores": {
+    "arquivo": 7.25,
+    "industria": 7.15,
+    "telejornal": 7.01
+  },
+  "best_reel_ever_before_v42": 7.78,
+  "factory_capability_previous": 8.91,
+  "factory_capability_estimate_after_ci": 8.96,
+  "factory_capability_ci_gate": "do not claim 8.96 until GitHub Actions verified successful",
+  "tests_local_passed": 15,
+  "technical_qa_three_formats_passed": true,
+  "narration_embedded": false,
+  "publication_approved": false,
+  "constraints": [
+    "narration Alexandre not transferred",
+    "2017 report has on-camera interview and studio footage; not field footage of current events",
+    "foreign 2011 industry footage is not CSN",
+    "formats tested with limited source diversity",
+    "no independent viewer test"
+  ]
+}
