@@ -1,9 +1,9 @@
 {
   "slug": "volta-redonda-perde-3154-empregos-pior-saldo-rj-2025-2026",
   "kind": "investigation",
-  "title": "Volta Redonda perde 3.154 empregos e tem o pior saldo do estado do Rio em 20 meses",
-  "subtitle": "Levantamento com dados do Novo Caged mostra retração na indústria, nos serviços e na construção enquanto cidades vizinhas e o estado registram saldos positivos.",
-  "summary": "Na consulta publicada em 1º/11, Volta Redonda acumulava −3.154 empregos formais de janeiro/2025 a agosto/2026, o menor saldo absoluto do RJ naquele corte. Atualização de 4/11: o estado somou +9.285 em setembro e Barra Mansa +500; o resultado municipal de setembro ainda não foi confirmado nesta apuração.",
+  "title": "Volta Redonda perde 3.143 empregos e segue com pior saldo do RJ em 21 meses",
+  "subtitle": "Novo Caged confirma 57 empregos líquidos em setembro, mas saldo de janeiro de 2025 a setembro de 2026 segue negativo; os demais 11 municípios do Médio Paraíba criaram 8.756 vagas.",
+  "summary": "Volta Redonda criou 57 empregos formais em setembro de 2026, mas acumulou −3.143 vínculos desde janeiro de 2025 e manteve o menor saldo absoluto entre os 92 municípios do Rio. Os demais 11 municípios do Médio Paraíba somaram +8.756 empregos e o estado, +187.113. Dados revisados do Novo Caged.",
   "section": "Economia, indústria e trabalho",
   "author": "VR Abandonada",
   "status": "published",
@@ -11,11 +11,16 @@
   "publishedAt": "2026-11-01T13:16:00-03:00",
   "investigationStatus": "ongoing",
   "cover": {
-    "src": "/editorial/covers/volta-redonda-empregos-2025-2026.svg",
-    "alt": "Capa gráfica de economia do VR Abandonada. Em destaque, o saldo negativo de 3.154 vínculos formais em Volta Redonda entre janeiro de 2025 e agosto de 2026, com ilustração vetorial de instalações industriais.",
-    "credit": "Arte editorial: VR Abandonada · Dados: Novo Caged/MTE · Silhueta industrial ilustrativa, não fotografia."
+    "src": "/editorial/covers/volta-redonda-empregos-jan2025-set2026.svg",
+    "alt": "Capa editorial do VR Abandonada: saldo negativo de 3.143 empregos formais em Volta Redonda, de janeiro de 2025 a setembro de 2026, com desenho industrial ilustrativo.",
+    "credit": "Arte: VR Abandonada. Dados: Novo Caged/MTE, tabelas oficiais de setembro/2026. Silhueta industrial ilustrativa, não fotografia."
   },
   "sources": [
+    {
+      "label": "MTE — Novo Caged setembro de 2026, arquivo oficial 3-tabelas_Setembro de 2026.xlsx (tabelas 3 e 8.1)",
+      "url": "https://drive.google.com/file/d/1HYU84SAj3uKU9M_Nop0V0FQKhWMb94Xr/view",
+      "consultedAt": "2026-11-04"
+    },
     {
       "label": "MTE — Novo Caged, agosto de 2026 e demais competências do período",
       "url": "https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/acoes-e-programas/programas-projetos-acoes-obras-e-atividades/estatisticas-trabalho/novo-caged/2026/agosto/pagina-inicial",
@@ -74,20 +79,45 @@
   ],
   "blocks": [
     {
+      "type": "paragraph",
+      "text": "Volta Redonda continua com o menor saldo absoluto de empregos formais entre os 92 municípios do Rio de Janeiro. Na edição de setembro de 2026 do Novo Caged, divulgada em 4 de novembro pelo Ministério do Trabalho e Emprego, o município acumulou −3.143 vínculos entre janeiro de 2025 e setembro de 2026. No mesmo período, o estado do Rio somou +187.113 e os demais 11 municípios do Médio Paraíba, excluída Volta Redonda, +8.756. Os 21 meses foram integralmente recalculados na série revisada, não pela soma de novos dados a uma edição anterior."
+    },
+    {
       "type": "heading",
-      "text": "ATUALIZAÇÃO — 4 de novembro de 2026: setembro foi divulgado; resultado de Volta Redonda ainda precisa ser confirmado"
+      "text": "Em setembro, 57 empregos a mais — e perda acumulada ainda elevada"
     },
     {
       "type": "paragraph",
-      "text": "O Ministério do Trabalho e Emprego divulgou em 4 de novembro os dados do Novo Caged relativos a setembro de 2026. O estado do Rio de Janeiro teve saldo positivo de 9.285 vínculos no mês e acumulou +86.489 entre janeiro e setembro. Na comparação regional, Barra Mansa registrou +500 no mês e figurou entre os cinco maiores saldos municipais do estado, segundo o Observatório do Trabalho fluminense, em números divulgados pelo Diário do Rio em 4/11. Os dados nacionais apontam +121.305 vínculos formais em setembro. O saldo específico de Volta Redonda e o ranking completo dos 92 municípios na edição de setembro não foram confirmados por esta apuração. Portanto, não é possível afirmar ainda se a cidade continuou na última posição ou apresentar um novo acumulado de 21 meses."
+      "text": "Volta Redonda registrou 2.726 admissões e 2.669 desligamentos em setembro, saldo positivo de 57 empregos. No mesmo mês de 2025, a série hoje revisada apontou +414. De janeiro a setembro de 2026, foram 24.738 admissões e 26.656 desligamentos, saldo de −1.918. Como 2025 terminou com −1.225, o total dos 21 meses soma −3.143."
+    },
+    {
+      "type": "heading",
+      "text": "Barra Mansa ganha 500 empregos em setembro; vizinhos ampliam vantagem"
     },
     {
       "type": "paragraph",
-      "text": "ATENÇÃO À REVISÃO DA SÉRIE: o levantamento original, consultado em 1º de novembro, registrava +77.670 empregos para o estado entre janeiro e agosto de 2026. A nova divulgação aponta +86.489 de janeiro a setembro e +9.285 somente em setembro, o que implica aritmeticamente +77.204 em janeiro–agosto na edição atual, diferença de −466 vínculos ante o corte anterior. Essa diferença evidencia revisões retroativas da base; ela não significa 466 demissões adicionais em setembro. Por esse motivo, não somamos automaticamente os números antigos aos novos. Os −3.154 de Volta Redonda, o desempenho setorial e o ranking referem-se explicitamente à extração de janeiro/2025–agosto/2026 realizada em 1º/11 e ainda dependem de reprocessamento homogêneo na versão de setembro."
+      "text": "Em setembro, o Médio Paraíba gerou 934 empregos líquidos: +57 em Volta Redonda e +877 nos outros 11 municípios. Barra Mansa (+500), Porto Real (+213) e Resende (+133) se destacaram. No acumulado de 21 meses, Barra Mansa somou +2.597, Porto Real +2.091, Resende +1.175, Valença +1.199 e Barra do Piraí +754. Angra dos Reis, na Costa Verde, acumulou +3.706. O saldo do Médio Paraíba completo é +5.613 e o dos três municípios da Costa Verde, +4.017."
+    },
+    {
+      "type": "list",
+      "text": "Saldos de setembro/2026 e saldo acumulado de janeiro/2025 a setembro/2026 em cada cidade do recorte (setembro | 21 meses):",
+      "items": [
+        "Angra dos Reis +472 | +3.706; Barra Mansa +500 | +2.597; Porto Real +213 | +2.091; Valença +31 | +1.199; Resende +133 | +1.175.",
+        "Barra do Piraí −104 | +754; Paraty −5 | +487; Rio das Flores +24 | +411; Piraí +60 | +381; Pinheiral +14 | +306.",
+        "Itatiaia +13 | −12; Rio Claro −1 | −63; Quatis −6 | −83; Mangaratiba +11 | −176; Volta Redonda +57 | −3.143."
+      ]
+    },
+    {
+      "type": "heading",
+      "text": "Por que os 3.154 empregos da manchete anterior viraram 3.143?"
     },
     {
       "type": "paragraph",
-      "text": "Volta Redonda atravessa uma retração no emprego formal que contrasta com o desempenho do Médio Paraíba e do estado do Rio de Janeiro. Entre janeiro de 2025 e agosto de 2026, foram 56.042 admissões e 59.196 desligamentos no município, resultando em saldo negativo de 3.154 vínculos com carteira assinada. No mesmo período, o estado fluminense acumulou saldo positivo de 178.375, e o Médio Paraíba, incluindo Volta Redonda, registrou +4.728. O resultado local foi o menor saldo absoluto entre os 92 municípios fluminenses; esse ranking não representa taxa de desemprego nem perda proporcional ao estoque de empregos."
+      "text": "O Novo Caged incorpora ajustes retroativos. Na edição consultada em 1º de novembro, Volta Redonda acumulava −1.929 empregos de janeiro a agosto de 2026. Na edição de setembro, esse mesmo intervalo foi revisto para −1.975, diferença de −46. Setembro acrescentou +57, levando janeiro–setembro a −1.918 e o total desde janeiro de 2025 a −3.143. Simplesmente somar +57 aos −3.154 da edição antiga daria um valor errado, pois ignoraria os ajustes."
+    },
+    {
+      "type": "paragraph",
+      "text": "No estado do Rio, o acumulado de janeiro a agosto de 2026 foi revisto de +77.670 para +77.204, e setembro acrescentou +9.285, fechando janeiro–setembro em +86.489. O saldo estadual de 2025 passou de +100.705 para +100.624. O total de 21 meses é +187.113. O ranking estadual de Volta Redonda foi confirmado novamente: 92ª posição, por saldo absoluto. Não representa uma comparação por habitante ou por estoque de empregados."
     },
     {
       "type": "heading",
@@ -95,71 +125,51 @@
     },
     {
       "type": "paragraph",
-      "text": "No início de 2025, a Prefeitura divulgou que o município havia encerrado 2024 com saldo positivo de 4.528 vagas, conforme a base disponível naquele momento. Na base revisada utilizada nesta reportagem, 2025 terminou com saldo negativo de 1.225 empregos. Entre janeiro e agosto de 2026, o saldo foi de −1.929. O número histórico de 2024 não foi reprocessado na mesma edição do painel para esta matéria: a comparação indica uma mudança de trajetória, não uma série inteiramente harmonizada."
-    },
-    {
-      "type": "paragraph",
-      "text": "Comparando intervalos de igual duração, janeiro a agosto de 2025 registrou −1.785 vínculos e janeiro a agosto de 2026 registrou −1.929: deterioração de 144 vagas no saldo."
+      "text": "Em janeiro de 2025, a Prefeitura divulgou saldo positivo de 4.528 empregos em 2024, conforme a base disponível à época. Na série revisada agora consultada, Volta Redonda registrou −1.225 em 2025 e −1.918 de janeiro a setembro de 2026. O dado histórico de 2024 divulgado pela Prefeitura não foi reprocessado nesta mesma edição; a comparação permite acompanhar mudança de trajetória, não comparar automaticamente bases idênticas."
     },
     {
       "type": "heading",
-      "text": "Vizinhos crescem, Volta Redonda encolhe"
+      "text": "Indústria: perdas da análise anterior, ainda não reprocessadas por setor"
     },
     {
       "type": "paragraph",
-      "text": "Nos 20 meses, Barra Mansa somou +2.086 empregos formais; Porto Real, +1.872; Valença, +1.175; Resende, +1.043; Barra do Piraí, +864; Pinheiral, +292. Angra dos Reis registrou +3.218. Os demais 11 municípios do Médio Paraíba, sem Volta Redonda, somaram +7.882, enquanto Volta Redonda registrou −3.154. Os resultados medem locais dos estabelecimentos, e não obrigatoriamente moradores de cada cidade."
+      "text": "Na extração anterior, encerrada em agosto de 2026 e consultada em 1º de novembro, a indústria registrou −1.139 empregos líquidos, com 12.734 admissões e 13.873 desligamentos. As classes de instalação de máquinas e equipamentos industriais (−942) e produção de laminados planos de aço (−308) concentravam perdas, parcialmente compensadas por outras atividades. Mecânicos de manutenção de máquinas industriais (−292) e trabalhadores de soldagem e corte (−208) também apareciam entre as ocupações em retração. Esses indicadores se referem apenas ao corte e à edição de dados até agosto, NÃO ao período atualizado de 21 meses."
+    },
+    {
+      "type": "paragraph",
+      "text": "Os códigos de atividade e ocupação não individualizam empregadores, portanto não permitem atribuir automaticamente as perdas à CSN, CBSI ou a qualquer empresa. São necessários contratos, movimentos por estabelecimento e documentos sobre encerramentos ou transferência de vínculos."
     },
     {
       "type": "heading",
-      "text": "A indústria perdeu 1.139 vínculos"
+      "text": "Serviços e saúde também precisam de investigação"
     },
     {
       "type": "paragraph",
-      "text": "Na indústria de Volta Redonda foram 12.734 admissões e 13.873 desligamentos entre janeiro de 2025 e agosto de 2026: saldo de −1.139. O conjunto dos 12 municípios do Médio Paraíba registrou +2.602 na indústria; os demais 11, excluindo Volta Redonda, somaram +3.741. Em Porto Real, o saldo industrial foi +1.732; em Barra do Piraí, +542; em Resende, +495; e em Barra Mansa, +425."
-    },
-    {
-      "type": "paragraph",
-      "text": "O recorte por classe de atividade econômica identifica perdas concentradas em instalação de máquinas e equipamentos industriais (−942) e produção de laminados planos de aço (−308). Outras classes industriais compensaram parte dessas perdas. Famílias ocupacionais com saldos negativos incluem mecânicos de manutenção de máquinas industriais (−292), soldagem e corte de ligas metálicas (−208) e especialistas em inspeções industriais (−148). Esses códigos identificam atividades e ocupações, mas não individualizam empregadores como CSN ou CBSI."
+      "text": "No corte anterior até agosto, os serviços tinham saldo de −1.870 empregos e a construção, −411; o comércio e a agropecuária somavam +263 e +3. Reportagem da Folha do Aço de julho de 2026, com análise atribuída à Firjan, apontou saldo de −1.202 vínculos em atividades de apoio à gestão de saúde no acumulado parcial de janeiro a maio, concentrado em fevereiro. A hipótese de mudanças contratuais permanece em aberto e não identifica, por si só, responsável ou quantidade de pessoas ainda desempregadas. Os saldos por setor ainda exigem reextração na edição de setembro."
     },
     {
       "type": "heading",
-      "text": "Serviços concentram a maior perda líquida"
+      "text": "Pessoas, gerações e os limites do indicador"
     },
     {
       "type": "paragraph",
-      "text": "A indústria não explica sozinha a retração. O saldo dos serviços foi −1.870; o da construção, −411; o comércio registrou +263; e a agropecuária, +3, fechando o saldo municipal de −3.154. Fevereiro de 2026 teve saldo municipal de −1.361, concentrado nos serviços (−1.215)."
-    },
-    {
-      "type": "paragraph",
-      "text": "Reportagem da Folha do Aço de julho de 2026 atribuiu à análise da Firjan uma perda de 1.202 vínculos em atividades de apoio à gestão de saúde, no acumulado de janeiro a maio, concentrada especialmente em fevereiro. A hipótese de mudanças administrativas ou contratuais precisa ser verificada em contratos e movimentações documentadas. Não é possível identificar com base nessa informação um contrato responsável, nem concluir que todos os vínculos encerrados correspondam a pessoas ainda desempregadas."
+      "text": "O IBGE estima a população de Volta Redonda em aproximadamente 280 mil habitantes em 2026. Isso não equivale ao número de trabalhadores que procuram ocupação. O saldo do Novo Caged é a diferença entre admissões e desligamentos nos estabelecimentos com vínculos formais. A mesma pessoa pode aparecer mais de uma vez, moradores podem trabalhar fora da cidade e a base não mede o emprego informal nem a taxa municipal de desemprego."
     },
     {
       "type": "heading",
-      "text": "Pressão por oportunidades e faixa etária"
+      "text": "O que explica a distância entre a Cidade do Aço e os vizinhos?"
     },
     {
       "type": "paragraph",
-      "text": "O IBGE estima a população municipal em cerca de 280 mil moradores em 2026, com relativa estabilidade nas estimativas recentes. Mesmo sem forte crescimento populacional total, jovens podem ingressar no mercado, pessoas antes inativas podem passar a procurar trabalho e mudanças migratórias podem alterar a oferta de mão de obra. A série do Novo Caged mostra saldo de +2.447 para movimentações de pessoas de até 24 anos e −5.601 para 25 anos ou mais; esses resultados não comprovam substituição direta entre idades nem quantificam a taxa de desemprego da população residente."
+      "text": "Os dados revelam onde o saldo foi negativo, mas não comprovam causa única. É necessário investigar ciclos de obras e manutenção industrial, transições de prestadoras, contratos na saúde, salários e duração dos vínculos. A Prefeitura, a CSN e demais empresas, a Firjan e representantes dos trabalhadores devem responder sobre as decisões e medidas relacionadas aos resultados. Até o fechamento desta atualização, não houve contraditório formal específico para estas perguntas."
     },
     {
       "type": "heading",
-      "text": "Quais são as causas e quem deve responder?"
+      "text": "Fontes e método: duas tabelas oficiais, 92 municípios conferidos"
     },
     {
       "type": "paragraph",
-      "text": "Os dados mostram onde as perdas ocorreram, mas não demonstram causa única. Precisam ser apurados ciclos de obras e manutenção industrial, mudanças de prestadoras, encerramentos de contratos, modalidades de vínculo, salários e decisões empresariais. Também cabe perguntar à Prefeitura, às empresas, à Firjan e às representações de trabalhadores que medidas concretas estão sendo tomadas para manter e gerar empregos duradouros."
-    },
-    {
-      "type": "paragraph",
-      "text": "O saldo negativo do Novo Caged é a diferença entre admissões e desligamentos formais registrados em estabelecimentos do município; não equivale a 3.154 pessoas desempregadas, nem mede a ocupação informal ou todos os trabalhadores residentes. A mesma pessoa pode aparecer em mais de uma movimentação."
-    },
-    {
-      "type": "heading",
-      "text": "Metodologia e atualização"
-    },
-    {
-      "type": "paragraph",
-      "text": "Levantamento do VR Abandonada feito a partir do Painel Novo Caged do Ministério do Trabalho e Emprego, competências de janeiro de 2025 a agosto de 2026, comparando saldos setoriais, municipais e estaduais na edição consultada em 1º de novembro. Os dados estão sujeitos a revisões. Em 4 de novembro foi divulgada a competência setembro, com novos saldos confirmados para o estado do Rio de Janeiro e Barra Mansa, incorporados em nota no início desta página. O valor de setembro para Volta Redonda ainda não foi validado, portanto não há atualização do total municipal de 20 para 21 meses ou do ranking estadual. O contraditório específico com Prefeitura, empresas, Firjan e entidades de trabalhadores sobre as causas das perdas permanece pendente."
+      "text": "A equipe do VR Abandonada analisou a planilha oficial '3-tabelas_Setembro de 2026.xlsx', disponibilizada pelo Ministério do Trabalho em 4 de novembro de 2026. A tabela 3 apresenta dados municipais de setembro e o acumulado de 2026; a tabela 8.1 permite reconstituir a série histórica mensal ajustada de janeiro de 2025 a setembro de 2026. Todos os 92 municípios fluminenses tiveram os saldos de setembro e de janeiro–setembro comparados entre as duas tabelas, sem nenhuma divergência. A soma dos municípios foi +9.285 em setembro e +86.489 no ano, idêntica ao total estadual publicado. A presente reportagem foi atualizada preservando a data, a manchete e os registros anteriores no histórico."
     }
   ],
   "updates": [
@@ -177,7 +187,12 @@
       "date": "2026-11-04T20:20:00-03:00",
       "label": "Novo Caged de setembro: atualização parcial verificada",
       "text": "Inseridos saldos de setembro no estado do RJ (+9.285) e em Barra Mansa (+500), acumulado estadual janeiro–setembro (+86.489) e ressalva sobre revisão de −466 na série janeiro–agosto estadual. O saldo municipal de Volta Redonda e o ranking atualizados permanecem não confirmados; o resultado histórico de −3.154 até agosto foi preservado e datado."
+    },
+    {
+      "date": "2026-11-04T20:39:00-03:00",
+      "label": "Fechamento oficial de setembro",
+      "text": "Conferidos 92 municípios entre as tabelas 3 e 8.1 do MTE, sem divergências. Volta Redonda +57 em setembro e −3.143 de janeiro/2025 a setembro/2026; município segue com menor saldo absoluto entre os 92. Manchete e capa atualizadas, preservando o mesmo URL. Indicadores por setor permanecem identificados como corte histórico até agosto."
     }
   ],
-  "updatedAt": "2026-11-04T20:20:00-03:00"
+  "updatedAt": "2026-11-04T20:39:00-03:00"
 }
