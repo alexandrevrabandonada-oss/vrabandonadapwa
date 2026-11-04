@@ -3,7 +3,7 @@
   "kind": "investigation",
   "title": "Volta Redonda perde 3.154 empregos e tem o pior saldo do estado do Rio em 20 meses",
   "subtitle": "Levantamento com dados do Novo Caged mostra retração na indústria, nos serviços e na construção enquanto cidades vizinhas e o estado registram saldos positivos.",
-  "summary": "Entre janeiro de 2025 e agosto de 2026, Volta Redonda registrou 56.042 admissões e 59.196 desligamentos, saldo de −3.154 vínculos formais. A cidade teve o menor saldo absoluto dos 92 municípios do Rio de Janeiro no intervalo; isso não equivale à maior taxa de desemprego.",
+  "summary": "Na consulta publicada em 1º/11, Volta Redonda acumulava −3.154 empregos formais de janeiro/2025 a agosto/2026, o menor saldo absoluto do RJ naquele corte. Atualização de 4/11: o estado somou +9.285 em setembro e Barra Mansa +500; o resultado municipal de setembro ainda não foi confirmado nesta apuração.",
   "section": "Economia, indústria e trabalho",
   "author": "VR Abandonada",
   "status": "published",
@@ -47,12 +47,44 @@
       "consultedAt": "2026-11-01"
     },
     {
-      "label": "Wikimedia Commons — fotografia da capa CSN01.jpg, autor e licença CC BY-SA 3.0",
+      "label": "Wikimedia Commons — fotografia histórica de referência, não utilizada na capa atual",
       "url": "https://commons.wikimedia.org/wiki/File:CSN01.jpg",
       "consultedAt": "2026-11-01"
+    },
+    {
+      "label": "Agência Gov/Secom — divulgação oficial do Novo Caged de setembro de 2026, 4/11/2026 (saldo nacional)",
+      "url": "https://agenciagov.ebc.com.br/noticias/202611/brasil-gera-121-3-mil-empregos-formais-em-setembro-e-saldo-no-ano-chega-a-1-24-milhao-de-novos-postos-com-carteira-assinada",
+      "consultedAt": "2026-11-04"
+    },
+    {
+      "label": "Diário do Rio — dados do Observatório do Trabalho/RJ, setembro de 2026 (+9.285 no estado; +500 em Barra Mansa)",
+      "url": "https://diariodorio.com/economia/mercado-de-trabalho/2026/11/04/rio-de-janeiro-cria-mais-de-86-mil-empregos-com-carteira-assinada-em-2026-mulheres-ocupam-70-das-novas-vagas-em-setembro.html",
+      "consultedAt": "2026-11-04"
+    },
+    {
+      "label": "UOL/Estadão — saldo acumulado do RJ em janeiro–setembro de 2026 (+86.489)",
+      "url": "https://economia.uol.com.br/noticias/estadao-conteudo/2026/11/04/caged-saldo-de-emprego-formal-e-positivo-em-1248914-vagas-de-janeiro-a-setembro.amp.htm",
+      "consultedAt": "2026-11-04"
+    },
+    {
+      "label": "MTE — anúncio da publicação dos dados completos de setembro após coletiva em 4/11",
+      "url": "https://www.gov.br/trabalho-e-emprego/pt-br/mte-divulga-dados-do-emprego-formal-de-setembro-nesta-quarta-feira-4",
+      "consultedAt": "2026-11-04"
     }
   ],
   "blocks": [
+    {
+      "type": "heading",
+      "text": "ATUALIZAÇÃO — 4 de novembro de 2026: setembro foi divulgado; resultado de Volta Redonda ainda precisa ser confirmado"
+    },
+    {
+      "type": "paragraph",
+      "text": "O Ministério do Trabalho e Emprego divulgou em 4 de novembro os dados do Novo Caged relativos a setembro de 2026. O estado do Rio de Janeiro teve saldo positivo de 9.285 vínculos no mês e acumulou +86.489 entre janeiro e setembro. Na comparação regional, Barra Mansa registrou +500 no mês e figurou entre os cinco maiores saldos municipais do estado, segundo o Observatório do Trabalho fluminense, em números divulgados pelo Diário do Rio em 4/11. Os dados nacionais apontam +121.305 vínculos formais em setembro. O saldo específico de Volta Redonda e o ranking completo dos 92 municípios na edição de setembro não foram confirmados por esta apuração. Portanto, não é possível afirmar ainda se a cidade continuou na última posição ou apresentar um novo acumulado de 21 meses."
+    },
+    {
+      "type": "paragraph",
+      "text": "ATENÇÃO À REVISÃO DA SÉRIE: o levantamento original, consultado em 1º de novembro, registrava +77.670 empregos para o estado entre janeiro e agosto de 2026. A nova divulgação aponta +86.489 de janeiro a setembro e +9.285 somente em setembro, o que implica aritmeticamente +77.204 em janeiro–agosto na edição atual, diferença de −466 vínculos ante o corte anterior. Essa diferença evidencia revisões retroativas da base; ela não significa 466 demissões adicionais em setembro. Por esse motivo, não somamos automaticamente os números antigos aos novos. Os −3.154 de Volta Redonda, o desempenho setorial e o ranking referem-se explicitamente à extração de janeiro/2025–agosto/2026 realizada em 1º/11 e ainda dependem de reprocessamento homogêneo na versão de setembro."
+    },
     {
       "type": "paragraph",
       "text": "Volta Redonda atravessa uma retração no emprego formal que contrasta com o desempenho do Médio Paraíba e do estado do Rio de Janeiro. Entre janeiro de 2025 e agosto de 2026, foram 56.042 admissões e 59.196 desligamentos no município, resultando em saldo negativo de 3.154 vínculos com carteira assinada. No mesmo período, o estado fluminense acumulou saldo positivo de 178.375, e o Médio Paraíba, incluindo Volta Redonda, registrou +4.728. O resultado local foi o menor saldo absoluto entre os 92 municípios fluminenses; esse ranking não representa taxa de desemprego nem perda proporcional ao estoque de empregos."
@@ -127,7 +159,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Levantamento do VR Abandonada feito a partir do Painel Novo Caged do Ministério do Trabalho e Emprego, competências de janeiro de 2025 a agosto de 2026, comparando saldos setoriais, municipais e estaduais na mesma edição. Dados podem sofrer revisões. Setembro de 2026 estava anunciado pelo MTE para 4 de novembro, às 14h30. Esta reportagem é investigação em acompanhamento; o contraditório específico de Prefeitura, empresas, Firjan e entidades de trabalhadores permanece pendente."
+      "text": "Levantamento do VR Abandonada feito a partir do Painel Novo Caged do Ministério do Trabalho e Emprego, competências de janeiro de 2025 a agosto de 2026, comparando saldos setoriais, municipais e estaduais na edição consultada em 1º de novembro. Os dados estão sujeitos a revisões. Em 4 de novembro foi divulgada a competência setembro, com novos saldos confirmados para o estado do Rio de Janeiro e Barra Mansa, incorporados em nota no início desta página. O valor de setembro para Volta Redonda ainda não foi validado, portanto não há atualização do total municipal de 20 para 21 meses ou do ranking estadual. O contraditório específico com Prefeitura, empresas, Firjan e entidades de trabalhadores sobre as causas das perdas permanece pendente."
     }
   ],
   "updates": [
@@ -140,7 +172,12 @@
       "date": "2026-11-01T13:19:00-03:00",
       "label": "Ajuste técnico da capa",
       "text": "Substituída referência externa à fotografia por capa gráfica própria hospedada no repositório do site, conforme validação editorial de imagens locais. Dados e texto da investigação preservados."
+    },
+    {
+      "date": "2026-11-04T20:20:00-03:00",
+      "label": "Novo Caged de setembro: atualização parcial verificada",
+      "text": "Inseridos saldos de setembro no estado do RJ (+9.285) e em Barra Mansa (+500), acumulado estadual janeiro–setembro (+86.489) e ressalva sobre revisão de −466 na série janeiro–agosto estadual. O saldo municipal de Volta Redonda e o ranking atualizados permanecem não confirmados; o resultado histórico de −3.154 até agosto foi preservado e datado."
     }
   ],
-  "updatedAt": "2026-11-01T13:19:00-03:00"
+  "updatedAt": "2026-11-04T20:20:00-03:00"
 }
