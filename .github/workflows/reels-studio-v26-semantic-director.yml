@@ -1,0 +1,102 @@
+name: Reels Studio V26 — auto semantic brutalist cinema
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/director_v26.py'
+      - 'tools/reels-studio/studio/render_v26.py'
+      - 'tools/reels-studio/studio/qa_v26.py'
+      - 'tools/reels-studio/tests/test_director_v26.py'
+      - 'tools/reels-studio/examples/editorial_brief_v26.json'
+      - '.github/workflows/reels-studio-v26-semantic-director.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  word-led-graphic-reels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 39
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install media and editorial type tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fontconfig fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Validate generic planning, content fidelity and visual layout
+        run: python -m pytest -q tests/test_director_v26.py
+      - name: Fetch and verify genuine CSN photograph and moving French foundry footage
+        run: |
+          set -euo pipefail
+          mkdir -p work/v26/sources work/v26/output
+          python - <<'PY'
+          from pathlib import Path
+          from studio.volta_redonda_v19 import fetch_asset
+          print(fetch_asset('csn_2014',Path('work/v26/sources')))
+          PY
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.26 (internal creative test)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v26/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v26/sources/france_2011.webm' | sha1sum -c -
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('work/v26/sources/france_2011.webm')
+          p.with_suffix('.json').write_text(json.dumps({
+            'id':'france_2011','date_label':2011,'sha1':hashlib.sha1(p.read_bytes()).hexdigest(),
+            'size_bytes':p.stat().st_size,'author':'Damien Vicart',
+            'source_url':'https://commons.wikimedia.org/wiki/File:Vicart_-_Aci%C3%A9rie.webm',
+            'editorial_role':'independent foreign visual reference, not CSN',
+            'publication_approved':False},indent=2))
+          PY
+      - name: Export A — dynamic graphic sequence from 4 semantic chapters
+        run: |
+          python -m studio.render_v26 \
+            --photo work/v26/sources/csn_2014.jpg \
+            --film work/v26/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --brief examples/editorial_brief_v26.json \
+            --out work/v26/output/V26_GRAFICO.mp4 --variant graphic
+      - name: Export B — different cinema grammar, same provenance and words
+        run: |
+          python -m studio.render_v26 \
+            --photo work/v26/sources/csn_2014.jpg \
+            --film work/v26/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --brief examples/editorial_brief_v26.json \
+            --out work/v26/output/V26_CINEMA.mp4 --variant cinema
+      - name: Independent media QA — keep artistic notes separate
+        run: |
+          python -m studio.qa_v26 --video work/v26/output/V26_GRAFICO.mp4 \
+            --manifest work/v26/output/V26_GRAFICO.json \
+            --out work/v26/output/V26_GRAFICO_QA.json
+          python -m studio.qa_v26 --video work/v26/output/V26_CINEMA.mp4 \
+            --manifest work/v26/output/V26_CINEMA.json \
+            --out work/v26/output/V26_CINEMA_QA.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('work/v26/output/V26_GRAFICO.json').read_text())
+          b=json.loads(Path('work/v26/output/V26_CINEMA.json').read_text())
+          for r in (a,b):
+              assert r['plan']['shot_count']==6
+              assert r['plan']['window_schedule']['different_windows']==3
+              assert r['word_timings_real'] is True
+              assert r['voice_embedded'] is False and r['voice_sha256'] is None
+              assert r['publication_approved'] is False
+          assert [x['layout'] for x in a['plan']['shots']] != [x['layout'] for x in b['plan']['shots']]
+          print('Two true 6-scene auto-planned reels produced, without falsely claiming embedded voice.')
+          PY
+      - name: Retain private A/B review artifacts only, not raw licensed sources
+        uses: actions/upload-artifact@v4
+        with:
+          name: v26-semantic-cinematic-director-ab-internal
+          path: |
+            tools/reels-studio/work/v26/output/V26_*.mp4
+            tools/reels-studio/work/v26/output/V26_*.jpg
+            tools/reels-studio/work/v26/output/V26_*.json
+          if-no-files-found: error
+          retention-days: 7

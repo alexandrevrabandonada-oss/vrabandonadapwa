@@ -1,0 +1,45 @@
+{
+  "schema_version": "v0.26",
+  "project_id": "aco-grafico-voz-alexandre-estudo",
+  "title": "Volta Redonda tem memória",
+  "end_padding_sec": 0.429,
+  "publication_approved": false,
+  "chapters": [
+    {
+      "id": "memoria",
+      "spoken_text": "Volta Redonda tem memória.",
+      "source": "photo",
+      "headline": "VOLTA REDONDA",
+      "eyebrow": "A CIDADE TEM MEMÓRIA",
+      "source_credit": "CSN / VOLTA REDONDA · FOTO 2014",
+      "energy": 0.95
+    },
+    {
+      "id": "usina",
+      "spoken_text": "Aqui, a CSN em dois mil e quatorze.",
+      "source": "photo",
+      "headline": "CSN / 2014",
+      "eyebrow": "UMA CIDADE INDUSTRIAL",
+      "source_credit": "CSN / VOLTA REDONDA · FOTO 2014",
+      "energy": 0.69
+    },
+    {
+      "id": "siderurgia",
+      "spoken_text": "As cenas de siderurgia vêm de um arquivo francês.",
+      "source": "film",
+      "headline": "AÇO EM MOVIMENTO",
+      "eyebrow": "REFERÊNCIA INTERNACIONAL",
+      "source_credit": "FRANÇA · FILMAGEM DE 2011",
+      "energy": 0.96
+    },
+    {
+      "id": "origem",
+      "spoken_text": "Nossa tarefa é transformar imagens em histórias, sem apagar sua origem.",
+      "source": "both",
+      "headline": "A ORIGEM IMPORTA",
+      "eyebrow": "DOCUMENTO / NARRATIVA",
+      "source_credit": "CSN 2014 / FRANÇA 2011 · FONTES DISTINTAS",
+      "energy": 0.82
+    }
+  ]
+}

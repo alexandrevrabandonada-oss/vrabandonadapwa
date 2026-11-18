@@ -1,0 +1,51 @@
+{
+  "catalog_version": "0.12",
+  "assets": [
+    {
+      "id": "UPV-001",
+      "type": "photo",
+      "source_description": "Fotografia da usina fornecida na conversa",
+      "capture_date": null,
+      "license_gate": "pending",
+      "usage_notes": "Contexto industrial; nunca registro comprovado do acidente em 1962"
+    },
+    {
+      "id": "ANOITE-1962-P4",
+      "type": "newspaper",
+      "source_description": "Fac-símile de A Noite p.4, 29/01/1962 fornecido na conversa",
+      "capture_date": "1962-01-29",
+      "license_gate": "pending",
+      "usage_notes": "Balanço da manchete: 12 mortos e 11 feridos; fontes posteriores devem ser comparadas"
+    },
+    {
+      "id": "VR-RODOVIA-CONTORNO-2017",
+      "type": "video",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Rodovia_do_Contorno_%C3%A9_inaugurada_ap%C3%B3s_22_anos_de_obra.webm",
+      "capture_date": "2017-12-08",
+      "license_gate": "pending",
+      "license_review_pending": true,
+      "stated_license": "CC BY 3.0, licença declarada na página; revisão pendente",
+      "attribution": "TV BrasilGov",
+      "license_url": "https://creativecommons.org/licenses/by/3.0/",
+      "usage_notes": "Somente imagens de contexto de infraestrutura 2017; NÃO para ilustrar o acidente de 1962"
+    },
+    {
+      "id": "CSN-TRABALHADORES-DOC",
+      "type": "video",
+      "source_url": "https://nucleopiratininga.org.br/os-homens-da-fabrica/",
+      "capture_date": null,
+      "license_gate": "pending",
+      "license_review_pending": true,
+      "attribution": "Produção Telenews Service / realização Sindicato dos Metalúrgicos",
+      "usage_notes": "Solicitar autorização de reutilização de trechos"
+    },
+    {
+      "id": "V11-INDUSTRIAL-SIM",
+      "type": "video",
+      "source_description": "Animação procedural de laboratório",
+      "capture_date": null,
+      "license_gate": "synthetic",
+      "usage_notes": "Sempre tarja SIMULAÇÃO GRÁFICA; não é registro histórico"
+    }
+  ]
+}

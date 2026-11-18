@@ -1,0 +1,76 @@
+{
+  "version": "v0.25",
+  "status": "INTERNAL_EDITORIAL_ESTIMATE_NOT_AUDIENCE_RATING",
+  "weights": {
+    "identidade_visual": 0.2,
+    "composicao": 0.15,
+    "montagem_movimento": 0.15,
+    "acervo_variedade": 0.15,
+    "narrativa": 0.1,
+    "legendas": 0.1,
+    "som_voz": 0.15
+  },
+  "rows": [
+    {
+      "version": "v0.24",
+      "label": "Referência anterior",
+      "grades": {
+        "identidade_visual": 5.9,
+        "composicao": 6.5,
+        "montagem_movimento": 6.1,
+        "acervo_variedade": 5.8,
+        "narrativa": 6.2,
+        "legendas": 7.3,
+        "som_voz": 3.4
+      },
+      "score": 5.8
+    },
+    {
+      "version": "v0.25",
+      "label": "A — Zine industrial",
+      "grades": {
+        "identidade_visual": 8.3,
+        "composicao": 7.5,
+        "montagem_movimento": 7,
+        "acervo_variedade": 5.8,
+        "narrativa": 6.2,
+        "legendas": 7.7,
+        "som_voz": 3.4
+      },
+      "score": 6.61
+    },
+    {
+      "version": "v0.25",
+      "label": "B — Documental",
+      "grades": {
+        "identidade_visual": 7.4,
+        "composicao": 7.7,
+        "montagem_movimento": 6.8,
+        "acervo_variedade": 5.8,
+        "narrativa": 6.2,
+        "legendas": 7.9,
+        "som_voz": 3.4
+      },
+      "score": 6.45
+    }
+  ],
+  "method": "Internally estimated qualitative art direction after visually inspecting seven-shot contact sheets and video outputs; these scores are not independently reviewed nor measured audience engagement.",
+  "limitations": [
+    "Alexandre voice bytes not embedded (instrumental soundtrack only)",
+    "genuine industrial motion is from France 2011, not CSN",
+    "Only one real CSN photo from 2014",
+    "Preview 540x960; no native 1080x1920/30fps",
+    "No three-topic/independent mobile review yet"
+  ],
+  "quality_10_certified": false,
+  "publication_approved": false,
+  "pipeline_capability_previous": 8.14,
+  "pipeline_capability_provisional": 8.24,
+  "pipeline_note": "Internal estimate after a new reusable visual grammar and QA; distinguish process capability from artistic quality. Confirmation requires v25 workflow success.",
+  "next_milestones": [
+    "import MP3 already generated on ElevenLabs without regenerating",
+    "more genuine local moving B-roll",
+    "parametric screenplay-to-layout generation rather than only seven hardcoded beats",
+    "native HD master and human evaluation across 3 different stories"
+  ]
+}

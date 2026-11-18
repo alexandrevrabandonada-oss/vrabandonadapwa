@@ -1,0 +1,40 @@
+{
+  "source_id": "rodovia_2017",
+  "source_sha1": "0974ee5e46efa3599f623e32c94fc0e0fd7da46a",
+  "reviewed_by": "Assistente editorial (revisão por amostragem, não avaliador externo)",
+  "review_basis": "Grade de fotogramas da reportagem original aproximadamente a cada 5 s, cobrindo 0-165 s, mais 8 janelas do ranking automático; classificação aproximada, não visionamento contínuo quadro a quadro.",
+  "purpose": "Selecionar filmagens de ação local para a linguagem cinematográfica Aço Gráfico",
+  "intervals": [
+    {
+      "start_sec": 0,
+      "end_sec": 13,
+      "label": "GRAPHIC_MONTAGE",
+      "decision": "REJECT_FOR_ACTION",
+      "reason": "Abertura com transições publicitárias e imagens genéricas de profissionais, sem comprovação de captação local das atividades mostradas."
+    },
+    {
+      "start_sec": 13,
+      "end_sec": 41.5,
+      "label": "STUDIO_PRESENTER",
+      "decision": "REJECT_FOR_ACTION",
+      "reason": "Apresentador e monitor em estúdio; baixa pertinência visual a uma narrativa de ação em Volta Redonda."
+    },
+    {
+      "start_sec": 41.5,
+      "end_sec": 157,
+      "label": "TALKING_HEAD",
+      "decision": "REJECT_FOR_ACTION",
+      "reason": "Entrevista prolongada na Rodovia do Contorno com enquadramento praticamente estático; pode servir como evidência contextual, não como filmagem de ação."
+    },
+    {
+      "start_sec": 157,
+      "end_sec": 169,
+      "label": "GRAPHIC_MONTAGE",
+      "decision": "REJECT_FOR_ACTION",
+      "reason": "Vinheta de encerramento com montagem gráfica de atividades genéricas; movimento induz falso escore de ação local."
+    }
+  ],
+  "rights_review": "PENDING_MANUAL_REVIEW",
+  "publication_approved": false,
+  "artistic_quality_certified": false
+}

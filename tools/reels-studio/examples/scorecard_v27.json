@@ -1,0 +1,53 @@
+{
+  "version": "v0.27",
+  "kind": "INTERNAL_EDITORIAL_ESTIMATE_NOT_INDEPENDENT",
+  "weights": {
+    "identidade_aranhaverso_brutalista": 0.2,
+    "composicao_e_legibilidade": 0.15,
+    "montagem_e_movimento": 0.15,
+    "repertorio_audiovisual": 0.15,
+    "narrativa_jornalistica": 0.1,
+    "legendas_mobile": 0.1,
+    "voz_e_som": 0.15
+  },
+  "criteria": {
+    "v0.27_impacto": {
+      "identidade_aranhaverso_brutalista": 8.45,
+      "composicao_e_legibilidade": 8.0,
+      "montagem_e_movimento": 7.65,
+      "repertorio_audiovisual": 6.05,
+      "narrativa_jornalistica": 6.5,
+      "legendas_mobile": 8.25,
+      "voz_e_som": 3.4
+    },
+    "v0.27_cinema": {
+      "identidade_aranhaverso_brutalista": 8.0,
+      "composicao_e_legibilidade": 8.05,
+      "montagem_e_movimento": 7.65,
+      "repertorio_audiovisual": 6.05,
+      "narrativa_jornalistica": 6.5,
+      "legendas_mobile": 8.25,
+      "voz_e_som": 3.4
+    }
+  },
+  "artistic_scores_out_of_10": {
+    "v0.27_impacto": 6.93,
+    "v0.27_cinema": 6.85
+  },
+  "previous_best_artistic": {
+    "version": "v0.26",
+    "score": 6.73
+  },
+  "factory_capability_out_of_10": 8.45,
+  "previous_factory_capability": 8.35,
+  "automatic_artistic_approval": false,
+  "limitations": [
+    "Voz Alexandre não incluída no vídeo final",
+    "Única fotografia local de 2014; vídeo em ação é da França em 2011",
+    "Nenhum teste cego de público, auditoria profissional independente ou retenção real",
+    "Vídeos são prévias 540x960; não master nativo 1080x1920",
+    "Nota não decorre automaticamente da métrica de vídeo ou do CI"
+  ],
+  "publication_approved": false
+}
+

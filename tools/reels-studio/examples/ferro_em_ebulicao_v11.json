@@ -1,0 +1,122 @@
+{
+  "project_id": "ferro-em-ebulicao-v11",
+  "status": "internal_visual_design_only",
+  "identity": "Aco Grafico / Brutalismo Expressivo Documental",
+  "output": {
+    "width": 540,
+    "height": 960,
+    "fps": 24
+  },
+  "visual_rules": {
+    "evidence_original_pixels": true,
+    "kinetic_graphics_on_context_only": true,
+    "credits_and_date_required": true,
+    "publication_blocked": true,
+    "physical_occlusion_required": true
+  },
+  "sources": {
+    "exterior": {
+      "path": "private_assets/csn_exterior.jpg",
+      "role": "industrial_context",
+      "capture_date": null,
+      "rights": "pending",
+      "on_screen_label": "IMAGEM DE CONTEXTO  •  DATA NÃO VERIFICADA"
+    },
+    "bobinas": {
+      "path": "private_assets/csn_bobinas.jpg",
+      "role": "industrial_context",
+      "capture_date": null,
+      "rights": "pending",
+      "on_screen_label": "IMAGEM DE CONTEXTO  •  DATA NÃO VERIFICADA"
+    },
+    "metal": {
+      "path": "private_assets/csn_metal.jpg",
+      "role": "industrial_context",
+      "capture_date": null,
+      "rights": "pending",
+      "on_screen_label": "IMAGEM DE CONTEXTO  •  DATA NÃO VERIFICADA"
+    },
+    "jornal": {
+      "path": "private_assets/a_noite_1962.jpg",
+      "role": "archival_newspaper",
+      "print_date": "1962-01-29",
+      "rights": "pending",
+      "on_screen_label": "FONTE: A NOITE  •  29 JAN 1962  •  FAC-SÍMILE"
+    },
+    "bobinas_bg": {
+      "path": "private_assets/csn_bobinas_fundo.jpg",
+      "role": "illustration",
+      "rights": "restricted",
+      "on_screen_label": "FUNDO RECONSTRUÍDO PARA ANIMAÇÃO"
+    },
+    "bobinas_mask": {
+      "path": "private_assets/csn_bobinas_mascara.png",
+      "role": "illustration",
+      "rights": "restricted",
+      "on_screen_label": "MÁSCARA DERIVADA DA FOTO"
+    }
+  },
+  "scenes": [
+    {
+      "id": "A",
+      "source": "exterior",
+      "kind": "industrial_world",
+      "duration": 2.0,
+      "title": "A CIDADE",
+      "accent": "electric",
+      "motion": "tilt_punch"
+    },
+    {
+      "id": "LAB",
+      "source": "exterior",
+      "kind": "industrial_world",
+      "duration": 2.2,
+      "accent": "signal",
+      "motion": "moving_footage",
+      "clip_source": "action_lab",
+      "clip_offset": 0,
+      "title": "MATÉRIA VIVA"
+    },
+    {
+      "id": "B",
+      "source": "bobinas",
+      "kind": "industrial_world",
+      "duration": 2.8,
+      "title": "FOI FORJADA",
+      "accent": "molten",
+      "motion": "physical_parallax",
+      "background_source": "bobinas_bg",
+      "mask_source": "bobinas_mask",
+      "strength": 1.45,
+      "pan_x": 0.28,
+      "pan_y": 0.55
+    },
+    {
+      "id": "C",
+      "source": "metal",
+      "kind": "industrial_world",
+      "duration": 1.6,
+      "title": "NO AÇO",
+      "accent": "electric",
+      "motion": "diagonal_rush"
+    },
+    {
+      "id": "D",
+      "source": "jornal",
+      "kind": "document_world",
+      "duration": 3.0,
+      "title": "29 JAN 1962",
+      "accent": "signal",
+      "motion": "evidence_dive"
+    }
+  ],
+  "edition": "Aco Grafico v0.11 - real video input gate",
+  "motion_clips": {
+    "action_lab": {
+      "path": "lab_assets/kinetic_industrial_simulation.mp4",
+      "rights": "cleared",
+      "role": "simulation",
+      "on_screen_label": "SIMULAÇÃO GRÁFICA  •  NÃO É ARQUIVO HISTÓRICO"
+    }
+  }
+}

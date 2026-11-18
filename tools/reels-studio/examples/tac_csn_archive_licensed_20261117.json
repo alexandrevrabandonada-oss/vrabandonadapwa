@@ -1,0 +1,44 @@
+{
+  "project": "TAC CSN — Aço Gráfico (private editorial pilot)",
+  "verified_at": "2026-11-17",
+  "publisher": "Wikimedia Commons",
+  "policy": "These are authentic archival 2014 photos, NOT images of 2026 air conditions. Preserve origin/credits. CC BY-SA 3.0 requires attribution, a license link, indication of edits, and share-alike compliance review for adapted material. Final publication NO-GO until rights/signoff.",
+  "assets": [
+    {
+      "id": "csn01_2014",
+      "file_name": "CSN01.jpg",
+      "asset_type": "documentary_archival_photograph",
+      "depicted_as_real": true,
+      "depicts": "vista panorâmica da Companhia Siderúrgica Nacional, Volta Redonda",
+      "capture_date": "2014-05-06",
+      "creator": "HenriqueBarraMansa",
+      "source": "https://commons.wikimedia.org/wiki/File:CSN01.jpg",
+      "original_download_url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/CSN01.jpg",
+      "license": "CC BY-SA 3.0 Unported",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source_reported_sha1": "6a792f0fd16ddd4c8bed2ca981788c9b9accb7a4",
+      "rights_status": "VERIFIED_LICENSE_CONDITIONAL",
+      "caption_must_state_archive_year": true,
+      "not_evidence_of_2026_compliance": true
+    },
+    {
+      "id": "csn02_2014",
+      "file_name": "CSN02.jpg",
+      "asset_type": "documentary_archival_photograph",
+      "depicted_as_real": true,
+      "depicts": "vista panorâmica da Companhia Siderúrgica Nacional, Volta Redonda",
+      "capture_date": "2014-05-06",
+      "creator": "HenriqueBarraMansa",
+      "source": "https://commons.wikimedia.org/wiki/File:CSN02.jpg",
+      "original_download_url": "https://upload.wikimedia.org/wikipedia/commons/d/df/CSN02.jpg",
+      "license": "CC BY-SA 3.0 Unported",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "source_reported_sha1": "229e83f4fdfe3b6f7b23bb34396679f65997861b",
+      "rights_status": "VERIFIED_LICENSE_CONDITIONAL",
+      "caption_must_state_archive_year": true,
+      "not_evidence_of_2026_compliance": true
+    }
+  ],
+  "required_attribution": "Fotos de arquivo (2014): HenriqueBarraMansa / Wikimedia Commons — CC BY-SA 3.0. Imagens recortadas/animadas quando aplicável.",
+  "publication_approved": false
+}

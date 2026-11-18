@@ -1,0 +1,48 @@
+name: Reels Studio V21 — documentary archive intake (no media)
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/archive_intake_v21.py'
+      - 'tools/reels-studio/tests/test_archive_intake_v21.py'
+      - 'tools/reels-studio/examples/acervo_arquivistico_v21.json'
+      - '.github/workflows/reels-studio-v21-archive-intake.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install source-only testing dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Test archival custody and rights fail-closed
+        run: python -m pytest -q tests/test_archive_intake_v21.py
+      - name: Export pending-only candidate audit (not footage)
+        run: |
+          mkdir -p work/v21
+          python -m studio.archive_intake_v21 --registry examples/acervo_arquivistico_v21.json --out work/v21/ACERVO_V21_PENDING.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('work/v21/ACERVO_V21_PENDING.json').read_text())
+          assert r['audit']['rights_cleared_count'] == 0
+          assert r['audit']['bytes_received'] == 0
+          assert r['audit']['publication_approved'] is False
+          assert all(a['license_gate'] == 'pending' for a in r['catalog']['assets'])
+          print('Archive leads indexed; zero licensed recordings or publication grants.')
+          PY
+      - name: Upload metadata only for private editorial review
+        uses: actions/upload-artifact@v4
+        with:
+          name: v21-archive-leads-pending-rights
+          path: tools/reels-studio/work/v21/ACERVO_V21_PENDING.json
+          retention-days: 7
+          if-no-files-found: error

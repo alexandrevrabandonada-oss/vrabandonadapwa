@@ -1,0 +1,46 @@
+name: Reels Studio V43 — motion-aware explainable shot curation (offline)
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/shot_curator_v43.py'
+      - 'tools/reels-studio/studio/review_v43.py'
+      - 'tools/reels-studio/tests/test_curator_v43.py'
+      - '.github/workflows/reels-studio-v43-curated-shot-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  curate-without-publishing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install offline image and sound dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+          python -m pip install -r requirements.txt
+          python -m pip install pytest
+      - name: Check curatorial rigor and regression against V42
+        env:
+          PYTHONPATH: .
+        run: |
+          python -m pytest -q tests/test_curator_v43.py tests/test_shot_scout_v42.py
+          python -m py_compile studio/shot_curator_v43.py studio/review_v43.py
+      - name: Confirm production, deployment and private source data are absent
+        run: |
+          test ! -d private_assets
+          test ! -d work/v43/private_assets
+          test ! -d .vercel
+          python - <<'PY'
+          from pathlib import Path
+          for directory in ('studio','tests'):
+              assert not any(x.suffix.lower() in {'.mp4','.webm','.mov','.mp3','.wav'} for x in Path(directory).rglob('*'))
+          print('CI is offline: no original video bytes, no deploy action, no publish')
+          PY

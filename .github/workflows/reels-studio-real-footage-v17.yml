@@ -1,0 +1,56 @@
+name: Reels Studio — real footage proof V17
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/real_footage_v17.py'
+      - 'tools/reels-studio/tests/test_v17.py'
+      - '.github/workflows/reels-studio-real-footage-v17.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  licensed-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ffmpeg and fonts
+        run: sudo apt-get update -qq && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - name: Run v17 source and composition tests
+        run: |
+          python -m pip install -r requirements.txt
+          python -m pytest -q tests/test_v17.py
+      - name: Download documented Wikimedia ORIGINAL
+        run: |
+          mkdir -p work/source work/output
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 5 \
+            --user-agent 'VRAbandonada-Research/0.17 (source attribution in artifact)' \
+            'https://upload.wikimedia.org/wikipedia/commons/f/f9/Armature_en_acier_de_pliage.webm' \
+            --output work/source/armature_senegal_2024.webm
+          echo 'cacc1db79fd88d7da28eb8783a57514159a5a3c1  work/source/armature_senegal_2024.webm' | sha1sum -c -
+          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 work/source/armature_senegal_2024.webm
+      - name: Render annotated 720x1280 film with original moving source
+        run: |
+          python -m studio.real_footage_v17 \
+            --source work/source/armature_senegal_2024.webm \
+            --output work/output/ACO_GRAFICO_V17_FILMAGEM_REAL_SENEGAL.mp4
+          ffprobe -v error -show_entries stream=codec_type,codec_name,width,height,r_frame_rate -show_entries format=duration -of json work/output/ACO_GRAFICO_V17_FILMAGEM_REAL_SENEGAL.mp4
+      - name: Contact sheet frames
+        run: |
+          ffmpeg -hide_banner -loglevel error -y -i work/output/ACO_GRAFICO_V17_FILMAGEM_REAL_SENEGAL.mp4 -vf 'fps=1/2,scale=216:384' work/output/preview_%02d.jpg
+          cp LICENCA_REAL_FILMAGEM_V17.md work/output/LICENCA_E_CREDITOS.md
+      - name: Upload internal review artifact (not site publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: v17-real-footage-internal-proof
+          path: |
+            tools/reels-studio/work/source/armature_senegal_2024.webm
+            tools/reels-studio/work/output/*.mp4
+            tools/reels-studio/work/output/*.json
+            tools/reels-studio/work/output/*.jpg
+            tools/reels-studio/work/output/LICENCA_E_CREDITOS.md
+          retention-days: 7
+          if-no-files-found: error

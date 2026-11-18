@@ -1,0 +1,12 @@
+{
+  "version": "v0.39",
+  "rubric": "Aço Gráfico Aranhaverso-brutalista autoral",
+  "assessment_type": "estimativa_editorial_interna_nao_independente",
+  "baseline": {"version": "v0.37", "best_reel": 7.74, "factory_capability": 8.91},
+  "artistic_weights": {"identity": 0.20, "composition": 0.15, "movement": 0.15, "archive": 0.15, "narrative": 0.10, "subtitles": 0.10, "audio_voice": 0.15},
+  "artistic_scores_internal": {"identity": 8.80, "composition": 8.70, "movement": 9.15, "archive": 8.45, "narrative": 7.30, "subtitles": 8.35, "audio_voice": 3.40},
+  "artistic_estimate": 7.78,
+  "factory_capability_status": "8.91/10, manter ate completar CI remoto v39; nao elevar com prova local apenas",
+  "objective_verified": {"tests_local": 12, "source_hashes": 4, "real_word_timing_count": 32, "shots": 8, "narrative_slow_shots": 4, "kinetic_shots": 4, "real_independent_motion_profile_matches": 8, "voice_embedded": false, "publication_approved": false},
+  "risks": ["Sem voz profissional audível no master", "Duas cenas ainda mostram a mesma fotografia de 2014", "Ação industrial é França 2011 e não a CSN", "Sem avaliadores independentes e sem teste de retenção"]
+}

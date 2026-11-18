@@ -1,0 +1,80 @@
+{
+  "version": "v0.20.1",
+  "date_checked": "2026-11-02",
+  "policy": "Research leads only. No media downloaded or redistributed, all rights pending. News broadcast and documentaries do not become Creative Commons because the story is publicly viewable.",
+  "source_discovery": [
+    {
+      "id": "csn_2026_worker_evacuations",
+      "title": "Trabalhadores afastando-se após ocorrência na CSN, 28/10/2026",
+      "reference_url": "https://diariodovale.com.br/cidade/explosao-na-csn-provoca-correria-e-desespero-entre-siderurgicos-em-vr/",
+      "origin_reported": "Diário do Vale, 28/10/2026",
+      "kind": "moving_video_reported_not_acquired",
+      "filming_place": "Usina Presidente Vargas, Volta Redonda; confirmar metadados do vídeo com a redação",
+      "priority_for_action": 1,
+      "potential_action": "pessoas em deslocamento real, acontecimento, urgência documental",
+      "risk": "sensibilidade de segurança e possível presença de pessoas identificáveis em episódio real",
+      "license_gate": "PENDING_AUTHORIZATION_AND_AUTHORSHIP",
+      "publication_approved": false
+    },
+    {
+      "id": "csn_2026_smoke_cnn",
+      "title": "Coluna de fumaça no episódio da CSN, 28/10/2026",
+      "reference_url": "https://www.cnnbrasil.com.br/nacional/sudeste/rj/video-bombeiros-sao-acionados-apos-explosao-na-csn-em-volta-redonda-rj/",
+      "origin_reported": "CNN Brasil, 28/10/2026",
+      "kind": "moving_video_reported_not_acquired",
+      "filming_place": "Entorno da CSN, Volta Redonda",
+      "priority_for_action": 2,
+      "potential_action": "fumaça em movimento e ambiente urbano real",
+      "risk": "imagem publicada não equivale a autorização do cinegrafista; confirmar autoria",
+      "license_gate": "PENDING_AUTHORIZATION_AND_AUTHORSHIP",
+      "publication_approved": false
+    },
+    {
+      "id": "csn_2026_reuters_licensed",
+      "title": "Registro da nuvem de fumaça na siderúrgica, 28/10/2026",
+      "reference_url": "https://www.reutersconnect.com/item/brazil-terrifying-blast-sends-mushroom-cloud-over-giant-brazilian-steelworks-shaking-homes-across-city/dGFnOnJldXRlcnMuY29tLDIwMjY6bmV3c21sX09XU0hCQzEyMDA3Nzg",
+      "origin_reported": "Reuters Connect / STRINGERSHUB",
+      "kind": "licensable_footage_reference_not_acquired",
+      "filming_place": "Volta Redonda",
+      "priority_for_action": 3,
+      "potential_action": "nuvem de fumaça, trânsito e contexto urbano",
+      "risk": "licença comercial necessária, nenhuma compra ou cessão efetuada",
+      "license_gate": "LICENSABLE_BUT_NOT_LICENSED",
+      "publication_approved": false
+    },
+    {
+      "id": "arquivo_nacional_greve_1988",
+      "title": "Greve dos trabalhadores da CSN (1988) — Arquivo Nacional",
+      "reference_url": "https://www.youtube.com/watch?v=jC2xFwNXgn8",
+      "archive_reference_url": "https://querepublicaeessa.an.gov.br/index.php/que-republica-e-essa/assuntos/temas/78-secoes-anteriores/66-filme/183-greve-e-repressao-nas-telas",
+      "origin_reported": "Arquivo Nacional, Fundo Ernesto Germano Parés, BR_RJANRIO_FJ_0_FIL_0001_0004",
+      "kind": "archive_video_reference_not_acquired",
+      "filming_place": "Volta Redonda (a verificar em cada plano)",
+      "priority_for_action": 4,
+      "potential_action": "greve histórica, movimento de trabalhadores, imagens documentais",
+      "risk": "licença CC BY-ND declarada para o site não prova autorização para remontar conteúdo audiovisual do acervo; solicitar termos específicos",
+      "license_gate": "PENDING_ARCHIVE_RIGHTS_REVIEW",
+      "publication_approved": false
+    },
+    {
+      "id": "os_homens_da_fabrica",
+      "title": "Os Homens da Fábrica — Núcleo Piratininga de Comunicação",
+      "reference_url": "https://nucleopiratininga.org.br/os-homens-da-fabrica/",
+      "origin_reported": "NPC, direção Luiz Arnaldo Campos, realização Sindicato dos Metalúrgicos de Volta Redonda",
+      "kind": "documentary_reference_not_acquired",
+      "filming_place": "Volta Redonda, várias épocas",
+      "priority_for_action": 5,
+      "potential_action": "depoimentos, cidade e eventuais imagens de operações históricas, dependendo de decupagem",
+      "risk": "titularidade de trechos de arquivo e autorização de remontagem não demonstradas",
+      "license_gate": "PENDING_AUTHORIZATION_AND_ARCHIVE_REVIEW",
+      "publication_approved": false
+    }
+  ],
+  "required_next_actions": [
+    "Pedir cópia autorizada e liberação escrita ao titular da filmagem",
+    "Verificar data, local, crédito, condições de edição e identificação",
+    "Assistir ao original e anotar cortes e eventos sem extrapolação factual",
+    "Registrar hash e origem da cópia recebida",
+    "Somente depois autorizar integração como fonte de imagem; publicação ainda requer gate editorial"
+  ]
+}

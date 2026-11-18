@@ -1,0 +1,89 @@
+name: Reels Studio V24 — 32 voice-timed captions and cinematic archive montage
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/cinema_director_v24.py'
+      - 'tools/reels-studio/studio/voice_timed_v24.py'
+      - 'tools/reels-studio/examples/voice_alexandre_words_v24.json'
+      - 'tools/reels-studio/tests/test_v24.py'
+      - '.github/workflows/reels-studio-v24-voice-led.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  voice-timed-film:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install encoders, fonts and Python
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fontconfig fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Test measured voice words, text legibility and scene context
+        run: python -m pytest -q tests/test_v24.py
+      - name: Acquire real visual media with source-byte integrity
+        run: |
+          set -euo pipefail
+          mkdir -p work/v24/source work/v24/output
+          python - <<'PY'
+          from pathlib import Path
+          from studio.volta_redonda_v19 import fetch_asset
+          print(fetch_asset('csn_2014',Path('work/v24/source')))
+          PY
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.24 (preview, no publication)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v24/source/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v24/source/france_2011.webm' | sha1sum -c -
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('work/v24/source/france_2011.webm')
+          r={'id':'france_2011','sha1':hashlib.sha1(p.read_bytes()).hexdigest(),
+             'size_bytes':p.stat().st_size,'date_label':2011,
+             'source_url':'https://commons.wikimedia.org/wiki/File:Vicart_-_Aci%C3%A9rie.webm',
+             'author':'Damien Vicart','publication_approved':False}
+          p.with_suffix('.json').write_text(json.dumps(r,ensure_ascii=False,indent=2))
+          PY
+      - name: Produce source-specific silent-voice preview with 32 highlighted words
+        run: |
+          python -m studio.cinema_director_v24 \
+            --photo work/v24/source/csn_2014.jpg \
+            --film work/v24/source/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v24/output/V24_CINEMA_PREVIEW_WITH_REAL_TIMED_CAPTIONS.mp4 \
+            | tee work/v24/output/V24_CINEMA_MANIFEST.json
+      - name: Export word-accurate SRT without voice regeneration
+        run: |
+          python -m studio.voice_timed_v24 \
+            --words examples/voice_alexandre_words_v24.json \
+            --srt work/v24/output/V24_ALEXANDRE.srt
+      - name: Verify loudness, peak and 14.5-second native video
+        run: |
+          set -o pipefail
+          python -m studio.qa_v18 work/v24/output/V24_CINEMA_PREVIEW_WITH_REAL_TIMED_CAPTIONS.mp4 \
+            --seconds 14.5 --width 540 --height 960 --fps 24 | tee work/v24/output/V24_QA.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('work/v24/output/V24_CINEMA_MANIFEST.json').read_text())
+          assert r['word_count']==32 and r['scenes']==7
+          assert r['captions_from_real_word_times'] is True
+          assert r['voice_embedded'] is False
+          assert r['publication_approved'] is False
+          PY
+      - name: Only preview, SRT, metadata and QA (no voice MP3 included)
+        uses: actions/upload-artifact@v4
+        with:
+          name: v24-voice-led-cinematic-preview-not-narrated
+          path: |
+            tools/reels-studio/work/v24/output/*.mp4
+            tools/reels-studio/work/v24/output/*.srt
+            tools/reels-studio/work/v24/output/*.json
+          retention-days: 7
+          if-no-files-found: error

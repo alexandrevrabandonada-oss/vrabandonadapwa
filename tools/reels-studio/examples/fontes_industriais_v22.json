@@ -1,0 +1,158 @@
+{
+  "version": "v0.22",
+  "status": "RESEARCH_ONLY",
+  "publication_approved": false,
+  "sources": [
+    {
+      "id": "cinemateca_csn_minerio_1953",
+      "title": "O Minério e o Carvão",
+      "official_id": "013614",
+      "year": 1953,
+      "custodial_site": "Cinemateca Brasileira — Banco de Conteúdos Culturais",
+      "reference_url": "https://www.bcc.org.br/filmes/443375",
+      "form": "LIVE_ACTION_DOCUMENTARY",
+      "place": "Volta Redonda (cenas descritas na sinopse oficial)",
+      "stated_origin": "Ministério da Educação e Cultura / INCE",
+      "director": "Humberto Mauro",
+      "approx_duration_seconds": 720,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": [
+        {
+          "event": "train_arrival",
+          "description": "Trem chegando com carga à CSN",
+          "timecode_verified": false,
+          "observed_frames": false
+        },
+        {
+          "event": "wagon_scale",
+          "description": "Pesagem dos vagões em balança de plataforma",
+          "timecode_verified": false,
+          "observed_frames": false
+        },
+        {
+          "event": "coal_unloading",
+          "description": "Descarga de carvão de vagão",
+          "timecode_verified": false,
+          "observed_frames": false
+        },
+        {
+          "event": "conveyor_machinery",
+          "description": "Minerais em esteiras até o beneficiamento",
+          "timecode_verified": false,
+          "observed_frames": false
+        }
+      ]
+    },
+    {
+      "id": "cinemateca_csn_1941",
+      "title": "Cine Jornal Brasileiro V.2 N.012",
+      "official_id": "014181",
+      "year": 1941,
+      "custodial_site": "Cinemateca Brasileira",
+      "reference_url": "https://bcc.org.br/assuntos-de-filmes/csn-companhia-sider%C3%BArgica-nacional",
+      "form": "HISTORICAL_NEWSREEL",
+      "place": "Contexto da CSN / local exato de cada plano não verificado",
+      "stated_origin": "Departamento de Imprensa e Propaganda",
+      "director": "Não verificado",
+      "approx_duration_seconds": null,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": []
+    },
+    {
+      "id": "cinemateca_1968_animation",
+      "title": "Milagre do Desenvolvimento",
+      "official_id": "028619",
+      "year": 1968,
+      "custodial_site": "Cinemateca Brasileira",
+      "reference_url": "https://www.bcc.org.br/assuntos-de-filmes/csn-companhia-sider%C3%BArgica-nacional",
+      "form": "ANIMATED_EDUCATIONAL_FILM",
+      "place": "Obra sobre desenvolvimento; nenhuma tomada real da CSN comprovada",
+      "stated_origin": "Instituto Nacional de Cinema",
+      "director": "Alain Jaccoud",
+      "approx_duration_seconds": 597,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": []
+    },
+    {
+      "id": "arquivo_nacional_1988",
+      "title": "Filmagem da greve e ocupação militar de Volta Redonda",
+      "official_id": "BR_RJANRIO_FJ_0_FIL_0001_0003",
+      "year": 1988,
+      "custodial_site": "Arquivo Nacional / Fundo Ernesto Germano Parés",
+      "reference_url": "https://querepublicaeessa.an.gov.br/index.php/que-republica-e-essa/assuntos/temas/78-secoes-anteriores/66-filme/487-uma-invasao-registrada-em-video",
+      "form": "LIVE_ACTION_DOCUMENTARY",
+      "place": "Volta Redonda — cada tomada a confirmar",
+      "stated_origin": "Fundo Ernesto Germano Parés",
+      "director": "Não verificado",
+      "approx_duration_seconds": null,
+      "rights_state": "PERMISSION_REQUIRED",
+      "copy_state": "NOT_RECEIVED",
+      "allowed_use": "RESEARCH_METADATA_ONLY",
+      "shot_ideas": []
+    }
+  ],
+  "technique": {
+    "mandatory_raw_image_preservation": true,
+    "archival_4_3_display": "contain_no_crop",
+    "synthetic_or_animation_as_1988_evidence": false,
+    "mandatory_on_screen_source": true,
+    "cutlist_requires_verified_timecodes": true,
+    "speech_Alexandre_status": "GENERATED_AT_ELEVENLABS_NOT_IMPORTED"
+  },
+  "secondary_research_leads": [
+    {
+      "id": "ince_expansao_1954",
+      "title": "Expansão de Volta Redonda",
+      "year": 1954,
+      "type": "FILM_TITLE_SECONDARY_SOURCE",
+      "institution": "INCE — a confirmar na Cinemateca",
+      "exact_film_id": null,
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.unirio.br/cchs/ppgh/producao-academica/dissertacoes-de-mestrado-e-egressos-pasta/arquivos/Dissertacao_Luana_Xavier_Ottoline_PPGH_UNIRIO.pdf",
+      "reference_note": "Luana Xavier Ottoline, dissertação UNIRIO 2024, tabela 2 (p. 113). Não foi identificado catálogo individual nem tipo exato de cenas."
+    },
+    {
+      "id": "ince_nem_tudo_aco_1954",
+      "title": "Nem tudo é aço",
+      "year": 1954,
+      "type": "FILM_TITLE_SECONDARY_SOURCE",
+      "institution": "INCE — a confirmar na Cinemateca",
+      "exact_film_id": null,
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.unirio.br/cchs/ppgh/producao-academica/dissertacoes-de-mestrado-e-egressos-pasta/arquivos/Dissertacao_Luana_Xavier_Ottoline_PPGH_UNIRIO.pdf",
+      "reference_note": "Título em dissertação UNIRIO 2024; cronologia MEC registra nome mais longo Nem tudo é aço em Volta Redonda."
+    },
+    {
+      "id": "ince_vr_como_hoje_1954",
+      "title": "Volta Redonda como é hoje",
+      "year": 1954,
+      "type": "FILM_TITLE_SECONDARY_SOURCE",
+      "institution": "INCE — a confirmar na Cinemateca",
+      "exact_film_id": null,
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.unirio.br/cchs/ppgh/producao-academica/dissertacoes-de-mestrado-e-egressos-pasta/arquivos/Dissertacao_Luana_Xavier_Ottoline_PPGH_UNIRIO.pdf",
+      "reference_note": "Tabela 2 e cronologia do INCE; pode haver variantes de título. Não presumir imagens da usina."
+    },
+    {
+      "id": "ince_manganes_1943",
+      "title": "Manganês: extração, beneficiamento, galerias",
+      "year": 1943,
+      "type": "INDUSTRIAL_DOCUMENTARY_NEEDS_LOCATION_REVIEW",
+      "institution": "INCE / Cinemateca Brasileira",
+      "exact_film_id": "011610",
+      "copy_state": "NOT_RECEIVED",
+      "rights_state": "UNKNOWN",
+      "reference_url": "https://www.bcc.org.br/filmes/443348",
+      "reference_note": "Ficha BCC descreve trabalhadores extraindo manganês e vistas de Volta Redonda. Não inferir que todas as cenas industriais ocorrem na CSN ou que cada mina fica na cidade."
+    }
+  ]
+}

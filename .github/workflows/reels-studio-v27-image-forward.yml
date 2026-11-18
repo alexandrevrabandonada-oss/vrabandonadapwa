@@ -1,0 +1,107 @@
+name: Reels Studio V27 — image-forward brutalist cinema with balanced captions
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/kinetic_editor_v27.py'
+      - 'tools/reels-studio/studio/render_v27.py'
+      - 'tools/reels-studio/studio/qa_score_v27.py'
+      - 'tools/reels-studio/tests/test_kinetic_v27.py'
+      - 'tools/reels-studio/examples/scorecard_v27.json'
+      - '.github/workflows/reels-studio-v27-image-forward.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  expressive-archive-direction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install FFmpeg, visual type system and Python regression tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fontconfig fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Prove visual compositional variety and no orphan captions
+        run: |
+          python -m pytest -q tests/test_kinetic_v27.py tests/test_director_v26.py
+          python -m studio.qa_score_v27 examples/scorecard_v27.json
+      - name: Acquire genuine source media with hashes, not synthetic footage
+        run: |
+          set -euo pipefail
+          mkdir -p work/v27/sources work/v27/output
+          python - <<'PY'
+          from pathlib import Path
+          from studio.volta_redonda_v19 import fetch_asset
+          print(fetch_asset('csn_2014',Path('work/v27/sources')))
+          PY
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.27 (internal cinematic research)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v27/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v27/sources/france_2011.webm' | sha1sum -c -
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('work/v27/sources/france_2011.webm')
+          p.with_suffix('.json').write_text(json.dumps({
+            'id':'france_2011','date_label':2011,'sha1':hashlib.sha1(p.read_bytes()).hexdigest(),
+            'size_bytes':p.stat().st_size,'author':'Damien Vicart',
+            'source_url':'https://commons.wikimedia.org/wiki/File:Vicart_-_Aci%C3%A9rie.webm',
+            'editorial_role':'foreign industrial illustration, NOT CSN',
+            'publication_approved':False},indent=2))
+          PY
+      - name: Render kinetic typography, image-forward art direction and timed captions
+        run: |
+          python -m studio.render_v27 \
+            --photo work/v27/sources/csn_2014.jpg \
+            --film work/v27/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --brief examples/editorial_brief_v26.json \
+            --out work/v27/output/V27_IMPACTO.mp4 --variant graphic
+          python -m studio.render_v27 \
+            --photo work/v27/sources/csn_2014.jpg \
+            --film work/v27/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --brief examples/editorial_brief_v26.json \
+            --out work/v27/output/V27_CINEMA.mp4 --variant cinema
+      - name: Two QA reports, independent scorecard math, no fake voice
+        run: |
+          python -m studio.qa_v26 \
+            --video work/v27/output/V27_IMPACTO.mp4 \
+            --manifest work/v27/output/V27_IMPACTO.json \
+            --out work/v27/output/V27_IMPACTO_QA.json
+          python -m studio.qa_v26 \
+            --video work/v27/output/V27_CINEMA.mp4 \
+            --manifest work/v27/output/V27_CINEMA.json \
+            --out work/v27/output/V27_CINEMA_QA.json
+          cp examples/scorecard_v27.json work/v27/output/SCORECARD_V27.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ('IMPACTO','CINEMA'):
+              m=json.loads(Path(f'work/v27/output/V27_{name}.json').read_text())
+              qa=json.loads(Path(f'work/v27/output/V27_{name}_QA.json').read_text())
+              assert qa['technical']['ok'] is True
+              assert m['visual_engine']=='ARANHAVERSO_BRUTALISTA_V27'
+              assert len(set(m['image_forward_presets'].values()))>=4
+              assert m['plan']['window_schedule']['different_windows']>=3
+              assert m['word_timings_real'] is True
+              assert m['voice_embedded'] is False and m['voice_sha256'] is None
+              assert m['publication_approved'] is False
+          print('V27 metadata and both previews audited. Voice remains NOT embedded.')
+          PY
+      - name: Preserve internal previews, contacts and checks for visual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: v27-image-forward-aranyaverso-brutalista-two-previews
+          path: |
+            tools/reels-studio/work/v27/output/V27_*.mp4
+            tools/reels-studio/work/v27/output/V27_*.jpg
+            tools/reels-studio/work/v27/output/V27_*.json
+            tools/reels-studio/work/v27/output/SCORECARD_V27.json
+          if-no-files-found: error
+          retention-days: 7

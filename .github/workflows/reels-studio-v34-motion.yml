@@ -1,0 +1,21 @@
+name: Reels Studio V34 Motion Identity
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/choreography_v34.py'
+      - 'tools/reels-studio/tests/test_choreography_v34.py'
+      - '.github/workflows/reels-studio-v34-motion.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  motion-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install pytest
+      - run: python -m pytest -q tests/test_choreography_v34.py

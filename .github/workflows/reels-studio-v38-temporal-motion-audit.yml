@@ -1,0 +1,29 @@
+name: Reels Studio V38 — semantic timing and motion review QA
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/temporal_audit_v38.py'
+      - 'tools/reels-studio/tests/test_temporal_audit_v38.py'
+      - 'tools/reels-studio/review/v38/**'
+      - '.github/workflows/reels-studio-v38-temporal-motion-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  human-review-and-temporal-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install independent motion QA prerequisites
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install -r requirements.txt
+      - name: Test original voice timestamps, source truth, no false voice, offline review
+        run: |
+          python -m pytest -q tests/test_temporal_audit_v38.py
+          python -m studio.temporal_audit_v38 --help >/dev/null

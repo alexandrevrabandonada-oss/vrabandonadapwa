@@ -1,0 +1,96 @@
+name: Reels Studio V25 — Aranhaverso Brutalista original documentary graphics A/B
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/spider_brutalist_v25.py'
+      - 'tools/reels-studio/studio/qa_brutalist_v25.py'
+      - 'tools/reels-studio/tests/test_spider_brutalist_v25.py'
+      - '.github/workflows/reels-studio-v25-brutalista.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cinema-comic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cinema tooling and heavy condensed fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fontconfig fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+          fc-match 'Roboto Condensed:style=Bold'
+      - name: Fetch genuine Volta Redonda still and French industrial film
+        run: |
+          set -euo pipefail
+          mkdir -p work/v25/sources work/v25/output
+          python - <<'PY'
+          from pathlib import Path
+          from studio.volta_redonda_v19 import fetch_asset
+          print(fetch_asset('csn_2014',Path('work/v25/sources')))
+          PY
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.25 (internal visual experiment)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v25/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v25/sources/france_2011.webm' | sha1sum -c -
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          src=Path('work/v25/sources/france_2011.webm')
+          src.with_suffix('.json').write_text(json.dumps({
+            'id':'france_2011','date_label':2011,'sha1':hashlib.sha1(src.read_bytes()).hexdigest(),
+            'size_bytes':src.stat().st_size,'author':'Damien Vicart',
+            'source_url':'https://commons.wikimedia.org/wiki/File:Vicart_-_Aci%C3%A9rie.webm',
+            'editorial_role':'international industrial context',
+            'publication_approved':False},indent=2))
+          PY
+      - name: V25 regression tests — image integrity, scene grammar and word safety
+        run: python -m pytest -q tests/test_spider_brutalist_v25.py
+      - name: Export internal A — ink offset, halftone and comic panels
+        run: |
+          python -m studio.spider_brutalist_v25 \
+            --photo work/v25/sources/csn_2014.jpg \
+            --film work/v25/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v25/output/V25_ZINE_INDUSTRIAL.mp4 --variant zine
+      - name: Export internal B — more documentary and cool colors
+        run: |
+          python -m studio.spider_brutalist_v25 \
+            --photo work/v25/sources/csn_2014.jpg \
+            --film work/v25/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v25/output/V25_DOCUMENTAL.mp4 --variant documental
+      - name: Independent technical QA (no aesthetic certification)
+        run: |
+          python -m studio.qa_brutalist_v25 work/v25/output/V25_ZINE_INDUSTRIAL.mp4 \
+            --out work/v25/output/V25_ZINE_QA.json
+          python -m studio.qa_brutalist_v25 work/v25/output/V25_DOCUMENTAL.mp4 \
+            --out work/v25/output/V25_DOCUMENTAL_QA.json
+          python -m studio.voice_timed_v24 \
+            --help >/dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for stem in ('V25_ZINE_INDUSTRIAL','V25_DOCUMENTAL'):
+              path=Path(f'work/v25/output/{stem}.json')
+              data=json.loads(path.read_text())
+              assert data['words']==32 and data['caption_layout_failures']==0
+              assert not data['original_voice_embedded']
+              assert not data['publication_approved']
+          print('Two preview movies valid; no narration or public distribution falsely declared.')
+          PY
+      - name: Save two internal audiovisual previews, contact sheets and audits
+        uses: actions/upload-artifact@v4
+        with:
+          name: v25-aranyaverso-brutalista-ab-internal
+          path: |
+            tools/reels-studio/work/v25/output/V25_*.mp4
+            tools/reels-studio/work/v25/output/V25_*.jpg
+            tools/reels-studio/work/v25/output/V25_*.json
+          if-no-files-found: error
+          retention-days: 7

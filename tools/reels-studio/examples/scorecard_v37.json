@@ -1,0 +1,33 @@
+{
+  "version": "v0.37",
+  "assessment": "estimativa_editorial_interna_nao_independente",
+  "artistic_weights": {"identity": 0.20,"composition": 0.15,"movement": 0.15,"archive": 0.15,"narrative": 0.10,"subtitles": 0.10,"audio_voice": 0.15},
+  "kinetic_scores": {"identity": 8.80,"composition": 8.70,"movement": 9.00,"archive": 8.45,"narrative": 7.15,"subtitles": 8.35,"audio_voice": 3.40},
+  "artistic_kinetic": 7.74,
+  "artistic_measured": 7.68,
+  "previous_v36_artistic": 7.68,
+  "previous_best_v33": 7.71,
+  "factory_capability": 8.91,
+  "factory_score_pending_ci": true,
+  "actual_voice_in_video": false,
+  "verified_local": {
+    "technical_qa": true,"fullhd": "1080x1920", "fps": 30,"duration_sec": 14.5,
+    "narrative_titles": 8,"distinct_typography_grammars": 8,
+    "image_motion_grammars": 8,"real_aligned_words": 32,
+    "regression_tests": 15,
+    "same_palette_ab": true,
+    "average_ab_title_motion_difference_fraction": 0.241,
+    "minimum_per_shot_changed_fraction": 0.3056,
+    "audio_integrated_lufs": -16.1,
+    "audio_true_peak_dbfs": -2.0,
+    "lab_audio_handoff_passed_without_original_alexandre": true,
+    "sources_original_hash_checked": true,
+    "publication_approved": false
+  },
+  "limitations": [
+    "A voz profissional Alexandre segue inacessível como bytes pelo conector ElevenLabs; dois MP4s são instrumentais",
+    "Não há filmagem em movimento comprovadamente realizada na CSN, só siderurgia francesa identificada",
+    "Nota artística interna de storyboard, não avaliação independente nem estudo de engajamento",
+    "Texto de ensaio documental, não dossiê jornalístico completo"
+  ]
+}

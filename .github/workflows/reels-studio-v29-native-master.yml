@@ -1,0 +1,82 @@
+name: Reels Studio V29 — original native 1080x1920 documentary master
+on:
+  pull_request:
+    paths:
+      - 'tools/reels-studio/studio/master_director_v29.py'
+      - 'tools/reels-studio/studio/master_qa_v29.py'
+      - 'tools/reels-studio/tests/test_master_director_v29.py'
+      - 'tools/reels-studio/tests/test_master_qa_v29.py'
+      - '.github/workflows/reels-studio-v29-native-master.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-1080p:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    defaults:
+      run:
+        working-directory: tools/reels-studio
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cinematic video tooling and type system
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg fonts-lato fonts-roboto-unhinted
+          python -m pip install -r requirements.txt
+      - name: Eleven tests for original 1080 art, source integrity and no fake voice
+        run: python -m pytest -q tests/test_master_director_v29.py tests/test_master_qa_v29.py
+      - name: Acquire original 2014 Volta Redonda photograph and 2011 French steel film
+        run: |
+          set -euo pipefail
+          mkdir -p work/v29/sources work/v29/output
+          python - <<'PY'
+          from pathlib import Path
+          from studio.volta_redonda_v19 import fetch_asset
+          fetch_asset('csn_2014',Path('work/v29/sources'))
+          PY
+          curl --fail --location --show-error --silent --retry 3 --retry-delay 4 \
+            --user-agent 'VRAbandonadaEditorialResearch/0.29 (internal documentary editing)' \
+            'https://upload.wikimedia.org/wikipedia/commons/3/32/Vicart_-_Aci%C3%A9rie.webm' \
+            --output work/v29/sources/france_2011.webm
+          echo 'c1129cac8654866856c7bec31196206f16eac6c7  work/v29/sources/france_2011.webm' | sha1sum -c -
+      - name: Native master with 7 shots, 4 different real video windows and captions
+        run: |
+          python -m studio.master_director_v29 \
+            --photo work/v29/sources/csn_2014.jpg \
+            --film work/v29/sources/france_2011.webm \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v29/output/V29_NATIVE_MASTER.mp4 \
+            --variant graphic --quality master
+      - name: Verify original 1080p/30 export, dynamics, AAC, EBU R128 and SRT
+        run: |
+          python -m studio.master_qa_v29 \
+            --video work/v29/output/V29_NATIVE_MASTER.mp4 \
+            --words examples/voice_alexandre_words_v24.json \
+            --out work/v29/output/V29_NATIVE_QA.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('work/v29/output')
+          manifest=json.loads((root/'V29_NATIVE_MASTER.json').read_text())
+          qa=json.loads((root/'V29_NATIVE_QA.json').read_text())
+          assert qa['technical_ok'] and qa['width']==1080 and qa['height']==1920 and qa['fps']=='30/1'
+          assert qa['word_count']==32 and qa['cue_count']>=7
+          assert manifest['native_composition'] and not manifest['upscaled_old_video']
+          assert manifest['different_film_windows']==4
+          assert manifest['voice_embedded'] is False and manifest['voice_sha256'] is None
+          assert manifest['publication_approved'] is False
+          assert qa['aesthetic_score_certified'] is False
+          PY
+      - name: Preserve only internal native MP4, contact sheet, SRT and QA
+        uses: actions/upload-artifact@v4
+        with:
+          name: v29-native-1080p-master-30fps-internal-unvoiced
+          path: |
+            tools/reels-studio/work/v29/output/V29_NATIVE_MASTER.mp4
+            tools/reels-studio/work/v29/output/V29_NATIVE_MASTER.json
+            tools/reels-studio/work/v29/output/V29_NATIVE_QA.json
+            tools/reels-studio/work/v29/output/V29_NATIVE_QA.srt
+            tools/reels-studio/work/v29/output/V29_NATIVE_QA.jpg
+          if-no-files-found: error
+          retention-days: 7
