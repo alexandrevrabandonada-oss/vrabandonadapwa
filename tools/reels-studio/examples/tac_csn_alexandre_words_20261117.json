@@ -1,0 +1,543 @@
+{
+  "source": "ElevenLabs Scribe v1; original narration generated 2026-11-17",
+  "source_audio_model": "eleven_v4",
+  "source_audio_generation_id": "jUaWgUGCT8LihzndXR74",
+  "source_audio_reported_duration_sec": 41.2,
+  "source_transcription_generation_id": "xRDYj4EitwOumyHiv6WA",
+  "aligned_last_word_end_sec": 41.28,
+  "voice_audio_available_in_renderer": false,
+  "editorial_status": "PRIVATE_REVIEW_ONLY_NOT_FOR_PUBLICATION",
+  "transcript": "Em 2018, a CSN assinou com o Inea um acordo para adequar ambientalmente a Usina Presidente Vargas, em Volta Redonda. O plano previa trezentos e três milhões de reais em investimentos, com prazo até 2024. Só que o prazo foi estendido por mais vinte e sete meses. O Ministério Público questionou a prorrogação e pediu fiscalização federal. O novo marco é dezenove de dezembro de dois mil e vinte e seis. Houve avanços na execução das medidas, mas isso, por si só, não comprova a regularização ambiental definitiva. A pergunta é simples: quais obrigações já receberam aceite técnico? E quando Volta Redonda terá uma resposta conclusiva?",
+  "words": [
+    {
+      "text": "Em",
+      "start": 0,
+      "end": 0.12
+    },
+    {
+      "text": "2018,",
+      "start": 0.16,
+      "end": 1.04
+    },
+    {
+      "text": "a",
+      "start": 1.36,
+      "end": 1.44
+    },
+    {
+      "text": "CSN",
+      "start": 1.52,
+      "end": 2.16
+    },
+    {
+      "text": "assinou",
+      "start": 2.28,
+      "end": 2.56
+    },
+    {
+      "text": "com",
+      "start": 2.64,
+      "end": 2.72
+    },
+    {
+      "text": "o",
+      "start": 2.76,
+      "end": 2.8
+    },
+    {
+      "text": "Inea",
+      "start": 2.88,
+      "end": 3.2
+    },
+    {
+      "text": "um",
+      "start": 3.28,
+      "end": 3.36
+    },
+    {
+      "text": "acordo",
+      "start": 3.44,
+      "end": 3.84
+    },
+    {
+      "text": "para",
+      "start": 3.92,
+      "end": 4.08
+    },
+    {
+      "text": "adequar",
+      "start": 4.2,
+      "end": 4.64
+    },
+    {
+      "text": "ambientalmente",
+      "start": 4.84,
+      "end": 5.44
+    },
+    {
+      "text": "a",
+      "start": 5.48,
+      "end": 5.52
+    },
+    {
+      "text": "Usina",
+      "start": 5.6,
+      "end": 5.92
+    },
+    {
+      "text": "Presidente",
+      "start": 6,
+      "end": 6.48
+    },
+    {
+      "text": "Vargas,",
+      "start": 6.56,
+      "end": 7.067
+    },
+    {
+      "text": "em",
+      "start": 7.093,
+      "end": 7.12
+    },
+    {
+      "text": "Volta",
+      "start": 7.2,
+      "end": 7.36
+    },
+    {
+      "text": "Redonda.",
+      "start": 7.44,
+      "end": 8.16
+    },
+    {
+      "text": "O",
+      "start": 8.4,
+      "end": 8.48
+    },
+    {
+      "text": "plano",
+      "start": 8.56,
+      "end": 8.8
+    },
+    {
+      "text": "previa",
+      "start": 8.88,
+      "end": 9.28
+    },
+    {
+      "text": "trezentos",
+      "start": 9.36,
+      "end": 9.84
+    },
+    {
+      "text": "e",
+      "start": 9.92,
+      "end": 10
+    },
+    {
+      "text": "três",
+      "start": 10.04,
+      "end": 10.16
+    },
+    {
+      "text": "milhões",
+      "start": 10.32,
+      "end": 10.72
+    },
+    {
+      "text": "de",
+      "start": 10.8,
+      "end": 10.84
+    },
+    {
+      "text": "reais",
+      "start": 10.88,
+      "end": 11.2
+    },
+    {
+      "text": "em",
+      "start": 11.28,
+      "end": 11.36
+    },
+    {
+      "text": "investimentos,",
+      "start": 11.52,
+      "end": 12.24
+    },
+    {
+      "text": "com",
+      "start": 12.28,
+      "end": 12.32
+    },
+    {
+      "text": "prazo",
+      "start": 12.48,
+      "end": 12.8
+    },
+    {
+      "text": "até",
+      "start": 12.88,
+      "end": 13.04
+    },
+    {
+      "text": "2024.",
+      "start": 13.12,
+      "end": 14.56
+    },
+    {
+      "text": "Só",
+      "start": 14.6,
+      "end": 14.68
+    },
+    {
+      "text": "que",
+      "start": 14.72,
+      "end": 14.76
+    },
+    {
+      "text": "o",
+      "start": 14.8,
+      "end": 14.88
+    },
+    {
+      "text": "prazo",
+      "start": 14.92,
+      "end": 15.2
+    },
+    {
+      "text": "foi",
+      "start": 15.28,
+      "end": 15.4
+    },
+    {
+      "text": "estendido",
+      "start": 15.44,
+      "end": 15.84
+    },
+    {
+      "text": "por",
+      "start": 15.92,
+      "end": 16.08
+    },
+    {
+      "text": "mais",
+      "start": 16.12,
+      "end": 16.32
+    },
+    {
+      "text": "vinte",
+      "start": 16.48,
+      "end": 16.64
+    },
+    {
+      "text": "e",
+      "start": 16.72,
+      "end": 16.8
+    },
+    {
+      "text": "sete",
+      "start": 16.92,
+      "end": 17.12
+    },
+    {
+      "text": "meses.",
+      "start": 17.2,
+      "end": 17.88
+    },
+    {
+      "text": "O",
+      "start": 18.08,
+      "end": 18.12
+    },
+    {
+      "text": "Ministério",
+      "start": 18.16,
+      "end": 18.48
+    },
+    {
+      "text": "Público",
+      "start": 18.64,
+      "end": 19.04
+    },
+    {
+      "text": "questionou",
+      "start": 19.24,
+      "end": 19.6
+    },
+    {
+      "text": "a",
+      "start": 19.64,
+      "end": 19.68
+    },
+    {
+      "text": "prorrogação",
+      "start": 19.72,
+      "end": 20.32
+    },
+    {
+      "text": "e",
+      "start": 20.48,
+      "end": 20.52
+    },
+    {
+      "text": "pediu",
+      "start": 20.56,
+      "end": 20.88
+    },
+    {
+      "text": "fiscalização",
+      "start": 20.96,
+      "end": 21.68
+    },
+    {
+      "text": "federal.",
+      "start": 21.76,
+      "end": 22.24
+    },
+    {
+      "text": "O",
+      "start": 22.56,
+      "end": 22.64
+    },
+    {
+      "text": "novo",
+      "start": 22.68,
+      "end": 22.88
+    },
+    {
+      "text": "marco",
+      "start": 22.96,
+      "end": 23.36
+    },
+    {
+      "text": "é",
+      "start": 23.4,
+      "end": 23.44
+    },
+    {
+      "text": "dezenove",
+      "start": 23.52,
+      "end": 24.08
+    },
+    {
+      "text": "de",
+      "start": 24.16,
+      "end": 24.24
+    },
+    {
+      "text": "dezembro",
+      "start": 24.36,
+      "end": 24.72
+    },
+    {
+      "text": "de",
+      "start": 24.8,
+      "end": 24.88
+    },
+    {
+      "text": "dois",
+      "start": 24.92,
+      "end": 25.04
+    },
+    {
+      "text": "mil",
+      "start": 25.12,
+      "end": 25.2
+    },
+    {
+      "text": "e",
+      "start": 25.28,
+      "end": 25.32
+    },
+    {
+      "text": "vinte",
+      "start": 25.36,
+      "end": 25.44
+    },
+    {
+      "text": "e",
+      "start": 25.52,
+      "end": 25.56
+    },
+    {
+      "text": "seis.",
+      "start": 25.6,
+      "end": 26
+    },
+    {
+      "text": "Houve",
+      "start": 26.48,
+      "end": 26.72
+    },
+    {
+      "text": "avanços",
+      "start": 26.88,
+      "end": 27.2
+    },
+    {
+      "text": "na",
+      "start": 27.24,
+      "end": 27.28
+    },
+    {
+      "text": "execução",
+      "start": 27.36,
+      "end": 27.76
+    },
+    {
+      "text": "das",
+      "start": 27.84,
+      "end": 27.92
+    },
+    {
+      "text": "medidas,",
+      "start": 28,
+      "end": 28.72
+    },
+    {
+      "text": "mas",
+      "start": 28.84,
+      "end": 28.96
+    },
+    {
+      "text": "isso,",
+      "start": 29.04,
+      "end": 29.44
+    },
+    {
+      "text": "por",
+      "start": 29.48,
+      "end": 29.52
+    },
+    {
+      "text": "si",
+      "start": 29.6,
+      "end": 29.76
+    },
+    {
+      "text": "só,",
+      "start": 29.84,
+      "end": 30.32
+    },
+    {
+      "text": "não",
+      "start": 30.4,
+      "end": 30.56
+    },
+    {
+      "text": "comprova",
+      "start": 30.64,
+      "end": 31.12
+    },
+    {
+      "text": "a",
+      "start": 31.16,
+      "end": 31.2
+    },
+    {
+      "text": "regularização",
+      "start": 31.36,
+      "end": 31.92
+    },
+    {
+      "text": "ambiental",
+      "start": 32,
+      "end": 32.48
+    },
+    {
+      "text": "definitiva.",
+      "start": 32.56,
+      "end": 33.48
+    },
+    {
+      "text": "A",
+      "start": 33.68,
+      "end": 33.76
+    },
+    {
+      "text": "pergunta",
+      "start": 33.84,
+      "end": 34.16
+    },
+    {
+      "text": "é",
+      "start": 34.2,
+      "end": 34.24
+    },
+    {
+      "text": "simples:",
+      "start": 34.32,
+      "end": 35.12
+    },
+    {
+      "text": "quais",
+      "start": 35.16,
+      "end": 35.36
+    },
+    {
+      "text": "obrigações",
+      "start": 35.44,
+      "end": 36.08
+    },
+    {
+      "text": "já",
+      "start": 36.16,
+      "end": 36.28
+    },
+    {
+      "text": "receberam",
+      "start": 36.32,
+      "end": 36.8
+    },
+    {
+      "text": "aceite",
+      "start": 36.88,
+      "end": 37.2
+    },
+    {
+      "text": "técnico?",
+      "start": 37.36,
+      "end": 38.08
+    },
+    {
+      "text": "E",
+      "start": 38.16,
+      "end": 38.24
+    },
+    {
+      "text": "quando",
+      "start": 38.28,
+      "end": 38.56
+    },
+    {
+      "text": "Volta",
+      "start": 38.64,
+      "end": 38.8
+    },
+    {
+      "text": "Redonda",
+      "start": 38.88,
+      "end": 39.36
+    },
+    {
+      "text": "terá",
+      "start": 39.44,
+      "end": 39.56
+    },
+    {
+      "text": "uma",
+      "start": 39.6,
+      "end": 39.68
+    },
+    {
+      "text": "resposta",
+      "start": 39.8,
+      "end": 40.24
+    },
+    {
+      "text": "conclusiva?",
+      "start": 40.32,
+      "end": 41.28
+    }
+  ]
+}
